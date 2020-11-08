@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.otcl</groupId>
+		<artifactId>otcl2</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>otcl2-core</artifactId>
+
+	<dependencies>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-yaml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.otcl</groupId>
+			<artifactId>otcl2-common</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.otcl</groupId>
+		    <artifactId>dateconverters</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.msgpack</groupId>
+		    <artifactId>msgpack</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>
