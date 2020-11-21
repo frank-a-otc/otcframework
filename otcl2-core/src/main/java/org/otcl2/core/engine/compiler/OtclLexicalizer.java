@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -43,12 +43,19 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclLexicalizer.
+ */
 final class OtclLexicalizer {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclLexicalizer.class);
 
+	/** The Constant FROM_OTCLCHAIN_PATTERN. */
 	private static final Pattern FROM_OTCLCHAIN_PATTERN = Pattern.compile(OtclConstants.REGEX_CHECK_OTCLCHAIN);
 
+	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper;
 
 	static {
@@ -59,6 +66,13 @@ final class OtclLexicalizer {
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
 	}
 
+	/**
+	 * Lexicalize.
+	 *
+	 * @param file the file
+	 * @param otclNamespace the otcl namespace
+	 * @return the otcl dto
+	 */
 	static OtclDto lexicalize(File file, String otclNamespace) {
 		OtclFileDto otclFileDto = loadOtcl(file);
 		if (otclFileDto.otclScripts == null) {
@@ -112,6 +126,12 @@ final class OtclLexicalizer {
 		return otclDto;
 	}
 
+	/**
+	 * Load otcl.
+	 *
+	 * @param file the file
+	 * @return the otcl file dto
+	 */
 	static OtclFileDto loadOtcl(File file) {
 		OtclFileDto otclFileDto = null;
 		try {
@@ -122,6 +142,16 @@ final class OtclLexicalizer {
 		return otclFileDto;
 	}
 
+	/**
+	 * Tokenize.
+	 *
+	 * @param otclNamespace the otcl namespace
+	 * @param fileName the file name
+	 * @param otclFileDto the otcl file dto
+	 * @param targetClz the target clz
+	 * @param sourceClz the source clz
+	 * @return the otcl dto
+	 */
 	private static OtclDto tokenize(String otclNamespace, String fileName, OtclFileDto otclFileDto, 
 			Class<?> targetClz, Class<?> sourceClz) {
 		Class<?> factoryHelper = fetchFactoryHelper(otclFileDto);
@@ -416,7 +446,20 @@ final class OtclLexicalizer {
 //		return scriptGroupDto;
 //	}
 	
-	private static OtclCommandDto tokenize(ScriptDto script, Class<?> factoryHelper, Class<?> clz, String otclChain, 
+	/**
+ * Tokenize.
+ *
+ * @param script the script
+ * @param factoryHelper the factory helper
+ * @param clz the clz
+ * @param otclChain the otcl chain
+ * @param mapOCDs the map OC ds
+ * @param builderOtclChainDto the builder otcl chain dto
+ * @param enumTargetOrSource the enum target or source
+ * @param logs the logs
+ * @return the otcl command dto
+ */
+private static OtclCommandDto tokenize(ScriptDto script, Class<?> factoryHelper, Class<?> clz, String otclChain, 
 			Map<String, OtclCommandDto> mapOCDs, OtclChainDto.Builder builderOtclChainDto, 
 			TARGET_SOURCE enumTargetOrSource, List<String> logs) {
 
@@ -518,6 +561,12 @@ final class OtclLexicalizer {
 		return stemOCD;
 	}
 
+	/**
+	 * Fetch factory helper.
+	 *
+	 * @param otclFileDto the otcl file dto
+	 * @return the class
+	 */
 	private static Class<?> fetchFactoryHelper(OtclFileDto otclFileDto) {
 		if (otclFileDto.metadata == null || otclFileDto.metadata.helper == null) {
 			return null;

@@ -14,8 +14,17 @@ import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 import org.otcl2.core.engine.compiler.templates.AbstractTemplate;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ExecuteCommandCodeGenerator.
+ */
 final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 
+	/**
+	 * Generate source code.
+	 *
+	 * @param executionContext the execution context
+	 */
 	public static void generateSourceCode(ExecutionContext executionContext) {
 		
 //		ScriptGroupDto scriptGroupDto = executionContext.entry.getValue();
@@ -51,6 +60,11 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 		return;
 	}
 	
+	/**
+	 * Generate code for module and converter.
+	 *
+	 * @param executionContext the execution context
+	 */
 	private static void generateCodeForModuleAndConverter(ExecutionContext executionContext) {
 //		Entry<String, ScriptGroupDto> entry = executionContext.entry;
 		OtclCommand otclCommand = executionContext.otclCommand;

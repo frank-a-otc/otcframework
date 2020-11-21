@@ -9,6 +9,10 @@
 	<version>1.0</version>
 	<packaging>pom</packaging>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>This is the parent for the two OTCL modules.</description>
+	<url>http://www.otclautomation.org</url>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>

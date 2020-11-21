@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -30,10 +30,26 @@ import org.otcl2.core.engine.utils.OtclReflectionUtil.GETTER_SETTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclSemanticsChecker.
+ */
 final class OtclSemanticsChecker {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclSemanticsChecker.class);
 
+	/**
+	 * Check semantics.
+	 *
+	 * @param factoryHelper the factory helper
+	 * @param script the script
+	 * @param clz the clz
+	 * @param otclChain the otcl chain
+	 * @param otclCommandDto the otcl command dto
+	 * @param otclTokens the otcl tokens
+	 * @return true, if successful
+	 */
 	static boolean checkSemantics(Class<?> factoryHelper, ScriptDto script, Class<?> clz,
 			String otclChain, OtclCommandDto otclCommandDto, String[] otclTokens) {
 		
@@ -50,6 +66,14 @@ final class OtclSemanticsChecker {
 		return true;
 	}
  
+	/**
+	 * Check notations.
+	 *
+	 * @param script the script
+	 * @param clz the clz
+	 * @param otclChain the otcl chain
+	 * @param otclCommandDto the otcl command dto
+	 */
 	private static void checkNotations(ScriptDto script, Class<?> clz, String otclChain, OtclCommandDto otclCommandDto) {
 		if (otclCommandDto.fieldName.equals(OtclConstants.ROOT)) {
 			otclCommandDto.declaringClass = clz;
@@ -126,6 +150,13 @@ final class OtclSemanticsChecker {
 		}
 	}
 	
+	/**
+	 * Inits the getter setter.
+	 *
+	 * @param factoryHelper the factory helper
+	 * @param otclCommandDto the otcl command dto
+	 * @param script the script
+	 */
 	private static void initGetterSetter(Class<?> factoryHelper, OtclCommandDto otclCommandDto,
 			ScriptDto script) {
 		if (!otclCommandDto.isSetterInitialized) {

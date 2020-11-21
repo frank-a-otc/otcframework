@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -36,24 +36,51 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeploymentContainerImpl.
+ */
 final class DeploymentContainerImpl implements DeploymentContainer {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentContainerImpl.class);
 
+	/** The map packaged otcl dtos. */
 	private Map<String, DeploymentDto> mapPackagedOtclDtos = new HashMap<>();
+	
+	/** The Constant otclDeploymentContainer. */
 	private static final DeploymentContainer otclDeploymentContainer = new DeploymentContainerImpl();
+	
+	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_DEP_EXTN);
+	
+	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();
+	
+	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper = new ObjectMapper();
+	
+	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader = OtclConfig.getTargetClassLoader();
 
+	/**
+	 * Instantiates a new deployment container impl.
+	 */
 	private DeploymentContainerImpl() {
 	}
 
+	/**
+	 * Gets the single instance of DeploymentContainerImpl.
+	 *
+	 * @return single instance of DeploymentContainerImpl
+	 */
 	public static DeploymentContainer getInstance() {
 		return otclDeploymentContainer;
 	}
 
+	/**
+	 * Deploy.
+	 */
 	@Override
 	public void deploy() {
 		String binDir = OtclConfig.getOtclBinLocation();
@@ -82,6 +109,14 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		return;
 	}
 	
+	/**
+	 * Inits the otcl command dto.
+	 *
+	 * @param id the id
+	 * @param otclCommandDto the otcl command dto
+	 * @param clz the clz
+	 * @param otclChainDto the otcl chain dto
+	 */
 	private void initOtclCommandDto(String id, OtclCommandDto otclCommandDto, Class<?> clz, OtclChainDto otclChainDto) {
 		if (otclCommandDto == null) {
 			return;
@@ -116,6 +151,11 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		return;
 	}
 	
+	/**
+	 * Deploy.
+	 *
+	 * @param deploymentDto the deployment dto
+	 */
 	@Override
 	public void deploy(DeploymentDto deploymentDto) {
 		if (deploymentDto == null) {
@@ -145,18 +185,40 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		return;
 	}
 
+	/**
+	 * Retrieve deployment dto.
+	 *
+	 * @param otclNamespace the otcl namespace
+	 * @param source the source
+	 * @param targetClz the target clz
+	 * @return the deployment dto
+	 */
 	@Override
 	public DeploymentDto retrieveDeploymentDto(String otclNamespace, Object source, Class<?> targetClz) {
 		String deploymentId = OtclUtils.createDeploymentId(otclNamespace, source, targetClz);
 		return retrieveDeploymentDto(deploymentId);
 	}
 
+	/**
+	 * Retrieve deployment dto.
+	 *
+	 * @param otclNamespace the otcl namespace
+	 * @param sourceClz the source clz
+	 * @param targetClz the target clz
+	 * @return the deployment dto
+	 */
 	@Override
 	public DeploymentDto retrieveDeploymentDto(String otclNamespace, Class<?> sourceClz, Class<?> targetClz) {
 		String deploymentId = OtclUtils.createDeploymentId(otclNamespace, sourceClz, targetClz);
 		return retrieveDeploymentDto(deploymentId);
 	}
 
+	/**
+	 * Retrieve deployment dto.
+	 *
+	 * @param deploymentId the deployment id
+	 * @return the deployment dto
+	 */
 	private DeploymentDto retrieveDeploymentDto(String deploymentId) {
 		DeploymentDto deploymentDto = mapPackagedOtclDtos.get(deploymentId);
 		if (deploymentDto == null) {

@@ -5,11 +5,25 @@ import org.otcl2.common.dto.OtclCommandDto;
 import org.otcl2.common.engine.compiler.OtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.SyntaxException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AnchorNotationProcessor.
+ */
 final class AnchorNotationProcessor {
 
 //	private static final Logger LOGGER = LoggerFactory.getLogger(MapNotationProcessor.class);
 
-	public static boolean process(String scriptId, OtclCommandDto otclCommandDto, String otclToken,
+	/**
+ * Process.
+ *
+ * @param scriptId the script id
+ * @param otclCommandDto the otcl command dto
+ * @param otclToken the otcl token
+ * @param otclChain the otcl chain
+ * @param otclTokens the otcl tokens
+ * @return true, if successful
+ */
+public static boolean process(String scriptId, OtclCommandDto otclCommandDto, String otclToken,
 			String otclChain, String[] otclTokens) {
 		int idxAnchor = otclToken.indexOf(OtclConstants.ANCHOR);
 		boolean isAnchored = false;

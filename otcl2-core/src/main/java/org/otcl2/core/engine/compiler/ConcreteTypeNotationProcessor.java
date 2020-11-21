@@ -10,10 +10,26 @@ import org.otcl2.common.dto.ScriptDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConcreteTypeNotationProcessor.
+ */
 final class ConcreteTypeNotationProcessor {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclLexicalizer.class);
 
+	/**
+	 * Process.
+	 *
+	 * @param script the script
+	 * @param otclCommandDto the otcl command dto
+	 * @param rawOtclToken the raw otcl token
+	 * @param otclChain the otcl chain
+	 * @param isMapNotation the is map notation
+	 * @param idxArrNotation the idx arr notation
+	 * @return true, if successful
+	 */
 	public static boolean process(ScriptDto script, OtclCommandDto otclCommandDto, String rawOtclToken,
 			String otclChain, boolean isMapNotation, int idxArrNotation) {
 		String scriptId = null;

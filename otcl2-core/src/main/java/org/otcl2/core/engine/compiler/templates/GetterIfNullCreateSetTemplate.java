@@ -9,10 +9,27 @@ import org.otcl2.common.util.CommonUtils;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetterIfNullCreateSetTemplate.
+ */
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new getter if null create set template.
+	 */
 	private GetterIfNullCreateSetTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param otclCommandDto the otcl command dto
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (otclCommandDto.isArray()) {
@@ -22,6 +39,17 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		return generateCode(targetOCC, otclCommandDto, null, createNewVarName, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code for array.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param otclCommandDto the otcl command dto
+	 * @param arraySize the array size
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCodeForArray(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (!otclCommandDto.isArray()) {
@@ -31,6 +59,17 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		return generateCode(targetOCC, otclCommandDto, arraySize, createNewVarName, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param otclCommandDto the otcl command dto
+	 * @param arraySize the array size
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		String concreteType = fetchConcreteTypeName(targetOCC, otclCommandDto);

@@ -9,8 +9,17 @@ import org.otcl2.core.engine.compiler.command.OtclCommand;
 import org.otcl2.core.engine.compiler.command.SourceOtclCommandContext;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CopyFlatAndMixedPathsCodeGenerator.
+ */
 final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtclCodeGenerator {
 
+	/**
+	 * Generate source code.
+	 *
+	 * @param executionContext the execution context
+	 */
 	public static void generateSourceCode(ExecutionContext executionContext) {
 //		Entry<String, ScriptGroupDto> entry = executionContext.entry;
 		OtclCommand otclCommand = executionContext.otclCommand;

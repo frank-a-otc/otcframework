@@ -10,10 +10,27 @@ import org.otcl2.core.engine.compiler.command.SourceOtclCommandContext;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetSetTemplate.
+ */
 public final class GetSetTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new gets the set template.
+	 */
 	private GetSetTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC, 
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;

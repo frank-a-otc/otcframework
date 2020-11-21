@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -29,19 +29,41 @@ import org.otcl2.core.engine.utils.OtclReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ObjectProfilerImpl.
+ */
 final class ObjectProfilerImpl implements ObjectProfiler {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ObjectProfilerImpl.class);
 
+	/** The object profiler impl. */
 	private static ObjectProfilerImpl objectProfilerImpl = new ObjectProfilerImpl();;
 
+	/**
+	 * Instantiates a new object profiler impl.
+	 */
 	private ObjectProfilerImpl() {
 	}
 
+	/**
+	 * Gets the single instance of ObjectProfilerImpl.
+	 *
+	 * @return single instance of ObjectProfilerImpl
+	 */
 	public static ObjectProfilerImpl getInstance() {
 		return objectProfilerImpl;
 	}
 
+	/**
+	 * Profile object.
+	 *
+	 * @param deploymentDto the deployment dto
+	 * @param enumTargetSource the enum target source
+	 * @param profiledObject the profiled object
+	 * @return the indexed collections dto
+	 */
 	@Override
 	public IndexedCollectionsDto profileObject(DeploymentDto deploymentDto, TARGET_SOURCE enumTargetSource, 
 			Object profiledObject) {
@@ -110,6 +132,14 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 		return rootICD;
 	}
 
+	/**
+	 * Profile object.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @param profiledObject the profiled object
+	 * @param parentICD the parent ICD
+	 * @return the indexed collections dto
+	 */
 	private static IndexedCollectionsDto profileObject(OtclCommandContext otclCommandContext, Object profiledObject,
 			IndexedCollectionsDto parentICD) {
 		String[] otclTokens = otclCommandContext.otclTokens;
@@ -136,6 +166,14 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 		return parentICD;
 	}
 	
+	/**
+	 * Profile collection.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @param profiledObject the profiled object
+	 * @param parentICD the parent ICD
+	 * @return the indexed collections dto
+	 */
 	private static IndexedCollectionsDto profileCollection(OtclCommandContext otclCommandContext, Object profiledObject, 
 			IndexedCollectionsDto parentICD) {
 		OtclCommandDto otclCommandDto = otclCommandContext.otclCommandDto; 
@@ -191,6 +229,14 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 		return parentICD;
 	}
 	
+	/**
+	 * Profile map.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @param profiledObject the profiled object
+	 * @param parentICD the parent ICD
+	 * @return the indexed collections dto
+	 */
 	@SuppressWarnings("unchecked")
 	private static IndexedCollectionsDto profileMap(OtclCommandContext otclCommandContext, Object profiledObject,
 			IndexedCollectionsDto parentICD) {

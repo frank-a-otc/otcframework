@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -15,17 +15,33 @@ import java.util.Map;
 
 import org.otcl2.common.exception.PropertyConverterException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PropertyConverterUtil.
+ */
 public class PropertyConverterUtil {
 
+	/** The Constant HEX_PREFIX. */
 	private static final String HEX_PREFIX = "0x";
+	
+	/** The Constant HEX_RADIX. */
 	private static final int HEX_RADIX = 16;
+	
+	/** The Constant BIN_PREFIX. */
 	private static final String BIN_PREFIX = "0b";
+	
+	/** The Constant BIN_RADIX. */
 	private static final int BIN_RADIX = 2;
+	
+	/** The Constant CONSTR_ARGS. */
 	private static final Class<?>[] CONSTR_ARGS = { String.class };
 	
 //	private static final char LIST_ESC_CHAR = '\\';
+/** The Constant wrapperTypes. */
 //	private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 	private static final Map<Class<?>, Class<?>> wrapperTypes = new IdentityHashMap<>(9);
+	
+	/** The Constant allTypes. */
 	private static final Map<Class<?>, Class<?>> allTypes;
 
 	static {
@@ -44,6 +60,12 @@ public class PropertyConverterUtil {
 		allTypes.put(BigDecimal.class, BigDecimal.class);
 	}
 
+	/**
+	 * To integer.
+	 *
+	 * @param value the value
+	 * @return the integer
+	 */
 	public static Integer toInteger(Object value) {
 		Number num = toNumber(value, Integer.class);
 		if (num instanceof Integer) {
@@ -53,6 +75,13 @@ public class PropertyConverterUtil {
 		}
 	}
 
+	/**
+	 * To number.
+	 *
+	 * @param value the value
+	 * @param clz the clz
+	 * @return the number
+	 */
 	static Number toNumber(Object value, Class<?> clz) {
 		if (value == null) {
 			return null;
@@ -85,6 +114,12 @@ public class PropertyConverterUtil {
 		}
 	}
 
+	/**
+	 * To boolean object.
+	 *
+	 * @param str the str
+	 * @return the boolean
+	 */
 	public static Boolean toBooleanObject(String str) {
 		// this approach is reported to be faster
 		if (str == "true") {

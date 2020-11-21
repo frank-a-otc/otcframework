@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -9,17 +9,38 @@ package org.otcl2.common.dto;
 
 import java.util.Arrays;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclChainDto.
+ */
 public final class OtclChainDto {
 
+	/** The otcl chain. */
 	public String otclChain;
+	
+	/** The collection count. */
 	public int collectionCount;
+	
+	/** The dictionary count. */
 	public int dictionaryCount;
+	
+	/** The raw otcl tokens. */
 	public String[] rawOtclTokens;
+	
+	/** The otcl tokens. */
 	public String[] otclTokens;
 
+	/**
+	 * Instantiates a new otcl chain dto.
+	 */
 	public OtclChainDto() {	
 	}
 	
+	/**
+	 * Instantiates a new otcl chain dto.
+	 *
+	 * @param builder the builder
+	 */
 	private OtclChainDto(Builder builder) {
 		otclChain = builder.otclChain;
 		collectionCount = builder.collectionCount;
@@ -28,16 +49,31 @@ public final class OtclChainDto {
 		otclTokens = builder.otclTokens;
 	}
 
+	/**
+	 * New builder.
+	 *
+	 * @return the builder
+	 */
 	public static Builder newBuilder() {
 		return new Builder();
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "OtclChainDto [otclChain=" + otclChain + ", collectionCount=" + collectionCount + ", dictionaryCount="
 				+ dictionaryCount + ", rawOtclTokens=" + Arrays.toString(rawOtclTokens) + "]";
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -50,6 +86,12 @@ public final class OtclChainDto {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -75,46 +117,101 @@ public final class OtclChainDto {
 		return true;
 	}
 
+	/**
+	 * The Class Builder.
+	 */
 	public static class Builder {
+		
+		/** The otcl chain. */
 		private String otclChain;
+		
+		/** The collection count. */
 		private int collectionCount;
+		
+		/** The dictionary count. */
 		private int dictionaryCount;
+		
+		/** The raw otcl tokens. */
 		public String[] rawOtclTokens;
+		
+		/** The otcl tokens. */
 		private String[] otclTokens;
 
+		/**
+		 * Adds the otcl chain.
+		 *
+		 * @param otclChain the otcl chain
+		 * @return the builder
+		 */
 		public Builder addOtclChain(String otclChain) {
 			this.otclChain = otclChain;
 			return this;
 		}
 
+		/**
+		 * Increment collection count.
+		 *
+		 * @return the builder
+		 */
 		public Builder incrementCollectionCount() {
 			this.collectionCount++;
 			return this;
 		}
 
+		/**
+		 * Increment dictionary count.
+		 *
+		 * @return the builder
+		 */
 		public Builder incrementDictionaryCount() {
 			this.dictionaryCount++;
 			return this;
 		}
 
+		/**
+		 * Adds the otcl tokens.
+		 *
+		 * @param otclTokens the otcl tokens
+		 * @return the builder
+		 */
 		public Builder addOtclTokens(String[] otclTokens) {
 			this.otclTokens = otclTokens;
 			this.rawOtclTokens = Arrays.copyOf(otclTokens, otclTokens.length);
 			return this;
 		}
 
+		/**
+		 * Gets the otcl chain.
+		 *
+		 * @return the otcl chain
+		 */
 		public String getOtclChain() {
 			return otclChain;
 		}
 
+		/**
+		 * Gets the otcl tokens.
+		 *
+		 * @return the otcl tokens
+		 */
 		public String[] getOtclTokens() {
 			return otclTokens;
 		}
 
+		/**
+		 * Gets the raw otcl tokens.
+		 *
+		 * @return the raw otcl tokens
+		 */
 		public String[] getRawOtclTokens() {
 			return rawOtclTokens;
 		}
 
+		/**
+		 * Builds the.
+		 *
+		 * @return the otcl chain dto
+		 */
 		public OtclChainDto build() {
 			return new OtclChainDto(this);
 		}

@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -17,58 +17,124 @@ import org.otcl2.core.engine.compiler.OtclCompilerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum OtclEngineImpl.
+ */
 public enum OtclEngineImpl implements OtclEngine {
+	
+	/** The instance. */
 	instance;
 	
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclEngineImpl.class);
 
+	/** The Constant otclCompiler. */
 	private static final OtclCompiler otclCompiler = OtclCompilerImpl.getInstance();
+	
+	/** The Constant deploymentContainer. */
 	private static final DeploymentContainer deploymentContainer = DeploymentContainerImpl.getInstance();
+	
+	/** The Constant otclExecutor. */
 	private static final OtclExecutor otclExecutor = OtclExecutorImpl.getInstance();
 
+	/**
+	 * Instantiates a new otcl engine impl.
+	 */
 	private OtclEngineImpl() {
 	}
 
+	/**
+	 * The Class Init.
+	 */
 	public static class Init {
+		
+		/**
+		 * Inits the.
+		 */
 		@PostConstruct
 		public static void init() {
 			instance.deploy();
 		}
 	}
 
+	/**
+	 * Gets the single instance of OtclEngineImpl.
+	 *
+	 * @return single instance of OtclEngineImpl
+	 */
 	public static OtclEngine getInstance() {
 		return instance;
 	}
 
+	/**
+	 * Compile otcl.
+	 */
 	@Override
 	public void compileOtcl() {
 		otclCompiler.compileOtcl();
 		return;
 	}
 	
+	/**
+	 * Compile source code.
+	 */
 	@Override
 	public void compileSourceCode() {
 		otclCompiler.compileSourceCode();
 		return;
 	}
 	
+	/**
+	 * Deploy.
+	 */
 	@Override
 	public void deploy() {
 		deploymentContainer.deploy();
 	}
 	
+	/**
+	 * Execute otcl.
+	 *
+	 * @param <T> the generic type
+	 * @param <S> the generic type
+	 * @param targetClz the target clz
+	 * @param data the data
+	 * @return the t
+	 */
 	@Override
 	public <T, S> T executeOtcl(Class<T> targetClz, Map<String, Object> data) {
 		T target = otclExecutor.executeOtcl(targetClz, data);
 		return target;
 	}
 	
+	/**
+	 * Execute otcl.
+	 *
+	 * @param <T> the generic type
+	 * @param <S> the generic type
+	 * @param source the source
+	 * @param targetClz the target clz
+	 * @param data the data
+	 * @return the t
+	 */
 	@Override
 	public <T, S> T executeOtcl(S source, Class<T> targetClz, Map<String, Object> data) {
 		T target = otclExecutor.executeOtcl(source, targetClz, data);
 		return target;
 	}
 
+	/**
+	 * Execute otcl.
+	 *
+	 * @param <T> the generic type
+	 * @param <S> the generic type
+	 * @param otclNamespace the otcl namespace
+	 * @param source the source
+	 * @param targetClz the target clz
+	 * @param data the data
+	 * @return the t
+	 */
 	@Override
 	public <T, S> T executeOtcl(String otclNamespace, S source, Class<T> targetClz, Map<String, Object> data) {
 		return otclExecutor.executeOtcl(otclNamespace, source, targetClz, data);

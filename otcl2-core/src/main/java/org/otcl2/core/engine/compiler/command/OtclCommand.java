@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -46,23 +46,44 @@ import org.otcl2.core.engine.compiler.templates.SetterTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclCommand.
+ */
 public class OtclCommand {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclCommand.class);
+	
+	/** The Constant CODE_TO_IMPORT. */
 	public static final String CODE_TO_IMPORT = "CODE_TO_IMPORT";
 
+	/** The Constant otclBinDir. */
 	private static final String otclBinDir = OtclConfig.getOtclTargetLocation();
+	
+	/** The Constant otclSourceDir. */
 	private static final String otclSourceDir = OtclConfig.getOtclSourceLocation();
+	
+	/** The Constant sourceFileLocation. */
 	private static final String sourceFileLocation = OtclConfig.getGeneratedCodeSourceLocation();
 	
+	/** The var names set. */
 	private Set<String> varNamesSet = new HashSet<>();
+	
+	/** The var names map. */
 	private Map<String, String> varNamesMap = new HashMap<>();
 
+	/**
+	 * Clear cache.
+	 */
 	public void clearCache() {
 		varNamesSet.clear();
 		varNamesMap.clear();
 	}
 	
+	/**
+	 * Clear target cache.
+	 */
 	public void clearTargetCache() {
 		Iterator<Entry<String, String>> iterator = varNamesMap.entrySet().iterator();
 		while (iterator.hasNext()) {
@@ -73,6 +94,12 @@ public class OtclCommand {
 		}
 	}
 	
+	/**
+	 * Creates the java file.
+	 *
+	 * @param classDto the class dto
+	 * @return the string
+	 */
 	public String createJavaFile(ClassDto classDto) {
 		File file = new File(sourceFileLocation);
 		if (!file.exists()) {
@@ -109,6 +136,14 @@ public class OtclCommand {
 		return fileName;
 	}
 
+	/**
+	 * Creates the java file.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param targetClz the target clz
+	 * @param sourceClz the source clz
+	 * @return the java code string object
+	 */
 	public JavaCodeStringObject createJavaFile(TargetOtclCommandContext targetOCC, Class<?> targetClz, 
 			Class<?> sourceClz) {
 		String methodEndCode = MethodEndTemplate.generateCode("");
@@ -128,6 +163,12 @@ public class OtclCommand {
 		return javaStringObject;
 	}
 	
+	/**
+	 * Retrieve member OCD.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto retrieveMemberOCD(OtclCommandContext otclCommandContext) {
 		OtclCommandDto otclCommandDto = otclCommandContext.otclCommandDto;
 		String[] rawOtclTokens = otclCommandContext.rawOtclTokens;
@@ -148,6 +189,12 @@ public class OtclCommand {
 		return otclCommandDto;
 	}
 
+	/**
+	 * Retrieve next OCD.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto retrieveNextOCD(OtclCommandContext otclCommandContext) {
 		OtclCommandDto otclCommandDto = otclCommandContext.otclCommandDto;
 		OtclCommandDto childOCD = otclCommandContext.otclCommandDto;
@@ -162,6 +209,12 @@ public class OtclCommand {
 		return childOCD;
 	}
 
+	/**
+	 * Retrieve next collection or map OCD.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto retrieveNextCollectionOrMapOCD(OtclCommandContext otclCommandContext) {
 		if (!otclCommandContext.hasDescendantCollectionOrMap()) {
 			throw new CodeGeneratorException("", 
@@ -178,6 +231,12 @@ public class OtclCommand {
 		return childOCD;
 	}
 
+	/**
+	 * Retrieve leaf OCD.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto retrieveLeafOCD(OtclCommandContext otclCommandContext) {
 		OtclCommandDto otclCommandDto = otclCommandContext.otclCommandDto;
 		String[] otclTokens = otclCommandContext.otclTokens;
@@ -205,6 +264,14 @@ public class OtclCommand {
 		return otclCommandDto;
 	}
 
+	/**
+	 * Append method call.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param targetClz the target clz
+	 * @param sourceClz the source clz
+	 * @param isModule the is module
+	 */
 	private void appendMethodCall(TargetOtclCommandContext targetOCC,  Class<?> targetClz, Class<?> sourceClz,
 			boolean isModule) {
 		StringBuilder executeMethodCallCodeBuilder = new StringBuilder("\n");
@@ -215,16 +282,44 @@ public class OtclCommand {
 		targetOCC.mainClassDto.codeBuilder.append(executeMethodCallCodeBuilder);
 	}
 	
+	/**
+	 * Append begin module class.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param targetClz the target clz
+	 * @param sourceClz the source clz
+	 * @param addLogger the add logger
+	 */
 	public void appendBeginModuleClass(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger) {
 		appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, addLogger, true);
 	}
 
+	/**
+	 * Append begin class.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param targetClz the target clz
+	 * @param sourceClz the source clz
+	 * @param addLogger the add logger
+	 */
 	public void appendBeginClass(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger) {
 		appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, addLogger, false);
 	}
 	
+	/**
+	 * Append begin class.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param targetClz the target clz
+	 * @param sourceClz the source clz
+	 * @param addLogger the add logger
+	 * @param isModule the is module
+	 */
 	private void appendBeginClass(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger, boolean isModule) {
 		String fileName = targetOCC.factoryClassDto.fullyQualifiedClassName.replace(".", File.separator);
@@ -254,23 +349,47 @@ public class OtclCommand {
 		return;
 	}
 
+	/**
+	 * Append preloop vars.
+	 *
+	 * @param targetOCC the target OCC
+	 */
 	public void appendPreloopVars(TargetOtclCommandContext targetOCC) {
 		targetOCC.appendCode(PreloopVarsTemplate.generateCode());
 		return;
 	}
 	
+	/**
+	 * Append assign anchored pcd to parent pcd.
+	 *
+	 * @param targetOCC the target OCC
+	 */
 	public void appendAssignAnchoredPcdToParentPcd(TargetOtclCommandContext targetOCC) {
 		String assignAnchoredPcdToMemberPcdCode = PcdInitTemplate.generateAssignAnchoredPcdToParentPcdTemplateCode();
 		targetOCC.appendCode(assignAnchoredPcdToMemberPcdCode);
 		return;
 	}
 	
+	/**
+	 * Append assign parent pcd to anchored pcd.
+	 *
+	 * @param targetOCC the target OCC
+	 */
 	public void appendAssignParentPcdToAnchoredPcd(TargetOtclCommandContext targetOCC) {
 		String assignAnchoredPcdToMemberPcdCode = PcdInitTemplate.generateAssignParentPcdToAnchoredPcdTemplateCode();
 		targetOCC.appendCode(assignAnchoredPcdToMemberPcdCode);
 		return;
 	}
 	
+	/**
+	 * Append retrieve next source collection or map parent.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param idx the idx
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
 	public void appendRetrieveNextSourceCollectionOrMapParent(TargetOtclCommandContext targetOCC,
 			SourceOtclCommandContext sourceOCC, int idx, boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
@@ -302,6 +421,14 @@ public class OtclCommand {
 		return ;
 	}
 	
+	/**
+	 * Append if null source return.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param idx the idx
+	 * @param logLevel the log level
+	 */
 	public void appendIfNullSourceReturn(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			Integer idx, LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
@@ -316,6 +443,13 @@ public class OtclCommand {
 		return ;
 	}
 
+	/**
+	 * Append if null source continue.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param logLevel the log level
+	 */
 	public void appendIfNullSourceContinue(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC, 
 			LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
@@ -335,11 +469,28 @@ public class OtclCommand {
 		return ;
 	}
 	
+	/**
+	 * Append for loop.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param idxPrefix the idx prefix
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
 	public void appendForLoop(TargetOtclCommandContext targetOCC, String idxPrefix, boolean createNewVarName,
 			LogLevel logLevel) {
 		appendForLoop(targetOCC, null, idxPrefix, createNewVarName, logLevel);
 	}
 	
+	/**
+	 * Append for loop.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param idxPrefix the idx prefix
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
 	public void appendForLoop(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC, String idxPrefix,
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto otclCommandDto = null;
@@ -366,6 +517,13 @@ public class OtclCommand {
 		return;
 	}
 	
+	/**
+	 * Append init.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
 	public void appendInit(TargetOtclCommandContext targetOCC, boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMapMember() || (targetOCD.isEnum() && targetOCC.isLeaf())) {
@@ -399,6 +557,12 @@ public class OtclCommand {
 		return;
 	}
 
+	/**
+	 * Append init if null target return.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 */
 	public void appendInitIfNullTargetReturn(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMapMember()) {
@@ -426,6 +590,12 @@ public class OtclCommand {
 		return ;
 	}
 	
+	/**
+	 * Append init if null target continue.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 */
 	public void appendInitIfNullTargetContinue(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMapMember()) {
@@ -440,6 +610,15 @@ public class OtclCommand {
 		return ;
 	}
 	
+	/**
+	 * Append init member.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param idx the idx
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
 	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, Integer idx,
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
@@ -462,6 +641,13 @@ public class OtclCommand {
 		return;
 	}
 
+	/**
+	 * Append get set.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param createNewVarName the create new var name
+	 */
 	public void appendGetSet(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			boolean createNewVarName) {
 		String getSetCode = GetSetTemplate.generateCode(targetOCC, sourceOCC, createNewVarName, varNamesSet, 
@@ -470,6 +656,14 @@ public class OtclCommand {
 		return;
 	}
 
+	/**
+	 * Append add map key.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param value the value
+	 * @param idx the idx
+	 */
 	public void appendAddMapKey(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String value, Integer idx) {
 		String addMapKeysCode = AddMapKeyTemplate.generateCode(targetOCC, sourceOCD, false, value, idx, 
 				varNamesSet, varNamesMap);
@@ -477,6 +671,15 @@ public class OtclCommand {
 		return;
 	}
 	
+	/**
+	 * Append add map value.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param value the value
+	 * @param idx the idx
+	 * @param logLevel the log level
+	 */
 	public void appendAddMapValue(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String value, Integer idx,
 			LogLevel logLevel) {
 		String addMapValueCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCD, false, value, idx, logLevel,
@@ -485,16 +688,37 @@ public class OtclCommand {
 		return;
 	}
 	
+	/**
+	 * Append if null target pcd return.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 */
 	public void appendIfNullTargetPcdReturn(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		String ifNullChildPcdReturnCode = PcdInitTemplate.generateIfNullTargetParentPcdReturnCode(targetOCC, logLevel);
 		targetOCC.appendCode(ifNullChildPcdReturnCode);
 	}
 	
+	/**
+	 * Append if null target member pcd return.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param idx the idx
+	 * @param logLevel the log level
+	 */
 	public void appendIfNullTargetMemberPcdReturn(TargetOtclCommandContext targetOCC, Integer idx, LogLevel logLevel) {
 		String ifNullChildPcdReturnCode = PcdInitTemplate.generateIfNullTargetMemberPcdReturnCode(targetOCC, idx, logLevel);
 		targetOCC.appendCode(ifNullChildPcdReturnCode);
 	}
 	
+	/**
+	 * Append add to collection.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param idx the idx
+	 * @param value the value
+	 */
 	public void appendAddToCollection(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, Integer idx,
 			String value) {
 		String addToCollectionCode = AddToCollectionTemplate.generateCode(targetOCC, value, sourceOCD, idx, false, 
@@ -502,16 +726,36 @@ public class OtclCommand {
 		targetOCC.appendCode(addToCollectionCode);
 	}
 	
+	/**
+	 * Append setter.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param value the value
+	 */
 	public void appendSetter(TargetOtclCommandContext targetOCC, String value) {
 		String setterCode = SetterTemplate.generateCode(targetOCC, false, value, varNamesSet, varNamesMap);
 		targetOCC.appendCode(setterCode);
 	}
 	
+	/**
+	 * Append getter.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param otclCommandDto the otcl command dto
+	 * @param createNewVarName the create new var name
+	 */
 	public void appendGetter(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto, boolean createNewVarName) {
 		String getter = GetterIfNullReturnTemplate.generateCode(targetOCC, otclCommandDto, createNewVarName, varNamesSet, varNamesMap);
 		targetOCC.appendCode(getter);
 	}
 	
+	/**
+	 * Append execute module.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param createNewVarName the create new var name
+	 */
 	public void appendExecuteModule(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			boolean createNewVarName) {
 		String executeModuleCode = ExecuteModuleTemplate.generateCode(targetOCC, sourceOCC, createNewVarName,
@@ -519,6 +763,13 @@ public class OtclCommand {
 		targetOCC.appendCode(executeModuleCode); 
 	}
 
+	/**
+	 * Append execute converter.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param createNewVarName the create new var name
+	 */
 	public void appendExecuteConverter(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			boolean createNewVarName) {
 		String executeModuleCode = ExecuteConverterTemplate.generateCode(targetOCC, sourceOCC, createNewVarName,
@@ -526,6 +777,14 @@ public class OtclCommand {
 		targetOCC.appendCode(executeModuleCode); 
 	}
 
+	/**
+	 * Append init upto anchored or last collection or leaf.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param idx the idx
+	 * @param uptoLeafParent the upto leaf parent
+	 * @param logLevel the log level
+	 */
 	public void appendInitUptoAnchoredOrLastCollectionOrLeaf(TargetOtclCommandContext targetOCC, Integer idx, 
 			boolean uptoLeafParent, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
@@ -562,6 +821,12 @@ public class OtclCommand {
 		}
 	}
 
+	/**
+	 * Append init upto next collection with return or continue.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 */
 	public void appendInitUptoNextCollectionWithReturnOrContinue(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		while (targetOCC.hasChildren()) {
@@ -589,6 +854,11 @@ public class OtclCommand {
 		}
 	}
 	
+	/**
+	 * Append getter if null create set.
+	 *
+	 * @param targetOCC the target OCC
+	 */
 	public void appendGetterIfNullCreateSet(TargetOtclCommandContext targetOCC) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		String ifNullCreateAndSetCode = null;
@@ -602,6 +872,12 @@ public class OtclCommand {
 		targetOCC.appendCode(ifNullCreateAndSetCode); 
 	}
 
+	/**
+	 * Append init upto next collection with continue.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 */
 	public void appendInitUptoNextCollectionWithContinue(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		while (targetOCC.hasChildren()) {
@@ -633,6 +909,15 @@ public class OtclCommand {
 		}
 	}
 
+	/**
+	 * Append init member.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param idxVar the idx var
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
 	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String idxVar, 
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
@@ -655,10 +940,20 @@ public class OtclCommand {
 		return;
 	}
 	
+	/**
+	 * Append increment offset idx.
+	 *
+	 * @param targetOCC the target OCC
+	 */
 	public void appendIncrementOffsetIdx(TargetOtclCommandContext targetOCC) {
 		targetOCC.appendCode(AbstractTemplate.incrementOffsetIdx); 
 	}
 	
+	/**
+	 * Append init offset idx.
+	 *
+	 * @param targetOCC the target OCC
+	 */
 	public void appendInitOffsetIdx(TargetOtclCommandContext targetOCC) {
 		targetOCC.appendCode(AbstractTemplate.initOffsetIdx); 
 	}

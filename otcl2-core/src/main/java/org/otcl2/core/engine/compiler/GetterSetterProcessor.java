@@ -15,10 +15,21 @@ import org.otcl2.core.engine.compiler.exception.SyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetterSetterProcessor.
+ */
 final class GetterSetterProcessor {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetterSetterProcessor.class);
 
+	/**
+	 * Process.
+	 *
+	 * @param script the script
+	 * @param otclCommandDto the otcl command dto
+	 */
 	public static void process(ScriptDto script, OtclCommandDto otclCommandDto) {
 		if (otclCommandDto.getter == null) {
 			String getter = null;

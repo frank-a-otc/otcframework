@@ -5,18 +5,43 @@ import org.otcl2.common.dto.OtclFileDto.Execute;
 import org.otcl2.common.dto.OtclFileDto.Execute.OtclModule;
 import org.otcl2.common.dto.OtclFileDto.OtclScript;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ScriptDto.
+ */
 public class ScriptDto {
 
+	/** The command. */
 	public Command command;
+	
+	/** The target otcl chain dto. */
 	public OtclChainDto targetOtclChainDto;
+	
+	/** The source otcl chain dto. */
 	public OtclChainDto sourceOtclChainDto;
+	
+	/** The has set values. */
 	public boolean hasSetValues;
+	
+	/** The has execute module. */
 	public boolean hasExecuteModule;
+	
+	/** The has execute converter. */
 	public boolean hasExecuteConverter;
+	
+	/** The has execution order. */
 	public boolean hasExecutionOrder;
 
+	/**
+	 * Instantiates a new script dto.
+	 */
 	private ScriptDto() { }
 
+	/**
+	 * Instantiates a new script dto.
+	 *
+	 * @param script the script
+	 */
 	public ScriptDto(OtclScript script) {
 		if (script.copy != null) {
 			command = script.copy;
@@ -37,6 +62,11 @@ public class ScriptDto {
 		}
 	}
 	
+	/**
+	 * Clone.
+	 *
+	 * @return the script dto
+	 */
 	public ScriptDto clone() {
 		ScriptDto scriptDto = new ScriptDto();
 		if (command instanceof Execute) {
@@ -58,6 +88,11 @@ public class ScriptDto {
 		return scriptDto;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "ScriptDto [command=" + command + ", targetOtclChainDto=" + targetOtclChainDto
@@ -66,6 +101,11 @@ public class ScriptDto {
 				+ ", hasExecutionOrder=" + hasExecutionOrder + "]";
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -80,6 +120,12 @@ public class ScriptDto {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

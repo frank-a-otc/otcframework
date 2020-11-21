@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -17,24 +17,59 @@ import org.otcl2.core.engine.compiler.command.SourceOtclCommandContext;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.templates.AbstractTemplate;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CopyCollectionPathsCodeGenerator.
+ */
 final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 
 //	private static final Logger LOGGER = LoggerFactory.getLogger(MapAndCollectionsPairCodeGenerator.class);
 	
-	enum CHAIN_COLLECTION_SIZE {LARGE_SOURCE, LARGE_TARGET, EQUAL};
+	/**
+ * The Enum CHAIN_COLLECTION_SIZE.
+ */
+enum CHAIN_COLLECTION_SIZE {/** The large source. */
+LARGE_SOURCE, /** The large target. */
+ LARGE_TARGET, /** The equal. */
+ EQUAL};
 
+	/**
+	 * Instantiates a new copy collection paths code generator.
+	 */
 	private CopyCollectionPathsCodeGenerator() { }
 	
+	/**
+	 * The Class NonFlatLogic.
+	 */
 	private static class NonFlatLogic {
+		
+		/** The initial source descendants collections count. */
 		int initialSourceDescendantsCollectionsCount;
+		
+		/** The source descendants collections count. */
 		int sourceDescendantsCollectionsCount;
+		
+		/** The initial target descendants collections count. */
 		int initialTargetDescendantsCollectionsCount;
+		
+		/** The target descendants collections count. */
 		int targetDescendantsCollectionsCount;
+		
+		/** The collection size. */
 		CHAIN_COLLECTION_SIZE collectionSize;
+		
+		/** The post anchor counter. */
 		int postAnchorCounter;
+		
+		/** The should increment offset idx. */
 		boolean shouldIncrementOffsetIdx;
 	}
 	
+	/**
+	 * Generate source code.
+	 *
+	 * @param executionContext the execution context
+	 */
 	public static void generateSourceCode(ExecutionContext executionContext) {
 		OtclCommand otclCommand = executionContext.otclCommand;
 		Class<?> targetClz = executionContext.targetClz;
@@ -71,6 +106,11 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 		return;
 	}
 
+	/**
+	 * Execute otcl recursive.
+	 *
+	 * @param executionContext the execution context
+	 */
 	@SuppressWarnings("unchecked")
 	private static void executeOtclRecursive(ExecutionContext executionContext) {
 
@@ -198,6 +238,13 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 		return;
 	}
 
+	/**
+	 * Decide chain collection size.
+	 *
+	 * @param targetDescendantsCollectionsCount the target descendants collections count
+	 * @param sourceDescendantsCollectionsCount the source descendants collections count
+	 * @return the chain collection size
+	 */
 	private static CHAIN_COLLECTION_SIZE decideChainCollectionSize(int targetDescendantsCollectionsCount,
 			int sourceDescendantsCollectionsCount) {
 		CHAIN_COLLECTION_SIZE collectionSize = null;
@@ -211,6 +258,13 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 		return collectionSize;
 	}
 	
+	/**
+	 * Append init.
+	 *
+	 * @param nonFlatLogic the non flat logic
+	 * @param executionContext the execution context
+	 * @param otclCommand the otcl command
+	 */
 	private static void appendInit(NonFlatLogic nonFlatLogic, ExecutionContext executionContext, OtclCommand otclCommand) {
 		String idxVar = null;
 		if (CHAIN_COLLECTION_SIZE.EQUAL == nonFlatLogic.collectionSize) {

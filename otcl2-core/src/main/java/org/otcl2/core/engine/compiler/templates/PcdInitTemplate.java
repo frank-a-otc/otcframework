@@ -10,18 +10,43 @@ import org.otcl2.common.engine.profiler.IndexedCollectionsDtoFactory;
 import org.otcl2.core.engine.compiler.command.SourceOtclCommandContext;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PcdInitTemplate.
+ */
 public final class PcdInitTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new pcd init template.
+	 */
 	private PcdInitTemplate() {}
 
+	/**
+	 * Generate assign parent pcd to anchored pcd template code.
+	 *
+	 * @return the string
+	 */
 	public static String generateAssignParentPcdToAnchoredPcdTemplateCode() {
 		return assignParentIcdToAnchoredIcdTemplate;
 	}
 
+	/**
+	 * Generate assign anchored pcd to parent pcd template code.
+	 *
+	 * @return the string
+	 */
 	public static String generateAssignAnchoredPcdToParentPcdTemplateCode() {
 		return assignAnchoredIcdToParentIcdTemplate;
 	}
 
+	/**
+	 * Generate member pcd code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param varNamesSet the var names set
+	 * @return the string
+	 */
 	public static String generateMemberPcdCode(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			Set<String> varNamesSet) {
 		StringBuilder memberPcdsCode = new StringBuilder("\n");
@@ -68,6 +93,14 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return memberPcdsCode.toString();
 	}
 	
+	/**
+	 * Generate if null target root pcd create code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	//------ Target ICD code
 	public static String generateIfNullTargetRootPcdCreateCode(TargetOtclCommandContext targetOCC, Set<String> varNamesSet,
 			Map<String, String> varNamesMap) {
@@ -76,6 +109,14 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return String.format(ifNullTargetRootIcdCreateTemplate, targetOCD.tokenPath, varName, targetOCD.tokenPath);
 	}
 
+	/**
+	 * Generate if null target parent pcd create code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateIfNullTargetParentPcdCreateCode(TargetOtclCommandContext targetOCC,
 			Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
@@ -86,6 +127,13 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return retrieveICDCode;
 	}
 
+	/**
+	 * Generate if null target root pcd return code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 * @return the string
+	 */
 	public static String generateIfNullTargetRootPcdReturnCode(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		//-- this method is required when map-value is in the otcl-chain.
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
@@ -93,6 +141,13 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return String.format(ifNullTargetRootIcdReturnTemplate, targetOCD.tokenPath, logLevel, logMsg);
 	}
 
+	/**
+	 * Generate if null target parent pcd return code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param logLevel the log level
+	 * @return the string
+	 */
 	public static String generateIfNullTargetParentPcdReturnCode(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		//-- this method is required when map-value is in the otcl-chain.
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
@@ -104,6 +159,14 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return ifNullParentPcdReturnCode;
 	}
 	
+	/**
+	 * Generate if null target member pcd return code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param idx the idx
+	 * @param logLevel the log level
+	 * @return the string
+	 */
 	public static String generateIfNullTargetMemberPcdReturnCode(TargetOtclCommandContext targetOCC, Integer idx,
 			LogLevel logLevel) {
 		//-- this method is required when map-value is in the otcl-chain.
@@ -129,6 +192,13 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return ifNullParentPcdReturnCode;
 	}
 	
+	/**
+	 * Generate if null source root pcd return code.
+	 *
+	 * @param sourceOCC the source OCC
+	 * @param logLevel the log level
+	 * @return the string
+	 */
 	//------ Source ICD code
 	public static String generateIfNullSourceRootPcdReturnCode(SourceOtclCommandContext sourceOCC, LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
@@ -136,6 +206,13 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return String.format(ifNullSourceRootIcdReturnTemplate, sourceOCD.tokenPath, logLevel, logMsg);
 	}
 
+	/**
+	 * Generate if null source parent pcd return code.
+	 *
+	 * @param sourceOCC the source OCC
+	 * @param logLevel the log level
+	 * @return the string
+	 */
 	public static String generateIfNullSourceParentPcdReturnCode(SourceOtclCommandContext sourceOCC, LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		String logMsg = "'" + sourceOCD.tokenPath + "' is null!";
@@ -145,6 +222,14 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		return ifNullParentPcdReturnCode;
 	}
 	
+	/**
+	 * Generate if null source member pcd return code.
+	 *
+	 * @param sourceOCC the source OCC
+	 * @param idx the idx
+	 * @param logLevel the log level
+	 * @return the string
+	 */
 	public static String generateIfNullSourceMemberPcdReturnCode(SourceOtclCommandContext sourceOCC, Integer idx,
 			LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;

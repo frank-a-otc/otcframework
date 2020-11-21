@@ -9,20 +9,63 @@ import org.otcl2.common.util.PackagesFilterUtil;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AddMapKeyTemplate.
+ */
 public final class AddMapKeyTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new adds the map key template.
+	 */
 	private AddMapKeyTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param createNewVarName the create new var name
+	 * @param key the key
+	 * @param idx the idx
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD,
 			boolean createNewVarName, String key, Integer idx, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, createNewVarName, key, idx, null, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param createNewVarName the create new var name
+	 * @param idxVar the idx var
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, 
 			boolean createNewVarName, String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, createNewVarName, null, null, idxVar, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param createNewVarName the create new var name
+	 * @param key the key
+	 * @param idx the idx
+	 * @param idxVar the idx var
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, 
 			boolean createNewVarName, String key, Integer idx, String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto keyOCD = targetOCC.otclCommandDto;
@@ -99,6 +142,17 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		return codeSectionBuilder.toString();
 	}
 	
+	/**
+	 * Generate post loop code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param createNewVarName the create new var name
+	 * @param idx the idx
+	 * @param idxVar the idx var
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generatePostLoopCode(TargetOtclCommandContext targetOCC, boolean createNewVarName, Integer idx,
 			String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto keyOCD = targetOCC.otclCommandDto;

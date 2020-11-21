@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -9,8 +9,17 @@ package org.otcl2.core.engine.compiler.command;
 
 import org.otcl2.common.engine.compiler.OtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SourceOtclCommandContext.
+ */
 public final class SourceOtclCommandContext extends OtclCommandContext {
 	
+	/**
+	 * Clone.
+	 *
+	 * @return the source otcl command context
+	 */
 	@Override
 	public SourceOtclCommandContext clone() {
 		SourceOtclCommandContext sourceOtclCommandContext = new SourceOtclCommandContext();

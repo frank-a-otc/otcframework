@@ -9,10 +9,27 @@ import org.otcl2.common.util.CommonUtils;
 import org.otcl2.common.util.PackagesFilterUtil;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SetterTemplate.
+ */
 public class SetterTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new setter template.
+	 */
 	private SetterTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param createNewVarName the create new var name
+	 * @param value the value
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, boolean createNewVarName, String value,
 			Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto otclCommandDto = targetOCC.otclCommandDto;

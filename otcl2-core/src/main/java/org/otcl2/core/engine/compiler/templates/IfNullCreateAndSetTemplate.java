@@ -9,10 +9,27 @@ import org.otcl2.common.util.CommonUtils;
 import org.otcl2.common.util.PackagesFilterUtil;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class IfNullCreateAndSetTemplate.
+ */
 public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new if null create and set template.
+	 */
 	private IfNullCreateAndSetTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param arraySize the array size
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, Integer arraySize,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;

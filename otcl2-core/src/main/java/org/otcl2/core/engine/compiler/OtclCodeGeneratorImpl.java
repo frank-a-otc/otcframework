@@ -28,21 +28,43 @@ import org.otcl2.core.engine.compiler.templates.MethodEndTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclCodeGeneratorImpl.
+ */
 final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements OtclCodeGenerator {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclCodeGeneratorImpl.class);
 	
+	/** The otcl code generator. */
 	private static OtclCodeGenerator otclCodeGenerator = new OtclCodeGeneratorImpl();
+	
+	/** The Constant otclBinDir. */
 	private static final String otclBinDir = OtclConfig.getOtclTargetLocation();
 
+	/**
+	 * Instantiates a new otcl code generator impl.
+	 */
 	private OtclCodeGeneratorImpl() {
 		otclCodeGenerator = this;
 	}
 
+	/**
+	 * Gets the single instance of OtclCodeGeneratorImpl.
+	 *
+	 * @return single instance of OtclCodeGeneratorImpl
+	 */
 	public static OtclCodeGenerator getInstance() {
 		return otclCodeGenerator;
 	}
 
+	/**
+	 * Generate sourcecode.
+	 *
+	 * @param otclDto the otcl dto
+	 * @return the list
+	 */
 	@Override
 	public List<JavaFileObject> generateSourcecode(OtclDto otclDto) {
 		LOGGER.info("Kickstarting Code generator....");
@@ -70,6 +92,14 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 		return javaFileObjects;
 	}
 
+	/**
+	 * Generate source code.
+	 *
+	 * @param otclDto the otcl dto
+	 * @param otclFileDto the otcl file dto
+	 * @param mainClassDto the main class dto
+	 * @return the list
+	 */
 	private static List<JavaFileObject> generateSourceCode(OtclDto otclDto, OtclFileDto otclFileDto, 
 			ClassDto mainClassDto) {
 		Map<String, OtclCommandDto> sourceOCDStems = otclDto.sourceOCDStems;

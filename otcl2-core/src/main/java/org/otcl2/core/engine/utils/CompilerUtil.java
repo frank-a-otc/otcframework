@@ -3,8 +3,20 @@ package org.otcl2.core.engine.utils;
 import org.otcl2.common.OtclConstants;
 import org.otcl2.common.util.CommonUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CompilerUtil.
+ */
 public final class CompilerUtil {
 
+	/**
+	 * Builds the java class name.
+	 *
+	 * @param otclNamespace the otcl namespace
+	 * @param otclFileName the otcl file name
+	 * @param otclChain the otcl chain
+	 * @return the string
+	 */
 	public static String buildJavaClassName(String otclNamespace, String otclFileName, String otclChain) {
 		if (otclFileName.endsWith(".otcl")) {
 			otclFileName = otclFileName.replace(otclFileName.substring(otclFileName.lastIndexOf(".otcl")), "");
@@ -30,10 +42,23 @@ public final class CompilerUtil {
 		return factoryClzName;
 	}
 
+	/**
+	 * Builds the java class name.
+	 *
+	 * @param otclNamespace the otcl namespace
+	 * @param otclFileName the otcl file name
+	 * @return the string
+	 */
 	public static String buildJavaClassName(String otclNamespace, String otclFileName) {
 		return buildJavaClassName(otclNamespace, otclFileName, null);
 	}
 
+	/**
+	 * Sanitize java identifier.
+	 *
+	 * @param identifier the identifier
+	 * @return the string
+	 */
 	public static String sanitizeJavaIdentifier(String identifier) {
 		if (identifier.contains(OtclConstants.ANCHOR)) {
 			identifier = identifier.replace(OtclConstants.ANCHOR, "");

@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -14,8 +14,22 @@ import org.otcl2.common.dto.OtclFileDto.Execute;
 import org.otcl2.common.dto.ScriptDto;
 import org.otcl2.core.engine.compiler.exception.OtclExtensionsException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclExtensionsValidator.
+ */
 final class OtclExtensionsValidator {
 
+	/**
+	 * Validate extensions.
+	 *
+	 * @param script the script
+	 * @param targetClz the target clz
+	 * @param builderTargetOtclChainDto the builder target otcl chain dto
+	 * @param sourceClz the source clz
+	 * @param builderSourceOtclChainDto the builder source otcl chain dto
+	 * @return true, if successful
+	 */
 	static boolean validateExtensions(ScriptDto script, Class<?> targetClz, OtclChainDto.Builder builderTargetOtclChainDto,
 			Class<?> sourceClz, OtclChainDto.Builder builderSourceOtclChainDto) {
 		String targetOtclChain = null;

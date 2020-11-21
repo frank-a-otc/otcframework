@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -15,83 +15,204 @@ import org.otcl2.common.OtclConstants.TARGET_SOURCE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclCommandDto.
+ */
 public class OtclCommandDto {
 
+	/**
+	 * The Enum CollectionDescriptor.
+	 */
 	public enum CollectionDescriptor {
+		
+		/** The normal. */
 		NORMAL("None"), 
+		
+		/** The array. */
 		ARRAY("Array"), 
+		
+		/** The list. */
 		LIST("List"), 
+		
+		/** The set. */
 		SET("Set"), 
+		
+		/** The queue. */
 		QUEUE("Queue"),
+		
+		/** The collection member. */
 		COLLECTION_MEMBER("Collection.Member"), 
+		
+		/** The map. */
 		MAP("Map"), 
+		
+		/** The map key. */
 		MAP_KEY("Map.Key"), 
+		
+		/** The map value. */
 		MAP_VALUE("Map.Value");
 
+		/** The value. */
 		private final String value;
 
+		/**
+		 * Instantiates a new collection descriptor.
+		 *
+		 * @param value the value
+		 */
 		CollectionDescriptor(String value) {
 			this.value = value;
 		}
 
+		/**
+		 * Checks if is normal.
+		 *
+		 * @return true, if is normal
+		 */
 		public boolean isNormal() {
 			return NORMAL.value == this.value;
 		}
 
+		/**
+		 * Checks if is collection.
+		 *
+		 * @return true, if is collection
+		 */
 		public boolean isCollection() {
 			return ARRAY.value == this.value || LIST.value == this.value || SET.value == this.value
 					|| QUEUE.value == this.value;
 		}
 
+		/**
+		 * Checks if is array.
+		 *
+		 * @return true, if is array
+		 */
 		public boolean isArray() {
 			return ARRAY.value == this.value;
 		}
 
+		/**
+		 * Checks if is collection member.
+		 *
+		 * @return true, if is collection member
+		 */
 		public boolean isCollectionMember() {
 			return COLLECTION_MEMBER.value == this.value;
 		}
 
+		/**
+		 * Checks if is map.
+		 *
+		 * @return true, if is map
+		 */
 		public boolean isMap() {
 			return MAP.value == this.value;
 		}
 
+		/**
+		 * Checks if is map key.
+		 *
+		 * @return true, if is map key
+		 */
 		public boolean isMapKey() {
 			return MAP_KEY.value == this.value;
 		}
 
+		/**
+		 * Checks if is map value.
+		 *
+		 * @return true, if is map value
+		 */
 		public boolean isMapValue() {
 			return MAP_VALUE.value == this.value;
 		}
 	}
 
+	/**
+	 * Instantiates a new otcl command dto.
+	 */
 	private OtclCommandDto() {
 	}
 
+	/** The token path. */
 	public String tokenPath;
+	
+	/** The enum target source. */
 	public TARGET_SOURCE enumTargetSource;
+	
+	/** The otcl token. */
 	public String otclToken;
+	
+	/** The otcl token index. */
 	public int otclTokenIndex;
+	
+	/** The is root node. */
 	public boolean isRootNode;
+	
+	/** The has collection notation. */
 	public boolean hasCollectionNotation;
+	
+	/** The has map notation. */
 	public boolean hasMapNotation;
+	
+	/** The collection descriptor. */
 	public CollectionDescriptor collectionDescriptor = CollectionDescriptor.NORMAL;
+	
+	/** The concrete type name. */
 	public String concreteTypeName;
+	
+	/** The map key concrete type. */
 	public String mapKeyConcreteType;
+	
+	/** The map value concrete type. */
 	public String mapValueConcreteType;
+	
+	/** The field name. */
 	public String fieldName;
+	
+	/** The field. */
 	public Field field;
+	
+	/** The enable factory helper getter. */
 	public boolean enableFactoryHelperGetter;
+	
+	/** The enable factory helper setter. */
 	public boolean enableFactoryHelperSetter;
+	
+	/** The is getter initialized. */
 	public boolean isGetterInitialized;
+	
+	/** The is setter initialized. */
 	public boolean isSetterInitialized;
+	
+	/** The getter. */
 	public String getter;
+	
+	/** The setter. */
 	public String setter;
+	
+	/** The field type. */
 	public Class<?> fieldType;
+	
+	/** The concrete type. */
 	public Class<?> concreteType;
+	
+	/** The declaring class. */
 	public Class<?> declaringClass;
+	
+	/** The parent. */
 	public OtclCommandDto parent;
+	
+	/** The children. */
 	public Map<String, OtclCommandDto> children;
 
+	/**
+	 * Instantiates a new otcl command dto.
+	 *
+	 * @param builder the builder
+	 */
 	private OtclCommandDto(Builder builder) {
 		enumTargetSource = builder.enumTargetSource;
 		otclToken = builder.otclToken;
@@ -108,6 +229,11 @@ public class OtclCommandDto {
 		children = builder.children;
 	}
 
+	/**
+	 * New builder.
+	 *
+	 * @return the builder
+	 */
 	public static Builder newBuilder() {
 		return new Builder() {
 			@Override
@@ -117,6 +243,11 @@ public class OtclCommandDto {
 		};
 	}
 
+	/**
+	 * Adds the child.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 */
 	public void addChild(OtclCommandDto otclCommandDto) {
 		if (children == null) {
 			children = new HashMap<>();
@@ -124,56 +255,111 @@ public class OtclCommandDto {
 		children.put(otclCommandDto.otclToken, otclCommandDto);
 	}
 
+    /**
+     * Checks if is enum.
+     *
+     * @return true, if is enum
+     */
     @JsonIgnore
     public boolean isEnum() {
 		return fieldType.isEnum();
 	}
 
+    /**
+     * Checks if is normal.
+     *
+     * @return true, if is normal
+     */
     @JsonIgnore
 	public boolean isNormal() {
 		return collectionDescriptor.isNormal();
 	}
 
+    /**
+     * Checks if is collection or map.
+     *
+     * @return true, if is collection or map
+     */
     @JsonIgnore
 	public boolean isCollectionOrMap() {
 		return isCollection() || isMap();
 	}
 
+    /**
+     * Checks if is collection.
+     *
+     * @return true, if is collection
+     */
     @JsonIgnore
 	public boolean isCollection() {
 		return collectionDescriptor.isCollection();
 	}
 
+    /**
+     * Checks if is array.
+     *
+     * @return true, if is array
+     */
     @JsonIgnore
 	public boolean isArray() {
 		return collectionDescriptor.isArray();
 	}
 
+    /**
+     * Checks if is collection or map member.
+     *
+     * @return true, if is collection or map member
+     */
     @JsonIgnore
 	public boolean isCollectionOrMapMember() {
 		return isCollectionMember() || isMapMember();
 	}
 
+    /**
+     * Checks if is collection member.
+     *
+     * @return true, if is collection member
+     */
     @JsonIgnore
 	public boolean isCollectionMember() {
 		return collectionDescriptor.isCollectionMember();
 	}
 
+    /**
+     * Checks if is map.
+     *
+     * @return true, if is map
+     */
     @JsonIgnore
 	public boolean isMap() {
 		return collectionDescriptor.isMap();
 	}
 
+    /**
+     * Checks if is map key.
+     *
+     * @return true, if is map key
+     */
     @JsonIgnore
 	public boolean isMapKey() {
 		return collectionDescriptor.isMapKey();
 	}
 
+    /**
+     * Checks if is map value.
+     *
+     * @return true, if is map value
+     */
     @JsonIgnore
 	public boolean isMapValue() {
 		return collectionDescriptor.isMapValue();
 	}
 
+    /**
+     * Checks if is map member.
+     *
+     * @return true, if is map member
+     */
     @JsonIgnore
 	public boolean isMapMember() {
 		return collectionDescriptor.isMapKey() || collectionDescriptor.isMapValue();
@@ -352,7 +538,12 @@ public class OtclCommandDto {
 //		return descendantsMapssCount;
 //	}
 
-	@Override
+	/**
+ * To string.
+ *
+ * @return the string
+ */
+@Override
 	public String toString() {
 		return "OtclCommandDto [tokenPath=" + tokenPath + ", enumTargetSource=" + enumTargetSource + ", otclToken="
 				+ otclToken + ", otclTokenIndex=" + otclTokenIndex + ", isRootNode=" + isRootNode
@@ -366,6 +557,11 @@ public class OtclCommandDto {
 				+ concreteType + "]";
 	}
 
+	/**
+	 * Hash code.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -394,6 +590,12 @@ public class OtclCommandDto {
 		return result;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -481,53 +683,129 @@ public class OtclCommandDto {
 		return true;
 	}
 
+	/**
+	 * The Class Builder.
+	 */
 	public abstract static class Builder {
+		
+		/** The enum target source. */
 		private TARGET_SOURCE enumTargetSource;
+		
+		/** The otcl token. */
 		private String otclToken;
+		
+		/** The token path. */
 		private String tokenPath;
+		
+		/** The otcl token index. */
 		private int otclTokenIndex;
+		
+		/** The is root node. */
 		private boolean isRootNode;
+		
+		/** The collection descriptor. */
 		private CollectionDescriptor collectionDescriptor = CollectionDescriptor.NORMAL;
+		
+		/** The concrete type name. */
 		private String concreteTypeName;
+		
+		/** The field name. */
 		private String fieldName;
+		
+		/** The field. */
 		private Field field;
+		
+		/** The field type. */
 		private Class<?> fieldType;
+		
+		/** The concrete type. */
 		private Class<?> concreteType;
+		
+		/** The parent. */
 		private OtclCommandDto parent;
+		
+		/** The children. */
 		private Map<String, OtclCommandDto> children;
 
+		/**
+		 * Builds the.
+		 *
+		 * @return the otcl command dto
+		 */
 		public abstract OtclCommandDto build();
 
+		/**
+		 * Adds the target or source.
+		 *
+		 * @param enumTargetOrSource the enum target or source
+		 * @return the builder
+		 */
 		public Builder addTargetOrSource(TARGET_SOURCE enumTargetOrSource) {
 			this.enumTargetSource = enumTargetOrSource;
 			return this;
 		}
 
+		/**
+		 * Adds the otcl token.
+		 *
+		 * @param otclToken the otcl token
+		 * @return the builder
+		 */
 		public Builder addOtclToken(String otclToken) {
 			this.otclToken = otclToken;
 			return this;
 		}
 
+		/**
+		 * Adds the token path.
+		 *
+		 * @param chainPath the chain path
+		 * @return the builder
+		 */
 		public Builder addTokenPath(String chainPath) {
 			this.tokenPath = chainPath;
 			return this;
 		}
 
+		/**
+		 * Adds the otcl token index.
+		 *
+		 * @param otclTokenIndex the otcl token index
+		 * @return the builder
+		 */
 		public Builder addOtclTokenIndex(int otclTokenIndex) {
 			this.otclTokenIndex = otclTokenIndex;
 			return this;
 		}
 
+		/**
+		 * Adds the is root node.
+		 *
+		 * @param isRootNode the is root node
+		 * @return the builder
+		 */
 		public Builder addIsRootNode(boolean isRootNode) {
 			this.isRootNode = isRootNode;
 			return this;
 		}
 
+		/**
+		 * Adds the collection definer.
+		 *
+		 * @param collectionDescriptor the collection descriptor
+		 * @return the builder
+		 */
 		public Builder addCollectionDefiner(CollectionDescriptor collectionDescriptor) {
 			this.collectionDescriptor = collectionDescriptor;
 			return this;
 		}
 
+		/**
+		 * Adds the concrete type name.
+		 *
+		 * @param concreteTypeName the concrete type name
+		 * @return the builder
+		 */
 		public Builder addConcreteTypeName(String concreteTypeName) {
 			if (concreteTypeName == null) {
 				return this;
@@ -536,31 +814,68 @@ public class OtclCommandDto {
 			return this;
 		}
 
+		/**
+		 * Adds the field name.
+		 *
+		 * @param fieldName the field name
+		 * @return the builder
+		 */
 		public Builder addFieldName(String fieldName) {
 			this.fieldName = fieldName;
 			return this;
 		}
 
+		/**
+		 * Adds the field.
+		 *
+		 * @param field the field
+		 * @return the builder
+		 */
 		public Builder addField(Field field) {
 			this.field = field;
 			return this;
 		}
 
+		/**
+		 * Adds the field type.
+		 *
+		 * @param fieldType the field type
+		 * @return the builder
+		 */
 		public Builder addFieldType(Class<?> fieldType) {
 			this.fieldType = fieldType;
 			return this;
 		}
 
+		/**
+		 * Adds the concrete type.
+		 *
+		 * @param concreteType the concrete type
+		 * @return the builder
+		 */
 		public Builder addConcreteType(Class<?> concreteType) {
 			this.concreteType = concreteType;
 			return this;
 		}
 
+		/**
+		 * Adds the parent.
+		 *
+		 * @param parent the parent
+		 * @return the builder
+		 */
 		public Builder addParent(OtclCommandDto parent) {
 			this.parent = parent;
 			return this;
 		}
 
+		/**
+		 * Adds the child.
+		 *
+		 * @param fieldName the field name
+		 * @param otclCommandDto the otcl command dto
+		 * @return the builder
+		 */
 		public Builder addChild(String fieldName, OtclCommandDto otclCommandDto) {
 			if (children == null) {
 				children = new HashMap<>();

@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -13,11 +13,27 @@ import org.otcl2.common.dto.ScriptDto;
 import org.otcl2.common.util.OtclUtils;
 import org.otcl2.common.util.PropertyConverterUtil;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclSytaxChecker.
+ */
 final class OtclSytaxChecker {
 
 //	private static final Logger LOGGER = LoggerFactory.getLogger(OtclSytaxChecker.class);
 
-	static boolean checkSyntax(ScriptDto script, Class<?> clz, Class<?> factoryHelper, 
+	/**
+ * Check syntax.
+ *
+ * @param script the script
+ * @param clz the clz
+ * @param factoryHelper the factory helper
+ * @param otclCommandDto the otcl command dto
+ * @param otclChain the otcl chain
+ * @param otclTokens the otcl tokens
+ * @param rawOtclToken the raw otcl token
+ * @return true, if successful
+ */
+static boolean checkSyntax(ScriptDto script, Class<?> clz, Class<?> factoryHelper, 
 			OtclCommandDto otclCommandDto, String otclChain, String[] otclTokens, String rawOtclToken) {
 		boolean isAnchored = rawOtclToken.contains(OtclConstants.ANCHOR);
 		if (isAnchored) {

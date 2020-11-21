@@ -10,6 +10,10 @@
 	</parent>
 	<artifactId>otcl2-common</artifactId>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>This is the modules containing the commons required by both of OTCL's Engine and the Editor.</description>
+	<url>http://www.otclautomation.org</url>
+
 	<dependencies>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>

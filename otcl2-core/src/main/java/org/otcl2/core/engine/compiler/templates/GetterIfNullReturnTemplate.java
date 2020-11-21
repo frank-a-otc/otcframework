@@ -11,10 +11,27 @@ import org.otcl2.common.util.CommonUtils;
 import org.otcl2.core.engine.compiler.command.SourceOtclCommandContext;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetterIfNullReturnTemplate.
+ */
 public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new getter if null return template.
+	 */
 	private GetterIfNullReturnTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param otclCommandDto the otcl command dto
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 
@@ -37,12 +54,33 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		return getterCode;
 	}
 
+	/**
+	 * Generate getter if null return code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateGetterIfNullReturnCode(TargetOtclCommandContext targetOCC, boolean createNewVarName,
 			LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateGetterIfNullReturnCode(targetOCC, null, createNewVarName, logLevel, varNamesSet,
 				varNamesMap);
 	}
 	
+	/**
+	 * Generate getter if null return code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateGetterIfNullReturnCode(TargetOtclCommandContext targetOCC, 
 			SourceOtclCommandContext sourceOCC, boolean createNewVarName, LogLevel logLevel,
 			Set<String> varNamesSet, Map<String, String> varNamesMap) {

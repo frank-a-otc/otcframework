@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -23,8 +23,28 @@ import org.otcl2.common.dto.OtclCommandDto.CollectionDescriptor;
 import org.otcl2.common.exception.OtclException;
 import org.otcl2.common.util.CommonUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating OtclCommandDto objects.
+ */
 public class OtclCommandDtoFactory {
 
+	/**
+	 * Creates the.
+	 *
+	 * @param enumTargetOrSource the enum target or source
+	 * @param otclToken the otcl token
+	 * @param tokenPath the token path
+	 * @param idx the idx
+	 * @param fldName the fld name
+	 * @param concreteType the concrete type
+	 * @param isRootNode the is root node
+	 * @param field the field
+	 * @param fldType the fld type
+	 * @param genericType the generic type
+	 * @param isLeaf the is leaf
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto create(TARGET_SOURCE enumTargetOrSource, String otclToken,
 			String tokenPath, int idx, String fldName, String concreteType, boolean isRootNode, Field field,
 			Class<?> fldType, Class<?> genericType, boolean isLeaf) {
@@ -46,6 +66,14 @@ public class OtclCommandDtoFactory {
 	}
 	
 	
+	/**
+	 * Creates a new OtclCommandDto object.
+	 *
+	 * @param id the id
+	 * @param otclCommandDto the otcl command dto
+	 * @param otclChain the otcl chain
+	 * @param otclTokens the otcl tokens
+	 */
 	public static void createMembers(String id, OtclCommandDto otclCommandDto, String otclChain,
 			String[] otclTokens) {
 		if (!otclCommandDto.hasCollectionNotation && !otclCommandDto.hasMapNotation) {
@@ -65,6 +93,13 @@ public class OtclCommandDtoFactory {
 		}
 	}
 	
+	/**
+	 * Creates a new OtclCommandDto object.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 * @param isLeaf the is leaf
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto createCollectionMember(OtclCommandDto otclCommandDto, boolean isLeaf) {
 		OtclCommandDto memberOCD = otclCommandDto.children.get(otclCommandDto.fieldName);
 		if (memberOCD != null) {
@@ -100,6 +135,16 @@ public class OtclCommandDtoFactory {
 		return memberOCD;
 	}
 
+	/**
+	 * Creates a new OtclCommandDto object.
+	 *
+	 * @param id the id
+	 * @param otclCommandDto the otcl command dto
+	 * @param otclChain the otcl chain
+	 * @param otclTokens the otcl tokens
+	 * @param isLeaf the is leaf
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto createMapMember(String id, OtclCommandDto otclCommandDto,
 			String otclChain, String[] otclTokens, boolean isLeaf) {
 		String otclToken = otclTokens[otclCommandDto.otclTokenIndex];
@@ -140,6 +185,15 @@ public class OtclCommandDtoFactory {
 		return mainOCD;
 	}
 
+	/**
+	 * Creates a new OtclCommandDto object.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 * @param parameterizedType the parameterized type
+	 * @param isLeaf the is leaf
+	 * @param isKey the is key
+	 * @return the otcl command dto
+	 */
 	public static OtclCommandDto createMapMember(OtclCommandDto otclCommandDto, Type parameterizedType, boolean isLeaf,
 			boolean isKey) {
 		Class<?> memberOtclGenericTypeClz = null;

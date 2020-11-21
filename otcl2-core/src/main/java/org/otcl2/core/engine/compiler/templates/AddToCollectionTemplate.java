@@ -13,20 +13,63 @@ import org.otcl2.core.engine.compiler.command.OtclCommand;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AddToCollectionTemplate.
+ */
 public final class AddToCollectionTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new adds the to collection template.
+	 */
 	private AddToCollectionTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param value the value
+	 * @param sourceOCD the source OCD
+	 * @param idx the idx
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, String value, OtclCommandDto sourceOCD,
 			Integer idx, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, value, idx, null, createNewVarName, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param idxVar the idx var
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD,
 			String idxVar, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, null, null, idxVar, createNewVarName, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param value the value
+	 * @param idx the idx
+	 * @param idxVar the idx var
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String value, 
 			Integer idx, String idxVar, boolean createNewVarName, Set<String> varNamesSet,
 			Map<String, String> varNamesMap) {
@@ -53,6 +96,19 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 		return initMembers;
 	}
 	
+	/**
+	 * Generate code to replace.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param memberOCD the member OCD
+	 * @param value the value
+	 * @param otherOCD the other OCD
+	 * @param idx the idx
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCodeToReplace(TargetOtclCommandContext targetOCC, OtclCommandDto memberOCD, String value,
 			OtclCommandDto otherOCD, Integer idx, boolean createNewVarName, Set<String> varNamesSet,
 			Map<String, String> varNamesMap) {
@@ -110,6 +166,20 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 		return codeToReplace;
 	}
 
+	/**
+	 * Generate post loop code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param createNewVarName the create new var name
+	 * @param idx the idx
+	 * @param idxVar the idx var
+	 * @param logLevel the log level
+	 * @param parentPcd the parent pcd
+	 * @param memberPcd the member pcd
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generatePostLoopCode(TargetOtclCommandContext targetOCC, boolean createNewVarName, Integer idx,
 			String idxVar, LogLevel logLevel, String parentPcd, String memberPcd, Set<String> varNamesSet, Map<String,
 			String> varNamesMap) {

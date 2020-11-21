@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -28,25 +28,51 @@ import org.otcl2.common.util.PropertyConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum OtclConfig.
+ */
 public enum OtclConfig {
+	
+	/** The instance. */
 	instance;
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclConfig.class);
 
+	/** The Constant OTCL_HOME_ENV_VAR. */
 	private static final String OTCL_HOME_ENV_VAR = "OTCL_HOME";
+	
+	/** The Constant COMPILER_CODEGEN_SOURCE_BASEDIR. */
 	private static final String COMPILER_CODEGEN_SOURCE_BASEDIR = "compiler.codegen.source.basedir";
+	
+	/** The Constant COMPILER_TESTPROFILE_ENABLED. */
 	private static final String COMPILER_TESTPROFILE_ENABLED = "compiler.testprofile.enable";
 
+	/** The Constant EXECUTOR_PACKAGES_FILTER. */
 	private static final String EXECUTOR_PACKAGES_FILTER = "executor.packages.filter";
 
+	/** The Constant engineLogingDetailedDefault. */
 	private static final boolean engineLogingDetailedDefault = true;
+	
+	/** The Constant compilerTestprofileEnableDefault. */
 	private static final boolean compilerTestprofileEnableDefault = false;
 
+	/** The Constant otclHome. */
 	private static final String otclHome;
+	
+	/** The Constant otclConfigProps. */
 	private static final Properties otclConfigProps = new Properties();
+	
+	/** The is test profile. */
 	private static boolean isTestProfile = false;
+	
+	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader;
 
+	/**
+	 * Instantiates a new otcl config.
+	 */
 	private OtclConfig() {
 	}
 
@@ -92,18 +118,34 @@ public enum OtclConfig {
 		isTestProfile = getConfigCompilerTestProfileEnabled();
 	}
 
+	/**
+	 * Enables test-profile.
+	 */
 	public static void enableTestProfile() {
 		isTestProfile = true;
 	}
 
+	/**
+	 * Disables test-profile.
+	 */
 	public static void disableTestProfile() {
 		isTestProfile = false;
 	}
 
+	/**
+	 * Gets the otcl home location.
+	 *
+	 * @return the otcl home location
+	 */
 	public static String getOtclHomeLocation() {
 		return otclHome;
 	}
 
+	/**
+	 * Gets the otcl lib location.
+	 *
+	 * @return the otcl lib location
+	 */
 	public static String getOtclLibLocation() {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
@@ -111,6 +153,11 @@ public enum OtclConfig {
 		return otclHome + File.separator + "lib" + File.separator;
 	}
 
+	/**
+	 * Gets the otcl source location.
+	 *
+	 * @return the otcl source location
+	 */
 	public static String getOtclSourceLocation() {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
@@ -122,6 +169,11 @@ public enum OtclConfig {
 		}
 	}
 
+	/**
+	 * Gets the generated code source location.
+	 *
+	 * @return the generated code source location
+	 */
 	public static String getGeneratedCodeSourceLocation() {
 		String sourceCodeLocation = null;
 		if (otclConfigProps.containsKey(COMPILER_CODEGEN_SOURCE_BASEDIR)) {
@@ -136,6 +188,11 @@ public enum OtclConfig {
 		return sourceCodeLocation;
 	}
 
+	/**
+	 * Gets the otcl bin location.
+	 *
+	 * @return the otcl bin location
+	 */
 	public static String getOtclBinLocation() {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
@@ -143,6 +200,11 @@ public enum OtclConfig {
 		return otclHome + File.separator + "bin" + File.separator;
 	}
 
+	/**
+	 * Gets the otcl target location.
+	 *
+	 * @return the otcl target location
+	 */
 	public static String getOtclTargetLocation() {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
@@ -150,10 +212,20 @@ public enum OtclConfig {
 		return otclHome + File.separator + "target" + File.separator;
 	}
 
+	/**
+	 * Gets the target class loader.
+	 *
+	 * @return the target class loader
+	 */
 	public static URLClassLoader getTargetClassLoader() {
 		return clzLoader;
 	}
 
+	/**
+	 * Gets the config compiler test profile enabled.
+	 *
+	 * @return the config compiler test profile enabled
+	 */
 	public static Boolean getConfigCompilerTestProfileEnabled() {
 		if (otclConfigProps.containsKey(COMPILER_TESTPROFILE_ENABLED)) {
 			return PropertyConverterUtil.toBooleanObject(otclConfigProps.getProperty(COMPILER_TESTPROFILE_ENABLED));

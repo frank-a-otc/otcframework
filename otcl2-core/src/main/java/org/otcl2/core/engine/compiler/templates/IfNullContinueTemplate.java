@@ -11,10 +11,28 @@ import org.otcl2.common.util.CommonUtils;
 import org.otcl2.core.engine.compiler.command.SourceOtclCommandContext;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class IfNullContinueTemplate.
+ */
 public class IfNullContinueTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new if null continue template.
+	 */
 	private IfNullContinueTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC,
 			boolean createNewVarName, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto otclCommandDto = null;

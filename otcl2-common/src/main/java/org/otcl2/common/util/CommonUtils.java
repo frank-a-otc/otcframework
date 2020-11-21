@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -25,10 +25,21 @@ import org.otcl2.common.exception.OtclException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CommonUtils.
+ */
 public class CommonUtils {
 
+	/** The logger. */
 	private static Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
 
+	/**
+	 * Load class.
+	 *
+	 * @param clzName the clz name
+	 * @return the class
+	 */
 	public static Class<?> loadClass(String clzName) {
 		if (clzName == null) {
 			throw new OtclException("", "Invalid value : null!");
@@ -42,18 +53,38 @@ public class CommonUtils {
 		return cls;
 	}
 
+	/**
+	 * Inits the cap.
+	 *
+	 * @param str the str
+	 * @return the string
+	 */
 	public static String initCap(String str) {
 		char[] chars = str.toCharArray();
 		chars[0] = Character.toUpperCase(chars[0]);
 		return new String(chars);
 	}
 
+	/**
+	 * Inits the lower.
+	 *
+	 * @param str the str
+	 * @return the string
+	 */
 	public static String initLower(String str) {
 		char[] chars = str.toCharArray();
 		chars[0] = Character.toLowerCase(chars[0]);
 		return new String(chars);
 	}
 
+	/**
+	 * Replace last.
+	 *
+	 * @param orginalStr the orginal str
+	 * @param searchStr the search str
+	 * @param replaceStr the replace str
+	 * @return the string
+	 */
 	public static String replaceLast(String orginalStr, String searchStr, String replaceStr) {
 		if (orginalStr == null || searchStr == null || replaceStr == null) {
 			return orginalStr;
@@ -65,10 +96,22 @@ public class CommonUtils {
 		return orginalStr.substring(0, idx) + replaceStr + orginalStr.substring(idx + searchStr.length());
 	}
 
+	/**
+	 * Checks if is empty.
+	 *
+	 * @param str the str
+	 * @return true, if is empty
+	 */
 	public static boolean isEmpty(String str) {
 		return str == null || str.trim().length() == 0;
 	}
 
+	/**
+	 * Gets the stack trace.
+	 *
+	 * @param throwable the throwable
+	 * @return the stack trace
+	 */
 	public static String getStackTrace(Throwable throwable) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw, true);
@@ -76,6 +119,12 @@ public class CommonUtils {
 		return sw.getBuffer().toString();
 	}
 
+	/**
+	 * Creates the filename filter.
+	 *
+	 * @param ext the ext
+	 * @return the file filter
+	 */
 	public static FileFilter createFilenameFilter(final String ext) {
 		FileFilter fileFilter = new FileFilter() {
 			public boolean accept(File file) {
@@ -88,6 +137,16 @@ public class CommonUtils {
 		return fileFilter;
 	}
 
+	/**
+	 * Do asycn call.
+	 *
+	 * @param <T> the generic type
+	 * @param id the id
+	 * @param mapFutures the map futures
+	 * @param callable the callable
+	 * @param executorService the executor service
+	 * @return the future
+	 */
 	public static <T> Future<T> doAsycnCall(String id, Map<String, Future<T>> mapFutures, Callable<T> callable,
 			ExecutorService executorService) {
 		Future<T> future = null;
@@ -102,6 +161,14 @@ public class CommonUtils {
 		return future;
 	}
 
+	/**
+	 * Wait for asych calls to complete.
+	 *
+	 * @param <T> the generic type
+	 * @param mapFutures the map futures
+	 * @param responsePollingPauseDurationInMillis the response polling pause duration in millis
+	 * @return the map
+	 */
 	public static <T> Map<String, T> waitForAsychCallsToComplete(Map<String, Future<T>> mapFutures,
 			int responsePollingPauseDurationInMillis) {
 		boolean isStillRunning = true;
@@ -171,6 +238,14 @@ public class CommonUtils {
 		return mapResponses;
 	}
 
+	/**
+	 * Wait for asych calls to complete.
+	 *
+	 * @param <T> the generic type
+	 * @param future the future
+	 * @param pollPauseDuration the poll pause duration
+	 * @return the t
+	 */
 	public static <T> T waitForAsychCallsToComplete(Future<T> future, int pollPauseDuration) {
 		boolean isStillRunning = true;
 		while (isStillRunning) {

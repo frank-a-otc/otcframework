@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -13,8 +13,21 @@ import org.otcl2.common.dto.OtclCommandDto;
 import org.otcl2.common.engine.compiler.OtclCommandContext;
 import org.otcl2.common.engine.profiler.dto.IndexedCollectionsDto;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating IndexedCollectionsDto objects.
+ */
 public class IndexedCollectionsDtoFactory {
 
+	/**
+	 * Creates a new IndexedCollectionsDto object.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 * @param hasChildren the has children
+	 * @param value the value
+	 * @param idxStr the idx str
+	 * @return the indexed collections dto
+	 */
 	public static IndexedCollectionsDto createRoot(OtclCommandDto otclCommandDto, boolean hasChildren, Object value,
 			String idxStr) {
 		IndexedCollectionsDto parentPCD = new IndexedCollectionsDto();
@@ -26,6 +39,15 @@ public class IndexedCollectionsDtoFactory {
 		return parentPCD;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @param otclCommandContext the otcl command context
+	 * @param parentPCD the parent PCD
+	 * @param value the value
+	 * @param idxStr the idx str
+	 * @return the indexed collections dto
+	 */
 	public static IndexedCollectionsDto create(OtclCommandContext otclCommandContext, IndexedCollectionsDto parentPCD,
 			Object value, String idxStr) {
 		IndexedCollectionsDto childPOD = new IndexedCollectionsDto();
@@ -40,6 +62,15 @@ public class IndexedCollectionsDtoFactory {
 		return childPOD;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @param parentPCD the parent PCD
+	 * @param value the value
+	 * @param idxStr the idx str
+	 * @param hasChildren the has children
+	 * @return the indexed collections dto
+	 */
 	public static IndexedCollectionsDto create(IndexedCollectionsDto parentPCD, Object value, String idxStr,
 			boolean hasChildren) {
 		if (parentPCD.children == null) {

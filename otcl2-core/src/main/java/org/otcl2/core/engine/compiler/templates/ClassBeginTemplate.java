@@ -7,10 +7,27 @@ import org.otcl2.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClassBeginTemplate.
+ */
 public final class ClassBeginTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new class begin template.
+	 */
 	private ClassBeginTemplate() {}
 
+	/**
+	 * Generate main class code.
+	 *
+	 * @param mainClassDto the main class dto
+	 * @param targetType the target type
+	 * @param sourceType the source type
+	 * @param otclChain the otcl chain
+	 * @param varNamesSet the var names set
+	 * @return the string
+	 */
 	public static String generateMainClassCode(ClassDto mainClassDto, String targetType, String sourceType,
 			String otclChain, Set<String> varNamesSet) {
 		String rootTargetVariable = CommonUtils.initLower(targetType);
@@ -37,17 +54,48 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 		return classBeginBody;
 	}
 	
+	/**
+	 * Generate factory class code.
+	 *
+	 * @param classDto the class dto
+	 * @param sourceType the source type
+	 * @param targetType the target type
+	 * @param addLogger the add logger
+	 * @param varNamesSet the var names set
+	 * @return the string
+	 */
 	public static String generateFactoryClassCode(ClassDto classDto, String sourceType, String targetType, 
 			boolean addLogger, Set<String> varNamesSet) {
 		return generateClassCode(classDto, sourceType, targetType, addLogger, factoryClassBeginCodeTemplate, varNamesSet);
 	}
 	
+	/**
+	 * Generate module class code.
+	 *
+	 * @param classDto the class dto
+	 * @param sourceType the source type
+	 * @param targetType the target type
+	 * @param addLogger the add logger
+	 * @param varNamesSet the var names set
+	 * @return the string
+	 */
 	public static String generateModuleClassCode(ClassDto classDto, String sourceType, String targetType,
 			boolean addLogger, Set<String> varNamesSet) {
 		return generateClassCode(classDto, sourceType, targetType, addLogger, factoryModuleClassBeginCodeTemplate,
 				varNamesSet);
 	}
 	
+	/**
+	 * Generate class code.
+	 *
+	 * @param classDto the class dto
+	 * @param sourceType the source type
+	 * @param targetType the target type
+	 * @param addLogger the add logger
+	 * @param template the template
+	 * @param varNamesSet the var names set
+	 * @return the string
+	 */
 	private static String generateClassCode(ClassDto classDto, String sourceType, String targetType, boolean addLogger, 
 			String template, Set<String> varNamesSet) {
 		String targetVar = CommonUtils.initLower(targetType);

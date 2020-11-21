@@ -4,11 +4,25 @@ import org.otcl2.common.OtclConstants;
 import org.otcl2.common.dto.OtclCommandDto;
 import org.otcl2.core.engine.compiler.exception.SyntaxException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MapNotationProcessor.
+ */
 final class MapNotationProcessor {
 
 //	private static final Logger LOGGER = LoggerFactory.getLogger(MapNotationProcessor.class);
 
-	public static boolean process(String scriptId, OtclCommandDto otclCommandDto, String otclToken,
+	/**
+ * Process.
+ *
+ * @param scriptId the script id
+ * @param otclCommandDto the otcl command dto
+ * @param otclToken the otcl token
+ * @param otclChain the otcl chain
+ * @param idxMapNotation the idx map notation
+ * @return true, if successful
+ */
+public static boolean process(String scriptId, OtclCommandDto otclCommandDto, String otclToken,
 			String otclChain, int idxMapNotation) {
 		if (!otclToken.contains(OtclConstants.MAP_BEGIN_REF) && !otclToken.contains(OtclConstants.MAP_PRE_ANCHOR) &&
 				!otclToken.contains(OtclConstants.MAP_END_REF) && !otclToken.contains(OtclConstants.MAP_POST_ANCHOR)) {

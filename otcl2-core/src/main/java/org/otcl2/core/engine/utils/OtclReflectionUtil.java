@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -18,18 +18,42 @@ import org.otcl2.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclReflectionUtil.
+ */
 public class OtclReflectionUtil {
 
+	/** The logger. */
 	private static Logger LOGGER = LoggerFactory.getLogger(OtclReflectionUtil.class);
 
+	/**
+	 * The Enum GETTER_SETTER.
+	 */
 	public static enum GETTER_SETTER {
-		GETTER, SETTER
+		
+		/** The getter. */
+		GETTER, 
+ /** The setter. */
+ SETTER
 	};
 
+	/** The Constant ZERO_LENGTH_FIELD_ARRAY. */
 	private static final Field[] ZERO_LENGTH_FIELD_ARRAY = new Field[0];
+	
+	/** The Constant ZERO_LENGTH_CLASS_ARRAY. */
 	private static final Class[] ZERO_LENGTH_CLASS_ARRAY = new Class[0];
+	
+	/** The Constant fieldsCache. */
 	private static final Map<Class<?>, Field[]> fieldsCache = new ConcurrentHashMap<>(100);
 
+	/**
+	 * Read field value.
+	 *
+	 * @param field the field
+	 * @param value the value
+	 * @return the object
+	 */
 	public static Object readFieldValue(Field field, Object value) {
 		if (value == null) {
 			throw new OtclException("", "Property value cannot be null!.");
@@ -45,6 +69,12 @@ public class OtclReflectionUtil {
 		return value;
 	}
 
+	/**
+	 * Find getter name.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 * @return the string
+	 */
 	public static String findGetterName(OtclCommandDto otclCommandDto) {
 		Field field = otclCommandDto.field;
 		String fieldName = field.getName();
@@ -57,6 +87,12 @@ public class OtclReflectionUtil {
 		return methodName;
 	}
 
+	/**
+	 * Find setter name.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 * @return the string
+	 */
 	public static String findSetterName(OtclCommandDto otclCommandDto) {
 		Field field = otclCommandDto.field;
 		String fieldName = field.getName();
@@ -69,6 +105,14 @@ public class OtclReflectionUtil {
 		return methodName;
 	}
 
+	/**
+	 * Find method.
+	 *
+	 * @param enumGetterSetter the enum getter setter
+	 * @param methodName the method name
+	 * @param otclCommandDto the otcl command dto
+	 * @return the method
+	 */
 	private static Method findMethod(GETTER_SETTER enumGetterSetter, String methodName, OtclCommandDto otclCommandDto) {
 		Method method = null;
 		Field field = otclCommandDto.field;
@@ -120,6 +164,15 @@ public class OtclReflectionUtil {
 		return method;
 	}
 
+	/**
+	 * Find helper method name.
+	 *
+	 * @param factoryHelper the factory helper
+	 * @param enumGetterSetter the enum getter setter
+	 * @param methodName the method name
+	 * @param otclCommandDto the otcl command dto
+	 * @return the string
+	 */
 	public static String findHelperMethodName(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter,
 			String methodName, OtclCommandDto otclCommandDto) {
 		Method method = findFactoryHelperMethod(factoryHelper, enumGetterSetter, methodName, otclCommandDto);
@@ -129,6 +182,15 @@ public class OtclReflectionUtil {
 		return methodName;
 	}
 	
+	/**
+	 * Find factory helper method.
+	 *
+	 * @param factoryHelper the factory helper
+	 * @param enumGetterSetter the enum getter setter
+	 * @param methodName the method name
+	 * @param otclCommandDto the otcl command dto
+	 * @return the method
+	 */
 	public static Method findFactoryHelperMethod(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter, String methodName,
 			OtclCommandDto otclCommandDto) {
 		if (factoryHelper == null) {
@@ -153,6 +215,18 @@ public class OtclReflectionUtil {
 		return method;
 	}
 
+	/**
+	 * Find method.
+	 *
+	 * @param clz the clz
+	 * @param enumGetterSetter the enum getter setter
+	 * @param methodName the method name
+	 * @param otclCommandDto the otcl command dto
+	 * @param paramTypes the param types
+	 * @return the method
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws SecurityException the security exception
+	 */
 	private static Method findMethod(Class<?> clz, GETTER_SETTER enumGetterSetter, String methodName,
 			OtclCommandDto otclCommandDto, Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
 		Method method = null;
@@ -164,10 +238,25 @@ public class OtclReflectionUtil {
 		return method;
 	}
 
+	/**
+	 * Find field.
+	 *
+	 * @param clazz the clazz
+	 * @param name the name
+	 * @return the field
+	 */
 	public static Field findField(Class<?> clazz, String name) {
 		return findField(clazz, name, null);
 	}
 
+	/**
+	 * Find field.
+	 *
+	 * @param clazz the clazz
+	 * @param name the name
+	 * @param type the type
+	 * @return the field
+	 */
 	public static Field findField(Class<?> clazz, String name, Class<?> type) {
 		Class<?> searchType = clazz;
 		while (Object.class != searchType && searchType != null) {
@@ -182,6 +271,12 @@ public class OtclReflectionUtil {
 		return null;
 	}
 
+	/**
+	 * Gets the declared fields.
+	 *
+	 * @param clazz the clazz
+	 * @return the declared fields
+	 */
 	private static Field[] getDeclaredFields(Class<?> clazz) {
 		Field[] result = fieldsCache.get(clazz);
 		if (result == null) {

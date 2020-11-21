@@ -15,10 +15,20 @@ import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CopyValuesCommandCodeGenerator.
+ */
 final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(CopyValuesCommandCodeGenerator.class);
 
+	/**
+	 * Generate source code.
+	 *
+	 * @param executionContext the execution context
+	 */
 	public static void generateSourceCode(ExecutionContext executionContext) {
 //		Entry<String, ScriptGroupDto> entry = executionContext.entry;
 		OtclCommand otclCommand = executionContext.otclCommand;
@@ -78,6 +88,16 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 		return;
 	}
 	
+	/**
+	 * Process remaining path.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param otclCommand the otcl command
+	 * @param scriptDto the script dto
+	 * @param scriptGroupIdx the script group idx
+	 * @param offsetIdx the offset idx
+	 * @return the int
+	 */
 	private static int processRemainingPath(TargetOtclCommandContext targetOCC, OtclCommand otclCommand,
 			ScriptDto scriptDto, int scriptGroupIdx, int offsetIdx) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;

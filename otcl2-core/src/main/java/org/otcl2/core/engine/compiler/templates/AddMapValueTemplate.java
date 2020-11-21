@@ -10,20 +10,66 @@ import org.otcl2.common.util.PackagesFilterUtil;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AddMapValueTemplate.
+ */
 public final class AddMapValueTemplate extends AbstractTemplate {
 
+	/**
+	 * Instantiates a new adds the map value template.
+	 */
 	private AddMapValueTemplate() {}
 
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param createNewVarName the create new var name
+	 * @param value the value
+	 * @param idx the idx
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, boolean createNewVarName,
 			String value, Integer idx, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, createNewVarName, value, idx, null, logLevel, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param createNewVarName the create new var name
+	 * @param idxVar the idx var
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, boolean createNewVarName,
 			String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, createNewVarName, null, null, idxVar, logLevel, varNamesSet, varNamesMap);
 	}
 	
+	/**
+	 * Generate code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param createNewVarName the create new var name
+	 * @param value the value
+	 * @param idx the idx
+	 * @param idxVar the idx var
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, boolean createNewVarName,
 			String value, Integer idx, String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto valueOCD = targetOCC.otclCommandDto;
@@ -85,6 +131,18 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 		return codeSectionBuilder.toString();
 	}
 	
+	/**
+	 * Generate post loop code.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param createNewVarName the create new var name
+	 * @param idx the idx
+	 * @param idxVar the idx var
+	 * @param logLevel the log level
+	 * @param varNamesSet the var names set
+	 * @param varNamesMap the var names map
+	 * @return the string
+	 */
 	public static String generatePostLoopCode(TargetOtclCommandContext targetOCC, boolean createNewVarName, Integer idx,
 			String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto valueOCD = targetOCC.otclCommandDto;

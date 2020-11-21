@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -11,9 +11,21 @@ import java.util.List;
 
 import org.otcl2.common.engine.compiler.CompilationReport;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface OtclCompiler.
+ */
 public interface OtclCompiler {
 
+	/**
+	 * Compile otcl.
+	 *
+	 * @return the list
+	 */
 	List<CompilationReport> compileOtcl();
 
+	/**
+	 * Compile source code.
+	 */
 	void compileSourceCode();
 }

@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -46,23 +46,49 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclCompilerImpl.
+ */
 public class OtclCompilerImpl implements OtclCompiler {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclCompilerImpl.class);
+	
+	/** The Constant otclLanguageCompilerImpl. */
 	private static final OtclCompilerImpl otclLanguageCompilerImpl = new OtclCompilerImpl();
+	
+	/** The Constant otclCodeGenerator. */
 	private static final OtclCodeGenerator otclCodeGenerator = OtclCodeGeneratorImpl.getInstance();
 	
+	/** The Constant otclSrcDir. */
 	private static final String otclSrcDir = OtclConfig.getOtclSourceLocation();
+	
+	/** The Constant srcDir. */
 	private static final String srcDir = OtclConfig.getGeneratedCodeSourceLocation();
+	
+	/** The Constant otclTargetDir. */
 	private static final String otclTargetDir = OtclConfig.getOtclTargetLocation();
+	
+	/** The Constant otclBinDir. */
 	private static final String otclBinDir = OtclConfig.getOtclBinLocation();
 
+	/** The Constant otclFileFilter. */
 	private static final FileFilter otclFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_FILE_EXTN);
+	
+	/** The Constant srcFileFilter. */
 	private static final FileFilter srcFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_GENERATEDCODE_EXTN);
+	
+	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_DEP_EXTN);
 
+	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();
+	
+	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper;
+	
+	/** The Constant diagnostics. */
 	private static final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
 	static {
@@ -70,10 +96,20 @@ public class OtclCompilerImpl implements OtclCompiler {
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
 	}
 
+	/**
+	 * Gets the single instance of OtclCompilerImpl.
+	 *
+	 * @return single instance of OtclCompilerImpl
+	 */
 	public static OtclCompilerImpl getInstance() {
 		return otclLanguageCompilerImpl;
 	}
 
+	/**
+	 * Compile otcl.
+	 *
+	 * @return the list
+	 */
 	@Override
 	public List<CompilationReport> compileOtcl() {
 		long startTime = System.nanoTime();
@@ -98,6 +134,13 @@ public class OtclCompilerImpl implements OtclCompiler {
 		return compilationReports;
 	}
 
+	/**
+	 * Compile otcl.
+	 *
+	 * @param directory the directory
+	 * @param otclNamespace the otcl namespace
+	 * @return the list
+	 */
 	private List<CompilationReport> compileOtcl(File directory, String otclNamespace) {
 		List<CompilationReport> compilationReports = null;
 		for (File file : directory.listFiles(otclFileFilter)) {
@@ -147,6 +190,12 @@ public class OtclCompilerImpl implements OtclCompiler {
 		return compilationReports;
 	}
 
+	/**
+	 * Creates the deployment dto.
+	 *
+	 * @param compilationReport the compilation report
+	 * @return the deployment dto
+	 */
 	private DeploymentDto createDeploymentDto(CompilationReport compilationReport) {
 		DeploymentDto deploymentDto = new DeploymentDto();
 		OtclDto otclDto = compilationReport.otclDto;
@@ -188,6 +237,11 @@ public class OtclCompilerImpl implements OtclCompiler {
 		return deploymentDto;
 	}
 	
+	/**
+	 * Nullify fields.
+	 *
+	 * @param otclCommandDto the otcl command dto
+	 */
 	private void nullifyFields(OtclCommandDto otclCommandDto) {
 		otclCommandDto.field = null;
 		otclCommandDto.parent = null;
@@ -198,6 +252,13 @@ public class OtclCompilerImpl implements OtclCompiler {
 		}
 	}
 	
+	/**
+	 * Compile otcl file.
+	 *
+	 * @param file the file
+	 * @param otclNamespace the otcl namespace
+	 * @return the compilation report
+	 */
 	private CompilationReport compileOtclFile(File file, String otclNamespace) {
 		OtclDto otclDto = null;
 		String otclFileName = file.getName();
@@ -250,6 +311,9 @@ public class OtclCompilerImpl implements OtclCompiler {
 		return compilationReport;
 	}
 
+	/**
+	 * Compile source code.
+	 */
 	@Override
 	public void compileSourceCode() {
 		File binDir = new File(otclBinDir);
@@ -281,6 +345,13 @@ public class OtclCompilerImpl implements OtclCompiler {
 		return;
 	}
 	
+	/**
+	 * Creates the compilation units.
+	 *
+	 * @param deploymentDtos the deployment dtos
+	 * @param javaFileObjects the java file objects
+	 * @return the list
+	 */
 	private List<JavaFileObject> createCompilationUnits(List<DeploymentDto> deploymentDtos, 
 			List<JavaFileObject> javaFileObjects) {
 		for (DeploymentDto deploymentDto : deploymentDtos) {
@@ -313,6 +384,11 @@ public class OtclCompilerImpl implements OtclCompiler {
 		return javaFileObjects;
 	}
 	
+	/**
+	 * Compile source code.
+	 *
+	 * @param javaFileObjects the java file objects
+	 */
 	private void compileSourceCode(List<JavaFileObject> javaFileObjects) {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);

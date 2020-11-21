@@ -16,10 +16,24 @@ import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractOtclCodeGenerator.
+ */
 abstract class AbstractOtclCodeGenerator  {
 		
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOtclCodeGenerator.class);
 
+	/**
+	 * Gets the index.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param currentIdx the current idx
+	 * @param scriptGroupIdx the script group idx
+	 * @param offsetIdx the offset idx
+	 * @return the index
+	 */
 	protected static Integer getIndex(TargetOtclCommandContext targetOCC, Integer currentIdx, int scriptGroupIdx,
 			Integer offsetIdx) {
 		Integer idx = null;
@@ -43,6 +57,12 @@ abstract class AbstractOtclCodeGenerator  {
 		return idx;
 	}
 	
+	/**
+	 * Reset OCC.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param scriptDto the script dto
+	 */
 	protected static void resetOCC(TargetOtclCommandContext targetOCC, ScriptDto scriptDto) {
 		targetOCC.scriptDto = scriptDto;
 		targetOCC.scriptId = scriptDto.command.id;
@@ -86,6 +106,12 @@ abstract class AbstractOtclCodeGenerator  {
 		}
 	}
 	
+	/**
+	 * Reset OCC.
+	 *
+	 * @param sourceOCC the source OCC
+	 * @param scriptDto the script dto
+	 */
 	protected static void resetOCC(SourceOtclCommandContext sourceOCC, ScriptDto scriptDto) {
 		OtclChainDto sourceOtclChainDto = scriptDto.sourceOtclChainDto;
 		if (sourceOtclChainDto != null) {
@@ -95,6 +121,13 @@ abstract class AbstractOtclCodeGenerator  {
 		}
 	}
 	
+	/**
+	 * Adds the java string object.
+	 *
+	 * @param javaFileObjects the java file objects
+	 * @param javaStringObject the java string object
+	 * @return the list
+	 */
 	protected static List<JavaFileObject> addJavaStringObject(List<JavaFileObject> javaFileObjects, 
 			JavaCodeStringObject javaStringObject) {
 		if (javaFileObjects == null) {

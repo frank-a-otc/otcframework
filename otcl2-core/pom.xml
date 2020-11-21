@@ -9,6 +9,10 @@
 	</parent>
 	<artifactId>otcl2-core</artifactId>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>This is the main OTCL Engine module.</description>
+	<url>http://www.otclautomation.org</url>
+
 	<dependencies>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
@@ -32,5 +36,30 @@
 		</dependency>
 
 	</dependencies>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/sisyphsu/dateparser/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0 License</name>
+            <url>https://github.com/sisyphsu/dateparser/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Franklin Abel</name>
+            <email>frank.j.java@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/frankjjava/otcl2.git</url>
+        <connection>scm:git@github.com:frankjjava/otcl2.git</connection>
+        <developerConnection>scm:git@github.com:frankjjava/otcl2.git</developerConnection>
+    </scm>
 
 </project>

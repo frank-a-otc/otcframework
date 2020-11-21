@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otcl2.org
+* Copyright (c) otclfoundation.org
 *
 * @author  Franklin Abel
 * @version 1.0
@@ -13,8 +13,19 @@ import org.otcl2.common.engine.compiler.OtclCommandContext;
 import org.otcl2.core.engine.compiler.command.OtclCommand;
 import org.otcl2.core.engine.compiler.exception.LexicalizerException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OtclLeavesSemanticsChecker.
+ */
 final class OtclLeavesSemanticsChecker {
 
+	/**
+	 * Check leaves semantics.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCC the source OCC
+	 * @return true, if successful
+	 */
 	static boolean checkLeavesSemantics(OtclCommandContext targetOCC, OtclCommandContext sourceOCC) {
 		OtclCommandDto targetOCD = OtclCommand.retrieveLeafOCD(targetOCC);
 		if (MutualDateTypesConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {

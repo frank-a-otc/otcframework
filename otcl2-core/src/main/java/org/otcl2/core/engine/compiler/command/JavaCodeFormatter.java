@@ -4,8 +4,18 @@ import java.util.Scanner;
 
 import org.otcl2.common.util.CommonUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JavaCodeFormatter.
+ */
 final class JavaCodeFormatter {
 
+	/**
+	 * Format.
+	 *
+	 * @param javaCode the java code
+	 * @return the string
+	 */
 	static String format(String javaCode) {
 		Scanner scanner = new Scanner(javaCode);
 		StringBuilder javaCodeBuilder = new StringBuilder();
@@ -44,6 +54,13 @@ final class JavaCodeFormatter {
 		return javaCodeBuilder.toString();
 	}
 
+	/**
+	 * Do indent.
+	 *
+	 * @param line the line
+	 * @param bracesCounter the braces counter
+	 * @return the string
+	 */
 	static String doIndent(String line, int bracesCounter) {
 		if (bracesCounter == 0) {
 			return line;
