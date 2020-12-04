@@ -80,7 +80,7 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, Class<?> factoryHelpe
 			fldName = rawOtclToken.substring(0, idxCollectionNotation);
 		}
 		otclCommandDto.fieldName = fldName;
-		GetterSetterProcessor.process(script, otclCommandDto);
+//		GetterSetterProcessor.process(script, otclCommandDto);
 		OtclSemanticsChecker.checkSemantics(factoryHelper, script, clz, otclChain, otclCommandDto, otclTokens);
 		String otclToken = rawOtclToken;
 		if (isCollectionNotation) {

@@ -50,21 +50,6 @@ final class OtclExecutorImpl implements OtclExecutor {
 	 * Execute otcl.
 	 *
 	 * @param <T> the generic type
-	 * @param <S> the generic type
-	 * @param targetClz the target clz
-	 * @param data the data
-	 * @return the t
-	 */
-	@Override
-	public <T, S> T executeOtcl(Class<T> targetClz, Map<String, Object> data) {
-		T target = executeOtcl(null, null, targetClz, data);
-		return target;
-	}
-
-	/**
-	 * Execute otcl.
-	 *
-	 * @param <T> the generic type
 	 * @param otclNamespace the otcl namespace
 	 * @param targetClz the target clz
 	 * @param data the data
@@ -73,22 +58,6 @@ final class OtclExecutorImpl implements OtclExecutor {
 	@Override
 	public <T> T executeOtcl(String otclNamespace, Class<T> targetClz, Map<String, Object> data) {
 		T target = executeOtcl(otclNamespace, null, targetClz, data);
-		return target;
-	}
-
-	/**
-	 * Execute otcl.
-	 *
-	 * @param <T> the generic type
-	 * @param <S> the generic type
-	 * @param source the source
-	 * @param targetClz the target clz
-	 * @param data the data
-	 * @return the t
-	 */
-	@Override
-	public <T, S> T executeOtcl(S source, Class<T> targetClz, Map<String, Object> data) {
-		T target = executeOtcl(null, source, targetClz, data);
 		return target;
 	}
 

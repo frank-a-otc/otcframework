@@ -14,8 +14,6 @@ import javax.annotation.PostConstruct;
 import org.otcl2.common.engine.OtclEngine;
 import org.otcl2.core.engine.compiler.OtclCompiler;
 import org.otcl2.core.engine.compiler.OtclCompilerImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,9 +23,6 @@ public enum OtclEngineImpl implements OtclEngine {
 	
 	/** The instance. */
 	instance;
-	
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(OtclEngineImpl.class);
 
 	/** The Constant otclCompiler. */
 	private static final OtclCompiler otclCompiler = OtclCompilerImpl.getInstance();
@@ -103,27 +98,11 @@ public enum OtclEngineImpl implements OtclEngine {
 	 * @return the t
 	 */
 	@Override
-	public <T, S> T executeOtcl(Class<T> targetClz, Map<String, Object> data) {
-		T target = otclExecutor.executeOtcl(targetClz, data);
+	public <T, S> T executeOtcl(String otclNamespace, Class<T> targetClz, Map<String, Object> data) {
+		T target = otclExecutor.executeOtcl(otclNamespace, targetClz, data);
 		return target;
 	}
 	
-	/**
-	 * Execute otcl.
-	 *
-	 * @param <T> the generic type
-	 * @param <S> the generic type
-	 * @param source the source
-	 * @param targetClz the target clz
-	 * @param data the data
-	 * @return the t
-	 */
-	@Override
-	public <T, S> T executeOtcl(S source, Class<T> targetClz, Map<String, Object> data) {
-		T target = otclExecutor.executeOtcl(source, targetClz, data);
-		return target;
-	}
-
 	/**
 	 * Execute otcl.
 	 *

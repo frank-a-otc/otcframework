@@ -61,6 +61,7 @@ final class OtclSemanticsChecker {
 			otclCommandDto.concreteType = concreteType;
 		}
 		initGetterSetter(factoryHelper, otclCommandDto, script);
+		GetterSetterProcessor.process(script, otclCommandDto);
 		OtclCommandDtoFactory.createMembers(script.command.id, otclCommandDto, otclChain, otclTokens);
 //		LOGGER.info("Semantics processing : Okay for " + script.id);
 		return true;
