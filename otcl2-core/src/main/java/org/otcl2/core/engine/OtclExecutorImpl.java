@@ -77,9 +77,9 @@ final class OtclExecutorImpl implements OtclExecutor {
 		long startTime = System.nanoTime();
 		DeploymentDto deploymentDto = deploymentContainer.retrieveDeploymentDto(otclNamespace, source, targetClz);
 		if (deploymentDto == null) {
-			String deploymentId = OtclUtils.createDeploymentId(otclNamespace, source, targetClz) +
+			String otclFile = OtclUtils.createDeploymentId(otclNamespace, source, targetClz) +
 					OtclConstants.OTCL_FILE_EXTN; 
-			String errMsg = "Oops... Cannot proceed. Missing or uncompiled OTCL file! " + deploymentId;
+			String errMsg = "Oops... Cannot proceed. Missing or uncompiled OTCL file! " + otclFile;
 			LOGGER.error(errMsg);
 			throw new OtclEngineException(errMsg);
 		}

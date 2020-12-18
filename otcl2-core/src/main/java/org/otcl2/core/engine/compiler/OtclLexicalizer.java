@@ -190,12 +190,12 @@ final class OtclLexicalizer {
 			}
 			if ((otclScript.copy != null && otclScript.copy.disable) || 
 					(otclScript.execute != null && otclScript.execute.disable)) {
-				LOGGER.warn("Bypassing disabled script : " + scriptId);
+				LOGGER.warn("Bypassing disabled script-block : " + scriptId);
 				continue;
 			}
 			if (scriptId == null) {
 				throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId + 
-						". The 'id' property is mandatory in every script block but one or more are missing.");
+						". The 'id' property is mandatory in every script-block but one or more are missing.");
 			}
 			if (scriptIds.contains(scriptId)) {
 				throw new OtclExtensionsException("", 
@@ -316,6 +316,10 @@ final class OtclLexicalizer {
 				int sourceCollectionsCount = 0;
 				OtclChainDto sourceOtclChainDto = null;
 				if (!CommonUtils.isEmpty(sourceOtclChain)) {
+					if (sourceClz == null) {
+						throw new LexicalizerException("", "Otcl Lexicalizer-phase failure! in Script-block : " + scriptId + 
+								". The from/source otclChain is defined. But source-type is undefined.");
+					}
 					builderSourceOtclChainDto.addOtclChain(sourceOtclChain);
 					// --- tokenize sourceOtclChain
 					OtclCommandDto sourceStemOCD = tokenize(scriptDto, factoryHelper, sourceClz, sourceOtclChain,

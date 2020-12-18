@@ -132,7 +132,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 				otclToken = otclToken.substring(0, otclToken.indexOf(OtclConstants.CLOSE_BRACKET)); 
 			}
 			if (otclCommandDto.isCollection() || otclCommandDto.isMap()) {
-				OtclCommandDtoFactory.createMembers(id, otclCommandDto, otclChainDto.otclChain, otclChainDto.otclTokens);
+				OtclCommandDtoFactory.createMembers(id, otclCommandDto, otclChainDto.otclChain, otclChainDto.rawOtclTokens);
 				if (otclCommandDto.isCollection()) {
 					otclCommandDto = otclCommandDto.children.get(otclCommandDto.fieldName);
 				} else if (otclCommandDto.isMap()) {

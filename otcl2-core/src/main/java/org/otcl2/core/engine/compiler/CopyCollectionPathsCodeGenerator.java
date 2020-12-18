@@ -26,12 +26,18 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 //	private static final Logger LOGGER = LoggerFactory.getLogger(MapAndCollectionsPairCodeGenerator.class);
 	
 	/**
- * The Enum CHAIN_COLLECTION_SIZE.
- */
-enum CHAIN_COLLECTION_SIZE {/** The large source. */
-LARGE_SOURCE, /** The large target. */
- LARGE_TARGET, /** The equal. */
- EQUAL};
+	 * The Enum CHAIN_COLLECTION_SIZE.
+	 */
+	enum CHAIN_COLLECTION_SIZE {
+		/** The large source. */
+		LARGE_SOURCE, 
+		
+		/** The large target. */
+		LARGE_TARGET, 
+		
+		/** The equal. */
+		EQUAL
+	};
 
 	/**
 	 * Instantiates a new copy collection paths code generator.
@@ -77,13 +83,9 @@ LARGE_SOURCE, /** The large target. */
 		Class<?> sourceClz = executionContext.sourceClz; 
 		SourceOtclCommandContext sourceOCC = executionContext.sourceOCC;
 		
-//		ScriptGroupDto scriptGroupDto = entry.getValue();
-//		List<ScriptDto> scriptDtos = scriptGroupDto.scriptDtos;
 		targetOCC.algorithmId = ALGORITHM_ID.COLLECTIONS;
 		boolean addLogger = true;
-		
-//		for (ScriptDto scriptDto : scriptDtos) {
-		
+				
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
@@ -118,15 +120,17 @@ LARGE_SOURCE, /** The large target. */
 		TargetOtclCommandContext targetOCC = executionContext.targetOCC;
 		SourceOtclCommandContext sourceOCC = executionContext.sourceOCC;
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
-		int sourceDescendantsCollectionsCount = sourceOCC.descendantsCollectionsCount() +
-				sourceOCC.descendantsMapsCount();
+//		int sourceDescendantsCollectionsCount = sourceOCC.descendantsListCount() +
+//				sourceOCC.descendantsMapsCount();
+		int sourceDescendantsCollectionsCount = sourceOCC.descendantsCollectionsCount();
 		if (sourceOCD.isCollectionOrMap()) {
 			sourceDescendantsCollectionsCount++;
 		}
 		int initialSourceDescendantsCollectionsCount = sourceDescendantsCollectionsCount;
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
-		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCount() +
-				targetOCC.descendantsMapsCount();
+//		int targetDescendantsCollectionsCount = targetOCC.descendantsListCount() +
+//				targetOCC.descendantsMapsCount();
+		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCount();
 		if (targetOCD.isCollectionOrMap()) {
 			targetDescendantsCollectionsCount++;
 		}
@@ -182,8 +186,7 @@ LARGE_SOURCE, /** The large target. */
 				hasAnchoredDescendant = targetOCC.hasAnchoredDescendant();
 			}
 			String idxVar = null;
-			boolean shouldIncrementOffsetIdx = false;
-			nonFlatLogic.shouldIncrementOffsetIdx = shouldIncrementOffsetIdx;
+			nonFlatLogic.shouldIncrementOffsetIdx = false;
 			if (isAnchored) {
 				if (targetDescendantsCollectionsCount == 1) {
 					idxVar = AbstractTemplate.OFFSET_IDX;
@@ -193,8 +196,10 @@ LARGE_SOURCE, /** The large target. */
 					idxVar = AbstractTemplate.SOURCE_IDX + postAnchorCounter;
 				}
 				otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
-				int tempTargetDCCount = targetOCC.descendantsCollectionsCount() + targetOCC.descendantsMapsCount();
-				int tempSourceDCCount = sourceOCC.descendantsCollectionsCount() + sourceOCC.descendantsMapsCount();
+//				int tempTargetDCCount = targetOCC.descendantsListCount() + targetOCC.descendantsMapsCount();
+//				int tempSourceDCCount = sourceOCC.descendantsListCount() + sourceOCC.descendantsMapsCount();
+				int tempTargetDCCount = targetOCC.descendantsCollectionsCount();
+				int tempSourceDCCount = sourceOCC.descendantsCollectionsCount();
 				collectionSize = decideChainCollectionSize(tempTargetDCCount, tempSourceDCCount);
 				nonFlatLogic.collectionSize = collectionSize;
 				nonFlatLogic.targetDescendantsCollectionsCount = tempTargetDCCount;

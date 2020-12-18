@@ -55,8 +55,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclCompilerImpl.class);
 	
-	/** The Constant otclLanguageCompilerImpl. */
-	private static final OtclCompilerImpl otclLanguageCompilerImpl = new OtclCompilerImpl();
+	/** The Constant otclCompilerImpl. */
+	private static final OtclCompilerImpl otclCompilerImpl = new OtclCompilerImpl();
 	
 	/** The Constant otclCodeGenerator. */
 	private static final OtclCodeGenerator otclCodeGenerator = OtclCodeGeneratorImpl.getInstance();
@@ -75,9 +75,6 @@ public class OtclCompilerImpl implements OtclCompiler {
 
 	/** The Constant otclFileFilter. */
 	private static final FileFilter otclFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_FILE_EXTN);
-	
-	/** The Constant srcFileFilter. */
-	private static final FileFilter srcFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_GENERATEDCODE_EXTN);
 	
 	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_DEP_EXTN);
@@ -102,7 +99,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 	 * @return single instance of OtclCompilerImpl
 	 */
 	public static OtclCompilerImpl getInstance() {
-		return otclLanguageCompilerImpl;
+		return otclCompilerImpl;
 	}
 
 	/**
@@ -160,29 +157,34 @@ public class OtclCompilerImpl implements OtclCompiler {
 				if (compilationReports == null) {
 					compilationReports = new ArrayList<>();
 				}
-				String depFileName = compilationReport.otclFileName.replace(OtclConstants.OTCL_FILE_EXTN, 
-						OtclConstants.OTCL_DEP_EXTN);
+				int idx = compilationReport.otclFileName.lastIndexOf(OtclConstants.OTCL_FILE_EXTN);
+				String depFileName = compilationReport.otclFileName.substring(0, idx) + OtclConstants.OTCL_DEP_EXTN;
 				if (!CommonUtils.isEmpty(compilationReport.otclNamespace)) {
 					depFileName = compilationReport.otclNamespace + "." + depFileName;
 				}
-				File repFile = new File(otclBinDir + depFileName);
+				File binDir = new File(otclBinDir);
+				if (!binDir.exists()) {
+					binDir.mkdirs();
+					binDir = null;
+				}
+				depFileName = otclBinDir + depFileName;
 				FileOutputStream fos = null;
 				DeploymentDto deploymentDto = createDeploymentDto(compilationReport);
 				try {
 					String str = objectMapper.writeValueAsString(deploymentDto);
-					fos = new FileOutputStream(repFile);
+					fos = new FileOutputStream(depFileName);
 			        msgPack.write(fos, str.getBytes());
 					fos.flush();
 					compilationReports.add(compilationReport);
 				} catch (IOException e) {
 					throw new OtclCompilerException(e);
 				} finally {
-					try {
-						if (fos != null) {
+					if (fos != null) {
+						try {
 							fos.close();
+						} catch (IOException e) {
+							throw new OtclCompilerException(e);
 						}
-					} catch (IOException e) {
-						throw new OtclCompilerException(e);
 					}
 				}
 			}

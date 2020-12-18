@@ -114,20 +114,20 @@ TARGET, /** The source. */
 	/** The close bracket. */
 	String CLOSE_BRACKET = "]";
 
+	/** The map ref. */
+	String MAP_REF = "[*,*]";
+	
 	/** The map begin ref. */
-	String MAP_BEGIN_REF = "[<";
+	String MAP_BEGIN_REF = "[*,*";
 	
 	/** The map end ref. */
-	String MAP_END_REF = ">]";
+	String MAP_END_REF = "*,*]";
 	
 	/** The map pre anchor. */
-	String MAP_PRE_ANCHOR = "[^<";
+	String MAP_PRE_ANCHOR = "[^*,*";
 	
 	/** The map post anchor. */
-	String MAP_POST_ANCHOR = ">^]";
-	
-	/** The map ref. */
-	String MAP_REF = "[<K,V>]";
+	String MAP_POST_ANCHOR = "*,*^]";
 	
 	/** The map key ref. */
 	String MAP_KEY_REF = "<K>";

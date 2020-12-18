@@ -55,16 +55,12 @@ public class OtclCommandContext {
 		return otclCommandContext;
 	}
 
-//	public boolean isKeyPath() {
-//		return otclTokens[otclCommandDto.otclTokenIndex].contains(OtclConstants.MAP_KEY_REF);
-//	}
-
 	/**
- * Checks if is leaf parent.
- *
- * @return true, if is leaf parent
- */
-public boolean isLeafParent() {
+	 * Checks if is leaf parent.
+	 *
+	 * @return true, if is leaf parent
+	 */
+	public boolean isLeafParent() {
 		if (otclCommandDto.otclTokenIndex == otclTokens.length - 2) {
 			if (otclCommandDto.collectionDescriptor.isCollection() || otclCommandDto.collectionDescriptor.isMap()) {
 				return false;
@@ -147,7 +143,6 @@ public boolean isLeafParent() {
 			return true;
 		}
 		return otclCommandDto.children != null && otclCommandDto.children.size() > 0; // && 
-//				otclTokens.length > otclCommandDto.otclTokenIndex + 1;
 	}
 	
 	/**
@@ -239,45 +234,19 @@ public boolean isLeafParent() {
 		return false;
 	}
 
-	/**
-	 * Descendants collections count.
-	 *
-	 * @return the int
-	 */
 	public int descendantsCollectionsCount() {
 		if (rawOtclTokens.length == 1) {
 			return 0;
 		}
 		int descendantsCollectionsCount = 0;
 		int startIdx = otclCommandDto.otclTokenIndex + 1;
-		for (int idx = startIdx; idx < rawOtclTokens.length; idx++) {
-			String otclToken = rawOtclTokens[idx];
-			if (otclToken.contains(OtclConstants.OPEN_BRACKET) && !(otclToken.contains(OtclConstants.MAP_BEGIN_REF)
-					|| otclToken.contains(OtclConstants.MAP_PRE_ANCHOR))) {
+		for (int idx = startIdx; idx < otclTokens.length; idx++) {
+			String otclToken = otclTokens[idx];
+			if (otclToken.contains(OtclConstants.OPEN_BRACKET)) {
 				descendantsCollectionsCount++;
 			}
 		}
 		return descendantsCollectionsCount;
-	}
-
-	/**
-	 * Descendants maps count.
-	 *
-	 * @return the int
-	 */
-	public int descendantsMapsCount() {
-		if (rawOtclTokens.length == 1) {
-			return 0;
-		}
-		int descendantsMapssCount = 0;
-		int startIdx = otclCommandDto.otclTokenIndex + 1;
-		for (int idx = startIdx; idx < rawOtclTokens.length; idx++) {
-			String otclToken = rawOtclTokens[idx];
-			if (otclToken.contains(OtclConstants.MAP_BEGIN_REF) || otclToken.contains(OtclConstants.MAP_PRE_ANCHOR)) {
-				descendantsMapssCount++;
-			}
-		}
-		return descendantsMapssCount;
 	}
 
 }

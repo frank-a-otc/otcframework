@@ -30,21 +30,13 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 	 * @param executionContext the execution context
 	 */
 	public static void generateSourceCode(ExecutionContext executionContext) {
-//		Entry<String, ScriptGroupDto> entry = executionContext.entry;
 		OtclCommand otclCommand = executionContext.otclCommand;
 		Class<?> targetClz = executionContext.targetClz;
 		TargetOtclCommandContext targetOCC = executionContext.targetOCC;
 		Class<?> sourceClz = executionContext.sourceClz; 
 		SourceOtclCommandContext sourceOCC = executionContext.sourceOCC;
-//		List<JavaFileObject> javaFileObjects = executionContext.javaFileObjects;
-		
-//		ScriptGroupDto scriptGroupDto = entry.getValue();
-//		List<ScriptDto> scriptDtos = scriptGroupDto.scriptDtos;
-//		ScriptDto firstScriptDto = scriptDtos.get(0);
-//		resetOCC(sourceOCC, firstScriptDto);
 
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
-//		resetOCC(sourceOCC, scriptDto);
 		targetOCC.algorithmId = ALGORITHM_ID.COPYVALUES;
 		boolean addLogger = false;
 		if (targetOCC.otclChain.contains(OtclConstants.MAP_VALUE_REF)) {
@@ -55,36 +47,33 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 
 		int offsetIdx = 0;
 		int scriptGroupIdx = 0;	
-//		for (ScriptDto scriptDto : scriptDtos) {
-			if (scriptDto.command.debug) { 
-				@SuppressWarnings("unused")
-				int dummy = 0;
+
+		if (scriptDto.command.debug) { 
+			@SuppressWarnings("unused")
+			int dummy = 0;
+		}
+		List<String> values = ((Copy) scriptDto.command).from.values;
+		if (values == null) {
+			LOGGER.warn("'values:' property in Script-block : " + scriptDto.command.id + 
+					" is empty! Skiping Code-generation.");
+			return;
+		}
+		otclCommand.clearCache();
+		otclCommand.appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, addLogger);
+		clonedTargetOCC = targetOCC.clone();
+		if (!clonedTargetOCC.isLeaf()) { 
+			otclCommand.appendInitUptoAnchoredOrLastCollectionOrLeaf(clonedTargetOCC, 0, false, LogLevel.WARN);
+			if (clonedTargetOCC.otclCommandDto.isCollectionOrMap()) {
+				targetOCD = OtclCommand.retrieveMemberOCD(clonedTargetOCC);
+				clonedTargetOCC.otclCommandDto = targetOCD;
 			}
-			List<String> values = ((Copy) scriptDto.command).from.values;
-			if (values == null) {
-				LOGGER.warn("'values:' property in Script-block : " + scriptDto.command.id + 
-						" is empty! Skiping Code-generation.");
-				return;
-			}
-			otclCommand.clearCache();
-//			resetOCC(targetOCC, scriptDto);
-			otclCommand.appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, addLogger);
-			clonedTargetOCC = targetOCC.clone();
-			if (!clonedTargetOCC.isLeaf()) { 
-				otclCommand.appendInitUptoAnchoredOrLastCollectionOrLeaf(clonedTargetOCC, 0, false, LogLevel.WARN);
-				if (clonedTargetOCC.otclCommandDto.isCollectionOrMap()) {
-					targetOCD = OtclCommand.retrieveMemberOCD(clonedTargetOCC);
-					clonedTargetOCC.otclCommandDto = targetOCD;
-				}
-			} else if (!targetOCD.isRootNode) {
-				otclCommand.appendGetter(clonedTargetOCC, targetOCD, false);
-			}
-			offsetIdx = processRemainingPath(clonedTargetOCC, otclCommand, scriptDto, scriptGroupIdx, offsetIdx);
-			targetOCD = targetOCC.otclCommandDto;
-			scriptGroupIdx++;
-			otclCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-//			addJavaStringObject(javaFileObjects, javaStringObject);
-//		}
+		} else if (!targetOCD.isRootNode) {
+			otclCommand.appendGetter(clonedTargetOCC, targetOCD, false);
+		}
+		offsetIdx = processRemainingPath(clonedTargetOCC, otclCommand, scriptDto, scriptGroupIdx, offsetIdx);
+		targetOCD = targetOCC.otclCommandDto;
+		scriptGroupIdx++;
+		otclCommand.createJavaFile(targetOCC, targetClz, sourceClz);
 		return;
 	}
 	
