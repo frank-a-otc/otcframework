@@ -105,7 +105,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		varNamesSet.add(idxPrefix);
 		String idxVar = sanitizeVarName(idxPrefix, varNamesSet);
-		targetOCC.idxVar = idxVar;
+//		targetOCC.idxVar = idxVar;
 		int idx = 0;
 		if (!idxVar.equals(idxPrefix)) {
 			idx = Integer.valueOf(idxVar.substring(idxPrefix.length()));

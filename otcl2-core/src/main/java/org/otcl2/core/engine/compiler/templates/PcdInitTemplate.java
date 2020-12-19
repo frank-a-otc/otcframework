@@ -81,7 +81,7 @@ public final class PcdInitTemplate extends AbstractTemplate {
 			}
 			memberPcdsCode.append(idxAndLenTemplate);
 		}
-		if (targetOCC.hasAnchor) {
+		if (targetOCC.hasAnchorInChain) {
 			memberPcdsCode.append(anchoredIcdTemplate);
 		}
 		if (targetOCC.hasExecuteConverter) {

@@ -136,13 +136,13 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 					} else if (childOCD.isCollectionMember()) {
 						if (targetOCC.hasMapValueDescendant()) {
 							if (isCurrentPreAnchored || (isCurrentPostAnchored && idx == 0) ||
-									(!targetOCC.hasAnchor && offsetIdx == 0) ||
+									(!targetOCC.hasAnchorInChain && offsetIdx == 0) ||
 									!targetOCC.hasDescendantCollectionOrMap() || offsetIdx == 0) {
 								otclCommand.appendIfNullTargetMemberPcdReturn(targetOCC, memberIdx, LogLevel.WARN);
 							}
 						} else {
 							if (isCurrentPreAnchored || (isCurrentPostAnchored && idx == 0) ||
-									(!targetOCC.hasAnchor && offsetIdx == 0) ||
+									(!targetOCC.hasAnchorInChain && offsetIdx == 0) ||
 									!targetOCC.hasDescendantCollectionOrMap() || offsetIdx == 0) {
 								otclCommand.appendAddToCollection(targetOCC, null, memberIdx, value);
 							}

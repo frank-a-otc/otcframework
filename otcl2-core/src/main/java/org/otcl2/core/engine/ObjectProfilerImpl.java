@@ -156,13 +156,11 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 			profiledObject = value;
 			otclCommandContext.otclCommandDto = otclCommandDto;
 		}
-//		if (otclCommandDto.isCollectionOrMap()) {
-			if (otclCommandDto.isCollection()) {				
-				parentICD = profileCollection(otclCommandContext, profiledObject, parentICD);
-			} else if (otclCommandDto.isMap()) {
-				parentICD = profileMap(otclCommandContext, profiledObject, parentICD);
-			}
-//		}
+		if (otclCommandDto.isCollection()) {				
+			parentICD = profileCollection(otclCommandContext, profiledObject, parentICD);
+		} else if (otclCommandDto.isMap()) {
+			parentICD = profileMap(otclCommandContext, profiledObject, parentICD);
+		}
 		return parentICD;
 	}
 	
@@ -195,7 +193,6 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 		OtclCommandDto memberOCD = otclCommandDto.children.get(otclCommandDto.fieldName);
 		if (parentICD == null) {
 			String profileId = null;
-//			if (otclCommandDto.hasAncestralCollectionOrMap(otclTokens)) {
 			if (otclCommandContext.hasAncestralCollectionOrMap()) {
 				profileId = otclCommandDto.otclToken;
 			} else {
@@ -213,12 +210,10 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 				} else {
 					member = iter.next();
 				}
-//				memberICD = IndexedCollectionsDtoFactory.create(memberOCD, otclTokens, parentICD, member, "" + idx);
 				memberICD = IndexedCollectionsDtoFactory.create(otclCommandContext, parentICD, member, "" + idx);
 			} else {
 				member = memberICD.profiledObject;
 			}
-//			if (memberOCD.hasDescendantCollectionOrMap(otclTokens)) {
 			if (otclCommandContext.hasDescendantCollectionOrMap()) {
 				IndexedCollectionsDto nextICD = profileObject(otclCommandContext.clone(), member, null);
 				if (nextICD != null) {
@@ -294,7 +289,6 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 				memberICD = valueICD;
 				otclCommandContext.otclCommandDto = valueOCD;
 			}
-//			if (memberOCD.hasDescendantCollectionOrMap(otclTokens)) {
 			if (otclCommandContext.hasDescendantCollectionOrMap()) {
 				Object member = memberICD.profiledObject;
 				IndexedCollectionsDto nextICD = profileObject(otclCommandContext, member, null);

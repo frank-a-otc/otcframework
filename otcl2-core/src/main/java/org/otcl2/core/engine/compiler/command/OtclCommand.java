@@ -124,6 +124,7 @@ public class OtclCommand {
 			String javaCode = classDto.codeBuilder.toString();
 			javaCode = JavaCodeFormatter.format(javaCode);
 			fileOutputStream.write(javaCode.getBytes()); 
+			fileOutputStream.flush();
 		} catch (IOException e) {
 			LOGGER.warn("", e);
 		} finally {
@@ -508,11 +509,13 @@ public class OtclCommand {
 		if (TARGET_SOURCE.TARGET == otclCommandDto.enumTargetSource) {
 			forLoopCode = ForLoopTemplate.generateTargetLoopCode(targetOCC, idxPrefix, createNewVarName, logLevel,
 					varNamesSet, varNamesMap);
+			targetOCC.currentCollectionTokenIndex++;
 		} else {
 			forLoopCode = ForLoopTemplate.generateSourceLoopCode(targetOCC, sourceOCC, idxPrefix, createNewVarName,
 					logLevel, varNamesSet, varNamesMap);
+			sourceOCC.currentCollectionTokenIndex++;
 		} 
-		targetOCC.loopCounter++;
+		targetOCC.loopsCounter++;
 		targetOCC.appendCode(forLoopCode);
 		return;
 	}
@@ -635,6 +638,37 @@ public class OtclCommand {
 					null, idx, logLevel, varNamesSet, varNamesMap);
 		} else if (memberOCD.isCollectionMember()) {
 			addToCollectionCode = AddToCollectionTemplate.generateCode(targetOCC, null, sourceOCD, idx, 
+					createNewVarName, varNamesSet, varNamesMap);
+		}
+		targetOCC.appendCode(addToCollectionCode);
+		return;
+	}
+
+	/**
+	 * Append init member.
+	 *
+	 * @param targetOCC the target OCC
+	 * @param sourceOCD the source OCD
+	 * @param idxVar the idx var
+	 * @param createNewVarName the create new var name
+	 * @param logLevel the log level
+	 */
+	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String idxVar, 
+			boolean createNewVarName, LogLevel logLevel) {
+		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
+		if (!memberOCD.isCollectionOrMapMember() || (memberOCD.isEnum() && targetOCC.isLeaf())) {
+			throw new CodeGeneratorException("","Invalid call to method in Script-block : " + targetOCC.scriptId + 
+					"! Type should be of a member of Collection/Map.");
+		}
+		String addToCollectionCode = null;
+		if (memberOCD.isMapKey()) {
+			addToCollectionCode = AddMapKeyTemplate.generateCode(targetOCC, sourceOCD, createNewVarName, idxVar,
+					varNamesSet, varNamesMap);
+		} else if (memberOCD.isMapValue()) {
+			addToCollectionCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCD, createNewVarName,
+					idxVar, logLevel, varNamesSet, varNamesMap);
+		} else if (memberOCD.isCollectionMember()) {
+			addToCollectionCode = AddToCollectionTemplate.generateCode(targetOCC, sourceOCD, idxVar,
 					createNewVarName, varNamesSet, varNamesMap);
 		}
 		targetOCC.appendCode(addToCollectionCode);
@@ -796,7 +830,7 @@ public class OtclCommand {
 				appendInit(targetOCC, false, LogLevel.WARN);
 			}
 			if (targetOCD.isCollectionOrMap()) {
-				boolean isAnchoredOrHavingCollections = targetOCC.isAnchored() || !targetOCC.hasDescendantCollectionOrMap();
+				boolean isAnchoredOrHavingCollections = targetOCC.isCurrentTokenAnchored() || !targetOCC.hasDescendantCollectionOrMap();
 				if (isAnchoredOrHavingCollections && !uptoLeafParent) {
 					break;
 				}
@@ -880,19 +914,28 @@ public class OtclCommand {
 	 */
 	public void appendInitUptoNextCollectionWithContinue(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
+		if (targetOCC.collectionsCount - targetOCC.currentCollectionTokenIndex > 0) {
+			targetOCC.currentCollectionTokenIndex++;
+		}
 		while (targetOCC.hasChildren()) {
 			boolean hasMapValueInPath = targetOCC.hasMapValueMember() || targetOCC.hasMapValueDescendant();
 			if (hasMapValueInPath) { 
 				appendInitIfNullTargetContinue(targetOCC, logLevel);
 				if (targetOCD.isCollectionOrMap()) {
 					String icdCode = null;
-					if (!targetOCC.hasAncestralCollectionOrMap()) {
-						if (OtclConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId &&
-								OtclConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
-							icdCode = PcdInitTemplate.generateIfNullTargetRootPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
-						}
-					} else {
+//					if (!targetOCC.hasAncestralCollectionOrMap()) {
+//						if (OtclConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId &&
+//								OtclConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
+//							icdCode = PcdInitTemplate.generateIfNullTargetRootPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
+//						}
+//					} else {
+//						icdCode = PcdInitTemplate.generateIfNullTargetParentPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
+//					}
+					if (targetOCC.hasAncestralCollectionOrMap()) {
 						icdCode = PcdInitTemplate.generateIfNullTargetParentPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
+					} else if (OtclConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId &&
+								OtclConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
+						icdCode = PcdInitTemplate.generateIfNullTargetRootPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
 					}
 					targetOCC.appendCode(icdCode);
 				} 
@@ -907,37 +950,6 @@ public class OtclCommand {
 				targetOCC.otclCommandDto = targetOCD;
 			}
 		}
-	}
-
-	/**
-	 * Append init member.
-	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
-	 * @param idxVar the idx var
-	 * @param createNewVarName the create new var name
-	 * @param logLevel the log level
-	 */
-	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String idxVar, 
-			boolean createNewVarName, LogLevel logLevel) {
-		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
-		if (!memberOCD.isCollectionOrMapMember() || (memberOCD.isEnum() && targetOCC.isLeaf())) {
-			throw new CodeGeneratorException("","Invalid call to method in Script-block : " + targetOCC.scriptId + 
-					"! Type should be of a member of Collection/Map.");
-		}
-		String addToCollectionCode = null;
-		if (memberOCD.isMapKey()) {
-			addToCollectionCode = AddMapKeyTemplate.generateCode(targetOCC, sourceOCD, createNewVarName, idxVar,
-					varNamesSet, varNamesMap);
-		} else if (memberOCD.isMapValue()) {
-			addToCollectionCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCD, createNewVarName,
-					idxVar, logLevel, varNamesSet, varNamesMap);
-		} else if (memberOCD.isCollectionMember()) {
-			addToCollectionCode = AddToCollectionTemplate.generateCode(targetOCC, sourceOCD, idxVar,
-					createNewVarName, varNamesSet, varNamesMap);
-		}
-		targetOCC.appendCode(addToCollectionCode);
-		return;
 	}
 	
 	/**

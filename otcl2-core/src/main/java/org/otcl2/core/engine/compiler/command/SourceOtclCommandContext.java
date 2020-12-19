@@ -28,6 +28,8 @@ public final class SourceOtclCommandContext extends OtclCommandContext {
 		sourceOtclCommandContext.otclTokens = otclTokens;
 		sourceOtclCommandContext.otclCommandDto = otclCommandDto;
 		sourceOtclCommandContext.profiledCollectionsDto = profiledCollectionsDto;		
+		sourceOtclCommandContext.collectionsCount = collectionsCount;
+		sourceOtclCommandContext.currentCollectionTokenIndex = currentCollectionTokenIndex;
 		return sourceOtclCommandContext;
 	}
 

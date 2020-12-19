@@ -28,21 +28,21 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtclCodeGenerator
 		SourceOtclCommandContext sourceOCC = executionContext.sourceOCC;
 
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
-		resetOCC(sourceOCC, scriptDto);
+//		resetOCC(sourceOCC, scriptDto);
 
 		OtclCommandDto targetOCD = null;
 		TargetOtclCommandContext clonedTargetOCC = null;
 		targetOCC.algorithmId = ALGORITHM_ID.FLAT;
 
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
-		resetOCC(sourceOCC, scriptDto);
+//		resetOCC(sourceOCC, scriptDto);
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
 			int dummy = 0;
 		}
 		otclCommand.clearCache();
 		boolean addLogger = true;
-		resetOCC(targetOCC, scriptDto);
+//		resetOCC(targetOCC, scriptDto);
 		clonedTargetOCC = targetOCC.clone();
 		otclCommand.appendBeginClass(clonedTargetOCC, sourceOCC, targetClz, sourceClz, addLogger);
 		if (sourceOCC.hasDescendantCollectionOrMap() && !sourceOCD.isCollectionOrMap()) {

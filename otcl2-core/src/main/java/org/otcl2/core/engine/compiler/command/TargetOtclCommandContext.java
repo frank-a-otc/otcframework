@@ -27,7 +27,7 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 	public ClassDto factoryClassDto;
 	
 	/** The has anchor. */
-	public boolean hasAnchor;
+	public boolean hasAnchorInChain;
 	
 	/** The has pre anchor. */
 	public boolean hasPreAnchor;
@@ -51,10 +51,13 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 	public ALGORITHM_ID algorithmId;
 	
 	/** The idx var. */
-	public String idxVar;
+//	public String idxVar;
 	
 	/** The loop counter. */
-	public int loopCounter;
+	public int loopsCounter;
+
+	/** The anchor index. */
+	public int anchorIndex;
 
 	/**
 	 * Instantiates a new target otcl command context.
@@ -84,7 +87,7 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 		targetOtclCommandContext.otclTokens = otclTokens;
 		targetOtclCommandContext.otclCommandDto = otclCommandDto;
 		targetOtclCommandContext.profiledCollectionsDto = profiledCollectionsDto;
-		targetOtclCommandContext.hasAnchor = hasAnchor;
+		targetOtclCommandContext.hasAnchorInChain = hasAnchorInChain;
 		targetOtclCommandContext.hasPreAnchor = hasPreAnchor;
 		targetOtclCommandContext.hasPostAnchor = hasPostAnchor;
 		targetOtclCommandContext.hasExecuteModule = hasExecuteModule;
@@ -92,6 +95,8 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 		targetOtclCommandContext.executeModuleOtclNamespace = executeModuleOtclNamespace;
 		targetOtclCommandContext.executeOtclConverter = executeOtclConverter;
 		targetOtclCommandContext.algorithmId = algorithmId;
+		targetOtclCommandContext.collectionsCount = collectionsCount;
+		targetOtclCommandContext.currentCollectionTokenIndex = currentCollectionTokenIndex;
 		return targetOtclCommandContext;
 	}
 

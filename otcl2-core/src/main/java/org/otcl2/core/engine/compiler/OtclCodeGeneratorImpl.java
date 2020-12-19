@@ -140,10 +140,14 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 			resetOCC(targetOCC, scriptDto);
 			OtclCommandDto targetOCD = targetOCDStems.get(targetOCC.otclTokens[0]);
 			targetOCC.otclCommandDto = targetOCD;
+			OtclChainDto targetOtclChainDto = scriptDto.targetOtclChainDto;
+			targetOCC.collectionsCount = targetOtclChainDto.collectionCount + targetOtclChainDto.dictionaryCount;
 			resetOCC(sourceOCC, scriptDto);
-			if (scriptDto.sourceOtclChainDto != null) {
+			OtclChainDto sourceOtclChainDto = scriptDto.sourceOtclChainDto;
+			if (sourceOtclChainDto != null) {
 				OtclCommandDto sourceOCD = sourceOCDStems.get(sourceOCC.otclTokens[0]);
 				sourceOCC.otclCommandDto = sourceOCD;
+				sourceOCC.collectionsCount = sourceOtclChainDto.collectionCount + sourceOtclChainDto.dictionaryCount;
 			}
 			boolean isCopyValues = false;
 			boolean isExtensions = false;
@@ -155,7 +159,6 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 			executionContext.sourceClz = sourceClz;
 			executionContext.targetOCC = targetOCC;
 			executionContext.sourceOCC = sourceOCC;
-//			executionContext.javaFileObjects = javaFileObjects;
 			if (scriptDto.hasSetValues) {
 				CopyValuesCommandCodeGenerator.generateSourceCode(executionContext);
 				isCopyValues = true;
@@ -165,11 +168,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 				isExtensions = true;
 			}
 			if (!isCopyValues && !isExtensions) {
-				OtclChainDto sourceOtclChainDto = scriptDto.sourceOtclChainDto;
-				OtclChainDto targetOtclChainDto = scriptDto.targetOtclChainDto;
-				int targetCollectionsCount = targetOtclChainDto.collectionCount + targetOtclChainDto.dictionaryCount;
-				int sourceCollectionsCount = sourceOtclChainDto.collectionCount + sourceOtclChainDto.dictionaryCount;
-				if (targetCollectionsCount > 0 && sourceCollectionsCount > 0) {
+				if (targetOCC.collectionsCount > 0 && sourceOCC.collectionsCount > 0) {
 					CopyCollectionPathsCodeGenerator.generateSourceCode(executionContext);
 				} else {
 					CopyFlatAndMixedPathsCodeGenerator.generateSourceCode(executionContext);

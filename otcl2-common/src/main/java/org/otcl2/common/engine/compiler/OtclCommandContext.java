@@ -39,6 +39,12 @@ public class OtclCommandContext {
 	/** The profiled collections dto. */
 	public IndexedCollectionsDto profiledCollectionsDto;
 		
+	/** The collections count. */
+	public int collectionsCount = 0;
+
+	/** The current collection token index. */
+	public int currentCollectionTokenIndex = 0;
+	
 	/**
 	 * Clone.
 	 *
@@ -200,7 +206,7 @@ public class OtclCommandContext {
 	 *
 	 * @return true, if is anchored
 	 */
-	public boolean isAnchored() {
+	public boolean isCurrentTokenAnchored() {
 		String otclToken = rawOtclTokens[otclCommandDto.otclTokenIndex];
 		if (otclToken.contains(OtclConstants.ANCHOR)) {
 			return true;
@@ -234,12 +240,9 @@ public class OtclCommandContext {
 		return false;
 	}
 
-	public int descendantsCollectionsCount() {
-		if (rawOtclTokens.length == 1) {
-			return 0;
-		}
+	public int descendantsCollectionsCountInclusive() {
 		int descendantsCollectionsCount = 0;
-		int startIdx = otclCommandDto.otclTokenIndex + 1;
+		int startIdx = otclCommandDto.otclTokenIndex;
 		for (int idx = startIdx; idx < otclTokens.length; idx++) {
 			String otclToken = otclTokens[idx];
 			if (otclToken.contains(OtclConstants.OPEN_BRACKET)) {

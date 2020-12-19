@@ -71,7 +71,7 @@ abstract class AbstractOtclCodeGenerator  {
 		targetOCC.otclChain = targetOtclChain;
 		targetOCC.otclTokens = targetOtclChainDto.otclTokens;
 		targetOCC.rawOtclTokens = targetOtclChainDto.rawOtclTokens;
-		targetOCC.hasAnchor = targetOtclChain.contains(OtclConstants.ANCHOR);
+		targetOCC.hasAnchorInChain = targetOtclChain.contains(OtclConstants.ANCHOR);
 		boolean hasPreAnchor = targetOtclChain.contains(OtclConstants.PRE_ANCHOR) || 
 				targetOtclChain.contains(OtclConstants.MAP_PRE_ANCHOR);
 		targetOCC.hasPreAnchor = hasPreAnchor;

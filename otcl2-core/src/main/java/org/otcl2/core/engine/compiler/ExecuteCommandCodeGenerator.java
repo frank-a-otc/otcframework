@@ -26,37 +26,32 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 	 * @param executionContext the execution context
 	 */
 	public static void generateSourceCode(ExecutionContext executionContext) {
-		
-//		ScriptGroupDto scriptGroupDto = executionContext.entry.getValue();
-//		for (ScriptDto scriptDto : scriptGroupDto.scriptDtos) {
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
-			
-			if (scriptDto.hasExecutionOrder) {
-				for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
-					ScriptDto clonedScriptDto = scriptDto.clone();
-					if (OtclConstants.EXECUTE_OTCL_CONVERTER.equals(execOrd)) {
-						clonedScriptDto.hasExecuteModule = false;
-						clonedScriptDto.hasExecuteConverter = true;
-						executionContext.targetOCC.algorithmId = ALGORITHM_ID.CONVERTER;
-					} else {
-						clonedScriptDto.hasExecuteModule = true;
-						clonedScriptDto.hasExecuteConverter = false;
-						executionContext.targetOCC.algorithmId = ALGORITHM_ID.MODULE;
-					}
-					executionContext.targetOCC.scriptDto = clonedScriptDto;
-				}
-			} else {
-				executionContext.targetOCC.scriptDto = scriptDto;
-				if (scriptDto.hasExecuteConverter) {
+		if (scriptDto.hasExecutionOrder) {
+			for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
+				ScriptDto clonedScriptDto = scriptDto.clone();
+				if (OtclConstants.EXECUTE_OTCL_CONVERTER.equals(execOrd)) {
+					clonedScriptDto.hasExecuteModule = false;
+					clonedScriptDto.hasExecuteConverter = true;
 					executionContext.targetOCC.algorithmId = ALGORITHM_ID.CONVERTER;
-					generateCodeForModuleAndConverter(executionContext);
-				}
-				if (scriptDto.hasExecuteModule) {
+				} else {
+					clonedScriptDto.hasExecuteModule = true;
+					clonedScriptDto.hasExecuteConverter = false;
 					executionContext.targetOCC.algorithmId = ALGORITHM_ID.MODULE;
-					generateCodeForModuleAndConverter(executionContext);
 				}
+				executionContext.targetOCC.scriptDto = clonedScriptDto;
 			}
-//		}
+		} else {
+			executionContext.targetOCC.scriptDto = scriptDto;
+			if (scriptDto.hasExecuteConverter) {
+				executionContext.targetOCC.algorithmId = ALGORITHM_ID.CONVERTER;
+				generateCodeForModuleAndConverter(executionContext);
+			}
+			if (scriptDto.hasExecuteModule) {
+				executionContext.targetOCC.algorithmId = ALGORITHM_ID.MODULE;
+				generateCodeForModuleAndConverter(executionContext);
+			}
+		}
 		return;
 	}
 	
@@ -66,23 +61,17 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 	 * @param executionContext the execution context
 	 */
 	private static void generateCodeForModuleAndConverter(ExecutionContext executionContext) {
-//		Entry<String, ScriptGroupDto> entry = executionContext.entry;
 		OtclCommand otclCommand = executionContext.otclCommand;
 		Class<?> targetClz = executionContext.targetClz;
 		TargetOtclCommandContext targetOCC = executionContext.targetOCC;
 		Class<?> sourceClz = executionContext.sourceClz; 
 		SourceOtclCommandContext sourceOCC = executionContext.sourceOCC;
-//		List<JavaFileObject> javaFileObjects = executionContext.javaFileObjects;
-		
-//		ScriptGroupDto scriptGroupDto = entry.getValue();
-//		List<ScriptDto> scriptDtos = scriptGroupDto.scriptDtos;
 		OtclCommandDto targetOCD = null;
 		int idx = 0;
-//		ScriptDto scriptDto = scriptDtos.get(0);
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
 		OtclChainDto sourceOtclChainDto = scriptDto.sourceOtclChainDto;
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
-		resetOCC(sourceOCC, scriptDto);
+//		resetOCC(sourceOCC, scriptDto);
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
 			int dummy = 0;
@@ -182,7 +171,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 			}
 		}
 		otclCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-//		addJavaStringObject(javaFileObjects, javaStringObject);
 		return ;
 	}
 

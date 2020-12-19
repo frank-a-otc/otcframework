@@ -374,7 +374,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 				if (!CommonUtils.isEmpty(otclNamespace) && !factoryClassName.startsWith(otclNamespace)) {
 					factoryClassName = otclNamespace + "." + factoryClassName;
 				}
-				 absoluteFileName = srcDir + File.separator + factoryClassName.replace(".", File.separator) +
+				absoluteFileName = srcDir + File.separator + factoryClassName.replace(".", File.separator) +
 						OtclConstants.OTCL_GENERATEDCODE_EXTN;
 				file = new File(absoluteFileName);
 				if (!file.exists()) {
