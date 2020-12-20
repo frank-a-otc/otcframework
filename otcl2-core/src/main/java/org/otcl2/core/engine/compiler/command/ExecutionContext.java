@@ -67,6 +67,20 @@ public class ExecutionContext {
 		return currentCollectionSizeType;
 	}
 	
+	public CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionInclusiveSizeType() {
+		int sourceCollectionsCount = sourceOCC.collectionsCount;
+		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCountInclusive();
+		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionSizeType;
+		if (targetDescendantsCollectionsCount > sourceCollectionsCount) {
+			currentCollectionSizeType = CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET;
+		} else if (targetDescendantsCollectionsCount == sourceCollectionsCount) {
+			currentCollectionSizeType = CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE;
+		} else {
+			currentCollectionSizeType = CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE;
+		}
+		return currentCollectionSizeType;
+	}
+	
 	/**
 	 * Checks if is large source.
 	 *

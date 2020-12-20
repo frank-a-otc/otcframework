@@ -923,14 +923,6 @@ public class OtclCommand {
 				appendInitIfNullTargetContinue(targetOCC, logLevel);
 				if (targetOCD.isCollectionOrMap()) {
 					String icdCode = null;
-//					if (!targetOCC.hasAncestralCollectionOrMap()) {
-//						if (OtclConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId &&
-//								OtclConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
-//							icdCode = PcdInitTemplate.generateIfNullTargetRootPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
-//						}
-//					} else {
-//						icdCode = PcdInitTemplate.generateIfNullTargetParentPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
-//					}
 					if (targetOCC.hasAncestralCollectionOrMap()) {
 						icdCode = PcdInitTemplate.generateIfNullTargetParentPcdCreateCode(targetOCC, varNamesSet, varNamesMap);
 					} else if (OtclConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId &&

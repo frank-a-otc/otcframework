@@ -104,6 +104,7 @@ abstract class AbstractOtclCodeGenerator  {
 			targetOCC.factoryClassDto.packageName = pkg;
 			targetOCC.factoryClassDto.className = clzName;
 		}
+		targetOCC.currentCollectionTokenIndex = 0;
 	}
 	
 	/**
@@ -119,6 +120,7 @@ abstract class AbstractOtclCodeGenerator  {
 			sourceOCC.otclTokens = sourceOtclChainDto.otclTokens;
 			sourceOCC.rawOtclTokens = sourceOtclChainDto.rawOtclTokens;
 		}
+		sourceOCC.currentCollectionTokenIndex = 0;
 	}
 	
 	/**

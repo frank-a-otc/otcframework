@@ -159,6 +159,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 			executionContext.sourceClz = sourceClz;
 			executionContext.targetOCC = targetOCC;
 			executionContext.sourceOCC = sourceOCC;
+			executionContext.initCollectionSizeType();
 			if (scriptDto.hasSetValues) {
 				CopyValuesCommandCodeGenerator.generateSourceCode(executionContext);
 				isCopyValues = true;
