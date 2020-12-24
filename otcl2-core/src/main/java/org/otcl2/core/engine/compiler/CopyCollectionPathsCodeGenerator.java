@@ -89,10 +89,16 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 			sourceOCD = OtclCommand.retrieveNextCollectionOrMapOCD(sourceOCC);
 			sourceOCC.otclCommandDto = sourceOCD; 
 		}
+//		boolean isOffsetIdxInitialized = false;
 		while (true) {
 			if (sourceCollectionsCount > 0) {
 				otclCommand.appendForLoop(targetOCC, sourceOCC, AbstractTemplate.SOURCE_IDX, false, LogLevel.WARN);
 				sourceCollectionsCount--;
+//				if (executionContext.isLargeSource() && targetOCC.collectionsCount > 1
+//						&& !isOffsetIdxInitialized) {
+//					otclCommand.appendInitOffsetIdx(targetOCC);
+//					isOffsetIdxInitialized = true;
+//				}
 			} else {
 				otclCommand.appendIfNullSourceContinue(targetOCC, sourceOCC, LogLevel.WARN);
 			}
