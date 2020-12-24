@@ -150,7 +150,7 @@ public abstract class AbstractTemplate {
 			+ "\nMap<String, Object> data) {";
 
 	/** The Constant executeFactoryMethodCallTemplate. */
-	protected static final String executeFactoryMethodCallTemplate = "\n%s.execute(%s, sourceICD, %s, targetICD, data);";
+	protected static final String executeFactoryMethodCallTemplate = "\n%s.execute(%s, %s, %s, targetICD, data);";
 
 	/** The Constant factoryModuleClassBeginCodeTemplate. */
 	protected static final String factoryModuleClassBeginCodeTemplate = "package %s;\n"

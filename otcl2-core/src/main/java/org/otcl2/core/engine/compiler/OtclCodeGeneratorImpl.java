@@ -67,7 +67,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 	 */
 	@Override
 	public List<JavaFileObject> generateSourcecode(OtclDto otclDto) {
-		LOGGER.info("Kickstarting Code generator....");
+		LOGGER.info("Starting Code generator....");
 		OtclFileDto otclFileDto = otclDto.otclFileDto;
 		ClassDto mainClassDto = otclDto.mainClassDto;
 		List<JavaFileObject> javaFileObjects = null;
@@ -159,7 +159,6 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 			executionContext.sourceClz = sourceClz;
 			executionContext.targetOCC = targetOCC;
 			executionContext.sourceOCC = sourceOCC;
-			executionContext.initCollectionSizeType();
 			if (scriptDto.hasSetValues) {
 				CopyValuesCommandCodeGenerator.generateSourceCode(executionContext);
 				isCopyValues = true;
@@ -170,6 +169,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 			}
 			if (!isCopyValues && !isExtensions) {
 				if (targetOCC.collectionsCount > 0 && sourceOCC.collectionsCount > 0) {
+					executionContext.initCollectionSizeType();
 					CopyCollectionPathsCodeGenerator.generateSourceCode(executionContext);
 				} else {
 					CopyFlatAndMixedPathsCodeGenerator.generateSourceCode(executionContext);

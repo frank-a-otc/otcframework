@@ -41,6 +41,9 @@ public class ExecutionContext {
 	/** The should increment offset idx. */
 	public boolean shouldIncrementOffsetIdx;
 
+	/** The is offset idx already added. */
+	public boolean isOffsetIdxAlreadyAdded = false;
+	
 	public void initCollectionSizeType() {
 		int sourceDescendantsCollectionsCount = sourceOCC.descendantsCollectionsCountInclusive();
 		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCountInclusive();
@@ -53,8 +56,13 @@ public class ExecutionContext {
 		}
 	}
 
-	public CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionSizeType() {
-		int sourceCollectionsCount = sourceOCC.collectionsCount - 1;
+	public CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionSizeType(TargetOtclCommandContext targetOCC) {
+		int sourceCollectionsCount = 0;
+		if (targetOCC.isCurrentTokenAnchored() || !targetOCC.hasAnchorInChain) {
+			sourceCollectionsCount = sourceOCC.collectionsCount;
+		} else {
+			sourceCollectionsCount = sourceOCC.collectionsCount - 1;
+		}
 		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCountInclusive();
 		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionSizeType;
 		if (targetDescendantsCollectionsCount > sourceCollectionsCount) {
@@ -97,42 +105,6 @@ public class ExecutionContext {
 	 */
 	public boolean isLargeTarget() {
 		return CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == collectionsComparisonType;
-	}
-	
-	/**
-	 * Checks if is equal size.
-	 *
-	 * @return true, if is equal size
-	 */
-	public boolean isEqualSize() {
-		return CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == collectionsComparisonType;
-	}
-	
-	/**
-	 * Checks if is current large source.
-	 *
-	 * @return true, if is current large source
-	 */
-	public boolean isCurrentLargeSource() {
-		return CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE == currentCollectionSizeType();
-	}
-	
-	/**
-	 * Checks if is current large target.
-	 *
-	 * @return true, if is current large target
-	 */
-	public boolean isCurrentLargeTarget() {
-		return CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == currentCollectionSizeType();
-	}
-	
-	/**
-	 * Checks if is current equal size.
-	 *
-	 * @return true, if is current equal size
-	 */
-	public boolean isCurrentEqualSize() {
-		return CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == currentCollectionSizeType();
 	}
 	
 }

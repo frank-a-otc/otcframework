@@ -24,10 +24,13 @@ public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 	public static String generateCode(String factoryClzName, Class<?> targetClz, Class<?> sourceClz) {
 		String targetVar = CommonUtils.initLower(targetClz.getSimpleName());
 		String sourceVar = null;
+		String sourceICD = null;
 		if (sourceClz != null) {
 			sourceVar = CommonUtils.initLower(sourceClz.getSimpleName());
+			sourceICD = "sourceICD";
 		}
-		String executeMethodCallCode = String.format(executeFactoryMethodCallTemplate, factoryClzName, sourceVar, targetVar);
+		String executeMethodCallCode = String.format(executeFactoryMethodCallTemplate, factoryClzName, sourceVar, sourceICD, 
+				targetVar);
 		return executeMethodCallCode;
 	}
 
