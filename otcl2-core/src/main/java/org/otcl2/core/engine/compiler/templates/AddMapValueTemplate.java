@@ -6,6 +6,7 @@ import java.util.Set;
 import org.otcl2.common.OtclConstants;
 import org.otcl2.common.OtclConstants.LogLevel;
 import org.otcl2.common.dto.OtclCommandDto;
+import org.otcl2.common.engine.compiler.OtclCommandContext;
 import org.otcl2.common.util.PackagesFilterUtil;
 import org.otcl2.core.engine.compiler.command.TargetOtclCommandContext;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
@@ -34,9 +35,9 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 	 * @param varNamesMap the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, boolean createNewVarName,
+	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandContext sourceOCC, boolean createNewVarName,
 			String value, Integer idx, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-		return generateCode(targetOCC, sourceOCD, createNewVarName, value, idx, null, logLevel, varNamesSet, varNamesMap);
+		return generateCode(targetOCC, sourceOCC, createNewVarName, value, idx, null, logLevel, varNamesSet, varNamesMap);
 	}
 	
 	/**
@@ -51,9 +52,9 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 	 * @param varNamesMap the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, boolean createNewVarName,
+	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandContext sourceOCC, boolean createNewVarName,
 			String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-		return generateCode(targetOCC, sourceOCD, createNewVarName, null, null, idxVar, logLevel, varNamesSet, varNamesMap);
+		return generateCode(targetOCC, sourceOCC, createNewVarName, null, null, idxVar, logLevel, varNamesSet, varNamesMap);
 	}
 	
 	/**
@@ -70,7 +71,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 	 * @param varNamesMap the var names map
 	 * @return the string
 	 */
-	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, boolean createNewVarName,
+	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandContext sourceOCC, boolean createNewVarName,
 			String value, Integer idx, String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto valueOCD = targetOCC.otclCommandDto;
 		if (!valueOCD.isMapValue()) {
@@ -90,7 +91,11 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			int endIdx = targetOCC.otclChain.lastIndexOf(OtclConstants.MAP_VALUE_REF) + 3;
 			String mapValueTokenPath = targetOCC.otclChain.substring(0, endIdx);
 			String logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
-			getMapKeyValueICDCode = String.format(ifNullMapKeyIcdReturnTemplate, keyPcdId, logLevel, logMsg, valuePcdId);
+			if (sourceOCC.hasAncestralCollectionOrMap()) {
+				getMapKeyValueICDCode = String.format(ifNullMapKeyIcdContinueTemplate, keyPcdId, logLevel, logMsg, valuePcdId);
+			} else {
+				getMapKeyValueICDCode = String.format(ifNullMapKeyIcdReturnTemplate, keyPcdId, logLevel, logMsg, valuePcdId);
+			}
 			if (targetOCC.hasDescendantCollectionOrMap()) {
 				getMapKeyValueICDCode += assignValueToMemberIcdTemplate;
 			}
@@ -102,6 +107,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 				keyFieldTypecastType);
 		codeSectionBuilder.append(retrieveMapKeyFromICDCode);
 		String valueFieldType = fetchFieldTypeName(targetOCC, null, valueOCD, false, varNamesMap);
+		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		String valOrVar = fetchValueOrVar(targetOCC, sourceOCD, value, createNewVarName, varNamesSet, varNamesMap);
 		String valueFieldCastType = fetchSanitizedTypeName(targetOCC, valueOCD);
 		String valueVarName = createVarName(valueOCD, false, varNamesSet, varNamesMap);

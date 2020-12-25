@@ -39,12 +39,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 					". Type should not be a Collecton or Map member.");
 		}
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
-		String sourceVarName = null;
-//		if (sourceOCD.isRootNode) {
-//			sourceVarName = CommonUtils.initLower(sourceOCD.field.getDeclaringClass().getSimpleName());
-//		} else {
-			sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
-//		}
+		String sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
 		String targetParentVarName = null;
 		String sourceParentVarName = null;
 		if (targetOCD.isRootNode) {
@@ -103,22 +98,8 @@ public final class GetSetTemplate extends AbstractTemplate {
 							throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to " +
 									targetOCD.fieldType + " in " + targetOCC.scriptId);
 						}
-//						String dateFormat = null;
-//						if (targetOCC.scriptDto.copy.from.overrides != null) {
-//							for (OtclFileDto.Override override : targetOCC.scriptDto.copy.from.overrides) {
-//								if (override.dateFormat != null) {
-//									dateFormat = override.dateFormat;
-//									break;
-//								}
-//							}
-//						}
-//						if (dateFormat != null) {
-//							getSetCode = String.format(formattedDateConverterTemplate, targetParentVarName,
-//									targetOCD.setter, sourceVarName, sourceOCD.fieldType);
-//						} else {
-							getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
-									sourceVarName, sourceOCD.fieldType);
-//						}
+						getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
+								sourceVarName, sourceOCD.fieldType);
 					}
 				} else if (MutualDateTypesConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
 					targetOCC.factoryClassDto.addImport(MutualDateTypesConverterFacade.class.getName());

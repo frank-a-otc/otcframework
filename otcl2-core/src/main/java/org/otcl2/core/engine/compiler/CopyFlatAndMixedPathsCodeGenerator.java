@@ -35,14 +35,12 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtclCodeGenerator
 		targetOCC.algorithmId = ALGORITHM_ID.FLAT;
 
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
-//		resetOCC(sourceOCC, scriptDto);
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
 			int dummy = 0;
 		}
 		otclCommand.clearCache();
 		boolean addLogger = true;
-//		resetOCC(targetOCC, scriptDto);
 		clonedTargetOCC = targetOCC.clone();
 		otclCommand.appendBeginClass(clonedTargetOCC, sourceOCC, targetClz, sourceClz, addLogger);
 		if (sourceOCC.hasDescendantCollectionOrMap() && !sourceOCD.isCollectionOrMap()) {
@@ -104,7 +102,7 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtclCodeGenerator
 			if (targetOCD.isMapKey()) {
 				otclCommand.appendAddMapKey(clonedTargetOCC, sourceOCD, null, 0);
 			} else if (targetOCD.isMapValue()) {
-				otclCommand.appendAddMapValue(clonedTargetOCC, sourceOCD, null, 0, LogLevel.WARN);
+				otclCommand.appendAddMapValue(clonedTargetOCC, sourceOCC, null, 0, LogLevel.WARN);
 			} else if (targetOCD.isCollectionMember()) {
 				otclCommand.appendAddToCollection(clonedTargetOCC, sourceOCD, null, null);
 			}

@@ -553,6 +553,14 @@ protected static final String ifNullCreateAndSetTemplate = "\nif (%s == null) {"
 			+ "\n}"
 			+ "\nvalueTargetICD = parentTargetICD.children.get(%s);";
 
+	/** The Constant ifNullMapKeyIcdReturnTemplate. */
+	protected static final String ifNullMapKeyIcdContinueTemplate = "\nkeyTargetICD = parentTargetICD.children.get(%s);"
+			+ "\nif (keyTargetICD == null) {" 
+			+ "\nLOGGER.%s(\"%s\");"
+			+ "\ncontinue;"
+			+ "\n}"
+			+ "\nvalueTargetICD = parentTargetICD.children.get(%s);";
+
 	/** The Constant addMapEntryUpdateIcdTemplate. */
 	protected static final String addMapEntryUpdateIcdTemplate = "\n%s.put(%s, %s);"
 			+ "\nvalueTargetICD.profiledObject = %s;";

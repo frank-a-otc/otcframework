@@ -622,19 +622,23 @@ public class OtclCommand {
 	 * @param createNewVarName the create new var name
 	 * @param logLevel the log level
 	 */
-	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, Integer idx,
+	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandContext sourceOCC, Integer idx,
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
 		if (!memberOCD.isCollectionOrMapMember() || (memberOCD.isEnum() && targetOCC.isLeaf())) {
 			throw new CodeGeneratorException("","Invalid call to method in Script-block : " + targetOCC.scriptId + 
 					"! Type should be of a member of Collection/Map.");
 		}
+		OtclCommandDto sourceOCD = null;
+		if (sourceOCC != null) {
+			sourceOCD = sourceOCC.otclCommandDto;
+		}
 		String addToCollectionCode = null;
 		if (memberOCD.isMapKey()) {
 			addToCollectionCode = AddMapKeyTemplate.generateCode(targetOCC, sourceOCD, createNewVarName,
 					null, idx, varNamesSet, varNamesMap);
 		} else if (memberOCD.isMapValue()) {
-			addToCollectionCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCD, createNewVarName,
+			addToCollectionCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCC, createNewVarName,
 					null, idx, logLevel, varNamesSet, varNamesMap);
 		} else if (memberOCD.isCollectionMember()) {
 			addToCollectionCode = AddToCollectionTemplate.generateCode(targetOCC, null, sourceOCD, idx, 
@@ -653,19 +657,20 @@ public class OtclCommand {
 	 * @param createNewVarName the create new var name
 	 * @param logLevel the log level
 	 */
-	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String idxVar, 
+	public void appendInitMember(TargetOtclCommandContext targetOCC, OtclCommandContext sourceOCC, String idxVar, 
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
 		if (!memberOCD.isCollectionOrMapMember() || (memberOCD.isEnum() && targetOCC.isLeaf())) {
 			throw new CodeGeneratorException("","Invalid call to method in Script-block : " + targetOCC.scriptId + 
 					"! Type should be of a member of Collection/Map.");
 		}
+		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		String addToCollectionCode = null;
 		if (memberOCD.isMapKey()) {
 			addToCollectionCode = AddMapKeyTemplate.generateCode(targetOCC, sourceOCD, createNewVarName, idxVar,
 					varNamesSet, varNamesMap);
 		} else if (memberOCD.isMapValue()) {
-			addToCollectionCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCD, createNewVarName,
+			addToCollectionCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCC, createNewVarName,
 					idxVar, logLevel, varNamesSet, varNamesMap);
 		} else if (memberOCD.isCollectionMember()) {
 			addToCollectionCode = AddToCollectionTemplate.generateCode(targetOCC, sourceOCD, idxVar,
@@ -714,9 +719,9 @@ public class OtclCommand {
 	 * @param idx the idx
 	 * @param logLevel the log level
 	 */
-	public void appendAddMapValue(TargetOtclCommandContext targetOCC, OtclCommandDto sourceOCD, String value, Integer idx,
+	public void appendAddMapValue(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC, String value, Integer idx,
 			LogLevel logLevel) {
-		String addMapValueCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCD, false, value, idx, logLevel,
+		String addMapValueCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCC, false, value, idx, logLevel,
 				varNamesSet, varNamesMap);
 		targetOCC.appendCode(addMapValueCode);
 		return;

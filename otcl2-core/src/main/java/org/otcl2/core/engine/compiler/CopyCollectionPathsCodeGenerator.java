@@ -89,16 +89,10 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 			sourceOCD = OtclCommand.retrieveNextCollectionOrMapOCD(sourceOCC);
 			sourceOCC.otclCommandDto = sourceOCD; 
 		}
-//		boolean isOffsetIdxInitialized = false;
 		while (true) {
 			if (sourceCollectionsCount > 0) {
 				otclCommand.appendForLoop(targetOCC, sourceOCC, AbstractTemplate.SOURCE_IDX, false, LogLevel.WARN);
 				sourceCollectionsCount--;
-//				if (executionContext.isLargeSource() && targetOCC.collectionsCount > 1
-//						&& !isOffsetIdxInitialized) {
-//					otclCommand.appendInitOffsetIdx(targetOCC);
-//					isOffsetIdxInitialized = true;
-//				}
 			} else {
 				otclCommand.appendIfNullSourceContinue(targetOCC, sourceOCC, LogLevel.WARN);
 			}
@@ -113,15 +107,16 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 		}
 		sourceCollectionsCount = sourceOCC.collectionsCount;
 		sourceOCD = sourceOCC.otclCommandDto;
+		OtclCommandDto memberOCD = null;
 		while (targetCollectionsCount > 0) {
 			otclCommand.appendInitUptoNextCollectionWithContinue(targetOCC, LogLevel.WARN);
-			OtclCommandDto memberOCD = OtclCommand.retrieveMemberOCD(targetOCC);
+			memberOCD = OtclCommand.retrieveMemberOCD(targetOCC);
 			targetOCC.otclCommandDto = memberOCD;
 			executionContext.shouldIncrementOffsetIdx = false;
 			if (targetOCC.isCurrentTokenAnchored()) {
 				appendInitAnchored(executionContext, otclCommand);
 			} else if (targetOCC.hasAnchoredDescendant()) {
-				otclCommand.appendInitMember(targetOCC, sourceOCD, 0, false, LogLevel.WARN);
+				otclCommand.appendInitMember(targetOCC, sourceOCC, 0, false, LogLevel.WARN);
 			} else if (targetOCC.hasAnchorInChain) {
 				appendInitHasAnchor(executionContext, otclCommand);
 			} else {
@@ -131,11 +126,11 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 				otclCommand.appendIncrementOffsetIdx(targetOCC);
 				executionContext.isOffsetIdxAlreadyAdded = true;
 			}
+			targetCollectionsCount = targetOCC.collectionsCount - targetOCC.currentCollectionTokenIndex;
 			if (targetOCC.hasDescendantCollectionOrMap()) {
 				targetOCD = OtclCommand.retrieveNextOCD(targetOCC);
 				targetOCC.otclCommandDto = targetOCD;
 			}
-			targetCollectionsCount = targetOCC.collectionsCount - targetOCC.currentCollectionTokenIndex;
 		}
 		if (!targetOCC.isLeaf() && !targetOCD.isCollectionOrMapMember()) {
 			targetOCD = OtclCommand.retrieveNextOCD(targetOCC);
@@ -143,6 +138,14 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 			while (!targetOCC.isLeaf()) {
 				otclCommand.appendInit(targetOCC, false, LogLevel.WARN);
 				targetOCD = OtclCommand.retrieveNextOCD(targetOCC);
+				targetOCC.otclCommandDto = targetOCD;
+			}
+		}
+		if (memberOCD != null) {
+			targetOCC.otclCommandDto = memberOCD;
+			if (targetOCC.isLeaf()) {
+				targetOCD = memberOCD;
+			} else {
 				targetOCC.otclCommandDto = targetOCD;
 			}
 		}
@@ -174,8 +177,8 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 				executionContext.shouldIncrementOffsetIdx = true;
 			}
 		}
-		OtclCommandDto sourceOCD = executionContext.sourceOCC.otclCommandDto;
-		otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+		SourceOtclCommandContext sourceOCC = executionContext.sourceOCC;
+		otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 		targetOCC.anchorIndex = targetOCC.currentCollectionTokenIndex;
 		return;
 	}
@@ -194,23 +197,23 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionComparisonType = executionContext.currentCollectionSizeType(targetOCC);
 		if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == currentCollectionComparisonType) {
 			if (targetOCC.currentCollectionTokenIndex > sourceOCC.collectionsCount) {
-				otclCommand.appendInitMember(targetOCC, sourceOCD, 0, false, LogLevel.WARN);
+				otclCommand.appendInitMember(targetOCC, sourceOCC, 0, false, LogLevel.WARN);
 			} else {
 				idxVar = AbstractTemplate.SOURCE_IDX + (targetOCC.currentCollectionTokenIndex - targetOCC.anchorIndex);
-				otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+				otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 			}
 		} else if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE == currentCollectionComparisonType ||
 				CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == currentCollectionComparisonType) {
 			if (targetOCC.currentCollectionTokenIndex < targetOCC.collectionsCount) {
 				idxVar = AbstractTemplate.SOURCE_IDX + (targetOCC.currentCollectionTokenIndex - targetOCC.anchorIndex);
-				otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+				otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 			} else if (targetOCC.currentCollectionTokenIndex == targetOCC.collectionsCount) {
 				if (executionContext.isLargeTarget()) {
-					otclCommand.appendInitMember(targetOCC, sourceOCD, 0, false, LogLevel.WARN);
+					otclCommand.appendInitMember(targetOCC, sourceOCC, 0, false, LogLevel.WARN);
 				} else {
 					idxVar = AbstractTemplate.OFFSET_IDX;
 					executionContext.shouldIncrementOffsetIdx = true;
-					otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+					otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 				}
 			}
 		}
@@ -235,7 +238,7 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 			} else {
 				int id = sourceOCC.collectionsCount - (remainingCollections + 1);
 				idxVar = AbstractTemplate.SOURCE_IDX + id;
-				otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+				otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 			}
 		} else if (executionContext.isLargeSource()) {
 			if (targetOCC.currentCollectionTokenIndex < targetOCC.collectionsCount) {
@@ -244,11 +247,11 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 				idxVar = AbstractTemplate.OFFSET_IDX;
 				executionContext.shouldIncrementOffsetIdx = true;
 			}
-			otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+			otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 		} else {
 			if (targetOCC.currentCollectionTokenIndex <= targetOCC.collectionsCount) {
 				idxVar = AbstractTemplate.SOURCE_IDX + (targetOCC.currentCollectionTokenIndex - 1);
-				otclCommand.appendInitMember(targetOCC, sourceOCD, idxVar, false, LogLevel.WARN);
+				otclCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 			} else {
 				otclCommand.appendInitMember(targetOCC, null, 0, false, LogLevel.WARN);
 			}
