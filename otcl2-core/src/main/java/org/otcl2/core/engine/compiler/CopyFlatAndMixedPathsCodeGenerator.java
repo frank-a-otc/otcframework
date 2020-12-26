@@ -75,6 +75,7 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtclCodeGenerator
 		if (targetOCD.isCollectionOrMap()) {
 			targetOCD = OtclCommand.retrieveMemberOCD(clonedTargetOCC);
 			clonedTargetOCC.otclCommandDto = targetOCD;
+//			otclCommand.appendInitMember(targetOCC, null, 0, false, LogLevel.WARN);
 		}
 		if (clonedTargetOCC.hasChildren()) {
 			targetOCD = OtclCommand.retrieveNextOCD(clonedTargetOCC);

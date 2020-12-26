@@ -847,9 +847,9 @@ public class OtclCommand {
 							false, AbstractTemplate.MEMBER_TARGET_ICD, varNamesSet, varNamesMap);
 					targetOCC.appendCode(retrieveTargetObjectFromPcdCode);
 				} else {
-					if (targetOCC.hasDescendantCollectionOrMap()) {
+					if (targetOCC.hasDescendantCollectionOrMap() || 
+							(targetOCD.isCollectionOrMapMember() && targetOCC.hasChildren())) {
 						appendInitMember(targetOCC, null, 0, false, logLevel);
-						targetOCD = targetOCC.otclCommandDto;
 					}
 				}
 			}
