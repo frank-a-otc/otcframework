@@ -274,14 +274,13 @@ public abstract class AbstractTemplate {
 	protected static final String helperSetterTemplate = "\n%s.%s(%s, %s);";
 
 	/** The Constant dateConverterTemplate. */
-	protected static final String dateConverterTemplate = "\n%s.%s(MutualDateTypesConverterFacade.convert(%s, %s.class));";
+	protected static final String dateConverterTemplate = "\n%s.%s(DateConverterFacade.convert(%s, %s.class));";
 	
 	/** The Constant dateToStringConverterTemplate. */
 	protected static final String dateToStringConverterTemplate = "\n%s.%s(%s.toString());";
-//	protected static final String formattedDateConverterTemplate = "\n%s.%s(MutualDateTypesConverterFacade.convert(%s, %s));";
 
 	/** The Constant ifNullCreateAndSetTemplate. */
-protected static final String ifNullCreateAndSetTemplate = "\nif (%s == null) {" 
+	protected static final String ifNullCreateAndSetTemplate = "\nif (%s == null) {" 
 			+ "\n%s = new %s();"
 			+ "\n%s.%s(%s);" 
 			+ "\n}";

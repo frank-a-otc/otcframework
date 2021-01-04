@@ -52,7 +52,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	private static final DeploymentContainer otclDeploymentContainer = new DeploymentContainerImpl();
 	
 	/** The Constant depFileFilter. */
-	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_DEP_EXTN);
+	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_EIS_EXTN);
 	
 	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();

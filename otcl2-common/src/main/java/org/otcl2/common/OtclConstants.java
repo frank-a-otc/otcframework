@@ -58,39 +58,45 @@ public interface OtclConstants {
 	/**
 	 * The Enum ALGORITHM_ID.
 	 */
-	enum ALGORITHM_ID {/** The copyvalues. */
-COPYVALUES, /** The module. */
- MODULE, /** The converter. */
- CONVERTER, /** The flat. */
- FLAT, /** The collections. */
- COLLECTIONS};
+	enum ALGORITHM_ID {
+		/** The copyvalues. */
+		COPYVALUES, 
+		/** The module. */
+		MODULE, 
+		/** The converter. */
+		CONVERTER, 
+		/** The flat. */
+		FLAT, 
+		/** The collections. */
+		COLLECTIONS
+	};
 
 	/**
 	 * The Enum TARGET_SOURCE.
 	 */
-	enum TARGET_SOURCE {/** The target. */
-TARGET, /** The source. */
- SOURCE};
+	enum TARGET_SOURCE {
+		/** The target. */
+		TARGET, 
+		/** The source. */
+		SOURCE
+	};
 
 	/** The execute otcl converter. */
 	String EXECUTE_OTCL_CONVERTER = "otclConverter";
 	
 	/** The execute otcl module. */
 	String EXECUTE_OTCL_MODULE = "otclModule";
-	
 
 	/** The regex otcl on dot. */
 	String REGEX_OTCL_ON_DOT = new String("[.](?![^<]*>)(?![^\\[]*\\])(?![^\\(]*\\))");
-//	String REGEX_OTCL_ON_COMMA_NOT_WITHIN_BRACKETS = new String("[,](?![^\\[]*\\])(?![^\\(]*\\))");
-/** The regex check otclchain. */
-//	String REGEX_OTCL_ON_COMMA_NOT_WITHIN_QUOTES = new String(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
+	/** The regex check otclchain. */
 	String REGEX_CHECK_OTCLCHAIN = "(?s)from:\\sotclChain:";
 
 	/** The root. */
 	String ROOT = "<ROOT>";
 
-/** The arr ref. */
-//	String ZERO = "<ZERO>";
+	/** The arr ref. */
 	String ARR_REF = "[*]";
 	
 	/** The append arr ref. */
@@ -141,12 +147,6 @@ TARGET, /** The source. */
 	/** The otcl generatedcode extn. */
 	String OTCL_GENERATEDCODE_EXTN = ".java";
 	
-	/** The otcl dep extn. */
-	String OTCL_DEP_EXTN = ".dep";
-
-	/** The otcl source. */
-	String OTCL_SOURCE = "/otcl-source";
-	
-	/** The otcl test source. */
-	String OTCL_TEST_SOURCE = "/otcl-test-source";
+	/** The otcl eis extn. */
+	String OTCL_EIS_EXTN = ".eis";
 }

@@ -3,7 +3,7 @@ package org.otcl2.core.engine.compiler.templates;
 import java.util.Map;
 import java.util.Set;
 
-import org.otcl.dateconverters.MutualDateTypesConverterFacade;
+import org.otcl.dateconverters.DateConverterFacade;
 import org.otcl2.common.dto.OtclCommandDto;
 import org.otcl2.common.util.CommonUtils;
 import org.otcl2.common.util.PackagesFilterUtil;
@@ -51,7 +51,7 @@ public class SetterTemplate extends AbstractTemplate {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			setterCode = String.format(helperSetterTemplate, helper, otclCommandDto.setter, parentVarName, value);
 		} else {
-			if (MutualDateTypesConverterFacade.isOfAnyDateType(otclCommandDto.fieldType)) {
+			if (DateConverterFacade.isOfAnyDateType(otclCommandDto.fieldType)) {
 //				String dateFormat = null;
 //				if (targetOCC.scriptDto.copy.from.overrides != null) {
 //					for (OtclFileDto.Override override : targetOCC.scriptDto.copy.from.overrides) {
@@ -61,7 +61,7 @@ public class SetterTemplate extends AbstractTemplate {
 //						}
 //					}
 //				}
-				targetOCC.factoryClassDto.addImport(MutualDateTypesConverterFacade.class.getName());
+				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				String clz = fetchSanitizedTypeName(targetOCC, otclCommandDto);
 //				if (dateFormat != null) {
 //					setterCode = String.format(formattedDateConverterTemplate, parentVarName, otclCommandDto.setter, value,

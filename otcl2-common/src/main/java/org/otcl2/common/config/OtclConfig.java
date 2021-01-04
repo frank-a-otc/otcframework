@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.otcl2.common.OtclConstants;
 import org.otcl2.common.config.exception.OtclConfigException;
 import org.otcl2.common.exception.OtclException;
 import org.otcl2.common.util.CommonUtils;
@@ -42,6 +41,12 @@ public enum OtclConfig {
 
 	/** The Constant OTCL_HOME_ENV_VAR. */
 	private static final String OTCL_HOME_ENV_VAR = "OTCL_HOME";
+
+	/** The otcl source. */
+//	private static final String OTCL_SOURCE = "/otcl-scripts-final";
+	
+	/** The otcl test source. */
+	private static final String OTCL_TEST_SOURCE = "/otcl-scripts-unittest";
 	
 	/** The Constant COMPILER_CODEGEN_SOURCE_BASEDIR. */
 	private static final String COMPILER_CODEGEN_SOURCE_BASEDIR = "compiler.codegen.source.basedir";
@@ -162,11 +167,7 @@ public enum OtclConfig {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
 		}
-		if (isTestProfile) {
-			return otclHome + OtclConstants.OTCL_TEST_SOURCE;
-		} else {
-			return otclHome + OtclConstants.OTCL_SOURCE;
-		}
+		return otclHome + OTCL_TEST_SOURCE;
 	}
 
 	/**

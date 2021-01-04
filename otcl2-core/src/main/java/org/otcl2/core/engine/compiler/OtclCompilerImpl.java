@@ -77,7 +77,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 	private static final FileFilter otclFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_FILE_EXTN);
 	
 	/** The Constant depFileFilter. */
-	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_DEP_EXTN);
+	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_EIS_EXTN);
 
 	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();
@@ -158,7 +158,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 					compilationReports = new ArrayList<>();
 				}
 				int idx = compilationReport.otclFileName.lastIndexOf(OtclConstants.OTCL_FILE_EXTN);
-				String depFileName = compilationReport.otclFileName.substring(0, idx) + OtclConstants.OTCL_DEP_EXTN;
+				String depFileName = compilationReport.otclFileName.substring(0, idx) + OtclConstants.OTCL_EIS_EXTN;
 				if (!CommonUtils.isEmpty(compilationReport.otclNamespace)) {
 					depFileName = compilationReport.otclNamespace + "." + depFileName;
 				}
