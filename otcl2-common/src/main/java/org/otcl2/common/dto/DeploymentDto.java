@@ -2,7 +2,7 @@ package org.otcl2.common.dto;
 
 import java.util.Map;
 
-import org.otcl2.common.engine.executor.CodeExecutor;
+import org.otcl2.common.executor.CodeExecutor;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,7 +35,7 @@ public final class DeploymentDto {
 	public boolean isProfilingRequried;
 	
 	/** The otcl code executor. */
-	public CodeExecutor otclCodeExecutor;
+	public CodeExecutor codeExecutor;
 	
 	/**
 	 * The Class CompiledInfo.

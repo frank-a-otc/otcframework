@@ -28,7 +28,7 @@ public class OtclUtils {
 			throw new OtclException("", "Either Target-class or Source-class is null.");
 		}
 		StringBuilder fileName = new StringBuilder(sourceClz);
-		fileName.append("_").append(targetClz).append(OtclConstants.OTCL_FILE_EXTN);
+		fileName.append("_").append(targetClz).append(OtclConstants.OTCL_SCRIPT_EXTN);
 		return fileName.toString();
 	}
 

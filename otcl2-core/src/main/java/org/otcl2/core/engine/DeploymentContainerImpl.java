@@ -23,8 +23,8 @@ import org.otcl2.common.dto.DeploymentDto;
 import org.otcl2.common.dto.DeploymentDto.CompiledInfo;
 import org.otcl2.common.dto.OtclChainDto;
 import org.otcl2.common.dto.OtclCommandDto;
-import org.otcl2.common.engine.executor.CodeExecutor;
 import org.otcl2.common.exception.OtclException;
+import org.otcl2.common.executor.CodeExecutor;
 import org.otcl2.common.factory.OtclCommandDtoFactory;
 import org.otcl2.common.util.CommonUtils;
 import org.otcl2.common.util.OtclUtils;
@@ -52,7 +52,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	private static final DeploymentContainer otclDeploymentContainer = new DeploymentContainerImpl();
 	
 	/** The Constant depFileFilter. */
-	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_EIS_EXTN);
+	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_TMD_EXTN);
 	
 	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();
@@ -174,10 +174,10 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 				throw new OtclException("", e);
 			}
 		}
-		CodeExecutor otclCodeExecutor;
+		CodeExecutor codeExecutor;
 		try {
-			otclCodeExecutor = (CodeExecutor) mainClz.newInstance();
-			deploymentDto.otclCodeExecutor = otclCodeExecutor;
+			codeExecutor = (CodeExecutor) mainClz.newInstance();
+			deploymentDto.codeExecutor = codeExecutor;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new OtclException("", e);
 		}

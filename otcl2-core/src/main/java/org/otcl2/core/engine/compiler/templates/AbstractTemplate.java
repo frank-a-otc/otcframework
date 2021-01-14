@@ -122,7 +122,7 @@ public abstract class AbstractTemplate {
 	/** The Constant mainClassBeginCodeTemplate. */
 	protected static final String mainClassBeginCodeTemplate = "package %s;\n"
 			+ "\nimport org.otcl2.common.engine.profiler.dto.IndexedCollectionsDto;"
-			+ "\nimport org.otcl2.common.engine.executor.CodeExecutor;"
+			+ "\nimport org.otcl2.common.executor.CodeExecutor;"
 			+ "\nimport java.util.Map;"
 			+ "\nimport java.util.HashMap;"
 			+ OtclCommand.CODE_TO_IMPORT

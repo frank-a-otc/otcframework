@@ -26,9 +26,9 @@ public interface OtclEngine {
 	void compileSourceCode();
 
 	/**
-	 * Deploy.
+	 * Register.
 	 */
-	void deploy();
+	void register();
 
 	/**
 	 * Execute otcl.

@@ -5,8 +5,8 @@ import java.util.Map;
 import org.otcl2.common.OtclConstants;
 import org.otcl2.common.OtclConstants.TARGET_SOURCE;
 import org.otcl2.common.dto.DeploymentDto;
-import org.otcl2.common.engine.executor.CodeExecutor;
 import org.otcl2.common.engine.profiler.dto.IndexedCollectionsDto;
+import org.otcl2.common.executor.CodeExecutor;
 import org.otcl2.common.util.OtclUtils;
 import org.otcl2.core.engine.exception.OtclEngineException;
 import org.slf4j.Logger;
@@ -74,11 +74,10 @@ final class OtclExecutorImpl implements OtclExecutor {
 	 */
 	@Override
 	public <T, S> T executeOtcl(String otclNamespace, S source, Class<T> targetClz, Map<String, Object> data) {
-		long startTime = System.nanoTime();
 		DeploymentDto deploymentDto = deploymentContainer.retrieveDeploymentDto(otclNamespace, source, targetClz);
 		if (deploymentDto == null) {
 			String otclFile = OtclUtils.createDeploymentId(otclNamespace, source, targetClz) +
-					OtclConstants.OTCL_FILE_EXTN; 
+					OtclConstants.OTCL_SCRIPT_EXTN; 
 			String errMsg = "Oops... Cannot proceed. Missing or uncompiled OTCL file! " + otclFile;
 			LOGGER.error(errMsg);
 			throw new OtclEngineException(errMsg);
@@ -87,7 +86,7 @@ final class OtclExecutorImpl implements OtclExecutor {
 		if (source != null && deploymentDto.isProfilingRequried) {
 			indexedCollectionsDto = objectProfiler.profileObject(deploymentDto, TARGET_SOURCE.SOURCE, source);
 		}
-		CodeExecutor<S, T> otclCodeExecutor = deploymentDto.otclCodeExecutor;
-		return (T) otclCodeExecutor.execute(source, indexedCollectionsDto, data);
+		CodeExecutor<S, T> codeExecutor = deploymentDto.codeExecutor;
+		return (T) codeExecutor.execute(source, indexedCollectionsDto, data);
 	}
 }

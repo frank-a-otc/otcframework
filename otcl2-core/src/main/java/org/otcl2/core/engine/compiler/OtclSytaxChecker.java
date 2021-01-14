@@ -61,7 +61,6 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, Class<?> factoryHelpe
 				isCollectionNotation = true;
 				otclCommandDto.hasCollectionNotation = true;
 				if (!rawOtclToken.contains(OtclConstants.ARR_REF)
-						&& !rawOtclToken.contains(OtclConstants.APPEND_ARR_REF)
 						&& !rawOtclToken.contains(OtclConstants.PRE_ANCHOR)
 						&& !rawOtclToken.contains(OtclConstants.POST_ANCHOR)) {
 					String idxCharacter = OtclUtils.retrieveIndexCharacter(rawOtclToken);

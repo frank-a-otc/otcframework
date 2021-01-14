@@ -96,11 +96,11 @@ final class OtclLexicalizer {
 				throw new LexicalizerException("", "Incorrect file-name! File-name should contain source and target class "
 						+ "names.");
 			}
-			targetClzName = fileName.substring(0, fileName.lastIndexOf(OtclConstants.OTCL_FILE_EXTN));
+			targetClzName = fileName.substring(0, fileName.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN));
 		} else {
 			sourceClzName = fileName.substring(0, idx);
 			sourceClz = CommonUtils.loadClass(sourceClzName);
-			targetClzName = fileName.substring(idx + 1, fileName.lastIndexOf(OtclConstants.OTCL_FILE_EXTN));
+			targetClzName = fileName.substring(idx + 1, fileName.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN));
 		}
 		Class<?> targetClz = CommonUtils.loadClass(targetClzName);
 		if (otclFileDto.metadata != null && otclFileDto.metadata.objectTypes != null) {
@@ -156,13 +156,13 @@ final class OtclLexicalizer {
 			Class<?> targetClz, Class<?> sourceClz) {
 		Class<?> factoryHelper = fetchFactoryHelper(otclFileDto);
 		Set<String> factorClzNames = new HashSet<>();
-		if (otclFileDto != null && otclFileDto.metadata != null && otclFileDto.metadata.mainClassName != null) {
-			String mainClassName = otclFileDto.metadata.mainClassName;
+		if (otclFileDto != null && otclFileDto.metadata != null && otclFileDto.metadata.entryClassName != null) {
+			String mainClassName = otclFileDto.metadata.entryClassName;
 			if ( mainClassName.contains(".")) {
 				LOGGER.warn("Otcl Lexicalizer-phase failure! Discarding package name! "
 						+ "Package should not be specified for Mainclass in 'metadata.mainClassName'.");
 				mainClassName = mainClassName.substring(mainClassName.lastIndexOf(".") + 1);
-				otclFileDto.metadata.mainClassName = mainClassName;
+				otclFileDto.metadata.entryClassName = mainClassName;
 				factorClzNames.add(mainClassName);
 			}
 		}

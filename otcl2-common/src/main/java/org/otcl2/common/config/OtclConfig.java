@@ -23,7 +23,6 @@ import org.otcl2.common.config.exception.OtclConfigException;
 import org.otcl2.common.exception.OtclException;
 import org.otcl2.common.util.CommonUtils;
 import org.otcl2.common.util.PackagesFilterUtil;
-import org.otcl2.common.util.PropertyConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,13 +45,10 @@ public enum OtclConfig {
 //	private static final String OTCL_SOURCE = "/otcl-scripts-final";
 	
 	/** The otcl test source. */
-	private static final String OTCL_TEST_SOURCE = "/otcl-scripts-unittest";
+	private static final String OTCL_UNITTEST_FOLDER = "/otcl-scripts-unittest";
 	
 	/** The Constant COMPILER_CODEGEN_SOURCE_BASEDIR. */
 	private static final String COMPILER_CODEGEN_SOURCE_BASEDIR = "compiler.codegen.source.basedir";
-	
-	/** The Constant COMPILER_TESTPROFILE_ENABLED. */
-	private static final String COMPILER_TESTPROFILE_ENABLED = "compiler.testprofile.enable";
 
 	/** The Constant EXECUTOR_PACKAGES_FILTER. */
 	private static final String EXECUTOR_PACKAGES_FILTER = "executor.packages.filter";
@@ -70,7 +66,7 @@ public enum OtclConfig {
 	private static final Properties otclConfigProps = new Properties();
 	
 	/** The is test profile. */
-	private static boolean isTestProfile = false;
+//	private static boolean isTestProfile = false;
 	
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader;
@@ -109,7 +105,7 @@ public enum OtclConfig {
 		PackagesFilterUtil.setFilteredPackages(lstFilteredPackages);
 		URL url;
 		try {
-			String targetDir = getOtclTargetLocation();
+			String targetDir = getCompiledCodeLocation();
 			File binFolder = new File(targetDir);
 			if (!binFolder.exists()) {
 				binFolder.mkdir();
@@ -120,21 +116,6 @@ public enum OtclConfig {
 		} catch (MalformedURLException e) {
 			throw new OtclConfigException(e);
 		}
-		isTestProfile = getConfigCompilerTestProfileEnabled();
-	}
-
-	/**
-	 * Enables test-profile.
-	 */
-	public static void enableTestProfile() {
-		isTestProfile = true;
-	}
-
-	/**
-	 * Disables test-profile.
-	 */
-	public static void disableTestProfile() {
-		isTestProfile = false;
 	}
 
 	/**
@@ -167,7 +148,7 @@ public enum OtclConfig {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
 		}
-		return otclHome + OTCL_TEST_SOURCE;
+		return otclHome + OTCL_UNITTEST_FOLDER;
 	}
 
 	/**
@@ -175,7 +156,7 @@ public enum OtclConfig {
 	 *
 	 * @return the generated code source location
 	 */
-	public static String getGeneratedCodeSourceLocation() {
+	public static String getSourceCodeLocation() {
 		String sourceCodeLocation = null;
 		if (otclConfigProps.containsKey(COMPILER_CODEGEN_SOURCE_BASEDIR)) {
 			sourceCodeLocation = otclConfigProps.getProperty(COMPILER_CODEGEN_SOURCE_BASEDIR);
@@ -206,7 +187,7 @@ public enum OtclConfig {
 	 *
 	 * @return the otcl target location
 	 */
-	public static String getOtclTargetLocation() {
+	public static String getCompiledCodeLocation() {
 		if (CommonUtils.isEmpty(otclHome)) {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
 		}
@@ -222,15 +203,4 @@ public enum OtclConfig {
 		return clzLoader;
 	}
 
-	/**
-	 * Gets the config compiler test profile enabled.
-	 *
-	 * @return the config compiler test profile enabled
-	 */
-	public static Boolean getConfigCompilerTestProfileEnabled() {
-		if (otclConfigProps.containsKey(COMPILER_TESTPROFILE_ENABLED)) {
-			return PropertyConverterUtil.toBooleanObject(otclConfigProps.getProperty(COMPILER_TESTPROFILE_ENABLED));
-		}
-		return compilerTestprofileEnableDefault;
-	}
 }

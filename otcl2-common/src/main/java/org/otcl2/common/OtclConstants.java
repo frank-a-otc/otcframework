@@ -98,9 +98,6 @@ public interface OtclConstants {
 
 	/** The arr ref. */
 	String ARR_REF = "[*]";
-	
-	/** The append arr ref. */
-	String APPEND_ARR_REF = "[append";
 
 	/** The asterisk. */
 	String ASTERISK = "*";
@@ -141,12 +138,12 @@ public interface OtclConstants {
 	/** The map value ref. */
 	String MAP_VALUE_REF = "<V>";
 
-	/** The otcl file extn. */
-	String OTCL_FILE_EXTN = ".otcl";
+	/** The otcl script extn. */
+	String OTCL_SCRIPT_EXTN = ".otcl";
 	
 	/** The otcl generatedcode extn. */
 	String OTCL_GENERATEDCODE_EXTN = ".java";
 	
-	/** The otcl eis extn. */
-	String OTCL_EIS_EXTN = ".eis";
+	/** The otcl tmd extn. */
+	String OTCL_TMD_EXTN = ".tmd";
 }

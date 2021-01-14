@@ -5,7 +5,7 @@
 * @version 1.0
 * @since   2020-06-08 
 */
-package org.otcl2.common.engine.converter;
+package org.otcl2.common.converter;
 
 import java.util.Map;
 
@@ -22,8 +22,8 @@ public interface OtclConverter {
 	 * @param <S> the generic type
 	 * @param targetObject the target object
 	 * @param sourceObject the source object
-	 * @param config the config
+	 * @param data the data
 	 * @return the t
 	 */
-	public <T, S> T convert(T targetObject, S sourceObject, Map<String, Object> config);
+	public <T, S> T convert(S sourceObject, T targetObject, Map<String, Object> data);
 }

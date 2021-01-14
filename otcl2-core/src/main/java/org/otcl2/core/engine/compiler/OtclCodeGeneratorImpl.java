@@ -41,7 +41,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 	private static OtclCodeGenerator otclCodeGenerator = new OtclCodeGeneratorImpl();
 	
 	/** The Constant otclBinDir. */
-	private static final String otclBinDir = OtclConfig.getOtclTargetLocation();
+	private static final String otclBinDir = OtclConfig.getCompiledCodeLocation();
 
 	/**
 	 * Instantiates a new otcl code generator impl.

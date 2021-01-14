@@ -49,7 +49,7 @@ public enum OtclEngineImpl implements OtclEngine {
 		 */
 		@PostConstruct
 		public static void init() {
-			instance.deploy();
+			instance.register();
 		}
 	}
 
@@ -81,10 +81,10 @@ public enum OtclEngineImpl implements OtclEngine {
 	}
 	
 	/**
-	 * Deploy.
+	 * Register.
 	 */
 	@Override
-	public void deploy() {
+	public void register() {
 		deploymentContainer.deploy();
 	}
 	

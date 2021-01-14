@@ -65,19 +65,19 @@ public class OtclCompilerImpl implements OtclCompiler {
 	private static final String otclSrcDir = OtclConfig.getOtclSourceLocation();
 	
 	/** The Constant srcDir. */
-	private static final String srcDir = OtclConfig.getGeneratedCodeSourceLocation();
+	private static final String srcDir = OtclConfig.getSourceCodeLocation();
 	
 	/** The Constant otclTargetDir. */
-	private static final String otclTargetDir = OtclConfig.getOtclTargetLocation();
+	private static final String otclTargetDir = OtclConfig.getCompiledCodeLocation();
 	
 	/** The Constant otclBinDir. */
 	private static final String otclBinDir = OtclConfig.getOtclBinLocation();
 
 	/** The Constant otclFileFilter. */
-	private static final FileFilter otclFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_FILE_EXTN);
+	private static final FileFilter otclFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_SCRIPT_EXTN);
 	
 	/** The Constant depFileFilter. */
-	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_EIS_EXTN);
+	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_TMD_EXTN);
 
 	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();
@@ -157,8 +157,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 				if (compilationReports == null) {
 					compilationReports = new ArrayList<>();
 				}
-				int idx = compilationReport.otclFileName.lastIndexOf(OtclConstants.OTCL_FILE_EXTN);
-				String depFileName = compilationReport.otclFileName.substring(0, idx) + OtclConstants.OTCL_EIS_EXTN;
+				int idx = compilationReport.otclFileName.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN);
+				String depFileName = compilationReport.otclFileName.substring(0, idx) + OtclConstants.OTCL_TMD_EXTN;
 				if (!CommonUtils.isEmpty(compilationReport.otclNamespace)) {
 					depFileName = compilationReport.otclNamespace + "." + depFileName;
 				}
@@ -207,7 +207,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 		deploymentDto.otclNamespace = otclDto.otclNamespace;
 		String otclNamespace = otclDto.otclNamespace;
 		String deploymentId = otclDto.otclFileName;
-		deploymentId = deploymentId.substring(0, deploymentId.lastIndexOf(OtclConstants.OTCL_FILE_EXTN));
+		deploymentId = deploymentId.substring(0, deploymentId.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN));
 		if (!CommonUtils.isEmpty(otclNamespace)) {
 			deploymentId = otclNamespace + "." + deploymentId;
 		}
@@ -279,8 +279,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 			ClassDto mainClassDto = new ClassDto();
 			otclDto.mainClassDto = mainClassDto;
 			if (otclDto.otclFileDto != null && otclDto.otclFileDto.metadata != null && 
-					otclDto.otclFileDto.metadata.mainClassName != null) {
-				mainClassDto.className = otclDto.otclFileDto.metadata.mainClassName;
+					otclDto.otclFileDto.metadata.entryClassName != null) {
+				mainClassDto.className = otclDto.otclFileDto.metadata.entryClassName;
 				if (!CommonUtils.isEmpty(otclDto.otclNamespace)) {
 					mainClassDto.packageName = otclDto.otclNamespace;
 					mainClassDto.fullyQualifiedClassName = mainClassDto.packageName + "." + mainClassDto.className;

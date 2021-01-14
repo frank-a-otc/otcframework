@@ -30,7 +30,7 @@ public final class OtclFileDto {
 	public static final class Metadata {
 		
 		/** The main class name. */
-		public String mainClassName;
+		public String entryClassName;
 		
 		/** The helper. */
 		public String helper;

@@ -59,13 +59,13 @@ public class OtclCommand {
 	public static final String CODE_TO_IMPORT = "CODE_TO_IMPORT";
 
 	/** The Constant otclBinDir. */
-	private static final String otclBinDir = OtclConfig.getOtclTargetLocation();
+	private static final String otclBinDir = OtclConfig.getCompiledCodeLocation();
 	
 	/** The Constant otclSourceDir. */
 	private static final String otclSourceDir = OtclConfig.getOtclSourceLocation();
 	
 	/** The Constant sourceFileLocation. */
-	private static final String sourceFileLocation = OtclConfig.getGeneratedCodeSourceLocation();
+	private static final String sourceFileLocation = OtclConfig.getSourceCodeLocation();
 	
 	/** The var names set. */
 	private Set<String> varNamesSet = new HashSet<>();
