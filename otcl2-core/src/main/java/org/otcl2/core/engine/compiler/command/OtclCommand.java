@@ -617,7 +617,7 @@ public class OtclCommand {
 	 * Append init member.
 	 *
 	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param sourceOCC the source OCC
 	 * @param idx the idx
 	 * @param createNewVarName the create new var name
 	 * @param logLevel the log level
@@ -648,11 +648,12 @@ public class OtclCommand {
 		return;
 	}
 
+
 	/**
 	 * Append init member.
 	 *
 	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param sourceOCC the source OCC
 	 * @param idxVar the idx var
 	 * @param createNewVarName the create new var name
 	 * @param logLevel the log level
@@ -714,7 +715,7 @@ public class OtclCommand {
 	 * Append add map value.
 	 *
 	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param sourceOCC the source OCC
 	 * @param value the value
 	 * @param idx the idx
 	 * @param logLevel the log level

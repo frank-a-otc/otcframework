@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.otcl</groupId>
+		<groupId>org.otcl2</groupId>
 		<artifactId>otcl2</artifactId>
 		<version>1.0</version>
 	</parent>
@@ -11,7 +11,95 @@
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>This is the main OTCL Engine module.</description>
-	<url>http://www.otclautomation.org</url>
+	<url>http://www.otclfoundation.org</url>
+
+	<licenses>
+		<license>
+			<name>Creative Commons Attribution-NoDerivatives 4.0 International Public License</name>
+			<url>https://creativecommons.org/licenses/by-nd/4.0/legalcode</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Franklin Abel</name>
+			<email>franklin.abel@otclfoundation.org</email>
+			<organization>OTCL Foundation</organization>
+			<organizationUrl>http://www.otclfoundation.org</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/frankjjava/otcl2.git</connection>
+		<developerConnection>scm:git:ssh://github.com:frankjjava/otcl2.git</developerConnection>
+		<url>https://github.com/frankjjava/otcl2</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/fjna-java/octl2issues/issues</url>
+    </issueManagement>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 		<dependency>
@@ -27,7 +115,7 @@
 			<artifactId>otcl2-common</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.otcl</groupId>
+		    <groupId>org.otclfoundation</groupId>
 		    <artifactId>dateconverters</artifactId>
 		</dependency>
 		<dependency>
@@ -36,30 +124,5 @@
 		</dependency>
 
 	</dependencies>
-
-    <issueManagement>
-        <system>Github Issue</system>
-        <url>https://github.com/sisyphsu/dateparser/issues</url>
-    </issueManagement>
-
-    <licenses>
-        <license>
-            <name>Apache-2.0 License</name>
-            <url>https://github.com/sisyphsu/dateparser/blob/master/LICENSE</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Franklin Abel</name>
-            <email>frank.j.java@gmail.com</email>
-        </developer>
-    </developers>
-
-    <scm>
-        <url>https://github.com/frankjjava/otcl2.git</url>
-        <connection>scm:git@github.com:frankjjava/otcl2.git</connection>
-        <developerConnection>scm:git@github.com:frankjjava/otcl2.git</developerConnection>
-    </scm>
 
 </project>

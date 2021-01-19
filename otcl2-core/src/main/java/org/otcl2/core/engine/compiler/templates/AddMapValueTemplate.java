@@ -26,7 +26,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 	 * Generate code.
 	 *
 	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param sourceOCC the source OCC
 	 * @param createNewVarName the create new var name
 	 * @param value the value
 	 * @param idx the idx
@@ -44,7 +44,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 	 * Generate code.
 	 *
 	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param sourceOCC the source OCC
 	 * @param createNewVarName the create new var name
 	 * @param idxVar the idx var
 	 * @param logLevel the log level
@@ -61,7 +61,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 	 * Generate code.
 	 *
 	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param sourceOCC the source OCC
 	 * @param createNewVarName the create new var name
 	 * @param value the value
 	 * @param idx the idx

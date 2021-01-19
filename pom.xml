@@ -4,14 +4,52 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.otcl</groupId>
+	<groupId>org.otcl2</groupId>
 	<artifactId>otcl2</artifactId>
 	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>This is the parent for the two OTCL modules.</description>
-	<url>http://www.otclautomation.org</url>
+	<url>http://www.otclfoundation.org</url>
+
+	<licenses>
+		<license>
+			<name>Creative Commons Attribution-NoDerivatives 4.0 International Public License</name>
+			<url>https://creativecommons.org/licenses/by-nd/4.0/legalcode</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Franklin Abel</name>
+			<email>franklin.abel@otclfoundation.org</email>
+			<organization>OTCL Foundation</organization>
+			<organizationUrl>http://www.otclfoundation.org</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/frankjjava/otcl2.git</connection>
+		<developerConnection>scm:git:ssh://github.com:frankjjava/otcl2.git</developerConnection>
+		<url>https://github.com/frankjjava/otcl2</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/fjna-java/octl2issues/issues</url>
+    </issueManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,9 +59,6 @@
 		<otcl.version>1.0</otcl.version>
 		<logback.version>1.2.3</logback.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<snakeyaml.version>1.26</snakeyaml.version>
-		<joda.version>2.10.6</joda.version>
-		<dateparser.version>1.0.0</dateparser.version>
 		<dateconverters.version>1.0</dateconverters.version>
 		<jackson.version>2.10.2</jackson.version>
 		<msgpack.version>0.6.12</msgpack.version>
@@ -78,22 +113,50 @@
 			    <version>${otcl.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>com.github.sisyphsu</groupId>
-			    <artifactId>dateparser</artifactId>
-			    <version>${dateparser.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.otcl</groupId>
+			    <groupId>org.otclfoundation</groupId>
 			    <artifactId>dateconverters</artifactId>
 			    <version>${dateconverters.version}</version>
 			</dependency>
+
 			<dependency>
 			    <groupId>org.msgpack</groupId>
 			    <artifactId>msgpack</artifactId>
 			    <version>${msgpack.version}</version>
 			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<modules>
 		<module>otcl2-common</module>
