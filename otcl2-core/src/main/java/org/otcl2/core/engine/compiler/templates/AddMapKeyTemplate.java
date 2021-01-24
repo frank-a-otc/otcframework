@@ -89,7 +89,6 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		createNullVarCode = String.format(createInitVarTemplate, valueType, valueVarName, null);
 		codeSectionBuilder.append(createNullVarCode);
 		String ifMapContainsKeyCode = null;
-//		if (keyOCD.isLeaf(rawOtclTokens)) { 
 		if (targetOCC.isLeaf()) { 
 			ifMapContainsKeyCode = String.format(ifNotContainsMapKeyTemplate, mapVarName, keyOrVar);
 		} else {

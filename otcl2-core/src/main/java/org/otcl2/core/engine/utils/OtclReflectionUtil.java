@@ -31,11 +31,8 @@ public class OtclReflectionUtil {
 	 * The Enum GETTER_SETTER.
 	 */
 	public static enum GETTER_SETTER {
-		
-		/** The getter. */
 		GETTER, 
- /** The setter. */
- SETTER
+		SETTER
 	};
 
 	/** The Constant ZERO_LENGTH_FIELD_ARRAY. */
