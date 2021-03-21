@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.otcl2</groupId>
 		<artifactId>otcl2</artifactId>
-		<version>1.0</version>
+		<version>1.2</version>
 	</parent>
 	<artifactId>otcl2-core</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>This is the main OTCL Engine module.</description>
+	<description>Main OTCL Engine module.</description>
 	<url>http://www.otclfoundation.org</url>
 
 	<licenses>
@@ -111,7 +111,7 @@
 		    <artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.otcl</groupId>
+			<groupId>org.otcl2</groupId>
 			<artifactId>otcl2-common</artifactId>
 		</dependency>
 		<dependency>

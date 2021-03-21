@@ -6,11 +6,11 @@
 
 	<groupId>org.otcl2</groupId>
 	<artifactId>otcl2</artifactId>
-	<version>1.0</version>
+	<version>1.2</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>This is the parent for the two OTCL modules.</description>
+	<description>This is the parent for the two OTCL modules Commons and Core.</description>
 	<url>http://www.otclfoundation.org</url>
 
 	<licenses>
@@ -56,7 +56,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<commons-configuration.version>1.8</commons-configuration.version>
-		<otcl.version>1.0</otcl.version>
+		<otcl.version>1.2</otcl.version>
 		<logback.version>1.2.3</logback.version>
 		<slf4j.version>1.7.30</slf4j.version>
 		<dateconverters.version>1.0</dateconverters.version>
@@ -108,8 +108,13 @@
 				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.otcl</groupId>
+				<groupId>org.otcl2</groupId>
 				<artifactId>otcl2-common</artifactId>
+			    <version>${otcl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.otcl2</groupId>
+				<artifactId>otcl2-core</artifactId>
 			    <version>${otcl.version}</version>
 			</dependency>
 			<dependency>
@@ -162,5 +167,6 @@
 		<module>otcl2-common</module>
 		<module>otcl2-core</module>
 	</modules>
+
 </project>
  

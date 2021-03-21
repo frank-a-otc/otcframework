@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.otcl2</groupId>
 		<artifactId>otcl2</artifactId>
-		<version>1.0</version>
+		<version>1.2</version>
 	</parent>
 	<artifactId>otcl2-common</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>This is the modules containing the commons required by both of OTCL's Engine and the Editor.</description>
+	<description>Otcl-Commons required by both the OTCL Engine and the Editor.</description>
 	<url>http://www.otclfoundation.org</url>
 
 	<licenses>
