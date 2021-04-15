@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.core.engine.compiler;
 
@@ -33,8 +48,8 @@ final class OtclSytaxChecker {
  * @param rawOtclToken the raw otcl token
  * @return true, if successful
  */
-static boolean checkSyntax(ScriptDto script, Class<?> clz, Class<?> factoryHelper, 
-			OtclCommandDto otclCommandDto, String otclChain, String[] otclTokens, String rawOtclToken) {
+static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCommandDto, String otclChain, 
+		String[] otclTokens, String rawOtclToken) {
 		boolean isAnchored = rawOtclToken.contains(OtclConstants.ANCHOR);
 		if (isAnchored) {
 			AnchorNotationProcessor.process(script.command.id, otclCommandDto, rawOtclToken, otclChain, otclTokens);
@@ -79,8 +94,7 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, Class<?> factoryHelpe
 			fldName = rawOtclToken.substring(0, idxCollectionNotation);
 		}
 		otclCommandDto.fieldName = fldName;
-//		GetterSetterProcessor.process(script, otclCommandDto);
-		OtclSemanticsChecker.checkSemantics(factoryHelper, script, clz, otclChain, otclCommandDto, otclTokens);
+		OtclSemanticsChecker.checkSemantics(script, clz, otclChain, otclCommandDto, otclTokens);
 		String otclToken = rawOtclToken;
 		if (isCollectionNotation) {
 			otclToken = fldName + OtclConstants.ARR_REF;

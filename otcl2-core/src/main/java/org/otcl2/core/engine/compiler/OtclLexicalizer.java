@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.core.engine.compiler;
 
@@ -99,10 +114,10 @@ final class OtclLexicalizer {
 			targetClzName = fileName.substring(0, fileName.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN));
 		} else {
 			sourceClzName = fileName.substring(0, idx);
-			sourceClz = CommonUtils.loadClass(sourceClzName);
+			sourceClz = OtclUtils.loadClass(sourceClzName);
 			targetClzName = fileName.substring(idx + 1, fileName.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN));
 		}
-		Class<?> targetClz = CommonUtils.loadClass(targetClzName);
+		Class<?> targetClz = OtclUtils.loadClass(targetClzName);
 		if (otclFileDto.metadata != null && otclFileDto.metadata.objectTypes != null) {
 			String metadataSourceClzName = otclFileDto.metadata.objectTypes.source;
 			if (metadataSourceClzName != null) {
@@ -122,6 +137,9 @@ final class OtclLexicalizer {
 		}
 		otclNamespace = otclNamespace == null ? "" : otclNamespace;
 		OtclDto otclDto = tokenize(otclNamespace, fileName, otclFileDto, targetClz, sourceClz);
+		Class<?> factoryHelper = fetchFactoryHelper(otclFileDto);
+		GetterSetterFinalizer.process(otclDto.sourceOCDStems, factoryHelper);
+		GetterSetterFinalizer.process(otclDto.targetOCDStems, factoryHelper);
 		otclDto.otclFileDto = otclFileDto;
 		return otclDto;
 	}
@@ -154,7 +172,6 @@ final class OtclLexicalizer {
 	 */
 	private static OtclDto tokenize(String otclNamespace, String fileName, OtclFileDto otclFileDto, 
 			Class<?> targetClz, Class<?> sourceClz) {
-		Class<?> factoryHelper = fetchFactoryHelper(otclFileDto);
 		Set<String> factorClzNames = new HashSet<>();
 		if (otclFileDto != null && otclFileDto.metadata != null && otclFileDto.metadata.entryClassName != null) {
 			String mainClassName = otclFileDto.metadata.entryClassName;
@@ -166,15 +183,12 @@ final class OtclLexicalizer {
 				factorClzNames.add(mainClassName);
 			}
 		}
-//		Map<String, ScriptGroupDto> groupedScriptDtos = new LinkedHashMap<>();
 		OtclDto.Builder builderDeploymentDto = OtclDto.newBuilder().addOtclNamespace(otclNamespace)
 				.addOtclFileName(fileName)
 				.addSourceClz(sourceClz)
 				.addTargetClz(targetClz);
-//				.addGroupedScriptDtos(groupedScriptDtos);
 		Map<String, OtclCommandDto> mapTargetOCDs = new LinkedHashMap<>();
 		Map<String, OtclCommandDto> mapSourceOCDs = new LinkedHashMap<>();
-//		List<String> logs = new ArrayList<>();
 		Set<String> scriptIds = new HashSet<>();
 		for (OtclFileDto.OtclCommand otclScript : otclFileDto.otclCommands) {
 			if ((otclScript.copy != null && otclScript.copy.debug) || 
@@ -305,7 +319,7 @@ final class OtclLexicalizer {
 			try {
 				builderTargetOtclChainDto.addOtclChain(targetOtclChain);
 				// --- tokenize targetOtclChain
-				OtclCommandDto targetStemOCD = tokenize(scriptDto, factoryHelper, targetClz, targetOtclChain,
+				OtclCommandDto targetStemOCD = tokenize(scriptDto, targetClz, targetOtclChain,
 						mapTargetOCDs, builderTargetOtclChainDto, TARGET_SOURCE.TARGET, null);
 				mapTargetOCDs.put(targetStemOCD.otclToken, targetStemOCD);
 				builderDeploymentDto.addTargetOtclCommandDtoStem(targetStemOCD);
@@ -322,7 +336,7 @@ final class OtclLexicalizer {
 					}
 					builderSourceOtclChainDto.addOtclChain(sourceOtclChain);
 					// --- tokenize sourceOtclChain
-					OtclCommandDto sourceStemOCD = tokenize(scriptDto, factoryHelper, sourceClz, sourceOtclChain,
+					OtclCommandDto sourceStemOCD = tokenize(scriptDto, sourceClz, sourceOtclChain,
 							mapSourceOCDs, builderSourceOtclChainDto, TARGET_SOURCE.SOURCE, null);
 					OtclCommandContext targetOCC = new OtclCommandContext();
 					targetOCC.otclCommandDto = targetStemOCD;
@@ -339,6 +353,7 @@ final class OtclLexicalizer {
 					scriptDto.sourceOtclChainDto = sourceOtclChainDto;
 					sourceCollectionsCount = sourceOtclChainDto.collectionCount + sourceOtclChainDto.dictionaryCount;
 				}
+				
 				String chainPathToParentLeaf = targetOtclChain;
 				if ((targetCollectionsCount > 0 && sourceCollectionsCount > 0) || isValues || isExtensions) {
 					if (sourceOtclChain != null) {
@@ -349,10 +364,6 @@ final class OtclLexicalizer {
 				if (scriptDto.command.factoryClassName == null) {
 					scriptDto.command.factoryClassName = CompilerUtil.buildJavaClassName(otclNamespace, fileName,
 							chainPathToParentLeaf);
-//					if (scriptDto.command.factoryClassName.contains(".")) {
-//						int idx = scriptDto.command.factoryClassName.lastIndexOf(".");
-//						scriptDto.command.factoryClassName = scriptDto.command.factoryClassName.substring(idx + 1);
-//					}
 				}
 				builderDeploymentDto.addScriptDto(scriptDto);
 			} catch (Exception ex) {
@@ -366,90 +377,6 @@ final class OtclLexicalizer {
 		return builderDeploymentDto.build();
 	}
 
-//	private static ScriptGroupDto addScriptDtoToGroup(Map<String, ScriptGroupDto> groupedScriptDtos, String chainPath,
-//			ScriptDto scriptDto, OtclChainDto targetOtclChainDto, OtclChainDto sourceOtclChainDto,
-//			ALGORITHM_ID algorithmId) {
-//		String key = chainPath;
-//		if (ALGORITHM_ID.SETVALUE == algorithmId || ALGORITHM_ID.CONVERTER == algorithmId ||
-//				ALGORITHM_ID.MODULE == algorithmId) {
-//			if (scriptDto.hasExecutionOrder) {
-//				scriptDto = scriptDto.clone();
-//			}
-//			if (ALGORITHM_ID.SETVALUE == algorithmId) {
-//				key += "_SetValue";
-//				scriptDto.hasExecuteModule = false;
-//				scriptDto.hasExecuteConverter = false;
-//			} else if (ALGORITHM_ID.CONVERTER == algorithmId) {
-//				key += "_ExecuteConverter";
-//				scriptDto.command.factoryClassName += "_ExecuteConverter";
-//				((Execute) scriptDto.command).otclModule = null;
-//				scriptDto.hasExecuteModule = false;
-//				scriptDto.hasSetValues = false;
-//			} else if (ALGORITHM_ID.MODULE == algorithmId) {
-//				key += "_ExecuteModule";
-//				scriptDto.command.factoryClassName += "_ExecuteModule";
-//				((Execute) scriptDto.command).otclConverter = null;
-//				scriptDto.hasExecuteConverter = false;
-//				scriptDto.hasSetValues = false;
-//			}
-//		}
-//		ScriptGroupDto scriptGroupDto = groupedScriptDtos.get(key);
-////		-- check for duplicates ---
-////		if (scriptGroupDto != null && !targetOtclChainDto.otclChain.contains(OtclConstants.ANCHOR)) { 
-////			StringBuilder scriptIdBuilder = null;
-////			for (ScriptDto duplicateScriptDto : scriptGroupDto.scriptDtos) {
-////				if (scriptIdBuilder == null) {
-////					scriptIdBuilder = new StringBuilder();
-////				} else {
-////					scriptIdBuilder.append(", ");
-////				}
-////				scriptIdBuilder.append(duplicateScriptDto.command.id);
-////			}
-////			String errMsg = null;
-////			if (scriptDto.hasExecuteModule) {
-////				errMsg = "Duplicate 'extensions: executeOtclModule' definition found in Script-Id : " + scriptDto.command.id;
-////			} else if (scriptDto.hasExecuteConverter) {
-////				errMsg = "Duplicate 'extensions: executeOtclConverter' definition found in Script-Id : " +
-////						scriptDto.command.id;
-////			} else {
-////				errMsg = "Duplicate target / target-source combination found in Script-Id : " + scriptDto.command.id;
-////			}
-////			errMsg += ". Script-block conflicts with " + scriptIdBuilder.toString();
-////			throw new LexicalizerException("", errMsg);
-////		}
-//		if (scriptGroupDto == null) {
-//			scriptGroupDto = new ScriptGroupDto();
-//			scriptGroupDto.scriptDtos = new ArrayList<>();
-//			groupedScriptDtos.put(key, scriptGroupDto);
-//		}
-//		scriptGroupDto.scriptDtos.add(scriptDto);
-//		if (scriptDto.command instanceof Execute) {
-//			Execute execute = (Execute) scriptDto.command;
-//			if (execute != null && execute.executionOrder != null) {
-//				scriptDto.hasExecutionOrder = true;
-//				for (String execExt : execute.executionOrder) {
-//					if (ALGORITHM_ID.MODULE == algorithmId && OtclConstants.EXECUTE_OTCL_MODULE.equals(execExt)) {
-//						if (execute.otclModule == null) {
-//							throw new LexicalizerException("", "Otcl Lexicalizer-phase failure in Script-block : " +
-//									scriptDto.command.id + ". 'executeOtclModule' definition "
-//									+ "is missing - but specified in 'executionOrder'");
-//						}
-//						break;
-//					}
-//					if (ALGORITHM_ID.CONVERTER == algorithmId && OtclConstants.EXECUTE_OTCL_CONVERTER.equals(execExt)) {
-//						if (execute.otclConverter == null) {
-//							throw new LexicalizerException("", "Otcl Lexicalizer-phase failure in Script-block : " +
-//									scriptDto.command.id + ". 'executeOtclConverter' definition is missing - "
-//									+ "but referenced in 'executionOrder'");
-//						}
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		return scriptGroupDto;
-//	}
-	
 	/**
 	 * Tokenize.
 	 *
@@ -463,7 +390,7 @@ final class OtclLexicalizer {
 	 * @param logs the logs
 	 * @return the otcl command dto
 	 */
-	private static OtclCommandDto tokenize(ScriptDto script, Class<?> factoryHelper, Class<?> clz, String otclChain, 
+	private static OtclCommandDto tokenize(ScriptDto script, Class<?> clz, String otclChain, 
 			Map<String, OtclCommandDto> mapOCDs, OtclChainDto.Builder builderOtclChainDto, 
 			TARGET_SOURCE enumTargetOrSource, List<String> logs) {
 
@@ -498,8 +425,7 @@ final class OtclLexicalizer {
 				if (otclCommandDto.isRootNode) {
 					stemOCD = otclCommandDto;
 				}
-				OtclSytaxChecker.checkSyntax(script, parentClz, factoryHelper, otclCommandDto,
-						otclChain, otclTokens, rawOtclToken);
+				OtclSytaxChecker.checkSyntax(script, parentClz, otclCommandDto, otclChain, otclTokens, rawOtclToken);
 				if (otclCommandDto.isCollection()) {
 					builderOtclChainDto.incrementCollectionCount();
 					otclCommandDto = otclCommandDto.children.get(otclCommandDto.fieldName);
@@ -538,8 +464,7 @@ final class OtclLexicalizer {
 			otclCommandDto = OtclCommandDtoFactory.create(enumTargetOrSource, otclToken, tokenPathBuilder.toString(),
 					idx, null, null, isRootNode, null, null, null, isLeaf);
 			otclCommandDto.parent = parentOCD;
-			OtclSytaxChecker.checkSyntax(script, parentClz, factoryHelper, otclCommandDto, otclChain,
-					otclTokens, rawOtclToken);
+			OtclSytaxChecker.checkSyntax(script, parentClz, otclCommandDto, otclChain, otclTokens, rawOtclToken);
 			if (parentOCD != null) {
 				parentOCD.addChild(otclCommandDto);
 			}
@@ -578,7 +503,7 @@ final class OtclLexicalizer {
 		String factoryHelper = otclFileDto.metadata.helper;
 		Class<?> clzFactoryHelper = null;
 		try {
-			clzFactoryHelper =  CommonUtils.loadClass(factoryHelper);
+			clzFactoryHelper =  OtclUtils.loadClass(factoryHelper);
 		} catch (OtclException otclException) {
 			String msg = "Discarding 'metadata: helper'! Could not load class : " + factoryHelper;
 			throw new OtclException("", msg, otclException);

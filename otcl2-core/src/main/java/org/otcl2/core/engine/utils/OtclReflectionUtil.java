@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.core.engine.utils;
 
@@ -148,8 +163,10 @@ public class OtclReflectionUtil {
 					ex = e;
 				}
 				try {
-					method = parentConcreteType.getMethod(methodName, new Class[] { concreteType });
-					return method;
+					if (parentConcreteType != null) {
+						method = parentConcreteType.getMethod(methodName, new Class[] { concreteType });
+						return method;
+					}
 				} catch (NoSuchMethodException | SecurityException e) {
 					ex = e;
 				}
@@ -200,10 +217,10 @@ public class OtclReflectionUtil {
 		try {
 			if (GETTER_SETTER.SETTER == enumGetterSetter) {
 				Class<?> fieldType = otclCommandDto.fieldType;
-				method = findMethod(factoryHelper, enumGetterSetter, methodName, otclCommandDto, declaringClz, fieldType);
+				method = findMethod(factoryHelper, methodName, otclCommandDto, declaringClz, fieldType);
 				otclCommandDto.enableFactoryHelperSetter = true;
 			} else {
-				method = findMethod(factoryHelper, enumGetterSetter, methodName, otclCommandDto, declaringClz);
+				method = findMethod(factoryHelper, methodName, otclCommandDto, declaringClz);
 				otclCommandDto.enableFactoryHelperGetter = true;
 			}
 		} catch (NoSuchMethodException | SecurityException e) {
@@ -216,7 +233,6 @@ public class OtclReflectionUtil {
 	 * Find method.
 	 *
 	 * @param clz the clz
-	 * @param enumGetterSetter the enum getter setter
 	 * @param methodName the method name
 	 * @param otclCommandDto the otcl command dto
 	 * @param paramTypes the param types
@@ -224,14 +240,9 @@ public class OtclReflectionUtil {
 	 * @throws NoSuchMethodException the no such method exception
 	 * @throws SecurityException the security exception
 	 */
-	private static Method findMethod(Class<?> clz, GETTER_SETTER enumGetterSetter, String methodName,
-			OtclCommandDto otclCommandDto, Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
-		Method method = null;
-		if (GETTER_SETTER.SETTER == enumGetterSetter) {
-			method = clz.getMethod(methodName, paramTypes);
-		} else {
-			method = clz.getMethod(methodName, paramTypes);
-		}
+	private static Method findMethod(Class<?> clz, String methodName, OtclCommandDto otclCommandDto, 
+			Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
+		Method method = clz.getMethod(methodName, paramTypes);
 		return method;
 	}
 

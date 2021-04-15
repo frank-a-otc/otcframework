@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.common.dto;
 
@@ -71,7 +86,7 @@ public class OtclCommandDto {
 		 * @return true, if is normal
 		 */
 		public boolean isNormal() {
-			return NORMAL.value == this.value;
+			return (NORMAL.value == this.value);
 		}
 
 		/**
@@ -80,8 +95,8 @@ public class OtclCommandDto {
 		 * @return true, if is collection
 		 */
 		public boolean isCollection() {
-			return ARRAY.value == this.value || LIST.value == this.value || SET.value == this.value
-					|| QUEUE.value == this.value;
+			return (ARRAY.value == this.value || LIST.value == this.value || SET.value == this.value
+					|| QUEUE.value == this.value);
 		}
 
 		/**
@@ -90,7 +105,7 @@ public class OtclCommandDto {
 		 * @return true, if is array
 		 */
 		public boolean isArray() {
-			return ARRAY.value == this.value;
+			return (ARRAY.value == this.value);
 		}
 
 		/**
@@ -99,7 +114,7 @@ public class OtclCommandDto {
 		 * @return true, if is collection member
 		 */
 		public boolean isCollectionMember() {
-			return COLLECTION_MEMBER.value == this.value;
+			return (COLLECTION_MEMBER.value == this.value);
 		}
 
 		/**
@@ -108,7 +123,7 @@ public class OtclCommandDto {
 		 * @return true, if is map
 		 */
 		public boolean isMap() {
-			return MAP.value == this.value;
+			return (MAP.value == this.value);
 		}
 
 		/**
@@ -117,7 +132,7 @@ public class OtclCommandDto {
 		 * @return true, if is map key
 		 */
 		public boolean isMapKey() {
-			return MAP_KEY.value == this.value;
+			return (MAP_KEY.value == this.value);
 		}
 
 		/**
@@ -126,7 +141,7 @@ public class OtclCommandDto {
 		 * @return true, if is map value
 		 */
 		public boolean isMapValue() {
-			return MAP_VALUE.value == this.value;
+			return (MAP_VALUE.value == this.value);
 		}
 	}
 

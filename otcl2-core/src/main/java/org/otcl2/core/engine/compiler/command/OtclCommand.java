@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.core.engine.compiler.command;
 
@@ -119,19 +134,22 @@ public class OtclCommand {
 			if (!dir.exists() ) {
 				dir.mkdirs();
 			}
-			file.createNewFile();
-			fileOutputStream = new FileOutputStream(file);
-			String javaCode = classDto.codeBuilder.toString();
-			javaCode = JavaCodeFormatter.format(javaCode);
-			fileOutputStream.write(javaCode.getBytes()); 
-			fileOutputStream.flush();
+			if (file.createNewFile()) {
+				fileOutputStream = new FileOutputStream(file);
+				String javaCode = classDto.codeBuilder.toString();
+				javaCode = JavaCodeFormatter.format(javaCode);
+				fileOutputStream.write(javaCode.getBytes()); 
+				fileOutputStream.flush();
+			}
 		} catch (IOException e) {
 			LOGGER.warn("", e);
 		} finally {
-			try {
-				fileOutputStream.close();
-			} catch (IOException e) {
-				LOGGER.warn("", e);
+			if (fileOutputStream != null) {
+				try {
+					fileOutputStream.close();
+				} catch (IOException e) {
+					LOGGER.warn("", e);
+				}
 			}
 		}
 		return fileName;
@@ -276,8 +294,7 @@ public class OtclCommand {
 	 * @param sourceClz the source clz
 	 * @param isModule the is module
 	 */
-	private void appendMethodCall(TargetOtclCommandContext targetOCC,  Class<?> targetClz, Class<?> sourceClz,
-			boolean isModule) {
+	private void appendMethodCall(TargetOtclCommandContext targetOCC,  Class<?> targetClz, Class<?> sourceClz) {
 		StringBuilder executeMethodCallCodeBuilder = new StringBuilder("\n");
 		String factoryMethodCallCode = null;
 		String factoryClzName = targetOCC.factoryClassDto.fullyQualifiedClassName;
@@ -328,9 +345,13 @@ public class OtclCommand {
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger, boolean isModule) {
 		String fileName = targetOCC.factoryClassDto.fullyQualifiedClassName.replace(".", File.separator);
 		File file = new File(otclBinDir + fileName + ".class");
-		file.delete();
+		if (file.exists()) {
+			boolean isDeleted = file.delete();
+		}
 		file = new File(otclSourceDir + fileName + ".java");
-		file.delete();
+		if (file.exists()) {
+			boolean isDeleted = file.delete();
+		}
 		targetOCC.factoryClassDto.codeBuilder = new StringBuilder();
 		targetOCC.factoryClassDto.clearImports();
 		targetOCC.factoryClassDto.addImport(Map.class.getName());
@@ -348,7 +369,7 @@ public class OtclCommand {
 					targetType, addLogger, varNamesSet);
 		}
 		factoryClassBegin += PcdInitTemplate.generateMemberPcdCode(targetOCC, sourceOCC, varNamesSet);
-		appendMethodCall(targetOCC, targetClz, sourceClz, isModule); 
+		appendMethodCall(targetOCC, targetClz, sourceClz); 
 		targetOCC.appendCode(factoryClassBegin);
 		return;
 	}
@@ -440,9 +461,8 @@ public class OtclCommand {
 			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
 					"! Token should not be of a member for this operation.");
 		}
-		String ifNullReturnCode = null;
-		ifNullReturnCode = GetterIfNullReturnTemplate.generateGetterIfNullReturnCode(targetOCC, sourceOCC, false, logLevel,
-				varNamesSet, varNamesMap);
+		String ifNullReturnCode = GetterIfNullReturnTemplate.generateGetterIfNullReturnCode(targetOCC, sourceOCC, 
+				false, logLevel, varNamesSet, varNamesMap);
 		targetOCC.appendCode(ifNullReturnCode);
 		return ;
 	}

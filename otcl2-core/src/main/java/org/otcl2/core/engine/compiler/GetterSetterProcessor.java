@@ -1,3 +1,25 @@
+/**
+* Copyright (c) otclfoundation.org
+*
+* @author  Franklin Abel
+* @version 1.0
+* @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
+*/
 package org.otcl2.core.engine.compiler;
 
 import java.util.List;
@@ -10,7 +32,6 @@ import org.otcl2.common.dto.otcl.OtclFileDto.Copy;
 import org.otcl2.common.dto.otcl.OtclFileDto.Execute;
 import org.otcl2.common.dto.otcl.OverrideDto;
 import org.otcl2.common.dto.otcl.TargetDto;
-import org.otcl2.common.util.CommonUtils;
 import org.otcl2.core.engine.compiler.exception.SyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,85 +55,81 @@ final class GetterSetterProcessor {
 		if (OtclConstants.ROOT.equals(otclCommandDto.fieldName)) {
 			return;
 		}
-		if (otclCommandDto.getter == null) {
-			String getter = null;
-			if (Boolean.class.isAssignableFrom(otclCommandDto.fieldType)) { 
-				getter = "is" + CommonUtils.initCap(otclCommandDto.fieldName);
+		if (otclCommandDto.getter == null || otclCommandDto.setter == null) {
+			if (TARGET_SOURCE.TARGET == otclCommandDto.enumTargetSource) {
+				List<TargetDto.Override> overrides = null;
+				if (script.command instanceof Copy) {
+					Copy copy = (Copy) script.command;
+					overrides = copy.to.overrides;
+				} else {
+					Execute execute = (Execute) script.command;
+					overrides = execute.target.overrides;
+				}
+				if (overrides == null) {
+					return;
+				}
+				for (TargetDto.Override override : overrides) {
+					String tokenPath = override.tokenPath;
+					if (tokenPath == null) {
+						throw new SyntaxException("", "Oops... Syntax error in Script-block : " + script.command.id + 
+								". OTCL-token didn't pass Syntax-Checker - 'overrides: tokenPath' is missing.");
+					}
+					if (!otclCommandDto.tokenPath.equals(tokenPath)) {
+						continue;
+					}
+					if (otclCommandDto.getter == null) {
+						if (override.getterHelper != null) {
+							otclCommandDto.enableFactoryHelperGetter = true;
+							otclCommandDto.isGetterInitialized = false;
+							otclCommandDto.getter = override.getterHelper;
+						} else if (override.getter != null) {
+							otclCommandDto.getter = override.getter;
+							otclCommandDto.isGetterInitialized = false;
+						}
+					}
+					if (otclCommandDto.setter != null) {
+						continue;
+					}
+					if (override.setterHelper != null) {
+						otclCommandDto.enableFactoryHelperSetter = true;
+						otclCommandDto.isSetterInitialized = false;
+						otclCommandDto.setter = override.setterHelper;
+					} else if (override.setter != null) {
+						otclCommandDto.setter = override.setter;
+						otclCommandDto.isSetterInitialized = false;
+					}
+				}
 			} else {
-				getter = "get" + CommonUtils.initCap(otclCommandDto.fieldName);
-			}
-			otclCommandDto.getter = getter;
-		}
-		if (TARGET_SOURCE.TARGET == otclCommandDto.enumTargetSource) {
-			if (otclCommandDto.setter == null) {
-				String setter = "set" + CommonUtils.initCap(otclCommandDto.fieldName);
-				otclCommandDto.setter = setter;
-			}
-			List<TargetDto.Override> overrides = null;
-			if (script.command instanceof Copy) {
-				Copy copy = (Copy) script.command;
-				overrides = copy.to.overrides;
-			} else {
-				Execute execute = (Execute) script.command;
-				overrides = execute.target.overrides;
-			}
-			if (overrides == null) {
-				return;
-			}
-			for (TargetDto.Override override : overrides) {
-				String tokenPath = override.tokenPath;
-				if (tokenPath == null) {
-					throw new SyntaxException("", "Oops... Syntax error in Script-block : " + script.command.id + 
-							". OTCL-token didn't pass Syntax-Checker - 'overrides: tokenPath' is missing.");
-				}
-				if (!otclCommandDto.tokenPath.equals(tokenPath)) {
-					continue;
-				}
-				if (override.getterHelper != null) {
-					otclCommandDto.enableFactoryHelperGetter = true;
-					otclCommandDto.isGetterInitialized = false;
-					otclCommandDto.getter = override.getterHelper;
-				} else if (override.getter != null) {
-					otclCommandDto.getter = override.getter;
-					otclCommandDto.isGetterInitialized = false;
-				}
-				if (override.setterHelper != null) {
-					otclCommandDto.enableFactoryHelperSetter = true;
-					otclCommandDto.isSetterInitialized = false;
-					otclCommandDto.setter = override.setterHelper;
-				} else if (override.setter != null) {
-					otclCommandDto.setter = override.setter;
-					otclCommandDto.isSetterInitialized = false;
-				}
-			}
-		} else {
-			List<OverrideDto> overrides = null;
-			if (script.command instanceof Copy) {
-				Copy copy = (Copy) script.command;
-				overrides = copy.from.overrides;
-			} else {
-				Execute execute = (Execute) script.command;
-				overrides = execute.source.overrides;
-			}
-			if (overrides == null) {
-				return;
-			}
-			for (OverrideDto override : overrides) {
-				String tokenPath = override.tokenPath;
-				if (tokenPath == null) {
-					throw new SyntaxException("", "Oops... Syntax error in Script-block : " + script.command.id + 
-							". OTCL-token didn't pass Syntax-Checker - 'overrides: tokenPath' is missing.");
-				}
-				if (!otclCommandDto.tokenPath.equals(tokenPath)) {
-					continue;
-				}
-				if (override.getterHelper != null) {
-					otclCommandDto.enableFactoryHelperGetter = true;
-					otclCommandDto.isGetterInitialized = false;
-					otclCommandDto.getter = override.getterHelper;
-				} else if (override.getter != null) {
-					otclCommandDto.getter = override.getter;
-					otclCommandDto.isGetterInitialized = false;
+				if (otclCommandDto.getter == null) {
+					List<OverrideDto> overrides = null;
+					if (script.command instanceof Copy) {
+						Copy copy = (Copy) script.command;
+						overrides = copy.from.overrides;
+					} else {
+						Execute execute = (Execute) script.command;
+						overrides = execute.source.overrides;
+					}
+					if (overrides == null) {
+						return;
+					}
+					for (OverrideDto override : overrides) {
+						String tokenPath = override.tokenPath;
+						if (tokenPath == null) {
+							throw new SyntaxException("", "Oops... Syntax error in Script-block : " + script.command.id + 
+									". OTCL-token didn't pass Syntax-Checker - 'overrides: tokenPath' is missing.");
+						}
+						if (!otclCommandDto.tokenPath.equals(tokenPath)) {
+							continue;
+						}
+						if (override.getterHelper != null) {
+							otclCommandDto.enableFactoryHelperGetter = true;
+							otclCommandDto.isGetterInitialized = false;
+							otclCommandDto.getter = override.getterHelper;
+						} else if (override.getter != null) {
+							otclCommandDto.getter = override.getter;
+							otclCommandDto.isGetterInitialized = false;
+						}
+					}
 				}
 			}
 		}

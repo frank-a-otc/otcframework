@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.core.engine.compiler;
 
@@ -20,13 +35,11 @@ import org.otcl2.common.dto.otcl.OtclFileDto.Copy;
 import org.otcl2.common.dto.otcl.OtclFileDto.Execute;
 import org.otcl2.common.dto.otcl.OverrideDto;
 import org.otcl2.common.dto.otcl.TargetDto;
-import org.otcl2.common.exception.OtclException;
 import org.otcl2.common.factory.OtclCommandDtoFactory;
-import org.otcl2.common.util.CommonUtils;
+import org.otcl2.common.util.OtclUtils;
 import org.otcl2.common.util.PackagesFilterUtil;
 import org.otcl2.core.engine.compiler.exception.SemanticsException;
 import org.otcl2.core.engine.utils.OtclReflectionUtil;
-import org.otcl2.core.engine.utils.OtclReflectionUtil.GETTER_SETTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,17 +63,16 @@ final class OtclSemanticsChecker {
 	 * @param otclTokens the otcl tokens
 	 * @return true, if successful
 	 */
-	static boolean checkSemantics(Class<?> factoryHelper, ScriptDto script, Class<?> clz,
-			String otclChain, OtclCommandDto otclCommandDto, String[] otclTokens) {
+	static boolean checkSemantics(ScriptDto script, Class<?> clz, String otclChain, OtclCommandDto otclCommandDto, 
+			String[] otclTokens) {
 		try {
 			checkNotations(script, clz, otclChain, otclCommandDto);
 			String concreteTypeName = otclCommandDto.concreteTypeName;
 			Class<?> concreteType = null;
 			if (concreteTypeName != null && otclCommandDto.concreteTypeName == null) {
-				concreteType = CommonUtils.loadClass(concreteTypeName);
+				concreteType = OtclUtils.loadClass(concreteTypeName);
 				otclCommandDto.concreteType = concreteType;
 			}
-			initGetterSetter(factoryHelper, otclCommandDto, script);
 			GetterSetterProcessor.process(script, otclCommandDto);
 			OtclCommandDtoFactory.createMembers(script.command.id, otclCommandDto, otclChain, otclTokens);
 		} catch (Exception ex) {
@@ -68,7 +80,7 @@ final class OtclSemanticsChecker {
 					(TARGET_SOURCE.SOURCE == otclCommandDto.enumTargetSource ? " in from/source field '" :
 							" in to/target field '") + otclCommandDto.fieldName + "' not found.");
 		}
-	//		LOGGER.info("Semantics processing : Okay for " + script.id);
+//		LOGGER.info("Semantics processing : Okay for " + script.id);
 		return true;
 	}
 	
@@ -102,18 +114,13 @@ final class OtclSemanticsChecker {
 		String sourceOtclChain = null;
 		if (script.command instanceof Execute) {
 			Execute execute = (Execute) script.command;
-			if (execute != null && (execute.otclModule != null || execute.otclConverter != null)) {
+			if (execute.otclModule != null || execute.otclConverter != null) {
 				String typeName = otclCommandDto.fieldType.getName();
 				//TODO this is not right - needs correction
 				if (!PackagesFilterUtil.isFilteredPackage(typeName) && !otclCommandDto.hasCollectionNotation &&
 						!otclCommandDto.hasMapNotation) {
-					if (TARGET_SOURCE.TARGET == otclCommandDto.enumTargetSource) {
-						throw new SemanticsException("", "Oops... Script didn't pass Semantics-Checker in Script-block : "
-								+ execute.id + " - Type : '" + typeName + "' not included in filter found.");
-					} else {
-						throw new SemanticsException("", "Oops... Script didn't pass Semantics-Checker in Script-block : "
-								+ execute.id + " - Type : '" + typeName + "' not included in filter found.");
-					}
+					throw new SemanticsException("", "Oops... Script didn't pass Semantics-Checker in Script-block : "
+							+ execute.id + " - Type : '" + typeName + "' not included in filter found.");
 				}
 				hasExtensions = true;
 			}
@@ -157,75 +164,75 @@ final class OtclSemanticsChecker {
 		}
 	}
 	
-	/**
-	 * Inits the getter setter.
-	 *
-	 * @param factoryHelper the factory helper
-	 * @param otclCommandDto the otcl command dto
-	 * @param script the script
-	 */
-	private static void initGetterSetter(Class<?> factoryHelper, OtclCommandDto otclCommandDto,
-			ScriptDto script) {
-		if (!otclCommandDto.isSetterInitialized) {
-			if (TARGET_SOURCE.TARGET == otclCommandDto.enumTargetSource) {
-				if (otclCommandDto.enableFactoryHelperSetter) {
-					try {
-						OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.SETTER, 
-								otclCommandDto.setter, otclCommandDto);
-						otclCommandDto.isSetterInitialized = true;
-					} catch (OtclException e) {
-						LOGGER.warn("FactoryHelper does not have setter for " + otclCommandDto.tokenPath
-								+ " in Script-block : " + script.command.id + 
-								". Semantics-checker will introspect declaring-class (or concreteType if defined) for "
-								+ "suitable setter. " + e.getMessage());
-						OtclReflectionUtil.findSetterName(otclCommandDto);
-						otclCommandDto.isSetterInitialized = true;
-					}
-				} else {
-					try {
-						if (!otclCommandDto.fieldName.equals(OtclConstants.ROOT)) {
-							OtclReflectionUtil.findSetterName(otclCommandDto);
-							otclCommandDto.isSetterInitialized = true;
-						}
-					} catch (OtclException ex) {
-						LOGGER.warn("Both declaring-class (or concreteType if defined), does not have setter for " +
-								otclCommandDto.tokenPath + " in Script-block : " + script.command.id + 
-								". Semantics-checker will introspect FactoryHelper for suitable setter. " + ex.getMessage());
-						OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.SETTER, 
-								otclCommandDto.setter, otclCommandDto);
-						otclCommandDto.isSetterInitialized = true;
-					}
-				}
-			}
-		}
-		if (!otclCommandDto.isGetterInitialized) {
-			if (otclCommandDto.enableFactoryHelperGetter) {
-				try {
-					OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.GETTER, 
-							otclCommandDto.getter, otclCommandDto);
-				} catch (OtclException e) {
-					LOGGER.warn("FactoryHelper does not have getter for " + otclCommandDto.tokenPath 
-							+ " in Script-block : " + script.command.id + 
-							". Semantics-checker will introspect declaring-class (or concreteType if defined) for"
-							+ " suitable getter. " + e.getMessage());
-					OtclReflectionUtil.findGetterName(otclCommandDto);
-					otclCommandDto.isGetterInitialized = true;
-				}
-			} else {
-				try {
-					if (!otclCommandDto.fieldName.equals(OtclConstants.ROOT)) {
-						OtclReflectionUtil.findGetterName(otclCommandDto);
-						otclCommandDto.isGetterInitialized = true;
-					}
-				} catch (OtclException ex) {
-					LOGGER.warn("Both declaring-class (or concreteType if defined), does not have getter for " +
-							otclCommandDto.tokenPath + " in Script-block : " + script.command.id + 
-							". Semantics-checker will introspect FactoryHelper for suitable getter. " + ex.getMessage());
-					OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.GETTER, 
-							otclCommandDto.getter, otclCommandDto);
-					otclCommandDto.isGetterInitialized = true;
-				}
-			}
-		}
-	}
+//	/**
+//	 * Inits the getter setter.
+//	 *
+//	 * @param factoryHelper the factory helper
+//	 * @param otclCommandDto the otcl command dto
+//	 * @param script the script
+//	 */
+//	private static void initGetterSetter(Class<?> factoryHelper, OtclCommandDto otclCommandDto,
+//			ScriptDto script) {
+//		if (!otclCommandDto.isSetterInitialized) {
+//			if (TARGET_SOURCE.TARGET == otclCommandDto.enumTargetSource) {
+//				if (otclCommandDto.enableFactoryHelperSetter) {
+//					try {
+//						OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.SETTER, 
+//								otclCommandDto.setter, otclCommandDto);
+//						otclCommandDto.isSetterInitialized = true;
+//					} catch (OtclException e) {
+//						LOGGER.warn("FactoryHelper does not have setter for " + otclCommandDto.tokenPath
+//								+ " in Script-block : " + script.command.id + 
+//								". Semantics-checker will introspect declaring-class (or concreteType if defined) for "
+//								+ "suitable setter. " + e.getMessage());
+//						OtclReflectionUtil.findSetterName(otclCommandDto);
+//						otclCommandDto.isSetterInitialized = true;
+//					}
+//				} else {
+//					try {
+//						if (!otclCommandDto.fieldName.equals(OtclConstants.ROOT)) {
+//							OtclReflectionUtil.findSetterName(otclCommandDto);
+//							otclCommandDto.isSetterInitialized = true;
+//						}
+//					} catch (OtclException ex) {
+//						LOGGER.warn("Both declaring-class (or concreteType if defined), does not have setter for " +
+//								otclCommandDto.tokenPath + " in Script-block : " + script.command.id + 
+//								". Semantics-checker will introspect FactoryHelper for suitable setter. " + ex.getMessage());
+//						OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.SETTER, 
+//								otclCommandDto.setter, otclCommandDto);
+//						otclCommandDto.isSetterInitialized = true;
+//					}
+//				}
+//			}
+//		}
+//		if (!otclCommandDto.isGetterInitialized) {
+//			if (otclCommandDto.enableFactoryHelperGetter) {
+//				try {
+//					OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.GETTER, 
+//							otclCommandDto.getter, otclCommandDto);
+//				} catch (OtclException e) {
+//					LOGGER.warn("FactoryHelper does not have getter for " + otclCommandDto.tokenPath 
+//							+ " in Script-block : " + script.command.id + 
+//							". Semantics-checker will introspect declaring-class (or concreteType if defined) for"
+//							+ " suitable getter. " + e.getMessage());
+//					OtclReflectionUtil.findGetterName(otclCommandDto);
+//					otclCommandDto.isGetterInitialized = true;
+//				}
+//			} else {
+//				try {
+//					if (!otclCommandDto.fieldName.equals(OtclConstants.ROOT)) {
+//						OtclReflectionUtil.findGetterName(otclCommandDto);
+//						otclCommandDto.isGetterInitialized = true;
+//					}
+//				} catch (OtclException ex) {
+//					LOGGER.warn("Both declaring-class (or concreteType if defined), does not have getter for " +
+//							otclCommandDto.tokenPath + " in Script-block : " + script.command.id + 
+//							". Semantics-checker will introspect FactoryHelper for suitable getter. " + ex.getMessage());
+//					OtclReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.GETTER, 
+//							otclCommandDto.getter, otclCommandDto);
+//					otclCommandDto.isGetterInitialized = true;
+//				}
+//			}
+//		}
+//	}
 }

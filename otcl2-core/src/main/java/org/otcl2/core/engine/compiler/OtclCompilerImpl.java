@@ -4,6 +4,21 @@
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
+*
+* This file is part of the OTCL framework.
+* 
+*  The OTCL framework is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The OTCL framework is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with OTCL framework project.  If not, see <https://www.gnu.org/licenses/>.
+*
 */
 package org.otcl2.core.engine.compiler;
 
@@ -35,6 +50,7 @@ import org.otcl2.common.dto.OtclDto;
 import org.otcl2.common.dto.ScriptDto;
 import org.otcl2.common.engine.compiler.CompilationReport;
 import org.otcl2.common.util.CommonUtils;
+import org.otcl2.common.util.OtclUtils;
 import org.otcl2.core.engine.compiler.command.JavaCodeStringObject;
 import org.otcl2.core.engine.compiler.exception.CodeGeneratorException;
 import org.otcl2.core.engine.compiler.exception.OtclCompilerException;
@@ -88,9 +104,31 @@ public class OtclCompilerImpl implements OtclCompiler {
 	/** The Constant diagnostics. */
 	private static final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
+	private static final List<String> optionList = new ArrayList<String>();
+
 	static {
 		objectMapper = new ObjectMapper();
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
+		
+        optionList.add("-classpath");
+    	String otclLibLocation = OtclConfig.getOtclLibLocation();
+		File directory = new File(otclLibLocation);
+		FileFilter fileFilter = CommonUtils.createFilenameFilter(".jar");
+		StringBuilder otclLibClassPath = null;
+    	for (File file : directory.listFiles(fileFilter)) {
+    		if (otclLibClassPath == null) {
+    			otclLibClassPath = new StringBuilder();
+    		}
+			if (file.getName().endsWith(".jar") || file.getName().endsWith(".class")) {
+	    		otclLibClassPath.append(File.pathSeparator + file.getAbsolutePath());
+			}
+		}
+    	if (otclLibClassPath == null || otclLibClassPath.length() == 0) {
+            optionList.add(System.getProperty("java.class.path") + File.pathSeparator + otclTargetDir);
+    	} else {
+    		optionList.add(System.getProperty("java.class.path") + File.pathSeparator + otclTargetDir + 
+    				otclLibClassPath.toString());
+    	}
 	}
 
 	/**
@@ -320,6 +358,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 	public void compileSourceCode() {
 		File binDir = new File(otclBinDir);
 		List<DeploymentDto> deploymentDtos = null;
+		Thread.currentThread().setContextClassLoader(OtclUtils.fetchCurrentURLClassLoader());
 		for (File depFile : binDir.listFiles(depFileFilter)) {
 			FileInputStream fis = null;
 			try {
@@ -402,13 +441,10 @@ public class OtclCompilerImpl implements OtclCompiler {
 		} catch (IOException e) {
 			LOGGER.error("Could not set root locations!. ", e);
 		}
-//		List<String> options = Arrays.asList("-classpath", otclTargetDir);
-		List<String> optionList = new ArrayList<String>();
-        optionList.add("-classpath");
-        optionList.add(System.getProperty("java.class.path") + File.pathSeparator + otclTargetDir);
 
 		JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, optionList, null,
 				javaFileObjects);
+//		Thread.currentThread().setContextClassLoader(OtclUtils.fetchCurrentURLClassLoader());
 		if (!task.call()) {
 			diagnostics.getDiagnostics().forEach(System.out::println);
 		}
