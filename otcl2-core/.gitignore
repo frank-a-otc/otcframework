@@ -1,3 +1,5 @@
 /target/
 /otcl2-core-deploy.log
 /.settings/
+/.classpath
+/.project
