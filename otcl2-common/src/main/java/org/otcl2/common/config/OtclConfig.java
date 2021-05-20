@@ -38,8 +38,7 @@ import org.otcl2.common.config.exception.OtclConfigException;
 import org.otcl2.common.exception.OtclException;
 import org.otcl2.common.util.CommonUtils;
 import org.otcl2.common.util.PackagesFilterUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.otcl2.common.util.PropertyConverterUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,15 +49,9 @@ public enum OtclConfig {
 	/** The instance. */
 	instance;
 
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(OtclConfig.class);
-
 	/** The Constant OTCL_HOME_ENV_VAR. */
 	private static final String OTCL_HOME_ENV_VAR = "OTCL_HOME";
 
-	/** The otcl source. */
-//	private static final String OTCL_SOURCE = "/otcl-scripts-final";
-	
 	/** The otcl test source. */
 	private static final String OTCL_UNITTEST_FOLDER = "/otcl-unittest";
 	
@@ -68,21 +61,18 @@ public enum OtclConfig {
 	/** The Constant EXECUTOR_PACKAGES_FILTER. */
 	private static final String EXECUTOR_PACKAGES_FILTER = "executor.packages.filter";
 
-	/** The Constant engineLogingDetailedDefault. */
-	private static final boolean engineLogingDetailedDefault = true;
+	/** The Constant COMPILER_SOURCECODE_FAILONERROR. */
+	private static final String COMPILER_SOURCECODE_FAILONERROR = "compiler.sourcecode.failonerror";
 	
 	/** The Constant compilerTestprofileEnableDefault. */
-	private static final boolean compilerTestprofileEnableDefault = false;
+	private static boolean compilerSourcecodeFailonerror = false;
 
 	/** The Constant otclHome. */
 	private static final String otclHome;
 	
 	/** The Constant otclConfigProps. */
 	private static final Properties otclConfigProps = new Properties();
-	
-	/** The is test profile. */
-//	private static boolean isTestProfile = false;
-	
+
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader;
 
@@ -109,10 +99,15 @@ public enum OtclConfig {
 						+ otclHome + "/config/otcl.properties' file");
 			}
 		} catch (IOException ex) {
-			LOGGER.error(ex.getMessage());
 			throw new OtclConfigException(ex);
 		}
 		String filteredPackages = otclConfigProps.getProperty(EXECUTOR_PACKAGES_FILTER);
+		String compilerSourcecodeFailonerror = otclConfigProps.getProperty(COMPILER_SOURCECODE_FAILONERROR);
+		try {
+			OtclConfig.compilerSourcecodeFailonerror = PropertyConverterUtil.toBooleanObject(compilerSourcecodeFailonerror);
+		} catch (Exception ex) {
+			
+		}
 		if (!filteredPackages.contains(",") && filteredPackages.contains(" ")) {
 			filteredPackages = filteredPackages.replace("  ", " ").replace(" ", ",");
 		}
@@ -207,6 +202,15 @@ public enum OtclConfig {
 			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
 		}
 		return otclHome + File.separator + "target" + File.separator;
+	}
+
+	/**
+	 * Gets the compiler sourcecode failonerror.
+	 *
+	 * @return the compiler sourcecode failonerror
+	 */
+	public static boolean getCompilerSourcecodeFailonerror() {
+		return compilerSourcecodeFailonerror;
 	}
 
 	/**

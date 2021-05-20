@@ -24,6 +24,7 @@ package org.otcl2.core.engine.compiler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -136,10 +137,13 @@ final class OtclLexicalizer {
 			}
 		}
 		otclNamespace = otclNamespace == null ? "" : otclNamespace;
-		OtclDto otclDto = tokenize(otclNamespace, fileName, otclFileDto, targetClz, sourceClz);
+		Map<String, OtclFileDto.CommandCommonParams> mapOtclCommands = new HashMap<>();
+		OtclDto otclDto = tokenize(otclNamespace, fileName, otclFileDto, targetClz, sourceClz, mapOtclCommands);
 		Class<?> factoryHelper = fetchFactoryHelper(otclFileDto);
-		GetterSetterFinalizer.process(otclDto.sourceOCDStems, factoryHelper);
-		GetterSetterFinalizer.process(otclDto.targetOCDStems, factoryHelper);
+		GetterSetterFinalizer.process(otclDto.sourceOCDStems, factoryHelper, TARGET_SOURCE.SOURCE);
+		GetterSetterFinalizer.process(otclDto.targetOCDStems, factoryHelper, TARGET_SOURCE.TARGET);
+		
+		GetterSetterFinalizer.resetLeafHelperTypes(mapOtclCommands, otclDto.sourceOCDStems, otclDto.targetOCDStems, factoryHelper);
 		otclDto.otclFileDto = otclFileDto;
 		return otclDto;
 	}
@@ -171,13 +175,12 @@ final class OtclLexicalizer {
 	 * @return the otcl dto
 	 */
 	private static OtclDto tokenize(String otclNamespace, String fileName, OtclFileDto otclFileDto, 
-			Class<?> targetClz, Class<?> sourceClz) {
+			Class<?> targetClz, Class<?> sourceClz, Map<String, OtclFileDto.CommandCommonParams> mapOtclCommands) {
 		Set<String> factorClzNames = new HashSet<>();
 		if (otclFileDto != null && otclFileDto.metadata != null && otclFileDto.metadata.entryClassName != null) {
 			String mainClassName = otclFileDto.metadata.entryClassName;
-			if ( mainClassName.contains(".")) {
-				LOGGER.warn("Otcl Lexicalizer-phase failure! Discarding package name! "
-						+ "Package should not be specified for Mainclass in 'metadata.mainClassName'.");
+			if (mainClassName.contains(".")) {
+				LOGGER.warn("Discarding package name! Package should not be specified in 'metadata.mainClassName'.");
 				mainClassName = mainClassName.substring(mainClassName.lastIndexOf(".") + 1);
 				otclFileDto.metadata.entryClassName = mainClassName;
 				factorClzNames.add(mainClassName);
@@ -190,115 +193,50 @@ final class OtclLexicalizer {
 		Map<String, OtclCommandDto> mapTargetOCDs = new LinkedHashMap<>();
 		Map<String, OtclCommandDto> mapSourceOCDs = new LinkedHashMap<>();
 		Set<String> scriptIds = new HashSet<>();
-		for (OtclFileDto.OtclCommand otclScript : otclFileDto.otclCommands) {
-			if ((otclScript.copy != null && otclScript.copy.debug) || 
-					(otclScript.execute != null && otclScript.execute.debug)) {
+		for (OtclFileDto.OtclCommand otclCommand : otclFileDto.otclCommands) {
+			if ((otclCommand.copy != null && otclCommand.copy.debug) || 
+					(otclCommand.execute != null && otclCommand.execute.debug)) {
 				@SuppressWarnings("unused")
 				int debugDummy = 0;
 			}
-			String scriptId = null;
-			if (otclScript.copy != null) {
-				scriptId = otclScript.copy.id;
+			String commandId = null;
+			if (otclCommand.copy != null) {
+				commandId = otclCommand.copy.id;
+				mapOtclCommands.put(commandId, otclCommand.copy);
 			} else {
-				scriptId = otclScript.execute.id;
+				commandId = otclCommand.execute.id;
+				mapOtclCommands.put(commandId, otclCommand.execute);
 			}
-			if ((otclScript.copy != null && otclScript.copy.disable) || 
-					(otclScript.execute != null && otclScript.execute.disable)) {
-				LOGGER.warn("Bypassing disabled script-block : " + scriptId);
+			if ((otclCommand.copy != null && otclCommand.copy.disable) || 
+					(otclCommand.execute != null && otclCommand.execute.disable)) {
+				LOGGER.warn("Ignoring disabled OTCL-command : {}", commandId);
 				continue;
 			}
-			if (scriptId == null) {
-				throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId + 
-						". The 'id' property is mandatory in every script-block but one or more are missing.");
-			}
-			if (scriptIds.contains(scriptId)) {
-				throw new OtclExtensionsException("", 
-						"Otcl Lexicalizer-phase failure in Script-block : " + scriptId + ". Duplicate Script-Id" +
-								scriptId + " found.");
-			}
-			scriptIds.add(scriptId);
+			LOGGER.debug("Compiling OTCL-command : {}", commandId);
+			validateScriptIds(scriptIds, commandId);
+			scriptIds.add(commandId);
 			String targetOtclChain = null;
 			String factoryClassName = null;
 			String sourceOtclChain = null;
 			boolean isValues = false;
 			boolean isExtensions = false;
-			if (otclScript.copy != null) {
-				if (otclScript.copy.to == null || otclScript.copy.to.otclChain == null) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId
-							+ ". The 'to: otclChain:' property/value is missing.");
-				}
-				if (otclScript.copy.from == null || (otclScript.copy.from.otclChain == null && 
-						otclScript.copy.from.values == null)) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId
-							+ ". Either one of 'from: otclChain/values:' is mandatory - but both are missing.");
-				}
-				if (otclScript.copy.from.otclChain != null && otclScript.copy.from.values != null) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId
-							+ ". Either one of 'from: otclChain/values:' should only be defined.");
-				}
-				if (otclScript.copy.from.values != null && otclScript.copy.from.overrides != null) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId
-							+ ". Property 'copy: from: overrides:' cannot be defined for 'from: values:' property.");
-				}
-				targetOtclChain = otclScript.copy.to.otclChain;
-				factoryClassName = otclScript.copy.factoryClassName;
-				if (otclScript.copy.from.otclChain != null) {
-					sourceOtclChain = otclScript.copy.from.otclChain;
+			if (otclCommand.copy != null) {
+				validateCopyCommand(otclCommand.copy, commandId); 
+				targetOtclChain = otclCommand.copy.to.otclChain;
+				factoryClassName = otclCommand.copy.factoryClassName;
+				if (otclCommand.copy.from.otclChain != null) {
+					sourceOtclChain = otclCommand.copy.from.otclChain;
 				} else {
 					isValues = true;
 				}
-			} else if (otclScript.execute != null) {
-				if (otclScript.execute.target == null || otclScript.execute.target.otclChain == null) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId
-							+ ". The 'target: otclChain' is missing.");
-				}
-				if (otclScript.execute.source == null || otclScript.execute.source.otclChain == null) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + scriptId
-							+ ". The 'source: otclChain' property/value is missing.");
-				}
-				if (otclScript.execute.executionOrder != null) {
-					for (String execExt : otclScript.execute.executionOrder) {
-						if (OtclConstants.EXECUTE_OTCL_MODULE.equals(execExt)) {
-							if (otclScript.execute.otclModule == null) {
-								throw new LexicalizerException("", "Otcl Lexicalizer-phase failure in Script-block : " +
-										otclScript.execute.id + ". 'executeOtclModule' definition "
-										+ "is missing - but specified in 'executionOrder'");
-							}
-							break;
-						}
-						if (OtclConstants.EXECUTE_OTCL_CONVERTER.equals(execExt)) {
-							if (otclScript.execute.otclConverter == null) {
-								throw new LexicalizerException("", "Otcl Lexicalizer-phase failure in Script-block : " +
-										otclScript.execute.id + ". 'executeOtclConverter' definition is missing - "
-										+ "but referenced in 'executionOrder'");
-							}
-							break;
-						}
-					}
-				}
-				targetOtclChain = otclScript.execute.target.otclChain;
-				factoryClassName = otclScript.execute.factoryClassName;
-				sourceOtclChain = otclScript.execute.source.otclChain;
+			} else if (otclCommand.execute != null) {
+				validateExecuteCommand(otclCommand.execute, commandId);
+				targetOtclChain = otclCommand.execute.target.otclChain;
+				factoryClassName = otclCommand.execute.factoryClassName;
+				sourceOtclChain = otclCommand.execute.source.otclChain;
 				isExtensions = true;
 			}
-			if (factoryClassName != null) {
-				if (factoryClassName.contains(".")) {
-					LOGGER.warn("Ignoring package name in Script-block : " + scriptId + 
-							". Package should not be specified for factoryClassName:' property.");
-					factoryClassName = factoryClassName.substring(factoryClassName.lastIndexOf(".") + 1);
-					if (otclScript.execute != null) {
-						otclScript.execute.factoryClassName = factoryClassName;
-					} else {
-						otclScript.copy.factoryClassName = factoryClassName;
-					}
-				}
-				if (factorClzNames.contains(factoryClassName)) {
-					throw new OtclExtensionsException("", 
-							"Otcl Lexicalizer-phase failure in Script-block : " + scriptId +
-							". Duplicate 'target: factoryClassName'" + factoryClassName + " found.");
-				}
-				factorClzNames.add(factoryClassName);
-			}
+			santizeFactoryClassName(factoryClassName, otclCommand, commandId, factorClzNames); 
 			if (targetOtclChain.endsWith(".")) {
 				targetOtclChain = targetOtclChain.substring(0, targetOtclChain.length() - 1);
 			}
@@ -307,7 +245,7 @@ final class OtclLexicalizer {
 			}
 			OtclChainDto.Builder builderTargetOtclChainDto = OtclChainDto.newBuilder();
 			OtclChainDto.Builder builderSourceOtclChainDto = OtclChainDto.newBuilder();
-			ScriptDto scriptDto = new ScriptDto(otclScript);
+			ScriptDto scriptDto = new ScriptDto(otclCommand);
 			Execute execute = scriptDto.command instanceof Execute ? (Execute) scriptDto.command : null;
 			if (isValues || (execute != null && (execute.otclConverter != null || execute.otclModule != null))) {
 				OtclExtensionsValidator.validateExtensions(scriptDto, targetClz, builderTargetOtclChainDto, sourceClz,
@@ -317,27 +255,17 @@ final class OtclLexicalizer {
 				}
 			}
 			try {
-				builderTargetOtclChainDto.addOtclChain(targetOtclChain);
-				// --- tokenize targetOtclChain
-				OtclCommandDto targetStemOCD = tokenize(scriptDto, targetClz, targetOtclChain,
-						mapTargetOCDs, builderTargetOtclChainDto, TARGET_SOURCE.TARGET, null);
-				mapTargetOCDs.put(targetStemOCD.otclToken, targetStemOCD);
-				builderDeploymentDto.addTargetOtclCommandDtoStem(targetStemOCD);
-				OtclChainDto targetOtclChainDto = builderTargetOtclChainDto.build();
-				scriptDto.targetOtclChainDto = targetOtclChainDto;
-
+				OtclCommandDto targetStemOCD = tokenizeTargetChain(builderTargetOtclChainDto, targetOtclChain, scriptDto, 
+						targetClz, mapTargetOCDs, builderDeploymentDto);
+				OtclChainDto targetOtclChainDto = scriptDto.targetOtclChainDto;
 				int targetCollectionsCount = targetOtclChainDto.collectionCount + targetOtclChainDto.dictionaryCount;
+				
 				int sourceCollectionsCount = 0;
 				OtclChainDto sourceOtclChainDto = null;
 				if (!CommonUtils.isEmpty(sourceOtclChain)) {
-					if (sourceClz == null) {
-						throw new LexicalizerException("", "Otcl Lexicalizer-phase failure! in Script-block : " + scriptId + 
-								". The from/source otclChain is defined. But source-type is undefined.");
-					}
-					builderSourceOtclChainDto.addOtclChain(sourceOtclChain);
-					// --- tokenize sourceOtclChain
-					OtclCommandDto sourceStemOCD = tokenize(scriptDto, sourceClz, sourceOtclChain,
-							mapSourceOCDs, builderSourceOtclChainDto, TARGET_SOURCE.SOURCE, null);
+					OtclCommandDto sourceStemOCD = tokenizeSourceChain(builderSourceOtclChainDto, sourceOtclChain, 
+							scriptDto, sourceClz, mapSourceOCDs, builderDeploymentDto);
+					sourceOtclChainDto = scriptDto.sourceOtclChainDto;
 					OtclCommandContext targetOCC = new OtclCommandContext();
 					targetOCC.otclCommandDto = targetStemOCD;
 					targetOCC.otclTokens = builderTargetOtclChainDto.getOtclTokens();
@@ -347,10 +275,6 @@ final class OtclLexicalizer {
 					sourceOCC.otclTokens = builderSourceOtclChainDto.getOtclTokens();
 					sourceOCC.rawOtclTokens = builderSourceOtclChainDto.getRawOtclTokens();
 					OtclLeavesSemanticsChecker.checkLeavesSemantics(targetOCC, sourceOCC);
-					mapSourceOCDs.put(sourceStemOCD.otclToken, sourceStemOCD);
-					builderDeploymentDto.addSourceOtclCommandDtoStem(sourceStemOCD);
-					sourceOtclChainDto = builderSourceOtclChainDto.build();
-					scriptDto.sourceOtclChainDto = sourceOtclChainDto;
 					sourceCollectionsCount = sourceOtclChainDto.collectionCount + sourceOtclChainDto.dictionaryCount;
 				}
 				
@@ -371,12 +295,131 @@ final class OtclLexicalizer {
 				if (ex instanceof OtclException) {
 					throw ex;
 				}
-				throw new LexicalizerException("", "Otcl Lexicalizer-phase failure! " + ex);
+				throw new LexicalizerException("", "Otcl Lexicalizer-phase failure compiling Command-Id : " + commandId, ex);
 			}
 		}
 		return builderDeploymentDto.build();
 	}
+	
+	private static void validateScriptIds(Set<String> scriptIds, String commandId) {
+		if (commandId == null) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + commandId + 
+					". The 'id' property is mandatory in every commmand-block but one or more are missing.");
+		}
+		if (scriptIds.contains(commandId)) {
+			throw new OtclExtensionsException("", 
+					"Otcl Lexicalizer-phase failure in Command with Id : " + commandId + ". Duplicate Command-Id : " +
+							commandId + " found.");
+		}
+	}
 
+	private static void validateCopyCommand(OtclFileDto.Copy copy, String commandId) {
+		if (copy.to == null || copy.to.otclChain == null) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + commandId
+					+ ". The 'to: otclChain:' property/value is missing.");
+		}
+		if (copy.from == null || (copy.from.otclChain == null && 
+				copy.from.values == null)) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + commandId
+					+ ". Either one of 'from: otclChain/values:' is mandatory - but both are missing.");
+		}
+		if (copy.from.otclChain != null && copy.from.values != null) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + commandId
+					+ ". Either one of 'from: otclChain/values:' should only be defined.");
+		}
+		if (copy.from.values != null && copy.from.overrides != null) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + commandId
+					+ ". Property 'copy: from: overrides:' cannot be defined for 'from: values:' property.");
+		}
+		return;
+	}
+	
+	private static void validateExecuteCommand(OtclFileDto.Execute execute, String scriptId) {
+		if (execute.target == null || execute.target.otclChain == null) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + scriptId
+					+ ". The 'target: otclChain' is missing.");
+		}
+		if (execute.source == null || execute.source.otclChain == null) {
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Command with Id : " + scriptId
+					+ ". The 'source: otclChain' property/value is missing.");
+		}
+		if (execute.executionOrder != null) {
+			for (String execExt : execute.executionOrder) {
+				if (OtclConstants.EXECUTE_OTCL_MODULE.equals(execExt)) {
+					if (execute.otclModule == null) {
+						throw new LexicalizerException("", "Otcl Lexicalizer-phase failure in Command with Id : " +
+								execute.id + ". 'executeOtclModule' definition "
+								+ "is missing - but specified in 'executionOrder'");
+					}
+					break;
+				}
+				if (OtclConstants.EXECUTE_OTCL_CONVERTER.equals(execExt)) {
+					if (execute.otclConverter == null) {
+						throw new LexicalizerException("", "Otcl Lexicalizer-phase failure in Command with Id : " +
+								execute.id + ". 'executeOtclConverter' definition is missing - "
+								+ "but referenced in 'executionOrder'");
+					}
+					break;
+				}
+			}
+		}
+	}
+	
+	private static OtclCommandDto tokenizeTargetChain(OtclChainDto.Builder builderTargetOtclChainDto, String targetOtclChain, ScriptDto scriptDto,
+			Class<?> targetClz, Map<String, OtclCommandDto> mapTargetOCDs, OtclDto.Builder builderDeploymentDto) { 
+		builderTargetOtclChainDto.addOtclChain(targetOtclChain);
+		// --- tokenize targetOtclChain
+		OtclCommandDto targetStemOCD = tokenize(scriptDto, targetClz, targetOtclChain,
+				mapTargetOCDs, builderTargetOtclChainDto, TARGET_SOURCE.TARGET, null);
+		mapTargetOCDs.put(targetStemOCD.otclToken, targetStemOCD);
+		builderDeploymentDto.addTargetOtclCommandDtoStem(targetStemOCD);
+		OtclChainDto targetOtclChainDto = builderTargetOtclChainDto.build();
+		scriptDto.targetOtclChainDto = targetOtclChainDto;
+		targetStemOCD.isRootNode = targetStemOCD.fieldName.equals(OtclConstants.ROOT); 
+		return targetStemOCD;
+	}
+	
+	private static OtclCommandDto tokenizeSourceChain(OtclChainDto.Builder builderSourceOtclChainDto, String sourceOtclChain, ScriptDto scriptDto,
+			Class<?> sourceClz, Map<String, OtclCommandDto> mapSourceOCDs, OtclDto.Builder builderDeploymentDto) { 
+		if (sourceClz == null) {
+			throw new LexicalizerException("", "Otcl Lexicalizer-phase failure! in Command with Id : " + scriptDto.command.id + 
+					". The 'from.otclChain / source.otclChain' property is defined - but the OTCL filename is inconsistent due to missing source-type.");
+		}
+		builderSourceOtclChainDto.addOtclChain(sourceOtclChain);
+		// --- tokenize sourceOtclChain
+		OtclCommandDto sourceStemOCD = tokenize(scriptDto, sourceClz, sourceOtclChain,
+				mapSourceOCDs, builderSourceOtclChainDto, TARGET_SOURCE.SOURCE, null);
+		mapSourceOCDs.put(sourceStemOCD.otclToken, sourceStemOCD);
+		builderDeploymentDto.addSourceOtclCommandDtoStem(sourceStemOCD);
+		OtclChainDto sourceOtclChainDto = builderSourceOtclChainDto.build();
+		scriptDto.sourceOtclChainDto = sourceOtclChainDto;
+		sourceStemOCD.isRootNode = sourceStemOCD.fieldName.equals(OtclConstants.ROOT); 
+		return sourceStemOCD;
+	}
+	
+	private static void santizeFactoryClassName(String factoryClassName, OtclFileDto.OtclCommand otclScript, String scriptId,
+			Set<String> factorClzNames) {
+		if (factoryClassName == null) {
+			return;
+		}
+		if (factoryClassName.contains(".")) {
+			LOGGER.warn("Ignoring package name in Command with Id : {}. " +
+					"Package should not be specified for factoryClassName:' property.", scriptId);
+			factoryClassName = factoryClassName.substring(factoryClassName.lastIndexOf(".") + 1);
+			if (otclScript.execute != null) {
+				otclScript.execute.factoryClassName = factoryClassName;
+			} else {
+				otclScript.copy.factoryClassName = factoryClassName;
+			}
+		}
+		if (factorClzNames.contains(factoryClassName)) {
+			throw new OtclExtensionsException("", 
+					"Otcl Lexicalizer-phase failure in Command with Id : " + scriptId +
+					". Duplicate 'target: factoryClassName'" + factoryClassName + " found.");
+		}
+		factorClzNames.add(factoryClassName);
+	}
+	
 	/**
 	 * Tokenize.
 	 *
@@ -391,7 +434,7 @@ final class OtclLexicalizer {
 	 * @return the otcl command dto
 	 */
 	private static OtclCommandDto tokenize(ScriptDto script, Class<?> clz, String otclChain, 
-			Map<String, OtclCommandDto> mapOCDs, OtclChainDto.Builder builderOtclChainDto, 
+			Map<String, OtclCommandDto> stemMapOCDs, OtclChainDto.Builder builderOtclChainDto, 
 			TARGET_SOURCE enumTargetOrSource, List<String> logs) {
 
 		String[] otclTokens = builderOtclChainDto.getOtclTokens();
@@ -406,6 +449,8 @@ final class OtclLexicalizer {
 		OtclCommandDto otclCommandDto = null;
 		StringBuilder tokenPathBuilder = null;
 		OtclCommandContext otclCommandContext = new OtclCommandContext();
+		String commandId = script.command.id;
+		Map<String, OtclCommandDto> mapOCDs = stemMapOCDs;
 		for (int idx = 0; idx < length; idx++) {
 			String rawOtclToken = otclTokens[idx];
 			String otclToken = OtclUtils.sanitizeOtcl(rawOtclToken);
@@ -422,7 +467,8 @@ final class OtclLexicalizer {
 			otclCommandContext.otclTokens = otclTokens;
 			if (mapOCDs.containsKey(otclToken)) {
 				otclCommandDto = mapOCDs.get(otclToken);
-				if (otclCommandDto.isRootNode) {
+				otclCommandDto.addCommandId(commandId);
+				if (otclCommandDto.isFirstNode) {
 					stemOCD = otclCommandDto;
 				}
 				OtclSytaxChecker.checkSyntax(script, parentClz, otclCommandDto, otclChain, otclTokens, rawOtclToken);
@@ -460,15 +506,15 @@ final class OtclLexicalizer {
 					isLeaf = true;
 				}
 			}
-			boolean isRootNode = idx == 0 ? true : false;
-			otclCommandDto = OtclCommandDtoFactory.create(enumTargetOrSource, otclToken, tokenPathBuilder.toString(),
-					idx, null, null, isRootNode, null, null, null, isLeaf);
+			boolean isFirstNode = idx == 0 ? true : false;
+			otclCommandDto = OtclCommandDtoFactory.create(commandId, enumTargetOrSource, otclToken, tokenPathBuilder.toString(),
+					idx, null, null, isFirstNode, null, null, null, isLeaf);
 			otclCommandDto.parent = parentOCD;
 			OtclSytaxChecker.checkSyntax(script, parentClz, otclCommandDto, otclChain, otclTokens, rawOtclToken);
 			if (parentOCD != null) {
 				parentOCD.addChild(otclCommandDto);
 			}
-			if (otclCommandDto.isRootNode) {
+			if (otclCommandDto.isFirstNode) {
 				stemOCD = otclCommandDto;
 				mapOCDs.put(otclCommandDto.otclToken, otclCommandDto);
 			}

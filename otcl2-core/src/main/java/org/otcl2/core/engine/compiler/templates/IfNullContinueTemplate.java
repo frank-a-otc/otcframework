@@ -66,7 +66,7 @@ public class IfNullContinueTemplate extends AbstractTemplate {
 		String fieldType = fetchFieldTypeName(targetOCC, sourceOCC, otclCommandDto, createNewVarName, varNamesMap);
 		String varName = createVarName(otclCommandDto, createNewVarName, varNamesSet, varNamesMap);
 		String parentVarName = null;
-		if (otclCommandDto.isRootNode) {
+		if (otclCommandDto.isFirstNode) {
 			parentVarName = CommonUtils.initLower(otclCommandDto.field.getDeclaringClass().getSimpleName());
 		} else {
 			OtclCommandDto parentOCD = otclCommandDto.parent;
@@ -83,7 +83,7 @@ public class IfNullContinueTemplate extends AbstractTemplate {
 			String mapValueTokenPath = targetOCC.otclChain.substring(0, endIdx);
 			logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
 		}
-		if (otclCommandDto.enableFactoryHelperGetter) {
+		if (otclCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			ifNotNullParentChildGetterCode = String.format(helperGetIfNullContinueTemplate, fieldType, varName, 
 					helper, getter, parentVarName, varName, logLevel, logMsg);

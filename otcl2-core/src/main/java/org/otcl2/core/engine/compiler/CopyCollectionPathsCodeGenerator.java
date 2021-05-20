@@ -39,8 +39,6 @@ import org.otcl2.core.engine.compiler.templates.AbstractTemplate;
  * The Class CopyCollectionPathsCodeGenerator.
  */
 final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
-
-//	private static final Logger LOGGER = LoggerFactory.getLogger(MapAndCollectionsPairCodeGenerator.class);
 	
 	/**
 	 * Instantiates a new copy collection paths code generator.
@@ -73,7 +71,7 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 		otclCommand.clearCache();
 		otclCommand.appendBeginClass(clonedTargetOCC, sourceOCC, targetClz, sourceClz, addLogger);
 		otclCommand.appendPreloopVars(clonedTargetOCC);
-		executeOtclRecursive(executionContext);
+		generateCode(executionContext);
 		if (clonedTargetOCC.loopsCounter > 0) {
 			for (int bracesIdx = 0; bracesIdx < clonedTargetOCC.loopsCounter; bracesIdx++) {
 				clonedTargetOCC.appendCode("\n}");
@@ -89,7 +87,7 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 	 * @param executionContext the execution context
 	 */
 	@SuppressWarnings("unchecked")
-	private static void executeOtclRecursive(ExecutionContext executionContext) {
+	private static void generateCode(ExecutionContext executionContext) {
 
 		OtclCommand otclCommand = executionContext.otclCommand;
 		TargetOtclCommandContext targetOCC = executionContext.targetOCC;
@@ -151,7 +149,10 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 			targetOCD = OtclCommand.retrieveNextOCD(targetOCC);
 			targetOCC.otclCommandDto = targetOCD;
 			while (!targetOCC.isLeaf()) {
-				otclCommand.appendInit(targetOCC, false, LogLevel.WARN);
+				otclCommand.appendInit(targetOCC, sourceOCC, false, LogLevel.WARN);
+				if (targetOCD.isEnum() && targetOCC.isLeafParent()) {
+					break;
+				}
 				targetOCD = OtclCommand.retrieveNextOCD(targetOCC);
 				targetOCC.otclCommandDto = targetOCD;
 			}
@@ -165,7 +166,9 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 			}
 		}
 		if (!targetOCD.isCollectionOrMapMember()) {
-			otclCommand.appendGetSet(targetOCC, sourceOCC, false);
+			if ((targetOCD.parent != null && !targetOCD.parent.isEnum()) && !targetOCC.isLeafParent()) {
+				otclCommand.appendGetSet(targetOCC, sourceOCC, false);
+			}
 		}
 		return;
 	}
@@ -207,7 +210,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 	private static void appendInitHasAnchor(ExecutionContext executionContext, OtclCommand otclCommand) {
 		String idxVar = null;
 		OtclCommandContext sourceOCC = executionContext.sourceOCC;
-//		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		TargetOtclCommandContext targetOCC = executionContext.targetOCC;
 		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionComparisonType = executionContext.currentCollectionSizeType(targetOCC);
 		if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == currentCollectionComparisonType) {
@@ -244,7 +246,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtclCodeGenerator {
 	private static void appendInitNonAnchored(ExecutionContext executionContext, OtclCommand otclCommand) {
 		String idxVar = null;
 		OtclCommandContext sourceOCC = executionContext.sourceOCC;
-//		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		TargetOtclCommandContext targetOCC = executionContext.targetOCC;
 		if (executionContext.isLargeTarget()) {
 			int remainingCollections = targetOCC.collectionsCount - targetOCC.currentCollectionTokenIndex;

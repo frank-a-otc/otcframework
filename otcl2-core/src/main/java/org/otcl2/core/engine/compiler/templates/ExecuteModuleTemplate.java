@@ -57,9 +57,6 @@ public final class ExecuteModuleTemplate extends AbstractTemplate {
 		String targetVarName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
 		String sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
 		String otclNamespace = targetOCC.executeModuleOtclNamespace;
-//		if (otclNamespace == null) {
-//			otclNamespace = "";
-//		}
 		String executeModuleCode = String.format(executeModuleTemplate, otclNamespace, sourceVarName, targetVarName);
 		return executeModuleCode;
 	}

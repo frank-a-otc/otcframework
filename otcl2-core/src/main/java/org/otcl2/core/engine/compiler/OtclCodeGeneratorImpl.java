@@ -88,11 +88,11 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 	 * @return the list
 	 */
 	@Override
-	public List<JavaFileObject> generateSourcecode(OtclDto otclDto) {
-		LOGGER.info("Starting Code generator....");
+	public void generateSourcecode(OtclDto otclDto) {
+		LOGGER.info("Starting Source-Code generator. Please wait.......");
+		long startTime = System.nanoTime();
 		OtclFileDto otclFileDto = otclDto.otclFileDto;
 		ClassDto mainClassDto = otclDto.mainClassDto;
-		List<JavaFileObject> javaFileObjects = null;
 		try {
 			File file = null;
 			String clzPackage = otclBinDir.replace("/", File.separator);
@@ -103,7 +103,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 			} else {
 				file = new File(clzPackage);
 			}
-    		javaFileObjects = generateSourceCode(otclDto, otclFileDto, mainClassDto);
+    		generateSourceCode(otclDto, otclFileDto, mainClassDto);
 		} catch (Exception e) {
 			if (!(e instanceof OtclException)) {
 				throw new CodeGeneratorException(e);
@@ -111,7 +111,9 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 				throw (OtclException) e;
 			}
 		}
-		return javaFileObjects;
+		long endTime = System.nanoTime();
+		LOGGER.info("Source-Code generation completed in {} millis.", ((endTime - startTime) / 1000000.0));
+		return;
 	}
 
 	/**
@@ -122,7 +124,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 	 * @param mainClassDto the main class dto
 	 * @return the list
 	 */
-	private static List<JavaFileObject> generateSourceCode(OtclDto otclDto, OtclFileDto otclFileDto, 
+	private static void generateSourceCode(OtclDto otclDto, OtclFileDto otclFileDto, 
 			ClassDto mainClassDto) {
 		Map<String, OtclCommandDto> sourceOCDStems = otclDto.sourceOCDStems;
 		Map<String, OtclCommandDto> targetOCDStems = otclDto.targetOCDStems;
@@ -177,7 +179,6 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 				if (javaFileObjects == null) {
 					javaFileObjects = new ArrayList<>();
 				}
-//				otclCommand.clearCache();
 				executionContext.otclCommand = otclCommand;
 				executionContext.targetClz = targetClz;
 				executionContext.sourceClz = sourceClz;
@@ -199,10 +200,10 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 						CopyFlatAndMixedPathsCodeGenerator.generateSourceCode(executionContext);
 					}
 				}
-				LOGGER.info("Generated code '" + scriptDto.command.factoryClassName + ".java' for Script-Id : " +
-						scriptDto.command.id);
+				LOGGER.debug("Generated source-code '{}.java' for Command-Id : {} " +
+						scriptDto.command.factoryClassName, scriptDto.command.id);
 			} catch (Exception ex) {
-				LOGGER.error("Error while compiling OTCL-Block with Id : " + scriptDto.command.id);
+				LOGGER.error("Error while compiling OTCL-Command with Id : {}", scriptDto.command.id);
 				throw new CodeGeneratorException(ex);
 			}
 		}
@@ -214,7 +215,7 @@ final class OtclCodeGeneratorImpl extends AbstractOtclCodeGenerator implements O
 		JavaCodeStringObject javaStringObject = new JavaCodeStringObject(fqClzName, javaCode);
 		javaFileObjects.add(javaStringObject);
 		otclCommand.createJavaFile(mainClassDto);
-		return javaFileObjects;
+		return;
 	}
 
 }

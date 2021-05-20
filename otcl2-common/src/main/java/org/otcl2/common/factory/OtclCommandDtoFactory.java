@@ -48,29 +48,31 @@ public class OtclCommandDtoFactory {
 	/**
 	 * Creates the.
 	 *
+	 * @param commandId the command id
 	 * @param enumTargetOrSource the enum target or source
 	 * @param otclToken the otcl token
 	 * @param tokenPath the token path
 	 * @param idx the idx
 	 * @param fldName the fld name
 	 * @param concreteType the concrete type
-	 * @param isRootNode the is root node
+	 * @param isFirstNode the is root node
 	 * @param field the field
 	 * @param fldType the fld type
 	 * @param genericType the generic type
 	 * @param isLeaf the is leaf
 	 * @return the otcl command dto
 	 */
-	public static OtclCommandDto create(TARGET_SOURCE enumTargetOrSource, String otclToken,
-			String tokenPath, int idx, String fldName, String concreteType, boolean isRootNode, Field field,
+	public static OtclCommandDto create(String commandId, TARGET_SOURCE enumTargetOrSource, String otclToken,
+			String tokenPath, int idx, String fldName, String concreteType, boolean isFirstNode, Field field,
 			Class<?> fldType, Class<?> genericType, boolean isLeaf) {
 		OtclCommandDto.Builder builder = OtclCommandDto.newBuilder()
+				.addCommandId(commandId)
 				.addTargetOrSource(enumTargetOrSource) 
 				.addOtclToken(otclToken)
 				.addTokenPath(tokenPath)
 				.addOtclTokenIndex(idx)
 				.addFieldName(fldName)
-				.addIsRootNode(isRootNode)
+				.addIsFirstNode(isFirstNode)
 				.addField(field)
 				.addFieldType(fldType)
 				.addConcreteType(genericType);
@@ -85,12 +87,12 @@ public class OtclCommandDtoFactory {
 	/**
 	 * Creates a new OtclCommandDto object.
 	 *
-	 * @param id the id
+	 * @param commandId the id
 	 * @param otclCommandDto the otcl command dto
 	 * @param otclChain the otcl chain
 	 * @param otclTokens the otcl tokens
 	 */
-	public static void createMembers(String id, OtclCommandDto otclCommandDto, String otclChain,
+	public static void createMembers(String commandId, OtclCommandDto otclCommandDto, String otclChain,
 			String[] otclTokens) {
 		if (!otclCommandDto.hasCollectionNotation && !otclCommandDto.hasMapNotation) {
 			return;
@@ -98,9 +100,9 @@ public class OtclCommandDtoFactory {
 		int idx = otclCommandDto.otclTokenIndex;
 		boolean isLeaf = (idx == otclTokens.length - 1 ? true : false);
 		if (otclCommandDto.hasCollectionNotation) {
-			createCollectionMember(otclCommandDto, isLeaf);
+			createCollectionMember(commandId, otclCommandDto, isLeaf);
 		} else if (otclCommandDto.hasMapNotation) {
-			createMapMember(id, otclCommandDto, otclChain, otclTokens, isLeaf);
+			createMapMember(commandId, otclCommandDto, otclChain, otclTokens, isLeaf);
 		}
 		if (isLeaf && otclCommandDto.isCollectionOrMap()) {
 			if (otclCommandDto.children == null) {
@@ -112,11 +114,12 @@ public class OtclCommandDtoFactory {
 	/**
 	 * Creates a new OtclCommandDto object.
 	 *
+	 * @param commandId the command id
 	 * @param otclCommandDto the otcl command dto
 	 * @param isLeaf the is leaf
 	 * @return the otcl command dto
 	 */
-	public static OtclCommandDto createCollectionMember(OtclCommandDto otclCommandDto, boolean isLeaf) {
+	public static OtclCommandDto createCollectionMember(String commandId, OtclCommandDto otclCommandDto, boolean isLeaf) {
 		OtclCommandDto memberOCD = otclCommandDto.children.get(otclCommandDto.fieldName);
 		if (memberOCD != null) {
 			return memberOCD;
@@ -141,7 +144,7 @@ public class OtclCommandDtoFactory {
 			memberFieldType = (Class<?>) ((ParameterizedType) parameterizedType).getActualTypeArguments()[0];
 		}
 		String memberOtclToken = otclCommandDto.fieldName;
-		memberOCD = OtclCommandDtoFactory.create(otclCommandDto.enumTargetSource, memberOtclToken, otclCommandDto.tokenPath,
+		memberOCD = OtclCommandDtoFactory.create(commandId, otclCommandDto.enumTargetSource, memberOtclToken, otclCommandDto.tokenPath,
 				otclCommandDto.otclTokenIndex, otclCommandDto.fieldName, otclCommandDto.concreteTypeName, false, null,
 				memberFieldType, null, isLeaf);
 		memberOCD.tokenPath = CommonUtils.replaceLast(memberOCD.tokenPath, OtclConstants.ARR_REF, "");
@@ -154,14 +157,14 @@ public class OtclCommandDtoFactory {
 	/**
 	 * Creates a new OtclCommandDto object.
 	 *
-	 * @param id the id
+	 * @param commandId the id
 	 * @param otclCommandDto the otcl command dto
 	 * @param otclChain the otcl chain
 	 * @param otclTokens the otcl tokens
 	 * @param isLeaf the is leaf
 	 * @return the otcl command dto
 	 */
-	public static OtclCommandDto createMapMember(String id, OtclCommandDto otclCommandDto,
+	public static OtclCommandDto createMapMember(String commandId, OtclCommandDto otclCommandDto,
 			String otclChain, String[] otclTokens, boolean isLeaf) {
 		String otclToken = otclTokens[otclCommandDto.otclTokenIndex];
 		String memberOtclToken = null;
@@ -173,8 +176,8 @@ public class OtclCommandDtoFactory {
 			memberOtclToken = OtclConstants.MAP_VALUE_REF + otclCommandDto.fieldName;
 		}
 		if (memberOtclToken == null) {
-			throw new OtclException("", "Oops... OTCL-token didn't pass Semantics-checker in Script-block : " +
-					id + " - <K> / <V> notation missing.");
+			throw new OtclException("", "Oops... OTCL-token didn't pass Semantics-checker in OTCL-Command-Id : " +
+					commandId + " - <K> / <V> notation missing.");
 		}
 		OtclCommandDto memberOCD = otclCommandDto.children.get(memberOtclToken);
 		if (memberOCD != null) {
@@ -184,8 +187,8 @@ public class OtclCommandDtoFactory {
 		Type parameterizedType = field.getGenericType();
 		otclCommandDto.collectionDescriptor = CollectionDescriptor.MAP;
 		OtclCommandDto mainOCD = null;
-		OtclCommandDto keyMemberOCD = createMapMember(otclCommandDto, parameterizedType, isLeaf, true);
-		OtclCommandDto valueMemberOCD = createMapMember(otclCommandDto, parameterizedType, isLeaf, false);
+		OtclCommandDto keyMemberOCD = createMapMember(commandId, otclCommandDto, parameterizedType, isLeaf, true);
+		OtclCommandDto valueMemberOCD = createMapMember(commandId, otclCommandDto, parameterizedType, isLeaf, false);
 		String chainPath = otclCommandDto.tokenPath;
 		if (chainPath.contains(OtclConstants.MAP_KEY_REF)) {
 			chainPath = chainPath.replace(OtclConstants.MAP_KEY_REF, "");
@@ -204,13 +207,14 @@ public class OtclCommandDtoFactory {
 	/**
 	 * Creates a new OtclCommandDto object.
 	 *
+	 * @param commandId the command id
 	 * @param otclCommandDto the otcl command dto
 	 * @param parameterizedType the parameterized type
 	 * @param isLeaf the is leaf
 	 * @param isKey the is key
 	 * @return the otcl command dto
 	 */
-	public static OtclCommandDto createMapMember(OtclCommandDto otclCommandDto, Type parameterizedType, boolean isLeaf,
+	public static OtclCommandDto createMapMember(String commandId, OtclCommandDto otclCommandDto, Type parameterizedType, boolean isLeaf,
 			boolean isKey) {
 		Class<?> memberOtclGenericTypeClz = null;
 		String memberConcreteType = null;
@@ -233,7 +237,7 @@ public class OtclCommandDtoFactory {
 			} else {
 				memberType = (Class<?>) ((ParameterizedType) parameterizedType).getActualTypeArguments()[1];
 			}
-			memberOCD = OtclCommandDtoFactory.create(otclCommandDto.enumTargetSource, memberOtclToken,
+			memberOCD = OtclCommandDtoFactory.create(commandId, otclCommandDto.enumTargetSource, memberOtclToken,
 					otclCommandDto.tokenPath, otclCommandDto.otclTokenIndex, otclCommandDto.fieldName, memberConcreteType,
 					false, null, memberType, memberOtclGenericTypeClz, isLeaf);
 			memberOCD.tokenPath = CommonUtils.replaceLast(memberOCD.tokenPath, OtclConstants.MAP_KEY_REF, "");

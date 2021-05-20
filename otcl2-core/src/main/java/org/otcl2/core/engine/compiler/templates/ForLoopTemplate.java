@@ -100,7 +100,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		memberPcd = "memberICD" + idx;
 		if (!sourceOCC.hasDescendantCollectionOrMap()) {
 			forLoopCodeBuilder.append(String.format(lastPostSourceLoopTemplate, idx, logLevel, logMsg, fieldType, varName,
-					concreteType, memberPcd));			
+					concreteType, memberPcd));
 		} else {
 			forLoopCodeBuilder.append(String.format(postLoopTemplate, idx, idx, idx, logLevel, logMsg));
 			if (!sourceOCC.hasDescendantCollectionOrMap()) {
@@ -127,7 +127,6 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		varNamesSet.add(idxPrefix);
 		String idxVar = sanitizeVarName(idxPrefix, varNamesSet);
-//		targetOCC.idxVar = idxVar;
 		int idx = 0;
 		if (!idxVar.equals(idxPrefix)) {
 			idx = Integer.valueOf(idxVar.substring(idxPrefix.length()));
@@ -174,7 +173,6 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		forLoopCodeBuilder.append(String.format(forLoopTemplate, idxVar, idxVar, idx, idxVar));
 		targetOCC.otclCommandDto = memberOCD;
 		if (targetOCD.isMap()) {
-//			targetOCC.otclCommandDto = memberOCD;
 			String addMapKeyCode = null;
 			if (memberOCD.isMapKey()) {
 				addMapKeyCode = AddMapKeyTemplate.generatePostLoopCode(targetOCC, createNewVarName, idx, idxVar,

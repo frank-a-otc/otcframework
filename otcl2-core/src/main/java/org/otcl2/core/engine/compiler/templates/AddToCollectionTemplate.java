@@ -96,7 +96,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			Map<String, String> varNamesMap) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
 		if (!memberOCD.isCollectionMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId +
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId +
 					". Type should be a collection member for target-otcl-chain : " + targetOCC.otclChain);
 		}
 		String memberType = fetchFieldTypeName(targetOCC, null, memberOCD, createNewVarName, varNamesMap);
@@ -146,7 +146,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 		String codeToReplace = "";
 		if (parentOCD.isArray()) {
 			String collectionsParentVarName = null;
-			if (parentOCD.isRootNode) {
+			if (parentOCD.isFirstNode) {
 				collectionsParentVarName = CommonUtils.initLower(parentOCD.field.getDeclaringClass().getSimpleName());
 			} else {
 				collectionsParentVarName = createVarName(parentOCD, createNewVarName, varNamesSet, varNamesMap);
@@ -160,7 +160,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 				codeToReplace = codeToReplace.replace(CODE_TO_REPLACE, setterCode);
 			} else {
 				String setter = parentOCD.setter;
-				if (parentOCD.enableFactoryHelperSetter) {
+				if (parentOCD.enableSetterHelper) {
 					String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 					codeToReplace += String.format(helperAddToArrayTemplate, parentVarName, idx, parentVarName,
 							parentVarName, helper, setter, collectionsParentVarName, parentVarName, "", varName,

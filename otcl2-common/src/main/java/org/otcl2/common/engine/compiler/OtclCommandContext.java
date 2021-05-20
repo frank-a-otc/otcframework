@@ -34,7 +34,7 @@ import org.otcl2.common.engine.profiler.dto.IndexedCollectionsDto;
 public class OtclCommandContext { 
 	
 	/** The script id. */
-	public String scriptId;
+	public String commandId;
 	
 	/** The script dto. */
 	public ScriptDto scriptDto;
@@ -122,7 +122,7 @@ public class OtclCommandContext {
 	 * @return true, if successful
 	 */
 	public boolean hasAncestralCollectionOrMap() {
-		if (otclTokens.length == 1 || otclCommandDto.isRootNode) {
+		if (otclTokens.length == 1 || otclCommandDto.isFirstNode) {
 			return false;
 		}
 		int startIdx = otclCommandDto.otclTokenIndex - 1;
@@ -163,7 +163,6 @@ public class OtclCommandContext {
 		if (otclCommandDto.isCollectionOrMap()) {
 			return true;
 		}
-//		return otclCommandDto.children != null && otclCommandDto.children.size() > 0; // && 
 		return (otclTokens.length > otclCommandDto.otclTokenIndex + 1);
 	}
 	
@@ -256,6 +255,11 @@ public class OtclCommandContext {
 		return false;
 	}
 
+	/**
+	 * Descendants collections count inclusive.
+	 *
+	 * @return the int
+	 */
 	public int descendantsCollectionsCountInclusive() {
 		int descendantsCollectionsCount = 0;
 		int startIdx = otclCommandDto.otclTokenIndex;

@@ -97,7 +97,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			String value, Integer idx, String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto valueOCD = targetOCC.otclCommandDto;
 		if (!valueOCD.isMapValue()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					". Command Object is not of Map-value type.");
 		}
 		StringBuilder codeSectionBuilder = new StringBuilder();
@@ -113,7 +113,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			int endIdx = targetOCC.otclChain.lastIndexOf(OtclConstants.MAP_VALUE_REF) + 3;
 			String mapValueTokenPath = targetOCC.otclChain.substring(0, endIdx);
 			String logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
-			if (targetOCC.hasAncestralCollectionOrMap()) {
+			if (targetOCC.loopsCounter > 0) {
 				getMapKeyValueICDCode = String.format(ifNullMapKeyIcdContinueTemplate, keyPcdId, logLevel, logMsg, valuePcdId);
 			} else {
 				getMapKeyValueICDCode = String.format(ifNullMapKeyIcdReturnTemplate, keyPcdId, logLevel, logMsg, valuePcdId);
@@ -178,7 +178,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			String idxVar, LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto valueOCD = targetOCC.otclCommandDto;
 		if (!valueOCD.isMapValue()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId +
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId +
 					". Command Object is not of Map-key type.");
 		}
 		String valueType = fetchFieldTypeName(targetOCC, null, valueOCD, createNewVarName, varNamesMap);

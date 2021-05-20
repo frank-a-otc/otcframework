@@ -24,9 +24,12 @@ package org.otcl2.core.engine;
 
 import java.util.Map;
 
+import org.otcl2.common.config.OtclConfig;
 import org.otcl2.common.engine.OtclEngine;
 import org.otcl2.core.engine.compiler.OtclCompiler;
 import org.otcl2.core.engine.compiler.OtclCompilerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,6 +39,8 @@ public enum OtclEngineImpl implements OtclEngine {
 	
 	/** The instance. */
 	instance;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OtclEngineImpl.class);
 
 	/** The Constant otclCompiler. */
 	private static final OtclCompiler otclCompiler = OtclCompilerImpl.getInstance();
@@ -88,6 +93,9 @@ public enum OtclEngineImpl implements OtclEngine {
 	 */
 	@Override
 	public void register() {
+		System.out.println("\n----------------");
+		LOGGER.info("For detailed logging, set 'otcl.log.level' property in '{}/config/log.properties' file to 'DEBUG' mode.", 
+				OtclConfig.getOtclHomeLocation());
 		deploymentContainer.deploy();
 	}
 	

@@ -70,10 +70,7 @@ public class IndexedCollectionsDtoFactory {
 			parentPCD.children.put(idxStr, childPOD);
 		}
 		childPOD.profiledObject = value;
-//		if (otclCommandDto.hasDescendantCollectionOrMap(otclTokens)) {
-//		if (otclCommandContext.hasDescendantCollectionOrMap()) {
-			childPOD.children = new HashMap<>();
-//		}
+		childPOD.children = new HashMap<>();
 		return childPOD;
 	}
 
@@ -92,7 +89,7 @@ public class IndexedCollectionsDtoFactory {
 			parentPCD.children = new HashMap<>();
 		}
 		IndexedCollectionsDto childPOD = new IndexedCollectionsDto();
-		parentPCD.children.put(idxStr, childPOD);			
+		parentPCD.children.put(idxStr, childPOD);
 		childPOD.profiledObject = value;
 		childPOD.id = idxStr;
 		if (hasChildren) {

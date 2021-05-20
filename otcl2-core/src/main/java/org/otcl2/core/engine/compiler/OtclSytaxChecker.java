@@ -34,21 +34,19 @@ import org.otcl2.common.util.PropertyConverterUtil;
  */
 final class OtclSytaxChecker {
 
-//	private static final Logger LOGGER = LoggerFactory.getLogger(OtclSytaxChecker.class);
-
 	/**
- * Check syntax.
- *
- * @param script the script
- * @param clz the clz
- * @param factoryHelper the factory helper
- * @param otclCommandDto the otcl command dto
- * @param otclChain the otcl chain
- * @param otclTokens the otcl tokens
- * @param rawOtclToken the raw otcl token
- * @return true, if successful
- */
-static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCommandDto, String otclChain, 
+	 * Check syntax.
+	 *
+	 * @param script the script
+	 * @param clz the clz
+	 * @param factoryHelper the factory helper
+	 * @param otclCommandDto the otcl command dto
+	 * @param otclChain the otcl chain
+	 * @param otclTokens the otcl tokens
+	 * @param rawOtclToken the raw otcl token
+	 * @return true, if successful
+	 */
+	static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCommandDto, String otclChain, 
 		String[] otclTokens, String rawOtclToken) {
 		boolean isAnchored = rawOtclToken.contains(OtclConstants.ANCHOR);
 		if (isAnchored) {
@@ -56,7 +54,7 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCo
 		}
 		int idx = otclCommandDto.otclTokenIndex;
 		if (idx == 0) {
-			otclCommandDto.isRootNode = true;
+			otclCommandDto.isFirstNode = true;
 		}
 		String fldName = rawOtclToken;
 		int idxMapNotation = 0;
@@ -85,8 +83,7 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCo
 				rawOtclToken = OtclUtils.sanitizeOtcl(rawOtclToken);
 			}
 		}
-		ConcreteTypeNotationProcessor.process(script, otclCommandDto, rawOtclToken, otclChain, isMapNotation,
-				idxCollectionNotation);
+		ConcreteTypeNotationProcessor.process(script, otclCommandDto);
 		if (isMapNotation) {
 			idxMapNotation = rawOtclToken.indexOf(OtclConstants.OPEN_BRACKET);
 			fldName = rawOtclToken.substring(0, idxMapNotation);
@@ -94,6 +91,7 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCo
 			fldName = rawOtclToken.substring(0, idxCollectionNotation);
 		}
 		otclCommandDto.fieldName = fldName;
+		// --- process semantics
 		OtclSemanticsChecker.checkSemantics(script, clz, otclChain, otclCommandDto, otclTokens);
 		String otclToken = rawOtclToken;
 		if (isCollectionNotation) {
@@ -105,7 +103,6 @@ static boolean checkSyntax(ScriptDto script, Class<?> clz, OtclCommandDto otclCo
 		}
 		otclTokens[idx] = otclToken;
 		otclCommandDto.otclToken = otclToken;
-//		logs.add("Syntax processing : Okay for " + script.id);
 		return true;
 	}
 

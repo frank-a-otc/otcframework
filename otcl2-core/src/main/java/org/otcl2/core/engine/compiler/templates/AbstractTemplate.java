@@ -62,8 +62,6 @@ public abstract class AbstractTemplate {
 
 	static {
 
-//		wrapperTypes.add(Character.class);
-//		wrapperTypes.add(Boolean.class);
 		fromTypes.add(Byte.class);
 		fromTypes.add(Double.class);
 		fromTypes.add(Float.class);
@@ -301,11 +299,20 @@ public abstract class AbstractTemplate {
 	/** The Constant setterTargetEnumTemplate. */
 	protected static final String setterTargetEnumTemplate = "\n%s.%s(%s.valueOf(%s));";
 	
+	/** The Constant setterTargetEnumTemplate. */
+	protected static final String setterTargetEnumWithAssignTemplate = "\n%s = %s.%s(%s.valueOf(%s));";
+	
 	/** The Constant setterSourceEnumTemplate. */
 	protected static final String setterSourceEnumTemplate = "\n%s.%s(%s.toString());";
 	
 	/** The Constant setterBothEnumTemplate. */
 	protected static final String setterBothEnumTemplate = "\n%s.%s(%s.valueOf(%s.toString()));";
+
+	/** The Constant ifNullEnumCreateAndSetTemplate. */
+	protected static final String ifNullEnumCreateAndSetTemplate = "\nif (%s == null) {" 
+			+ "\n%s = %s.valueOf(%s);"
+			+ "\n%s.%s(%s);" 
+			+ "\n}";
 
 	/** The Constant helperSetterTemplate. */
 	protected static final String helperSetterTemplate = "\n%s.%s(%s, %s);";
@@ -688,13 +695,6 @@ public abstract class AbstractTemplate {
 	 * @return the string
 	 */
 	protected static String fetchConcreteTypeName(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto) {
-//		String clzName = null;
-//		if (otclCommandDto.concreteTypeName != null) {
-//			clzName = otclCommandDto.concreteTypeName;
-//			if (clzName != null) {
-//				return clzName;
-//			}
-//		}
 		String clzName = otclCommandDto.concreteTypeName;
 		if (clzName != null) {
 			return clzName;
@@ -759,7 +759,7 @@ public abstract class AbstractTemplate {
 			varName = varNamesMap.get(otclCommandDto.enumTargetSource + otclCommandDto.tokenPath);
 		}
 		if (varName == null) {
-			if (otclCommandDto.isRootNode) {
+			if (otclCommandDto.isFirstNode) {
 				if (otclCommandDto.fieldName.equals(OtclConstants.ROOT)) {
 					varName = CommonUtils.initLower(otclCommandDto.declaringClass.getSimpleName());
 				} else {
@@ -909,7 +909,7 @@ public abstract class AbstractTemplate {
 		if (targetOCC.isLeaf()) { 
 			if (value == null) {
 				if (sourceOCD == null) {
-					throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+					throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 							"! Both value and SourceOCD cannot be null for a leaf-token.");
 				}
 				valOrVar = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);

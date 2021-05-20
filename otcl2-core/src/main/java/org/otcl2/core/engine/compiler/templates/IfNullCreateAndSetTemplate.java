@@ -52,7 +52,7 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 	 * @param varNamesMap the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtclCommandContext targetOCC, Integer arraySize,
+	public static String generateCode(TargetOtclCommandContext targetOCC, String value, Integer arraySize,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		String concreteType = fetchConcreteTypeName(targetOCC, targetOCD);
@@ -67,7 +67,7 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 			}
 		}
 		String parentVarName = null;
-		if (targetOCD.isRootNode) {
+		if (targetOCD.isFirstNode) {
 			parentVarName = CommonUtils.initLower(targetOCD.field.getDeclaringClass().getSimpleName());
 		} else {
 			parentVarName = createVarName(targetOCD.parent, createNewVarName, varNamesSet, varNamesMap);
@@ -75,13 +75,19 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 		String ifNullSetterCode = "";
 		String setter = targetOCD.setter;
 		if (PackagesFilterUtil.isFilteredPackage(targetOCD.fieldType) || targetOCD.isCollectionOrMap()) {
-			if (targetOCD.enableFactoryHelperSetter) {
+			if (targetOCD.enableSetterHelper) {
 				String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 				ifNullSetterCode = String.format(ifNullCreateAndHelperSetTemplate, varName, varName, concreteType,
 						helper, setter, parentVarName, varName);
 			} else {
-				ifNullSetterCode = String.format(ifNullCreateAndSetTemplate, varName, varName, concreteType, parentVarName,
+				if (targetOCD.isEnum()) {
+					value = createConvertExpression(targetOCD, value);
+					ifNullSetterCode = String.format(ifNullEnumCreateAndSetTemplate, varName, varName, concreteType, value,
+							parentVarName, setter, varName);
+				} else {
+					ifNullSetterCode = String.format(ifNullCreateAndSetTemplate, varName, varName, concreteType, parentVarName,
 						setter, varName);
+				}
 			}
 			if (targetOCD.isArray()) {
 				ifNullSetterCode = ifNullSetterCode.replace("]()", "]");

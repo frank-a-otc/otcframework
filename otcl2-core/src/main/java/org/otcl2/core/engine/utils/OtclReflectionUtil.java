@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.otcl2.common.dto.OtclCommandDto;
 import org.otcl2.common.exception.OtclException;
 import org.otcl2.common.util.CommonUtils;
+import org.otcl2.core.engine.compiler.exception.SemanticsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public class OtclReflectionUtil {
 
 	/** The logger. */
-	private static Logger LOGGER = LoggerFactory.getLogger(OtclReflectionUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OtclReflectionUtil.class);
 
 	/**
 	 * The Enum GETTER_SETTER.
@@ -92,7 +93,11 @@ public class OtclReflectionUtil {
 		String fieldName = field.getName();
 		String getter = otclCommandDto.getter;
 		if (getter == null) {
-			getter = "get" + CommonUtils.initCap(fieldName);
+			if (Boolean.class.isAssignableFrom(otclCommandDto.fieldType)) { 
+				getter = "is" + CommonUtils.initCap(fieldName);
+			} else {
+				getter = "get" + CommonUtils.initCap(fieldName);
+			}
 		}
 		Method method = findMethod(GETTER_SETTER.GETTER, getter, otclCommandDto);
 		String methodName = method.getName();
@@ -129,51 +134,55 @@ public class OtclReflectionUtil {
 		Method method = null;
 		Field field = otclCommandDto.field;
 		Class<?> declaringClz = field.getDeclaringClass();
-		Exception ex = null;
+		Class<?>[] paramTypes = null;
 		try {
 			if (GETTER_SETTER.GETTER == enumGetterSetter) {
-				method = declaringClz.getMethod(methodName, ZERO_LENGTH_CLASS_ARRAY);
+				paramTypes = ZERO_LENGTH_CLASS_ARRAY;
 			} else {
-				method = declaringClz.getMethod(methodName, new Class[] { field.getType() });
+				paramTypes = new Class[] { field.getType() };
 			}
+			method = declaringClz.getMethod(methodName, paramTypes);
 			return method;
 		} catch (NoSuchMethodException | SecurityException e) {
-			ex = e;
+			String msg = createMethodNotFoundMessage(declaringClz, methodName, paramTypes, otclCommandDto);
+			LOGGER.warn(msg, e.getMessage());
 		}
 		Class<?> parentConcreteType = null;
-		if (!otclCommandDto.isRootNode) {
+		if (!otclCommandDto.isFirstNode) {
 			parentConcreteType = otclCommandDto.parent.concreteType;
 		}
 		if (GETTER_SETTER.GETTER == enumGetterSetter) {
 			if (parentConcreteType != null) {
+				paramTypes = ZERO_LENGTH_CLASS_ARRAY;
 				try {
-					method = parentConcreteType.getMethod(methodName, ZERO_LENGTH_CLASS_ARRAY);
+					method = parentConcreteType.getMethod(methodName, paramTypes);
 					return method;
 				} catch (NoSuchMethodException | SecurityException e) {
-					ex = e;
+					String msg = createMethodNotFoundMessage(parentConcreteType, methodName, paramTypes, otclCommandDto);
+					throw new SemanticsException("", msg, e);
 				}
 			}
 		} else {
 			Class<?> concreteType = otclCommandDto.concreteType;
 			if (concreteType != null) {
+				paramTypes = new Class[] { concreteType };
 				try {
-					method = declaringClz.getMethod(methodName, new Class[] { concreteType });
+					method = declaringClz.getMethod(methodName, paramTypes);
 					return method;
 				} catch (NoSuchMethodException | SecurityException e) {
-					ex = e;
+					String msg = createMethodNotFoundMessage(declaringClz, methodName, paramTypes, otclCommandDto);
+					LOGGER.warn(msg, e.getMessage());
 				}
 				try {
 					if (parentConcreteType != null) {
-						method = parentConcreteType.getMethod(methodName, new Class[] { concreteType });
+						method = parentConcreteType.getMethod(methodName, paramTypes);
 						return method;
 					}
 				} catch (NoSuchMethodException | SecurityException e) {
-					ex = e;
+					String msg = createMethodNotFoundMessage(parentConcreteType, methodName, paramTypes, otclCommandDto);
+					throw new SemanticsException("", msg, e);
 				}
 			}
-		}
-		if (method == null && ex != null) {
-			throw new OtclException("", ex);
 		}
 		return method;
 	}
@@ -188,8 +197,9 @@ public class OtclReflectionUtil {
 	 * @return the string
 	 */
 	public static String findHelperMethodName(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter,
-			String methodName, OtclCommandDto otclCommandDto) {
-		Method method = findFactoryHelperMethod(factoryHelper, enumGetterSetter, methodName, otclCommandDto);
+			OtclCommandDto otclCommandDto, Class<?> fieldType) {
+		Method method = findFactoryHelperMethod(factoryHelper, enumGetterSetter, otclCommandDto, fieldType);
+		String methodName = null;
 		if (method != null) {
 			methodName = method.getName();
 		}
@@ -205,26 +215,26 @@ public class OtclReflectionUtil {
 	 * @param otclCommandDto the otcl command dto
 	 * @return the method
 	 */
-	public static Method findFactoryHelperMethod(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter, String methodName,
-			OtclCommandDto otclCommandDto) {
+	public static Method findFactoryHelperMethod(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter, 
+			OtclCommandDto otclCommandDto, Class<?> fieldType) {
 		if (factoryHelper == null) {
 			throw new OtclException("", "Helper class cannot be null to invoke this method!");
+		}
+		String methodName = null;
+		if (GETTER_SETTER.SETTER == enumGetterSetter) {
+			methodName = otclCommandDto.setter;
+		} else {
+			methodName = otclCommandDto.getter;
 		}
 		Method method = null;
 		Field field = otclCommandDto.field;
 		Class<?> declaringClz = field.getDeclaringClass();
-		Exception ex = null;
-		try {
-			if (GETTER_SETTER.SETTER == enumGetterSetter) {
-				Class<?> fieldType = otclCommandDto.fieldType;
-				method = findMethod(factoryHelper, methodName, otclCommandDto, declaringClz, fieldType);
-				otclCommandDto.enableFactoryHelperSetter = true;
-			} else {
-				method = findMethod(factoryHelper, methodName, otclCommandDto, declaringClz);
-				otclCommandDto.enableFactoryHelperGetter = true;
-			}
-		} catch (NoSuchMethodException | SecurityException e) {
-			throw new OtclException("", ex);
+		if (GETTER_SETTER.SETTER == enumGetterSetter) {
+			method = findMethod(factoryHelper, methodName, otclCommandDto, declaringClz, fieldType);
+			otclCommandDto.enableSetterHelper = true;
+		} else {
+			method = findMethod(factoryHelper, methodName, otclCommandDto, declaringClz);
+			otclCommandDto.enableGetterHelper = true;
 		}
 		return method;
 	}
@@ -240,12 +250,36 @@ public class OtclReflectionUtil {
 	 * @throws NoSuchMethodException the no such method exception
 	 * @throws SecurityException the security exception
 	 */
-	private static Method findMethod(Class<?> clz, String methodName, OtclCommandDto otclCommandDto, 
-			Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
-		Method method = clz.getMethod(methodName, paramTypes);
+	private static Method findMethod(Class<?> clz, String methodName, OtclCommandDto otclCommandDto, Class<?>... paramTypes) {
+		Method method = null;
+		try {
+			method = clz.getMethod(methodName, paramTypes);
+		} catch (NoSuchMethodException | SecurityException e) {
+			String msg = createMethodNotFoundMessage(clz, methodName, paramTypes, otclCommandDto);
+			throw new SemanticsException("", msg, e);
+		}
 		return method;
 	}
 
+	private static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes, OtclCommandDto otclCommandDto) {
+		StringBuilder paramsBuilder = null;
+		if (paramTypes != null && paramTypes.length > 0) {
+			for (Class<?> paramType : paramTypes) {
+				if (paramsBuilder == null) {
+					paramsBuilder = new StringBuilder("(").append(paramType.getName());
+				} else {
+					paramsBuilder.append(",").append(paramType.getName());
+				}
+			}
+			paramsBuilder.append(")");
+		} else {
+			paramsBuilder = new StringBuilder("()");
+		}
+		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString() +
+				" not found for tokenpath : " + otclCommandDto.tokenPath + "' - probable conflicts in command(s) " + 
+				otclCommandDto.occursInCommands;
+		return msg;
+	}
 	/**
 	 * Find field.
 	 *

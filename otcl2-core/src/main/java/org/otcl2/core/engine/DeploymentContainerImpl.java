@@ -99,9 +99,15 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	@Override
 	public void deploy() {
 		String binDir = OtclConfig.getOtclBinLocation();
-		LOGGER.info("Begining OTCL deployment from " + binDir);
 		File directory = new File(binDir);
-		for (File file : directory.listFiles(depFileFilter)) {
+		File[] files = directory.listFiles(depFileFilter);
+		if (files == null) {
+			return;
+		}
+		LOGGER.info("Begining OTCL deployment from {}", binDir);
+		long startTime = System.nanoTime();
+		boolean hasDeployments = false;
+		for (File file : files) {
 			if (file.isDirectory()) {
 				continue;
 			}
@@ -109,18 +115,31 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 				FileInputStream fis = new FileInputStream(file);
 				byte[] contents = msgPack.read(fis, byte[].class);
 				DeploymentDto deploymentDto = objectMapper.readValue(contents, DeploymentDto.class);
+				if (deploymentDto.isError) {
+					LOGGER.error("Ignoring deployment of {}. " +
+							"Probable cause: full compilation did not succeed on previous attempt.", file.getAbsolutePath());
+					continue;
+				}
 				for (CompiledInfo compiledInfo : deploymentDto.compiledInfos.values()) {
+					// init source
 					initOtclCommandDto(compiledInfo.id, compiledInfo.sourceOCDStem, deploymentDto.sourceClz,
 							compiledInfo.sourceOtclChainDto); 
-					initOtclCommandDto(compiledInfo.id, compiledInfo.sourceOCDStem, deploymentDto.sourceClz,
-							compiledInfo.sourceOtclChainDto); 
+					// init target
+					initOtclCommandDto(compiledInfo.id, compiledInfo.targetOCDStem, deploymentDto.targetClz,
+							compiledInfo.targetOtclChainDto); 
 				}
 				deploy(deploymentDto);
+				hasDeployments = true;
 			} catch (IOException e) {
 				throw new OtclEngineException("", e);
 			}
 		}
-		LOGGER.info("Completed OTCL deployments.");
+		long endTime = System.nanoTime();
+		if (hasDeployments) {
+			LOGGER.info("Completed OTCL deployments in {} millis.", ((endTime - startTime) / 1000000.0));
+		} else {
+			LOGGER.info("Nothing to deploy - no deployment files found !!");
+		}
 		return;
 	}
 	
@@ -143,9 +162,6 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		}
 		for (int idx = 1; idx < otclChainDto.otclTokens.length; idx++) {
 			String otclToken = otclChainDto.otclTokens[idx];
-//			if (otclToken.contains(OtclConstants.MAP_KEY_REF) || otclToken.contains(OtclConstants.MAP_VALUE_REF))  {
-//				otclToken = otclToken.substring(0, otclToken.indexOf(OtclConstants.CLOSE_BRACKET)); 
-//			}
 			if (otclCommandDto.isCollection() || otclCommandDto.isMap()) {
 				OtclCommandDtoFactory.createMembers(id, otclCommandDto, otclChainDto.otclChain, otclChainDto.rawOtclTokens);
 				if (otclCommandDto.isCollection()) {

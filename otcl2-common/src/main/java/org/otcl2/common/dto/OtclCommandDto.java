@@ -23,7 +23,9 @@
 package org.otcl2.common.dto;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.otcl2.common.OtclConstants.TARGET_SOURCE;
@@ -166,6 +168,9 @@ public class OtclCommandDto {
 	/** The is root node. */
 	public boolean isRootNode;
 	
+	/** The is first child. */
+	public boolean isFirstNode;
+	
 	/** The has collection notation. */
 	public boolean hasCollectionNotation;
 	
@@ -191,10 +196,10 @@ public class OtclCommandDto {
 	public Field field;
 	
 	/** The enable factory helper getter. */
-	public boolean enableFactoryHelperGetter;
+	public boolean enableGetterHelper;
 	
 	/** The enable factory helper setter. */
-	public boolean enableFactoryHelperSetter;
+	public boolean enableSetterHelper;
 	
 	/** The is getter initialized. */
 	public boolean isGetterInitialized;
@@ -223,17 +228,21 @@ public class OtclCommandDto {
 	/** The children. */
 	public Map<String, OtclCommandDto> children;
 
+	/** The occurs in commands. */
+	public List<String> occursInCommands;
+	
 	/**
 	 * Instantiates a new otcl command dto.
 	 *
 	 * @param builder the builder
 	 */
 	private OtclCommandDto(Builder builder) {
+		occursInCommands = builder.occursInCommands;
 		enumTargetSource = builder.enumTargetSource;
 		otclToken = builder.otclToken;
 		tokenPath = builder.tokenPath;
 		otclTokenIndex = builder.otclTokenIndex;
-		isRootNode = builder.isRootNode;
+		isFirstNode = builder.isFirstNode;
 		collectionDescriptor = builder.collectionDescriptor;
 		concreteTypeName = builder.concreteTypeName;
 		fieldName = builder.fieldName;
@@ -270,6 +279,15 @@ public class OtclCommandDto {
 		children.put(otclCommandDto.otclToken, otclCommandDto);
 	}
 
+	/**
+	 * Adds the command id.
+	 *
+	 * @param commandId the command id
+	 */
+	public void addCommandId(String commandId) {
+		occursInCommands.add(commandId);
+	}
+	
     /**
      * Checks if is enum.
      *
@@ -380,196 +398,25 @@ public class OtclCommandDto {
 		return collectionDescriptor.isMapKey() || collectionDescriptor.isMapValue();
 	}
 
-//	public boolean isKeyPath(String[] otclTokens) {
-//		return otclTokens[otclTokenIndex].contains(OtclConstants.MAP_KEY_REF);
-//	}
-//
-//	public boolean isLeafParent(String[] otclTokens) {
-//		if (otclTokenIndex == otclTokens.length - 2) {
-//			if (collectionDescriptor.isCollection() || collectionDescriptor.isMap()) {
-//				return false;
-//			}
-//			String otclToken = otclTokens[otclTokenIndex + 1];
-//			OtclCommandDto otclCommandDto = children.get(otclToken);
-//			if (otclCommandDto.collectionDescriptor.isNormal()) {
-//				return true;
-//			}
-//			return false;
-//		} else if (otclTokenIndex == otclTokens.length - 1) {
-//			if (collectionDescriptor.isCollection() || collectionDescriptor.isMap()) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public boolean isLeaf(String[] otclTokens) {
-//		if (otclTokenIndex >= otclTokens.length - 1) {
-//			if (collectionDescriptor.isNormal() || collectionDescriptor.isMapKey() || collectionDescriptor.isMapValue()
-//					|| collectionDescriptor.isCollectionMember()) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public boolean hasAncestralCollectionOrMap(String[] otclTokens) {
-//		if (otclTokens.length == 1 || isRootNode) {
-//			return false;
-//		}
-//		int startIdx = otclTokenIndex - 1;
-//		for (int idx = startIdx; idx >= 0; idx--) {
-//			String otclToken = otclTokens[idx];
-//			if (otclToken.contains(OtclConstants.OPEN_BRACKET)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public boolean hasDescendantCollectionOrMap(String[] otclTokens) {
-//		if (otclTokens.length == 1) {
-//			return false;
-//		}
-//		int startIdx = otclTokenIndex + 1;
-//		for (int idx = startIdx; idx < otclTokens.length; idx++) {
-//			String otclToken = otclTokens[idx];
-//			if (otclToken.contains(OtclConstants.OPEN_BRACKET)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public boolean hasChildren(String[] otclTokens) {
-//		if (isCollectionOrMap()) {
-//			return true;
-//		}
-//		return children != null && otclTokens.length > otclTokenIndex + 1;
-//	}
-//	
-//	public boolean hasMapValueDescendant(String[] rawOtclTokens) {
-//		if (rawOtclTokens.length == 1) {
-//			return false;
-//		}
-//		int startIdx = otclTokenIndex + 1;
-//		for (int idx = startIdx; idx < rawOtclTokens.length; idx++) {
-//			String otclToken = rawOtclTokens[idx];
-//			if (otclToken.contains(OtclConstants.MAP_VALUE_REF)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public boolean hasMapValueMember(String[] rawOtclTokens) {
-//		if (rawOtclTokens[otclTokenIndex].contains(OtclConstants.MAP_VALUE_REF)) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	public boolean hasAnchoredDescendant(String[] otclTokens) {
-//		if (otclTokens.length == 1) {
-//			return false;
-//		}
-//		int startIdx = otclTokenIndex + 1;
-//		for (int idx = startIdx; idx < otclTokens.length; idx++) {
-//			String otclToken = otclTokens[idx];
-//			if (otclToken.contains(OtclConstants.ANCHOR)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-////	public boolean hasAnchor(String otclChain) {
-////		if (otclChain.contains(OtclConstants.ANCHOR)) {
-////			return true;
-////		}
-////		return false;
-////	}
-//
-//	public boolean isAnchored(String[] otclTokens) {
-//		String otclToken = otclTokens[otclTokenIndex];
-//		if (otclToken.contains(OtclConstants.ANCHOR)) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	public boolean isPreAnchored(String[] otclTokens) {
-//		String otclToken = otclTokens[otclTokenIndex];
-//		if (otclToken.contains(OtclConstants.PRE_ANCHOR) || otclToken.contains(OtclConstants.MAP_PRE_ANCHOR)) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	public boolean isPostAnchored(String[] otclTokens) {
-//		String otclToken = otclTokens[otclTokenIndex];
-//		if (otclToken.contains(OtclConstants.POST_ANCHOR) || otclToken.contains(OtclConstants.MAP_POST_ANCHOR)) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	public boolean hasEndedCollectionInChain(String otclChain) {
-//		if (otclChain.endsWith(OtclConstants.CLOSE_BRACKET) || otclChain.endsWith(OtclConstants.MAP_KEY_REF)
-//				|| otclChain.endsWith(OtclConstants.MAP_VALUE_REF)) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	public int descendantsCollectionsCount(String[] otclTokens) {
-//		if (otclTokens.length == 1) {
-//			return 0;
-//		}
-//		int descendantsCollectionsCount = 0;
-//		int startIdx = otclTokenIndex + 1;
-//		for (int idx = startIdx; idx < otclTokens.length; idx++) {
-//			String otclToken = otclTokens[idx];
-//			if (otclToken.contains(OtclConstants.OPEN_BRACKET) && !(otclToken.contains(OtclConstants.MAP_BEGIN_REF)
-//					|| otclToken.contains(OtclConstants.MAP_PRE_ANCHOR))) {
-//				descendantsCollectionsCount++;
-//			}
-//		}
-//		return descendantsCollectionsCount;
-//	}
-//
-//	public int descendantsMapsCount(String[] otclTokens) {
-//		if (otclTokens.length == 1) {
-//			return 0;
-//		}
-//		int descendantsMapssCount = 0;
-//		int startIdx = otclTokenIndex + 1;
-//		for (int idx = startIdx; idx < otclTokens.length; idx++) {
-//			String otclToken = otclTokens[idx];
-//			if (otclToken.contains(OtclConstants.MAP_BEGIN_REF) || otclToken.contains(OtclConstants.MAP_PRE_ANCHOR)) {
-//				descendantsMapssCount++;
-//			}
-//		}
-//		return descendantsMapssCount;
-//	}
 
 	/**
- * To string.
- *
- * @return the string
- */
-@Override
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	@Override
 	public String toString() {
 		return "OtclCommandDto [tokenPath=" + tokenPath + ", enumTargetSource=" + enumTargetSource + ", otclToken="
-				+ otclToken + ", otclTokenIndex=" + otclTokenIndex + ", isRootNode=" + isRootNode
-				+ ", hasCollectionNotation=" + hasCollectionNotation + ", hasMapNotation=" + hasMapNotation
-				+ ", collectionDescriptor=" + collectionDescriptor + ", concreteTypeName=" + concreteTypeName
-				+ ", mapKeyConcreteType=" + mapKeyConcreteType + ", mapValueConcreteType=" + mapValueConcreteType
-				+ ", fieldName=" + fieldName + ", field=" + field + ", enableFactoryHelperGetter="
-				+ enableFactoryHelperGetter + ", enableFactoryHelperSetter=" + enableFactoryHelperSetter
-				+ ", isGetterInitialized=" + isGetterInitialized + ", isSetterInitialized=" + isSetterInitialized
-				+ ", getter=" + getter + ", setter=" + setter + ", fieldType=" + fieldType + ", concreteType="
-				+ concreteType + "]";
+				+ otclToken + ", otclTokenIndex=" + otclTokenIndex + ", isRootNode=" + isRootNode + ", isFirstNode="
+				+ isFirstNode + ", hasCollectionNotation=" + hasCollectionNotation + ", hasMapNotation="
+				+ hasMapNotation + ", collectionDescriptor=" + collectionDescriptor + ", concreteTypeName="
+				+ concreteTypeName + ", mapKeyConcreteType=" + mapKeyConcreteType + ", mapValueConcreteType="
+				+ mapValueConcreteType + ", fieldName=" + fieldName + ", field=" + field + ", enableGetterHelper="
+				+ enableGetterHelper + ", enableSetterHelper=" + enableSetterHelper + ", isGetterInitialized="
+				+ isGetterInitialized + ", isSetterInitialized=" + isSetterInitialized + ", getter=" + getter
+				+ ", setter=" + setter + ", fieldType=" + fieldType + ", concreteType=" + concreteType
+				+ ", declaringClass=" + declaringClass + ", parent=" + parent + ", children=" + children
+				+ ", occursInCommands=" + occursInCommands + "]";
 	}
 
 	/**
@@ -583,20 +430,25 @@ public class OtclCommandDto {
 		int result = 1;
 		result = prime * result + ((children == null) ? 0 : children.hashCode());
 		result = prime * result + ((collectionDescriptor == null) ? 0 : collectionDescriptor.hashCode());
+		result = prime * result + ((concreteType == null) ? 0 : concreteType.hashCode());
 		result = prime * result + ((concreteTypeName == null) ? 0 : concreteTypeName.hashCode());
-		result = prime * result + (enableFactoryHelperGetter ? 1231 : 1237);
-		result = prime * result + (enableFactoryHelperSetter ? 1231 : 1237);
+		result = prime * result + ((declaringClass == null) ? 0 : declaringClass.hashCode());
+		result = prime * result + (enableGetterHelper ? 1231 : 1237);
+		result = prime * result + (enableSetterHelper ? 1231 : 1237);
 		result = prime * result + ((enumTargetSource == null) ? 0 : enumTargetSource.hashCode());
 		result = prime * result + ((field == null) ? 0 : field.hashCode());
 		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((fieldType == null) ? 0 : fieldType.hashCode());
 		result = prime * result + ((getter == null) ? 0 : getter.hashCode());
 		result = prime * result + (hasCollectionNotation ? 1231 : 1237);
 		result = prime * result + (hasMapNotation ? 1231 : 1237);
+		result = prime * result + (isFirstNode ? 1231 : 1237);
 		result = prime * result + (isGetterInitialized ? 1231 : 1237);
 		result = prime * result + (isRootNode ? 1231 : 1237);
 		result = prime * result + (isSetterInitialized ? 1231 : 1237);
 		result = prime * result + ((mapKeyConcreteType == null) ? 0 : mapKeyConcreteType.hashCode());
 		result = prime * result + ((mapValueConcreteType == null) ? 0 : mapValueConcreteType.hashCode());
+		result = prime * result + ((occursInCommands == null) ? 0 : occursInCommands.hashCode());
 		result = prime * result + ((otclToken == null) ? 0 : otclToken.hashCode());
 		result = prime * result + otclTokenIndex;
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
@@ -627,14 +479,24 @@ public class OtclCommandDto {
 			return false;
 		if (collectionDescriptor != other.collectionDescriptor)
 			return false;
+		if (concreteType == null) {
+			if (other.concreteType != null)
+				return false;
+		} else if (!concreteType.equals(other.concreteType))
+			return false;
 		if (concreteTypeName == null) {
 			if (other.concreteTypeName != null)
 				return false;
 		} else if (!concreteTypeName.equals(other.concreteTypeName))
 			return false;
-		if (enableFactoryHelperGetter != other.enableFactoryHelperGetter)
+		if (declaringClass == null) {
+			if (other.declaringClass != null)
+				return false;
+		} else if (!declaringClass.equals(other.declaringClass))
 			return false;
-		if (enableFactoryHelperSetter != other.enableFactoryHelperSetter)
+		if (enableGetterHelper != other.enableGetterHelper)
+			return false;
+		if (enableSetterHelper != other.enableSetterHelper)
 			return false;
 		if (enumTargetSource != other.enumTargetSource)
 			return false;
@@ -648,6 +510,11 @@ public class OtclCommandDto {
 				return false;
 		} else if (!fieldName.equals(other.fieldName))
 			return false;
+		if (fieldType == null) {
+			if (other.fieldType != null)
+				return false;
+		} else if (!fieldType.equals(other.fieldType))
+			return false;
 		if (getter == null) {
 			if (other.getter != null)
 				return false;
@@ -656,6 +523,8 @@ public class OtclCommandDto {
 		if (hasCollectionNotation != other.hasCollectionNotation)
 			return false;
 		if (hasMapNotation != other.hasMapNotation)
+			return false;
+		if (isFirstNode != other.isFirstNode)
 			return false;
 		if (isGetterInitialized != other.isGetterInitialized)
 			return false;
@@ -672,6 +541,11 @@ public class OtclCommandDto {
 			if (other.mapValueConcreteType != null)
 				return false;
 		} else if (!mapValueConcreteType.equals(other.mapValueConcreteType))
+			return false;
+		if (occursInCommands == null) {
+			if (other.occursInCommands != null)
+				return false;
+		} else if (!occursInCommands.equals(other.occursInCommands))
 			return false;
 		if (otclToken == null) {
 			if (other.otclToken != null)
@@ -703,6 +577,9 @@ public class OtclCommandDto {
 	 */
 	public abstract static class Builder {
 		
+		/** The occurs in commands. */
+		public List<String> occursInCommands;
+
 		/** The enum target source. */
 		private TARGET_SOURCE enumTargetSource;
 		
@@ -716,7 +593,7 @@ public class OtclCommandDto {
 		private int otclTokenIndex;
 		
 		/** The is root node. */
-		private boolean isRootNode;
+		private boolean isFirstNode;
 		
 		/** The collection descriptor. */
 		private CollectionDescriptor collectionDescriptor = CollectionDescriptor.NORMAL;
@@ -748,6 +625,20 @@ public class OtclCommandDto {
 		 * @return the otcl command dto
 		 */
 		public abstract OtclCommandDto build();
+
+		/**
+		 * Adds the command id.
+		 *
+		 * @param commandId the command id
+		 * @return the builder
+		 */
+		public Builder addCommandId(String commandId) {
+			if (occursInCommands == null) {
+				occursInCommands = new ArrayList<String>();
+			}
+			occursInCommands.add(commandId);
+			return this;
+		}
 
 		/**
 		 * Adds the target or source.
@@ -796,11 +687,11 @@ public class OtclCommandDto {
 		/**
 		 * Adds the is root node.
 		 *
-		 * @param isRootNode the is root node
+		 * @param isFirstNode the is root node
 		 * @return the builder
 		 */
-		public Builder addIsRootNode(boolean isRootNode) {
-			this.isRootNode = isRootNode;
+		public Builder addIsFirstNode(boolean isFirstNode) {
+			this.isFirstNode = isFirstNode;
 			return this;
 		}
 
@@ -898,5 +789,6 @@ public class OtclCommandDto {
 			children.put(fieldName, otclCommandDto);
 			return this;
 		}
+		
 	}
 }

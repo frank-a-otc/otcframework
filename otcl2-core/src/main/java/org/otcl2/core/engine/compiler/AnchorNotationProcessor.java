@@ -33,19 +33,17 @@ import org.otcl2.core.engine.compiler.exception.SyntaxException;
  */
 final class AnchorNotationProcessor {
 
-//	private static final Logger LOGGER = LoggerFactory.getLogger(MapNotationProcessor.class);
-
 	/**
- * Process.
- *
- * @param scriptId the script id
- * @param otclCommandDto the otcl command dto
- * @param otclToken the otcl token
- * @param otclChain the otcl chain
- * @param otclTokens the otcl tokens
- * @return true, if successful
- */
-public static boolean process(String scriptId, OtclCommandDto otclCommandDto, String otclToken,
+	 * Process.
+	 *
+	 * @param scriptId the script id
+	 * @param otclCommandDto the otcl command dto
+	 * @param otclToken the otcl token
+	 * @param otclChain the otcl chain
+	 * @param otclTokens the otcl tokens
+	 * @return true, if successful
+	 */
+	public static boolean process(String scriptId, OtclCommandDto otclCommandDto, String otclToken,
 			String otclChain, String[] otclTokens) {
 		int idxAnchor = otclToken.indexOf(OtclConstants.ANCHOR);
 		boolean isAnchored = false;
@@ -53,7 +51,7 @@ public static boolean process(String scriptId, OtclCommandDto otclCommandDto, St
 			if (!otclToken.contains(OtclConstants.PRE_ANCHOR) && !otclToken.contains(OtclConstants.POST_ANCHOR) &&
 					!otclToken.contains(OtclConstants.MAP_PRE_ANCHOR) && !otclToken.contains(OtclConstants.MAP_POST_ANCHOR)) {
 				throw new SyntaxException("",
-						"Oops... Syntax error in Script-block : " + scriptId + ". OTCL-token didn't pass Syntax-Checker "
+						"Oops... Syntax error in OTCL-command : " + scriptId + ". OTCL-token didn't pass Syntax-Checker "
 								+ "- misplaced anchors found outside Collection/Map notation '[' and ']' boundaries.");
 			}
 			OtclCommandContext otclCommandContext = new OtclCommandContext();
@@ -61,12 +59,11 @@ public static boolean process(String scriptId, OtclCommandDto otclCommandDto, St
 			otclCommandContext.rawOtclTokens = otclTokens;
 			boolean hasAnchoredDescendants = otclCommandContext.hasAnchoredDescendant();
 			if (hasAnchoredDescendants) {
-				throw new SyntaxException("", "Oops... Syntax error in Script-block : " + scriptId + 
+				throw new SyntaxException("", "Oops... Syntax error in OTCL-command : " + scriptId + 
 						". OTCL-token didn't pass Syntax-Checker! " + "Atmost only one anchor only can be defined.");
 			}
 			isAnchored = true;
 		}
-//		logs.add("Elastic-tree notations processing : Okay for " + script.id);
 		return isAnchored;
 	}
 

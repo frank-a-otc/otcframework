@@ -30,6 +30,8 @@ import org.otcl2.common.dto.ScriptDto;
 import org.otcl2.common.dto.otcl.OtclFileDto.Copy;
 import org.otcl2.common.dto.otcl.OtclFileDto.Execute;
 import org.otcl2.common.dto.otcl.TargetDto;
+import org.otcl2.core.engine.compiler.exception.SemanticsException;
+import org.otcl2.core.engine.compiler.exception.SyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,20 +55,22 @@ final class ConcreteTypeNotationProcessor {
 	 * @param idxArrNotation the idx arr notation
 	 * @return true, if successful
 	 */
-	public static boolean process(ScriptDto script, OtclCommandDto otclCommandDto, String rawOtclToken,
-			String otclChain, boolean isMapNotation, int idxArrNotation) {
+	public static boolean process(ScriptDto script, OtclCommandDto otclCommandDto) {
 		if (!(script.command instanceof Copy)) {
 			return true;
 		}
-		String scriptId = null;
+		String commandId = script.command.id;
 		List<TargetDto.Override> overrides = null;
+		String otclChain = null;
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
+			otclChain = copy.to.otclChain;
 			if (copy != null && copy.to != null && copy.to.overrides != null) {
 				overrides = copy.to.overrides;
 			}
 		} else {
 			Execute execute = (Execute) script.command;
+			otclChain = execute.target.otclChain;
 			if (execute != null && execute.target != null && execute.target.overrides != null) {
 				overrides = execute.target.overrides;
 			}
@@ -76,32 +80,49 @@ final class ConcreteTypeNotationProcessor {
 		}
 		otclCommandDto.concreteTypeName = null;
 		for (TargetDto.Override override : overrides) {
+			String tokenPath = override.tokenPath;
+			if (tokenPath == null) {
+				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId + 
+						".  'overrides.tokenPath: ' is missing.");
+			}
+			if (tokenPath.contains(OtclConstants.ANCHOR)) {
+				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId + 
+						".  Anchor not allowed in 'overrides.tokenPath: '" + tokenPath + "'");
+			}
+			if (!otclChain.startsWith(tokenPath)) {
+				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath + 
+						"' in target's overrides section in command : " + commandId);
+			}
+			if (!otclCommandDto.tokenPath.equals(tokenPath)) {
+				continue;
+			}
 			String concreteType = override.concreteType;
 			if (concreteType == null) {
 				continue;
 			}
-			String tokenPath = override.tokenPath;
-			if (tokenPath.contains(OtclConstants.MAP_KEY_REF)) {
+			boolean isErr = false;
+			if (tokenPath.endsWith(OtclConstants.MAP_KEY_REF)) {
 				if (otclCommandDto.mapKeyConcreteType == null) {
 					otclCommandDto.mapKeyConcreteType = concreteType;
 				} else {
-					LOGGER.warn("Oops... Syntax error in Script-block : " + scriptId + ". Ignoring unexpected "
-							+ "'override.concreteType' value '" + concreteType + "' found for Map-key <K>");
+					isErr = true;
 				}
-			} else if (rawOtclToken.contains(OtclConstants.MAP_KEY_REF)) {
+			} else if (tokenPath.endsWith(OtclConstants.MAP_VALUE_REF)) {
 				if (otclCommandDto.mapValueConcreteType == null) {
 					otclCommandDto.mapValueConcreteType = concreteType;
 				} else {
-					LOGGER.warn("Oops... Syntax error in Script-block : " + scriptId + ". Ignoring unexpected "
-							+ "'override.concreteType' value '" + concreteType + "' found for Map-value <V>");
+					isErr = true;
 				}
-			} else if (otclCommandDto.tokenPath.equals(tokenPath)) {
+			} else {
 				if (otclCommandDto.concreteTypeName == null) {
 					otclCommandDto.concreteTypeName = concreteType;
 				} else {
-					LOGGER.warn("Oops... Syntax error in Script-block : " + scriptId + ". Ignoring unexpected "
-							+ "'override.concreteType' value '" + concreteType + "' found.");
+					isErr = true;
 				}
+			}
+			if (isErr) {
+				LOGGER.warn("Oops... Error in OTCL-Command-Id : {} - 'overrides.concreteType' already set earlier for : '{}" +
+						"' in one of these earlier commands : ", commandId, tokenPath, otclCommandDto.occursInCommands);
 			}
 		}
 		return true;

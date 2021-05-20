@@ -55,10 +55,10 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	public static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (otclCommandDto.isArray()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId +
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId +
 					". Type should not be an array.");
 		}
-		return generateCode(targetOCC, otclCommandDto, null, createNewVarName, varNamesSet, varNamesMap);
+		return generateCode(targetOCC, otclCommandDto, null, null, createNewVarName, varNamesSet, varNamesMap);
 	}
 	
 	/**
@@ -75,10 +75,19 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	public static String generateCodeForArray(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (!otclCommandDto.isArray()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					". Type should be an array.");
 		}
-		return generateCode(targetOCC, otclCommandDto, arraySize, createNewVarName, varNamesSet, varNamesMap);
+		return generateCode(targetOCC, otclCommandDto, null, arraySize, createNewVarName, varNamesSet, varNamesMap);
+	}
+	
+	public static String generateCodeForEnum(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto, String value,
+			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
+		if (!otclCommandDto.isEnum()) {
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
+					". Type should be an array.");
+		}
+		return generateCode(targetOCC, otclCommandDto, value, arraySize, createNewVarName, varNamesSet, varNamesMap);
 	}
 	
 	/**
@@ -92,7 +101,7 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	 * @param varNamesMap the var names map
 	 * @return the string
 	 */
-	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto,
+	private static String generateCode(TargetOtclCommandContext targetOCC, OtclCommandDto otclCommandDto, String value,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		String concreteType = fetchConcreteTypeName(targetOCC, otclCommandDto);
 		String fieldType = fetchFieldTypeName(targetOCC, null, otclCommandDto, createNewVarName, varNamesMap);
@@ -107,20 +116,20 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 			}
 		}
 		String parentVarName = null;
-		if (otclCommandDto.isRootNode) {
+		if (otclCommandDto.isFirstNode) {
 			parentVarName = CommonUtils.initLower(otclCommandDto.field.getDeclaringClass().getSimpleName());
 		} else {
 			parentVarName = createVarName(otclCommandDto.parent, createNewVarName, varNamesSet, varNamesMap);
 		}
 		String getter = otclCommandDto.getter;
 		String getterCode = null;
-		if (otclCommandDto.enableFactoryHelperGetter) {
+		if (otclCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			getterCode = String.format(helperGetterTemplate, fieldType, varName, helper, getter, parentVarName);
 		} else {
 			getterCode = String.format(getterTemplate, fieldType, varName, parentVarName, getter);
 		}
-		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, arraySize, createNewVarName,
+		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize, createNewVarName,
 				varNamesSet, varNamesMap);
 		return getterCode + ifNullCreateAndSetCode;
 	}

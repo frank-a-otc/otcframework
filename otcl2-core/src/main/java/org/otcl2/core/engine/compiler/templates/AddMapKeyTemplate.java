@@ -92,7 +92,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 			boolean createNewVarName, String key, Integer idx, String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto keyOCD = targetOCC.otclCommandDto;
 		if (!keyOCD.isMapKey()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					". Command Object is not of Map-key type.");
 		}
 		String keyType = fetchFieldTypeName(targetOCC, null, keyOCD, createNewVarName, varNamesMap);
@@ -178,7 +178,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 			String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto keyOCD = targetOCC.otclCommandDto;
 		if (!keyOCD.isMapKey()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					". Command Object is not of Map-key type.");
 		}
 		String keyType = fetchFieldTypeName(targetOCC, null, keyOCD, createNewVarName, varNamesMap);
@@ -205,7 +205,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
 			mapKeyCode = String.format(createInstanceTemplate, "", keyVarName, keyConcreteType);
 		} else {
-			//TODO - there is a mistake in this below line.
+			//TODO - seems there is a mistake in this below line.
 			mapKeyCode = String.format(createInstanceTemplate.replace("new %s()", keyVarName), "", keyVarName,
 					keyConcreteType);
 		}

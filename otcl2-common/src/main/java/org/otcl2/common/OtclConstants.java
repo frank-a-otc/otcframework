@@ -109,7 +109,7 @@ public interface OtclConstants {
 	String REGEX_CHECK_OTCLCHAIN = "(?s)from:\\sotclChain:";
 
 	/** The root. */
-	String ROOT = "<ROOT>";
+	String ROOT = "$";
 
 	/** The arr ref. */
 	String ARR_REF = "[*]";

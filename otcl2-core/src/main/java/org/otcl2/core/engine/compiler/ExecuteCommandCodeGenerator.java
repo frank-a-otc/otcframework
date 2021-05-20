@@ -57,7 +57,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
 		OtclChainDto sourceOtclChainDto = scriptDto.sourceOtclChainDto;
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
-//		resetOCC(sourceOCC, scriptDto);
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
 			int dummy = 0;
@@ -66,7 +65,7 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 		int sourceCollectionCount = sourceOtclChainDto.collectionCount + sourceOtclChainDto.dictionaryCount;
 		int targetCollectionCount = targetOtclChainDto.collectionCount + targetOtclChainDto.dictionaryCount;
 		if (sourceCollectionCount > 0 && targetCollectionCount > 0) {
-			throw new CodeGeneratorException("", "Code Generation failure for Script-block : " + scriptDto.command.id + 
+			throw new CodeGeneratorException("", "Code Generation failure for OTCL-command : " + scriptDto.command.id + 
 					". Extensions are not applicable when both target and source contain collections.");
 		}
 		otclCommand.clearCache();
@@ -130,7 +129,7 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 			}
 			if (!targetOCD.isCollectionOrMapMember()) {
 				while (true) {
-					otclCommand.appendInit(targetOCC, false, LogLevel.WARN);
+					otclCommand.appendInit(targetOCC, null, false, LogLevel.WARN);
 					if (targetOCC.isLeaf()) {
 						break;
 					}
@@ -149,7 +148,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtclCodeGenerator {
 				}
 			}
 		} else {
-			
 			if (((Execute) scriptDto.command).otclConverter != null) {
 				otclCommand.appendExecuteConverter(targetOCC, sourceOCC, false); 
 			} 

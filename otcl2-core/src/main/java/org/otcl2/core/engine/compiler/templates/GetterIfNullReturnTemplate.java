@@ -60,14 +60,14 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		String fieldType = fetchFieldTypeName(targetOCC, null, otclCommandDto, createNewVarName, varNamesMap);
 		String varName = createVarName(otclCommandDto, createNewVarName, varNamesSet, varNamesMap);
 		String parentVarName = null;
-		if (otclCommandDto.isRootNode) {
+		if (otclCommandDto.isFirstNode) {
 			parentVarName = CommonUtils.initLower(otclCommandDto.field.getDeclaringClass().getSimpleName());
 		} else {
 			parentVarName = createVarName(otclCommandDto.parent, false, varNamesSet, varNamesMap);
 		}
 		String getterName = otclCommandDto.getter;
 		String getterCode = null;
-		if (otclCommandDto.enableFactoryHelperGetter) {
+		if (otclCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			getterCode = String.format(helperGetterTemplate, fieldType, varName, helper, getterName, parentVarName);
 		} else {
@@ -118,7 +118,7 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		String fieldType = fetchFieldTypeName(targetOCC, null, otclCommandDto, createNewVarName, varNamesMap);
 		String varName = createVarName(otclCommandDto, createNewVarName, varNamesSet, varNamesMap);
 		String parentVarName = null;
-		if (otclCommandDto.isRootNode) {
+		if (otclCommandDto.isFirstNode) {
 			parentVarName = CommonUtils.initLower(otclCommandDto.field.getDeclaringClass().getSimpleName());
 		} else {
 			OtclCommandDto parentOCD = otclCommandDto.parent;
@@ -134,7 +134,7 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 			String mapValueTokenPath = targetOCC.otclChain.substring(0, endIdx);
 			logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
 		}
-		if (otclCommandDto.enableFactoryHelperGetter) {
+		if (otclCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			ifNotNullParentChildGetterCode = String.format(helperGetIfNullReturnTemplate, fieldType, varName, 
 					helper, getter, parentVarName, varName, logLevel, logMsg);

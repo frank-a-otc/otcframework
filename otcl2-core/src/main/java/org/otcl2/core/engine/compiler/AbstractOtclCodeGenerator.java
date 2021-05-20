@@ -87,7 +87,8 @@ abstract class AbstractOtclCodeGenerator  {
 	 */
 	protected static void resetOCC(TargetOtclCommandContext targetOCC, ScriptDto scriptDto) {
 		targetOCC.scriptDto = scriptDto;
-		targetOCC.scriptId = scriptDto.command.id;
+		String commandId = scriptDto.command.id;
+		targetOCC.commandId = commandId;
 		OtclChainDto targetOtclChainDto = scriptDto.targetOtclChainDto;
 		String targetOtclChain = targetOtclChainDto.otclChain;
 		targetOCC.otclChain = targetOtclChain;
@@ -108,6 +109,9 @@ abstract class AbstractOtclCodeGenerator  {
 			}
 			targetOCC.hasExecuteConverter = scriptDto.hasExecuteConverter;
 			targetOCC.executeOtclConverter = execute.otclConverter;
+		} else {
+			targetOCC.hasExecuteConverter = false;
+			targetOCC.hasExecuteModule = false;
 		}
 		String pkgName = targetOCC.factoryClassDto.packageName;
 		String factoryClzName = scriptDto.command.factoryClassName;
@@ -119,7 +123,7 @@ abstract class AbstractOtclCodeGenerator  {
 		}
 		targetOCC.factoryClassDto.className = factoryClzName;
 		if (factoryClzName.contains(".")) {
-			LOGGER.warn("Stripping Namespace/Package name in 'factoryClassName' property!. ");
+			LOGGER.warn("Stripping illegal presence of Namespace/Package name in 'factoryClassName' property in command-id : {}", commandId);
 			int idx = factoryClzName.lastIndexOf(".");
 			String pkg = factoryClzName.substring(0, idx);
 			String clzName = factoryClzName.substring(idx + 1);

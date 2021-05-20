@@ -54,13 +54,13 @@ final class OtclExtensionsValidator {
 			targetOtclChain = ((Execute) script.command).target.otclChain;
 		}
 		if (script.command instanceof Execute && targetOtclChain.contains(OtclConstants.ANCHOR)) {
-			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + script.command.id +
+			throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in OTCL-command : " + script.command.id +
 					". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
 		}
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
 			if (copy.from != null && copy.from.values != null && copy.from.otclChain != null) {
-				throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " +
+				throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in OTCL-command : " +
 						script.command.id + ". Both 'source: from: otclChain' and 'source: from: values' cannot co-exist.");
 			}
 		} else if (script.command instanceof Execute) {
@@ -69,7 +69,7 @@ final class OtclExtensionsValidator {
 				String sourceOtclChain = execute.source.otclChain;
 				if (targetOtclChain.contains(OtclConstants.OPEN_BRACKET) && 
 						sourceOtclChain.contains(OtclConstants.OPEN_BRACKET)) {
-					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " + 
+					throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in OTCL-command : " + 
 						script.command.id + ". Extension cannot have Collection/Map notations on both target and source at "
 								+ "the same time 'executeOtclConverter' extension.");
 				}
@@ -77,13 +77,13 @@ final class OtclExtensionsValidator {
 					for (String exeOrd : execute.executionOrder) {
 						if (OtclConstants.EXECUTE_OTCL_CONVERTER.equals(exeOrd) && 
 								execute.otclConverter == null) {
-							throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " +
+							throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in OTCL-command : " +
 								script.command.id + ". 'executeOtclConverter' defined in 'extensions: executionOrder' "
 								+ "but 'extensions: executeOtclConverter' is undefined.");
 						}
 						if (OtclConstants.EXECUTE_OTCL_MODULE.equals(exeOrd) && 
 								execute.otclModule == null) {
-							throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in Script-block : " +
+							throw new OtclExtensionsException("", "Otcl Lexicalizer-phase failure in OTCL-command : " +
 								script.command.id + ". 'executeOtclModule' defined in 'extensions: executionOrder' "
 								+ "but 'extensions: executeOtclModule' is undefined.");
 						}

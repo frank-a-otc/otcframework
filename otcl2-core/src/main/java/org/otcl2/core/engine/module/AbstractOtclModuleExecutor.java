@@ -36,7 +36,7 @@ public abstract class AbstractOtclModuleExecutor {
 	private static OtclEngine otclEngine = OtclEngineImpl.getInstance();
 	
 	protected static <S, T> T executeModule(String otclNamespace, S source, T target, Map<String, Object> config) {
-		LOGGER.debug(AbstractOtclModuleExecutor.class.getSimpleName() + " called!");
+		LOGGER.debug(AbstractOtclModuleExecutor.class.getName() + " called!");
 		T newTarget = null;
 		try {
 			newTarget = (T) otclEngine.executeOtcl(otclNamespace, source, target.getClass(), config);

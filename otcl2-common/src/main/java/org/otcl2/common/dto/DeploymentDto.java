@@ -41,6 +41,12 @@ public final class DeploymentDto {
 	/** The otcl file name. */
 	public String otclFileName;
 	
+	/** The deployment file name. */
+	public String deploymentFileName;
+	
+	/** The is error. */
+	public boolean isError;
+
 	/** The main class. */
 	public String mainClass;
 	

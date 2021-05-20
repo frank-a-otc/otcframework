@@ -82,7 +82,7 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 	@Override
 	public IndexedCollectionsDto profileObject(DeploymentDto deploymentDto, TARGET_SOURCE enumTargetSource, 
 			Object profiledObject) {
-		LOGGER.trace("Initiating object-profiling for instance of " + profiledObject.getClass().getName());
+		LOGGER.trace("Initiating object-profiling for instance of {}", profiledObject.getClass().getName());
 
 		long startTime = System.nanoTime();
 		Set<String> loadedOtclTokens = null;
@@ -142,8 +142,8 @@ final class ObjectProfilerImpl implements ObjectProfiler {
 				}
 			}
 		}
-		LOGGER.trace("Completed object-profiling for instance of '" + profiledObject.getClass().getName() + "' in "
-					+ ((System.nanoTime() - startTime) / 1000000.0)  + " millis.");
+		LOGGER.debug("Completed object-profiling for instance of '{}' in millis.", profiledObject.getClass().getName(),
+					((System.nanoTime() - startTime) / 1000000.0));
 		return rootICD;
 	}
 

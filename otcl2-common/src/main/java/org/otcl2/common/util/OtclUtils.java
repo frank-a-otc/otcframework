@@ -29,9 +29,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.otcl2.common.OtclConstants;
 import org.otcl2.common.config.OtclConfig;
+import org.otcl2.common.dto.OtclCommandDto;
 import org.otcl2.common.exception.OtclException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +44,13 @@ import org.slf4j.LoggerFactory;
  */
 public class OtclUtils {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtclUtils.class);
 
+	/** The clz loader. */
 	private static URLClassLoader clzLoader;
+	
+	/** The Constant otclLibLocation. */
 	private static final String otclLibLocation = OtclConfig.getOtclLibLocation();
 
 	/**
@@ -118,6 +124,8 @@ public class OtclUtils {
 	 * @return the string
 	 */
 	public static String sanitizeOtcl(String otclChain) {
+		// this method is written this way to enable a future features implementations 
+		// to support index and map-keys.
 		if (otclChain.contains(OtclConstants.ANCHOR)) {
 			otclChain = otclChain.replace(OtclConstants.ANCHOR, "");
 		}
@@ -146,6 +154,83 @@ public class OtclUtils {
 	}
 
 	/**
+	 * Retrieve leaf OCD.
+	 *
+	 * @param mapOCDs the map OC ds
+	 * @param rawOtclChain the raw otcl chain
+	 * @return the otcl command dto
+	 */
+	public static OtclCommandDto retrieveLeafOCD(Map<String, OtclCommandDto> mapOCDs, String rawOtclChain) {
+		String[] rawOtclTokens = rawOtclChain.split("\\.");
+		String otclChain = OtclUtils.sanitizeOtcl(rawOtclChain);
+		String[] otclTokens = otclChain.split("\\.");
+
+		OtclCommandDto otclCommandDto = retrieveNextOCD(mapOCDs, otclTokens[0]);
+		for (int idx = 1; idx < otclTokens.length; idx++) {
+			if (otclCommandDto.isCollectionOrMap()) {
+				String memberName = otclCommandDto.fieldName;
+				if (otclCommandDto.isMap()) {
+					if (rawOtclTokens[otclCommandDto.otclTokenIndex].contains(OtclConstants.MAP_KEY_REF)) {
+						memberName = OtclConstants.MAP_KEY_REF + memberName;
+					} else {
+						memberName = OtclConstants.MAP_VALUE_REF + memberName;
+					}
+				}
+				otclCommandDto = otclCommandDto.children.get(memberName);
+			}
+//			otclCommandDto = otclCommandDto.children.get(otclTokens[otclCommandDto.otclTokenIndex + 1]);
+			otclCommandDto = retrieveNextOCD(otclCommandDto.children, otclTokens[otclCommandDto.otclTokenIndex + 1]);
+		}
+		return otclCommandDto;
+	}
+
+	/**
+	 * Retrieve next OCD.
+	 *
+	 * @param mapOCDs the map OC ds
+	 * @param ocdKey the ocd key
+	 * @return the otcl command dto
+	 */
+	private static OtclCommandDto retrieveNextOCD(Map<String, OtclCommandDto> mapOCDs, String ocdKey) {
+		if (ocdKey.contains(OtclConstants.MAP_KEY_REF)) {
+			ocdKey = ocdKey.replace(OtclConstants.MAP_KEY_REF, "");
+		} else if (ocdKey.contains(OtclConstants.MAP_VALUE_REF)) {
+			ocdKey = ocdKey.replace(OtclConstants.MAP_VALUE_REF, "");
+		}
+		OtclCommandDto otclCommandDto = mapOCDs.get(ocdKey);
+		return otclCommandDto;
+	}
+	
+	/**
+	 * Creates the method not found message.
+	 *
+	 * @param clz the clz
+	 * @param methodName the method name
+	 * @param paramTypes the param types
+	 * @param otclCommandDto the otcl command dto
+	 * @return the string
+	 */
+	public static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes, OtclCommandDto otclCommandDto) {
+		StringBuilder paramsBuilder = null;
+		if (paramTypes != null && paramTypes.length > 0) {
+			for (Class<?> paramType : paramTypes) {
+				if (paramsBuilder == null) {
+					paramsBuilder = new StringBuilder("(").append(paramType.getName());
+				} else {
+					paramsBuilder.append(",").append(paramType.getName());
+				}
+			}
+			paramsBuilder.append(")");
+		} else {
+			paramsBuilder = new StringBuilder("()");
+		}
+		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString() +
+				" not found for tokenpath : " + otclCommandDto.tokenPath + "' - probable conflicts in command(s) " + 
+				otclCommandDto.occursInCommands;
+		return msg;
+	}
+
+	/**
 	 * Retrieve index character.
 	 *
 	 * @param otclToken the otcl token
@@ -158,6 +243,30 @@ public class OtclUtils {
 		return idxCharacter;
 	}
 	
+	/**
+	 * Checks if is tokenpath leafparent.
+	 *
+	 * @param otclChain the otcl chain
+	 * @param tokenPath the token path
+	 * @return true, if is tokenpath leafparent
+	 */
+	public static boolean isTokenpathLeafparent(String otclChain, String tokenPath) {
+		String remainderChain = otclChain.replace(tokenPath, "");
+		if (!CommonUtils.isEmpty(remainderChain)) {
+			if (remainderChain.startsWith(".")) {
+				remainderChain = remainderChain.substring(1);
+			}
+			return remainderChain.split("\\.").length == 1;
+		}
+		return false;
+	}
+	
+	/**
+	 * Load URL class loader.
+	 *
+	 * @param path the path
+	 * @return the URL class loader
+	 */
 	public static URLClassLoader loadURLClassLoader(String path) {
 		File otclBinDirectory = new File(path);
 		List<URL> urls = createURLs(otclBinDirectory, CommonUtils.createFilenameFilter(".jar"), null);
@@ -169,6 +278,14 @@ public class OtclUtils {
 		return clzLoader;
 	}
 
+	/**
+	 * Creates the UR ls.
+	 *
+	 * @param directory the directory
+	 * @param fileFilter the file filter
+	 * @param urls the urls
+	 * @return the list
+	 */
 	public static List<URL> createURLs(File directory, FileFilter fileFilter, List<URL> urls) {
 		for (File file : directory.listFiles(fileFilter)) {
 			if (file.isDirectory()) {
@@ -219,6 +336,11 @@ public class OtclUtils {
 		return cls;
 	}
 
+	/**
+	 * Fetch current URL class loader.
+	 *
+	 * @return the URL class loader
+	 */
 	public static URLClassLoader fetchCurrentURLClassLoader() {
 		return clzLoader;
 	}

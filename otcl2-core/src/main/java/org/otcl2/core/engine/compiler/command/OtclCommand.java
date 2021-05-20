@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.otcl2.common.OtclConstants;
+import org.otcl2.common.OtclConstants.ALGORITHM_ID;
 import org.otcl2.common.OtclConstants.LogLevel;
 import org.otcl2.common.OtclConstants.TARGET_SOURCE;
 import org.otcl2.common.config.OtclConfig;
@@ -190,9 +191,6 @@ public class OtclCommand {
 	 */
 	public static OtclCommandDto retrieveMemberOCD(OtclCommandContext otclCommandContext) {
 		OtclCommandDto otclCommandDto = otclCommandContext.otclCommandDto;
-//		if (otclCommandDto.isCollectionOrMapMember()) {
-//			return otclCommandDto;
-//		}
 		if (!otclCommandDto.isCollectionOrMap()) {
 			throw new CodeGeneratorException("", 
 					"Invalid call to method! Token should be for a " + "Map / collection / array in "
@@ -420,7 +418,7 @@ public class OtclCommand {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		if (!sourceOCD.isCollectionOrMap()) {
 			if (!sourceOCC.hasDescendantCollectionOrMap()) {
-				throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+				throw new CodeGeneratorException("", "Invalid call to method in OTCL-Command : " + targetOCC.commandId + 
 					"!. Token does not have descentant Collection/Map.");
 			}
 			sourceOCD = retrieveNextCollectionOrMapOCD(sourceOCC);
@@ -458,7 +456,7 @@ public class OtclCommand {
 			Integer idx, LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		if (sourceOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Token should not be of a member for this operation.");
 		}
 		String ifNullReturnCode = GetterIfNullReturnTemplate.generateGetterIfNullReturnCode(targetOCC, sourceOCC, 
@@ -478,7 +476,7 @@ public class OtclCommand {
 			LogLevel logLevel) {
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		if (sourceOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Token should not be of a Collection/Map member for this operation.");
 		}
 		StringBuilder ifNullReturnCodeBuilder = new StringBuilder();
@@ -524,7 +522,7 @@ public class OtclCommand {
 			otclCommandDto = targetOCC.otclCommandDto;
 		}
 		if (!otclCommandDto.isCollectionOrMap()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Token should be a collection/map for this operation for target:otclChain : "
 					+ otclCommandDto.tokenPath);
 		}
@@ -547,13 +545,15 @@ public class OtclCommand {
 	 * Append init.
 	 *
 	 * @param targetOCC the target OCC
+	 * @param sourceOCC TODO
 	 * @param createNewVarName the create new var name
 	 * @param logLevel the log level
 	 */
-	public void appendInit(TargetOtclCommandContext targetOCC, boolean createNewVarName, LogLevel logLevel) {
+	public void appendInit(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC, boolean createNewVarName, 
+			LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMapMember() || (targetOCD.isEnum() && targetOCC.isLeaf())) {
-			throw new CodeGeneratorException("", "Invalid call to method  in Script-block : " + targetOCC.scriptId +
+			throw new CodeGeneratorException("", "Invalid call to method  in OTCL-command : " + targetOCC.commandId +
 					"! Token should not be a Enum / Collection member / Map member for this operation.");
 		}
 		String ifNullCreateAndSetCode = null;
@@ -562,8 +562,13 @@ public class OtclCommand {
 			ifNullCreateAndSetCode = GetterIfNullCreateSetTemplate.generateCodeForArray(targetOCC, targetOCD, 1,
 					createNewVarName, varNamesSet, varNamesMap);
 		} else {
-			ifNullCreateAndSetCode = GetterIfNullCreateSetTemplate.generateCode(targetOCC, targetOCD, createNewVarName,
+			if (targetOCD.isEnum() && ALGORITHM_ID.COPYVALUES != targetOCC.algorithmId) {
+				ifNullCreateAndSetCode = GetSetTemplate.generateCode(targetOCC, sourceOCC, createNewVarName, varNamesSet, 
+						varNamesMap);
+			} else {
+				ifNullCreateAndSetCode = GetterIfNullCreateSetTemplate.generateCode(targetOCC, targetOCD, createNewVarName,
 					varNamesSet, varNamesMap);
+			}
 		}
 		ifNullReturnCodeBuilder.append(ifNullCreateAndSetCode);
 		if (targetOCD.isCollectionOrMap()) {
@@ -592,7 +597,7 @@ public class OtclCommand {
 	public void appendInitIfNullTargetReturn(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Token should not be of a member for this operation.");
 		}
 		StringBuilder ifNullReturnCodeBuilder = new StringBuilder();
@@ -625,7 +630,7 @@ public class OtclCommand {
 	public void appendInitIfNullTargetContinue(TargetOtclCommandContext targetOCC, LogLevel logLevel) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Token should not be of a member for this operation.");
 		}
 		StringBuilder ifNullContinueCodeBuilder = new StringBuilder();
@@ -649,7 +654,7 @@ public class OtclCommand {
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
 		if (!memberOCD.isCollectionOrMapMember() || (memberOCD.isEnum() && targetOCC.isLeaf())) {
-			throw new CodeGeneratorException("","Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("","Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Type should be of a member of Collection/Map.");
 		}
 		OtclCommandDto sourceOCD = null;
@@ -685,7 +690,7 @@ public class OtclCommand {
 			boolean createNewVarName, LogLevel logLevel) {
 		OtclCommandDto memberOCD = targetOCC.otclCommandDto;
 		if (!memberOCD.isCollectionOrMapMember() || (memberOCD.isEnum() && targetOCC.isLeaf())) {
-			throw new CodeGeneratorException("","Invalid call to method in Script-block : " + targetOCC.scriptId + 
+			throw new CodeGeneratorException("","Invalid call to method in OTCL-command : " + targetOCC.commandId + 
 					"! Type should be of a member of Collection/Map.");
 		}
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
@@ -856,7 +861,7 @@ public class OtclCommand {
 			if (hasMapValueInPath) {
 				appendInitIfNullTargetReturn(targetOCC, logLevel);
 			} else {
-				appendInit(targetOCC, false, LogLevel.WARN);
+				appendInit(targetOCC, null, false, LogLevel.WARN);
 			}
 			if (targetOCD.isCollectionOrMap()) {
 				boolean isAnchoredOrHavingCollections = targetOCC.isCurrentTokenAnchored() || !targetOCC.hasDescendantCollectionOrMap();
@@ -902,9 +907,9 @@ public class OtclCommand {
 				}
 			} else {
 				if (targetOCC.hasAncestralCollectionOrMap()) {
-					appendGetterIfNullCreateSet(targetOCC);
+					appendGetterIfNullCreateSet(targetOCC, null);
 				} else {
-					appendInit(targetOCC, false, LogLevel.WARN);
+					appendInit(targetOCC, null, false, LogLevel.WARN);
 				}
 			}
 			if (targetOCD.isCollectionOrMap()) {
@@ -922,12 +927,15 @@ public class OtclCommand {
 	 *
 	 * @param targetOCC the target OCC
 	 */
-	public void appendGetterIfNullCreateSet(TargetOtclCommandContext targetOCC) {
+	public void appendGetterIfNullCreateSet(TargetOtclCommandContext targetOCC, String value) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		String ifNullCreateAndSetCode = null;
 		if (targetOCD.isArray()) {
 			ifNullCreateAndSetCode = GetterIfNullCreateSetTemplate.generateCodeForArray(targetOCC, targetOCD, 1,
 					false, varNamesSet, varNamesMap);
+		} else if (targetOCD.isEnum()) {
+			ifNullCreateAndSetCode = GetterIfNullCreateSetTemplate.generateCodeForEnum(targetOCC, targetOCD, value,
+					null, false, varNamesSet, varNamesMap);
 		} else {
 			ifNullCreateAndSetCode = GetterIfNullCreateSetTemplate.generateCode(targetOCC, targetOCD, false,
 					varNamesSet, varNamesMap);
@@ -961,7 +969,7 @@ public class OtclCommand {
 					targetOCC.appendCode(icdCode);
 				} 
 			} else {
-				appendInit(targetOCC, false, LogLevel.WARN);
+				appendInit(targetOCC, null, false, LogLevel.WARN);
 			}
 			if (targetOCD.isCollectionOrMap()) {
 				break;

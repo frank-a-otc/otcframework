@@ -34,7 +34,7 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 
 	/** The helper. */
 	public String helper;
-	
+		
 	/** The main class dto. */
 	public ClassDto mainClassDto;
 	
@@ -64,10 +64,7 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 	
 	/** The algorithm id. */
 	public ALGORITHM_ID algorithmId;
-	
-	/** The idx var. */
-//	public String idxVar;
-	
+
 	/** The loop counter. */
 	public int loopsCounter;
 
@@ -92,7 +89,7 @@ public final class TargetOtclCommandContext extends OtclCommandContext {
 	@Override
 	public TargetOtclCommandContext clone() {
 		TargetOtclCommandContext targetOtclCommandContext = new TargetOtclCommandContext();
-		targetOtclCommandContext.scriptId = scriptId;
+		targetOtclCommandContext.commandId = commandId;
 		targetOtclCommandContext.scriptDto = scriptDto;
 		targetOtclCommandContext.helper = helper;
 		targetOtclCommandContext.mainClassDto = mainClassDto;

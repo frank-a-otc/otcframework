@@ -53,8 +53,7 @@ public final class OtclDto {
 	/** The main class dto. */
 	public ClassDto mainClassDto;
 
-/** The script dtos. */
-//	public Map<String, ScriptGroupDto> groupedScriptDtos;
+	/** The script dtos. */
 	public List<ScriptDto> scriptDtos;
 	
 	/** The source OCD stems. */
@@ -107,10 +106,9 @@ public final class OtclDto {
 		
 		/** The target clz. */
 		private Class<?> targetClz;
-//		private Map<String, ScriptGroupDto> groupedScriptDtos;
 
 		/** The script dtos. */
-public List<ScriptDto> scriptDtos;
+		public List<ScriptDto> scriptDtos;
 
 		/** The source OCD stems. */
 		private Map<String, OtclCommandDto> sourceOCDStems;
@@ -187,18 +185,13 @@ public List<ScriptDto> scriptDtos;
 			return this;
 		}
 
-//		public Builder addGroupedScriptDtos(Map<String, ScriptGroupDto> groupedScriptDtos) {
-//			this.groupedScriptDtos = groupedScriptDtos;
-//			return this;
-//		}
-
 		/**
- * Adds the source otcl command dto stem.
- *
- * @param sourceOCD the source OCD
- * @return the builder
- */
-public Builder addSourceOtclCommandDtoStem(OtclCommandDto sourceOCD) {
+		 * Adds the source otcl command dto stem.
+		 *
+		 * @param sourceOCD the source OCD
+		 * @return the builder
+		 */
+		public Builder addSourceOtclCommandDtoStem(OtclCommandDto sourceOCD) {
 			if (sourceOCDStems == null) {
 				sourceOCDStems = new HashMap<>();
 			}

@@ -57,12 +57,12 @@ public final class GetSetTemplate extends AbstractTemplate {
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		if (targetOCD.isCollectionOrMap() || targetOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId +
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId +
 					". Type should not be a Collecton or Map member.");
 		}
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		String getSetCode = null;
-		if (targetOCD.enableFactoryHelperSetter || sourceOCD.enableFactoryHelperGetter) {
+		if (targetOCD.enableSetterHelper || sourceOCD.enableGetterHelper) {
 			getSetCode = generateCodeForHelper(targetOCC, sourceOCC, createNewVarName, varNamesSet, varNamesMap);
 		} else {
 			getSetCode = generateCodeForGetterSetter(targetOCC, sourceOCC, createNewVarName, varNamesSet, varNamesMap);
@@ -77,22 +77,22 @@ public final class GetSetTemplate extends AbstractTemplate {
 		String getSetCode = null;
 		String sourceParentVarName = null;
 		String targetParentVarName = null;
-		if (targetOCD.isRootNode) {
+		if (targetOCD.isFirstNode) {
 			targetParentVarName = CommonUtils.initLower(targetOCD.field.getDeclaringClass().getSimpleName());
 		} else {
 			targetParentVarName = createVarName(targetOCD.parent, createNewVarName, varNamesSet, varNamesMap);
 		}
-		if (sourceOCD.isRootNode) {
+		if (sourceOCD.isFirstNode) {
 			sourceParentVarName = CommonUtils.initLower(sourceOCD.field.getDeclaringClass().getSimpleName());
 		} else {
-			if (targetOCD.enableFactoryHelperSetter && sourceOCD.isCollectionOrMapMember()) {
+			if (targetOCD.enableSetterHelper && sourceOCD.isCollectionOrMapMember()) {
 				sourceParentVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
 			} else {
 				sourceParentVarName = createVarName(sourceOCD.parent, createNewVarName, varNamesSet, varNamesMap);
 			}
 		}
 		String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-		if (targetOCD.enableFactoryHelperSetter && sourceOCD.enableFactoryHelperGetter) {
+		if (targetOCD.enableSetterHelper && sourceOCD.enableGetterHelper) {
 			if (sourceOCD.isCollectionOrMapMember()) {
 				getSetCode = String.format(helperSetterTemplate, helper, targetOCD.setter, targetParentVarName,
 						sourceParentVarName);
@@ -100,7 +100,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 				getSetCode = String.format(setHelperGetHelperTemplate, helper, targetOCD.setter, targetParentVarName, 
 					helper, sourceOCD.getter, sourceParentVarName);
 			}
-		} else if (targetOCD.enableFactoryHelperSetter) {
+		} else if (targetOCD.enableSetterHelper) {
 			if (sourceOCD.isCollectionOrMapMember()) {
 				getSetCode = String.format(helperSetterTemplate, helper, targetOCD.setter, targetParentVarName,
 						sourceParentVarName);
@@ -108,9 +108,10 @@ public final class GetSetTemplate extends AbstractTemplate {
 				getSetCode = String.format(setHelperTemplate, helper, targetOCD.setter, targetParentVarName, 
 						sourceParentVarName, sourceOCD.getter);
 			}
+
 		} else {
 			String targetVarName = null;
-			if (targetOCD.isRootNode) {
+			if (targetOCD.isFirstNode) {
 				targetVarName = CommonUtils.initLower(targetOCD.field.getDeclaringClass().getSimpleName());
 			} else {
 				targetVarName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
@@ -125,14 +126,14 @@ public final class GetSetTemplate extends AbstractTemplate {
 	private static String generateCodeForGetterSetter(TargetOtclCommandContext targetOCC, SourceOtclCommandContext sourceOCC, 
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (!sourceOCC.isLeaf()) {
-			throw new CodeGeneratorException("", "Invalid call to method in Script-block : " + targetOCC.scriptId +
+			throw new CodeGeneratorException("", "Invalid call to method in OTCL-command : " + targetOCC.commandId +
 					". Source token is not a leaf.");
 		}
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;
 		OtclCommandDto sourceOCD = sourceOCC.otclCommandDto;
 		String sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
 		String targetParentVarName = null;
-		if (targetOCD.isRootNode) {
+		if (targetOCD.isFirstNode) {
 			targetParentVarName = CommonUtils.initLower(targetOCD.field.getDeclaringClass().getSimpleName());
 		} else {
 			targetParentVarName = createVarName(targetOCD.parent, createNewVarName, varNamesSet, varNamesMap);
@@ -158,7 +159,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 				} else {
 					if (String.class != sourceOCD.fieldType) {
 						throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to " +
-								targetOCD.fieldType + " in " + targetOCC.scriptId);
+								targetOCD.fieldType + " in " + targetOCC.commandId);
 					}
 					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
 							sourceVarName, sourceOCD.fieldType);
@@ -167,7 +168,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				if (String.class != targetOCD.fieldType) {
 					throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to " +
-							targetOCD.fieldType + " in " + targetOCC.scriptId);
+							targetOCD.fieldType + " in " + targetOCC.commandId);
 				}
 				getSetCode = String.format(dateToStringConverterTemplate, targetParentVarName, targetOCD.setter,
 						sourceVarName);

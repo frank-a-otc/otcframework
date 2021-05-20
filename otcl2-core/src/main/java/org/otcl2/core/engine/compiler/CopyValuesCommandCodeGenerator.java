@@ -76,8 +76,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 		}
 		List<String> values = ((Copy) scriptDto.command).from.values;
 		if (values == null) {
-			LOGGER.warn("'values:' property in Script-block : " + scriptDto.command.id + 
-					" is empty! Skiping Code-generation.");
+			LOGGER.warn("'values:' property in OTCL-command : {} is empty! Skiping Code-generation.", scriptDto.command.id);
 			return;
 		}
 		otclCommand.clearCache();
@@ -89,7 +88,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 				targetOCD = OtclCommand.retrieveMemberOCD(clonedTargetOCC);
 				clonedTargetOCC.otclCommandDto = targetOCD;
 			}
-		} else if (!targetOCD.isRootNode) {
+		} else if (!targetOCD.isFirstNode) {
 			otclCommand.appendGetter(clonedTargetOCC, targetOCD, false);
 		}
 		offsetIdx = processRemainingPath(clonedTargetOCC, otclCommand, scriptDto, scriptGroupIdx, offsetIdx);
@@ -174,7 +173,11 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtclCodeGenerator {
 					if (targetOCC.hasMapValueMember() || targetOCC.hasMapValueDescendant()) {
 						otclCommand.appendIfNullTargetPcdReturn(targetOCC, LogLevel.WARN);
 					} else {
-						otclCommand.appendInit(targetOCC, false, LogLevel.WARN);
+						if (childOCD.isEnum()) {
+							otclCommand.appendGetterIfNullCreateSet(targetOCC, value);
+						} else {
+							otclCommand.appendInit(targetOCC, null, false, LogLevel.WARN);
+						}
 					}
 				} else {
 					otclCommand.appendSetter(targetOCC, value);

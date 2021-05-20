@@ -88,6 +88,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 	
 	/** The Constant otclBinDir. */
 	private static final String otclBinDir = OtclConfig.getOtclBinLocation();
+	
+	private static final boolean compilerSourcecodeFailonerror = OtclConfig.getCompilerSourcecodeFailonerror();
 
 	/** The Constant otclFileFilter. */
 	private static final FileFilter otclFileFilter = CommonUtils.createFilenameFilter(OtclConstants.OTCL_SCRIPT_EXTN);
@@ -100,9 +102,6 @@ public class OtclCompilerImpl implements OtclCompiler {
 	
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper;
-	
-	/** The Constant diagnostics. */
-	private static final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
 	private static final List<String> optionList = new ArrayList<String>();
 
@@ -148,7 +147,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 	@Override
 	public List<CompilationReport> compileOtcl() {
 		long startTime = System.nanoTime();
-		LOGGER.info("Initiating OTCL compilations in " + otclSrcDir);
+		LOGGER.info("Initiating OTCL file compilations in {}", otclSrcDir);
 		File otclSourceDirectory = new File(otclSrcDir);
 		List<CompilationReport> compilationReports = compileOtcl(otclSourceDirectory, null);
 		int successful = 0;
@@ -161,8 +160,9 @@ public class OtclCompilerImpl implements OtclCompiler {
 			}
 		}
 		int total = successful + failed;
-		LOGGER.info("Completed " + successful + "/" + total + " OTCL deployments, Failed : " + failed + "/" 
-				+ total + ". in " + ((System.nanoTime() - startTime) / 1000000.0) + " millis.");
+		long endTime = System.nanoTime();
+		LOGGER.info("Completed {}/{} OTCL deployments, Failed : {}/{}. in {} millis.", 
+				successful, total, failed, total, ((endTime - startTime) / 1000000.0) );
 		if (successful == 0) {
 			throw new OtclEngineException("", "Oops... Cannot continue due to 0 deployments!");
 		}
@@ -206,28 +206,33 @@ public class OtclCompilerImpl implements OtclCompiler {
 					binDir = null;
 				}
 				depFileName = otclBinDir + depFileName;
-				FileOutputStream fos = null;
 				DeploymentDto deploymentDto = createDeploymentDto(compilationReport);
-				try {
-					String str = objectMapper.writeValueAsString(deploymentDto);
-					fos = new FileOutputStream(depFileName);
-			        msgPack.write(fos, str.getBytes());
-					fos.flush();
-					compilationReports.add(compilationReport);
-				} catch (IOException e) {
-					throw new OtclCompilerException(e);
-				} finally {
-					if (fos != null) {
-						try {
-							fos.close();
-						} catch (IOException e) {
-							throw new OtclCompilerException(e);
-						}
-					}
-				}
+				deploymentDto.deploymentFileName = depFileName;
+				createDeploymentFile(deploymentDto);
+				compilationReports.add(compilationReport);
 			}
 		}
 		return compilationReports;
+	}
+	
+	private void createDeploymentFile(DeploymentDto deploymentDto) {
+		FileOutputStream fos = null;
+		try {
+			String str = objectMapper.writeValueAsString(deploymentDto);
+			fos = new FileOutputStream(deploymentDto.deploymentFileName);
+	        msgPack.write(fos, str.getBytes());
+			fos.flush();
+		} catch (IOException e) {
+			throw new OtclCompilerException(e);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					throw new OtclCompilerException(e);
+				}
+			}
+		}
 	}
 
 	/**
@@ -244,6 +249,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 		deploymentDto.targetClz = otclDto.targetClz;
 		deploymentDto.otclNamespace = otclDto.otclNamespace;
 		String otclNamespace = otclDto.otclNamespace;
+		deploymentDto.otclFileName = otclDto.otclFileName;
 		String deploymentId = otclDto.otclFileName;
 		deploymentId = deploymentId.substring(0, deploymentId.lastIndexOf(OtclConstants.OTCL_SCRIPT_EXTN));
 		if (!CommonUtils.isEmpty(otclNamespace)) {
@@ -308,7 +314,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 				.addOtclFileName(otclFileName);
 		String message = null;
 		try {
-			LOGGER.info("Compiling OTCL file : " + otclNamespace + "->" + otclFileName);
+			LOGGER.info("Compiling OTCL file : {}->{}", otclNamespace, otclFileName);
+			long startTime = System.nanoTime();
 			otclDto = OtclLexicalizer.lexicalize(file, otclNamespace);
 			if (otclDto.scriptDtos == null || otclDto.scriptDtos.size() == 0) {
 				throw new CodeGeneratorException("", "No OTCL commmands to execute! "
@@ -333,12 +340,14 @@ public class OtclCompilerImpl implements OtclCompiler {
 					mainClassDto.className = mainClassName.substring(mainClassName.lastIndexOf(".") + 1); 
 				}
 			}
+			long endTime = System.nanoTime();
+			message = "Successfully compiled OTCL file in " + ((endTime - startTime) / 1000000.0)
+					 + " millis - OTCL-Filename: " + otclNamespace + "->" + otclFileName;
+			LOGGER.info(message);
 			otclCodeGenerator.generateSourcecode(otclDto);
-			message = "Successfully compiled OTCL file : " + otclNamespace + "->" + otclFileName;
 			compilationReportBuilder.addDidSucceed(true)
 				.addOtclDto(otclDto)
 				.addMessage(message);
-			LOGGER.info(message);
 		} catch (Exception ex) {
 			message = "Error while compiling OTCL file : " + otclNamespace + "->" + otclFileName;
 			compilationReportBuilder.addDidSucceed(false)
@@ -356,6 +365,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 	 */
 	@Override
 	public void compileSourceCode() {
+		LOGGER.info("Compiling source-code files. Please wait.......");
+		long startTime = System.nanoTime();
 		File binDir = new File(otclBinDir);
 		List<DeploymentDto> deploymentDtos = null;
 		Thread.currentThread().setContextClassLoader(OtclUtils.fetchCurrentURLClassLoader());
@@ -381,8 +392,14 @@ public class OtclCompilerImpl implements OtclCompiler {
 				}
 			}
 		}
-		List<JavaFileObject> javaFileObjects = createCompilationUnits(deploymentDtos, null);
-		compileSourceCode(javaFileObjects);
+		try {
+			createCompilationUnitsAndCompile(deploymentDtos, null);
+		} catch (OtclCompilerException e) {
+			LOGGER.error("", e);
+			throw e;
+		}
+		long endTime = System.nanoTime();
+		LOGGER.info("Completed source-Code file compilations in {} millis.", ((endTime - startTime) / 1000000.0));
 		return;
 	}
 	
@@ -393,7 +410,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 	 * @param javaFileObjects the java file objects
 	 * @return the list
 	 */
-	private List<JavaFileObject> createCompilationUnits(List<DeploymentDto> deploymentDtos, 
+	private List<JavaFileObject> createCompilationUnitsAndCompile(List<DeploymentDto> deploymentDtos, 
 			List<JavaFileObject> javaFileObjects) {
 		for (DeploymentDto deploymentDto : deploymentDtos) {
 			String mainClz = deploymentDto.mainClass;
@@ -421,6 +438,8 @@ public class OtclCompilerImpl implements OtclCompiler {
 				}
 				javaFileObjects.add(new JavaCodeStringObject(file));
 			}
+			// -- compile source-code files...
+			compileSourceCode(javaFileObjects, deploymentDto);
 		}
 		return javaFileObjects;
 	}
@@ -430,7 +449,7 @@ public class OtclCompilerImpl implements OtclCompiler {
 	 *
 	 * @param javaFileObjects the java file objects
 	 */
-	private void compileSourceCode(List<JavaFileObject> javaFileObjects) {
+	private void compileSourceCode(List<JavaFileObject> javaFileObjects, DeploymentDto deploymentDto) {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 		File fileClzPathRoot = new File(otclTargetDir);
@@ -441,12 +460,26 @@ public class OtclCompilerImpl implements OtclCompiler {
 		} catch (IOException e) {
 			LOGGER.error("Could not set root locations!. ", e);
 		}
-
+		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 		JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, optionList, null,
 				javaFileObjects);
-//		Thread.currentThread().setContextClassLoader(OtclUtils.fetchCurrentURLClassLoader());
 		if (!task.call()) {
-			diagnostics.getDiagnostics().forEach(System.out::println);
+			diagnostics.getDiagnostics().forEach((diagnostic) -> {
+				if (!deploymentDto.isError && diagnostic.getCode().contains("compiler.err")) {
+					deploymentDto.isError = true;
+				}
+				System.out.println(diagnostic);
+			});
+			if (deploymentDto.isError) {
+				createDeploymentFile(deploymentDto);
+				if (compilerSourcecodeFailonerror) {
+					throw new OtclCompilerException("", "Source code compilation failed.");
+				}
+			}
+		} else {
+			javaFileObjects.forEach((javaFile) -> {
+				LOGGER.debug("Compiled source code : {}", javaFile.getName());
+			});
 		}
 		return;
 	}
