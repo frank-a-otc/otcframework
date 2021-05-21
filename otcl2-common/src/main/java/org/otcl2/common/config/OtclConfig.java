@@ -143,9 +143,7 @@ public enum OtclConfig {
 	 * @return the otcl lib location
 	 */
 	public static String getOtclLibLocation() {
-		if (CommonUtils.isEmpty(otclHome)) {
-			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
-		}
+		checkOtclHomeSet();
 		return otclHome + File.separator + "lib" + File.separator;
 	}
 
@@ -155,9 +153,7 @@ public enum OtclConfig {
 	 * @return the otcl source location
 	 */
 	public static String getOtclSourceLocation() {
-		if (CommonUtils.isEmpty(otclHome)) {
-			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
-		}
+		checkOtclHomeSet();
 		return otclHome + OTCL_UNITTEST_FOLDER;
 	}
 
@@ -186,9 +182,7 @@ public enum OtclConfig {
 	 * @return the otcl bin location
 	 */
 	public static String getOtclBinLocation() {
-		if (CommonUtils.isEmpty(otclHome)) {
-			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
-		}
+		checkOtclHomeSet();
 		return otclHome + File.separator + "bin" + File.separator;
 	}
 
@@ -198,12 +192,34 @@ public enum OtclConfig {
 	 * @return the otcl target location
 	 */
 	public static String getCompiledCodeLocation() {
-		if (CommonUtils.isEmpty(otclHome)) {
-			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
-		}
+		checkOtclHomeSet();
 		return otclHome + File.separator + "target" + File.separator;
 	}
 
+	/**
+	 * Gets the expected result location.
+	 *
+	 * @return the expected result location
+	 */
+	public static String getTestCaseExpectedResultLocation() {
+		checkOtclHomeSet();
+		String expectedLocation = otclHome + File.separator + "tc_expected" + File.separator;
+		File file = new File(expectedLocation);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		return expectedLocation;
+	}
+	
+	public static String getTestCaseActualResultLocation() {
+		String expectedLocation = otclHome + File.separator + "tc_actual" + File.separator;
+		File file = new File(expectedLocation);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		return expectedLocation;
+	}
+	
 	/**
 	 * Gets the compiler sourcecode failonerror.
 	 *
@@ -220,6 +236,12 @@ public enum OtclConfig {
 	 */
 	public static URLClassLoader getTargetClassLoader() {
 		return clzLoader;
+	}
+	
+	private static void checkOtclHomeSet() {
+		if (CommonUtils.isEmpty(otclHome)) {
+			throw new OtclException("", "Oops... Environment variable 'otcl.home' not set! ");
+		}
 	}
 
 }

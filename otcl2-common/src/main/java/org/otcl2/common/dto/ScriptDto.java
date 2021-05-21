@@ -25,7 +25,7 @@ package org.otcl2.common.dto;
 import org.otcl2.common.dto.otcl.OtclFileDto.CommandCommonParams;
 import org.otcl2.common.dto.otcl.OtclFileDto.Execute;
 import org.otcl2.common.dto.otcl.OtclFileDto.Execute.OtclModule;
-import org.otcl2.common.dto.otcl.OtclFileDto.OtclCommand;
+import org.otcl2.common.dto.otcl.OtclFileDto.OtclCommands;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,7 +64,7 @@ public class ScriptDto {
 	 *
 	 * @param script the script
 	 */
-	public ScriptDto(OtclCommand script) {
+	public ScriptDto(OtclCommands script) {
 		if (script.copy != null) {
 			command = script.copy;
 		} else {

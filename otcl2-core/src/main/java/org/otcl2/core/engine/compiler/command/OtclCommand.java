@@ -922,10 +922,12 @@ public class OtclCommand {
 		}
 	}
 	
+
 	/**
 	 * Append getter if null create set.
 	 *
 	 * @param targetOCC the target OCC
+	 * @param value the value
 	 */
 	public void appendGetterIfNullCreateSet(TargetOtclCommandContext targetOCC, String value) {
 		OtclCommandDto targetOCD = targetOCC.otclCommandDto;

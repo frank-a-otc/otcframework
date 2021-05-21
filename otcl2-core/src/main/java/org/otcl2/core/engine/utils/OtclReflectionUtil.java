@@ -192,8 +192,8 @@ public class OtclReflectionUtil {
 	 *
 	 * @param factoryHelper the factory helper
 	 * @param enumGetterSetter the enum getter setter
-	 * @param methodName the method name
 	 * @param otclCommandDto the otcl command dto
+	 * @param fieldType the field type
 	 * @return the string
 	 */
 	public static String findHelperMethodName(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter,
@@ -211,8 +211,8 @@ public class OtclReflectionUtil {
 	 *
 	 * @param factoryHelper the factory helper
 	 * @param enumGetterSetter the enum getter setter
-	 * @param methodName the method name
 	 * @param otclCommandDto the otcl command dto
+	 * @param fieldType the field type
 	 * @return the method
 	 */
 	public static Method findFactoryHelperMethod(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter, 
@@ -247,7 +247,6 @@ public class OtclReflectionUtil {
 	 * @param otclCommandDto the otcl command dto
 	 * @param paramTypes the param types
 	 * @return the method
-	 * @throws NoSuchMethodException the no such method exception
 	 * @throws SecurityException the security exception
 	 */
 	private static Method findMethod(Class<?> clz, String methodName, OtclCommandDto otclCommandDto, Class<?>... paramTypes) {

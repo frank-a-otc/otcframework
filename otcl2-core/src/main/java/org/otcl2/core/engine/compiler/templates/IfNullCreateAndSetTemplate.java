@@ -46,6 +46,7 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 	 * Generate code.
 	 *
 	 * @param targetOCC the target OCC
+	 * @param value the value
 	 * @param arraySize the array size
 	 * @param createNewVarName the create new var name
 	 * @param varNamesSet the var names set

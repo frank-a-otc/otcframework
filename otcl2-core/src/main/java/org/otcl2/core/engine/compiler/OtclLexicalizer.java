@@ -193,7 +193,7 @@ final class OtclLexicalizer {
 		Map<String, OtclCommandDto> mapTargetOCDs = new LinkedHashMap<>();
 		Map<String, OtclCommandDto> mapSourceOCDs = new LinkedHashMap<>();
 		Set<String> scriptIds = new HashSet<>();
-		for (OtclFileDto.OtclCommand otclCommand : otclFileDto.otclCommands) {
+		for (OtclFileDto.OtclCommands otclCommand : otclFileDto.otclCommands) {
 			if ((otclCommand.copy != null && otclCommand.copy.debug) || 
 					(otclCommand.execute != null && otclCommand.execute.debug)) {
 				@SuppressWarnings("unused")
@@ -397,7 +397,7 @@ final class OtclLexicalizer {
 		return sourceStemOCD;
 	}
 	
-	private static void santizeFactoryClassName(String factoryClassName, OtclFileDto.OtclCommand otclScript, String scriptId,
+	private static void santizeFactoryClassName(String factoryClassName, OtclFileDto.OtclCommands otclScript, String scriptId,
 			Set<String> factorClzNames) {
 		if (factoryClassName == null) {
 			return;
