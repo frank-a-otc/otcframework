@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>This is the parent for the two OTC modules Commons and Core.</description>
+	<description>This is the parent for the two OTC modules Commons and Core</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>
