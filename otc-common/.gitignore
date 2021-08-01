@@ -1,0 +1,5 @@
+/target/
+/otc-common-deploy.log
+/.classpath
+/.settings/
+/.project

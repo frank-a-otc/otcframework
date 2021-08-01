@@ -4,14 +4,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.otcl2</groupId>
-	<artifactId>otcl2</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<groupId>org.otcframework</groupId>
+	<artifactId>otc</artifactId>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>This is the parent for the two OTCL modules Commons and Core.</description>
-	<url>http://www.otclfoundation.org</url>
+	<description>This is the parent for the two OTC modules Commons and Core.</description>
+	<url>http://www.otcframework.org</url>
 
 	<licenses>
 		<license>
@@ -23,16 +23,16 @@
 	<developers>
 		<developer>
 			<name>Franklin Abel</name>
-			<email>franklin.abel@otclfoundation.org</email>
-			<organization>OTCL Foundation</organization>
-			<organizationUrl>http://www.otclfoundation.org</organizationUrl>
+			<email>franklin.abel@otcframework.org</email>
+			<organization>OTC Framework</organization>
+			<organizationUrl>http://www.otcframework.org</organizationUrl>
 		</developer>
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/frankjjava/otcl2.git</connection>
-		<developerConnection>scm:git:ssh://github.com:frankjjava/otcl2.git</developerConnection>
-		<url>https://github.com/frankjjava/otcl2</url>
+		<connection>scm:git:git://github.com/frankjjava/otc.git</connection>
+		<developerConnection>scm:git:ssh://github.com:frankjjava/otc.git</developerConnection>
+		<url>https://github.com/frankjjava/otc</url>
 	</scm>
 
 	<distributionManagement>
@@ -56,7 +56,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		
-		<otcl.version>1.4-SNAPSHOT</otcl.version>
+		<otc.version>1.0</otc.version>
 
 		<commons-configuration.version>1.8</commons-configuration.version>
 		<logback.version>1.2.3</logback.version>
@@ -122,17 +122,17 @@
 				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.otcl2</groupId>
-				<artifactId>otcl2-common</artifactId>
-			    <version>${otcl.version}</version>
+				<groupId>org.otcframework</groupId>
+				<artifactId>otc-common</artifactId>
+			    <version>${otc.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.otcl2</groupId>
-				<artifactId>otcl2-core</artifactId>
-			    <version>${otcl.version}</version>
+				<groupId>org.otcframework</groupId>
+				<artifactId>otc-core</artifactId>
+			    <version>${otc.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.otclfoundation</groupId>
+			    <groupId>org.otcframework</groupId>
 			    <artifactId>dateconverters</artifactId>
 			    <version>${dateconverters.version}</version>
 			</dependency>
@@ -183,8 +183,8 @@
 	</build>
 
 	<modules>
-		<module>otcl2-common</module>
-		<module>otcl2-core</module>
+		<module>otc-common</module>
+		<module>otc-core</module>
 	</modules>
 
 </project>
