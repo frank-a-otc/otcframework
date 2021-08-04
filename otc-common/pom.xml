@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.otcframework</groupId>
-		<artifactId>otc</artifactId>
+		<artifactId>otcframework</artifactId>
 		<version>1.0</version>
 	</parent>
 	<artifactId>otc-common</artifactId>
