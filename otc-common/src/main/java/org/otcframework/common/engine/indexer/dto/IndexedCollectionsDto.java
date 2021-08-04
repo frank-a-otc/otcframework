@@ -34,7 +34,7 @@ public class IndexedCollectionsDto {
 	public String id;
 
 	/** The indexedd object. */
-	public Object indexeddObject;
+	public Object indexedObject;
 
 	/** The children. */
 	public Map<String, IndexedCollectionsDto> children;

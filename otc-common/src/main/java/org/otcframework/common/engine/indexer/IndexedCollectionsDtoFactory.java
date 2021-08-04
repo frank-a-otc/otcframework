@@ -46,7 +46,7 @@ public class IndexedCollectionsDtoFactory {
 	public static IndexedCollectionsDto createRoot(OtcCommandDto otcCommandDto, boolean hasChildren, Object value,
 			String idxStr) {
 		IndexedCollectionsDto parentPCD = new IndexedCollectionsDto();
-		parentPCD.indexeddObject = value;
+		parentPCD.indexedObject = value;
 		parentPCD.id = idxStr;
 		if (hasChildren) {
 			parentPCD.children = new HashMap<>();
@@ -69,7 +69,7 @@ public class IndexedCollectionsDtoFactory {
 		if (parentPCD != null) {
 			parentPCD.children.put(idxStr, childPOD);
 		}
-		childPOD.indexeddObject = value;
+		childPOD.indexedObject = value;
 		childPOD.children = new HashMap<>();
 		return childPOD;
 	}
@@ -90,7 +90,7 @@ public class IndexedCollectionsDtoFactory {
 		}
 		IndexedCollectionsDto childPOD = new IndexedCollectionsDto();
 		parentPCD.children.put(idxStr, childPOD);
-		childPOD.indexeddObject = value;
+		childPOD.indexedObject = value;
 		childPOD.id = idxStr;
 		if (hasChildren) {
 			childPOD.children = new HashMap<>();

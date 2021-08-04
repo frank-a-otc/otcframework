@@ -226,7 +226,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				}
 				memberICD = IndexedCollectionsDtoFactory.create(otcCommandContext, parentICD, member, "" + idx);
 			} else {
-				member = memberICD.indexeddObject;
+				member = memberICD.indexedObject;
 			}
 			if (otcCommandContext.hasDescendantCollectionOrMap()) {
 				IndexedCollectionsDto nextICD = indexObject(otcCommandContext.clone(), member, null);
@@ -304,7 +304,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				otcCommandContext.otcCommandDto = valueOCD;
 			}
 			if (otcCommandContext.hasDescendantCollectionOrMap()) {
-				Object member = memberICD.indexeddObject;
+				Object member = memberICD.indexedObject;
 				IndexedCollectionsDto nextICD = indexObject(otcCommandContext, member, null);
 				if (nextICD != null) {
 					memberICD.children.put(nextICD.id, nextICD);
