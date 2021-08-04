@@ -26,10 +26,10 @@ import java.util.Scanner;
 
 import org.otcframework.common.util.CommonUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class JavaCodeFormatter.
  */
+// TODO: Auto-generated Javadoc
 final class JavaCodeFormatter {
 
 	/**
@@ -62,7 +62,7 @@ final class JavaCodeFormatter {
 				if (line.startsWith("public ")) {
 					line = "\n" + line;
 					isPostClassDeclaration = true;
-				} else if (isPostClassDeclaration && !decrementPhase){
+				} else if (isPostClassDeclaration && !decrementPhase) {
 					line = "\t" + line;
 				}
 				line = "\n" + line;
@@ -79,7 +79,7 @@ final class JavaCodeFormatter {
 	/**
 	 * Do indent.
 	 *
-	 * @param line the line
+	 * @param line          the line
 	 * @param bracesCounter the braces counter
 	 * @return the string
 	 */

@@ -34,29 +34,33 @@ import org.otcframework.core.engine.compiler.exception.SemanticsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcReflectionUtil.
  */
+// TODO: Auto-generated Javadoc
 public class OtcReflectionUtil {
 
-	/** The logger. */
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcReflectionUtil.class);
 
 	/**
 	 * The Enum GETTER_SETTER.
 	 */
 	public static enum GETTER_SETTER {
-		GETTER, 
+
+		/** The getter. */
+		GETTER,
+
+		/** The setter. */
 		SETTER
 	};
 
 	/** The Constant ZERO_LENGTH_FIELD_ARRAY. */
 	private static final Field[] ZERO_LENGTH_FIELD_ARRAY = new Field[0];
-	
+
 	/** The Constant ZERO_LENGTH_CLASS_ARRAY. */
 	private static final Class[] ZERO_LENGTH_CLASS_ARRAY = new Class[0];
-	
+
 	/** The Constant fieldsCache. */
 	private static final Map<Class<?>, Field[]> fieldsCache = new ConcurrentHashMap<>(100);
 
@@ -93,7 +97,7 @@ public class OtcReflectionUtil {
 		String fieldName = field.getName();
 		String getter = otcCommandDto.getter;
 		if (getter == null) {
-			if (Boolean.class.isAssignableFrom(otcCommandDto.fieldType)) { 
+			if (Boolean.class.isAssignableFrom(otcCommandDto.fieldType)) {
 				getter = "is" + CommonUtils.initCap(fieldName);
 			} else {
 				getter = "get" + CommonUtils.initCap(fieldName);
@@ -126,8 +130,8 @@ public class OtcReflectionUtil {
 	 * Find method.
 	 *
 	 * @param enumGetterSetter the enum getter setter
-	 * @param methodName the method name
-	 * @param otcCommandDto the otc command dto
+	 * @param methodName       the method name
+	 * @param otcCommandDto    the otc command dto
 	 * @return the method
 	 */
 	private static Method findMethod(GETTER_SETTER enumGetterSetter, String methodName, OtcCommandDto otcCommandDto) {
@@ -190,10 +194,10 @@ public class OtcReflectionUtil {
 	/**
 	 * Find helper method name.
 	 *
-	 * @param factoryHelper the factory helper
+	 * @param factoryHelper    the factory helper
 	 * @param enumGetterSetter the enum getter setter
-	 * @param otcCommandDto the otc command dto
-	 * @param fieldType the field type
+	 * @param otcCommandDto    the otc command dto
+	 * @param fieldType        the field type
 	 * @return the string
 	 */
 	public static String findHelperMethodName(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter,
@@ -205,17 +209,17 @@ public class OtcReflectionUtil {
 		}
 		return methodName;
 	}
-	
+
 	/**
 	 * Find factory helper method.
 	 *
-	 * @param factoryHelper the factory helper
+	 * @param factoryHelper    the factory helper
 	 * @param enumGetterSetter the enum getter setter
-	 * @param otcCommandDto the otc command dto
-	 * @param fieldType the field type
+	 * @param otcCommandDto    the otc command dto
+	 * @param fieldType        the field type
 	 * @return the method
 	 */
-	public static Method findFactoryHelperMethod(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter, 
+	public static Method findFactoryHelperMethod(Class<?> factoryHelper, GETTER_SETTER enumGetterSetter,
 			OtcCommandDto otcCommandDto, Class<?> fieldType) {
 		if (factoryHelper == null) {
 			throw new OtcException("", "Helper class cannot be null to invoke this method!");
@@ -242,14 +246,14 @@ public class OtcReflectionUtil {
 	/**
 	 * Find method.
 	 *
-	 * @param clz the clz
-	 * @param methodName the method name
+	 * @param clz           the clz
+	 * @param methodName    the method name
 	 * @param otcCommandDto the otc command dto
-	 * @param paramTypes the param types
+	 * @param paramTypes    the param types
 	 * @return the method
-	 * @throws SecurityException the security exception
 	 */
-	private static Method findMethod(Class<?> clz, String methodName, OtcCommandDto otcCommandDto, Class<?>... paramTypes) {
+	private static Method findMethod(Class<?> clz, String methodName, OtcCommandDto otcCommandDto,
+			Class<?>... paramTypes) {
 		Method method = null;
 		try {
 			method = clz.getMethod(methodName, paramTypes);
@@ -260,7 +264,17 @@ public class OtcReflectionUtil {
 		return method;
 	}
 
-	private static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes, OtcCommandDto otcCommandDto) {
+	/**
+	 * Creates the method not found message.
+	 *
+	 * @param clz           the clz
+	 * @param methodName    the method name
+	 * @param paramTypes    the param types
+	 * @param otcCommandDto the otc command dto
+	 * @return the string
+	 */
+	private static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes,
+			OtcCommandDto otcCommandDto) {
 		StringBuilder paramsBuilder = null;
 		if (paramTypes != null && paramTypes.length > 0) {
 			for (Class<?> paramType : paramTypes) {
@@ -274,16 +288,17 @@ public class OtcReflectionUtil {
 		} else {
 			paramsBuilder = new StringBuilder("()");
 		}
-		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString() +
-				" not found for tokenpath : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) " + 
-				otcCommandDto.occursInCommands;
+		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString()
+				+ " not found for tokenpath : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) "
+				+ otcCommandDto.occursInCommands;
 		return msg;
 	}
+
 	/**
 	 * Find field.
 	 *
 	 * @param clazz the clazz
-	 * @param name the name
+	 * @param name  the name
 	 * @return the field
 	 */
 	public static Field findField(Class<?> clazz, String name) {
@@ -294,8 +309,8 @@ public class OtcReflectionUtil {
 	 * Find field.
 	 *
 	 * @param clazz the clazz
-	 * @param name the name
-	 * @param type the type
+	 * @param name  the name
+	 * @param type  the type
 	 * @return the field
 	 */
 	public static Field findField(Class<?> clazz, String name, Class<?> type) {

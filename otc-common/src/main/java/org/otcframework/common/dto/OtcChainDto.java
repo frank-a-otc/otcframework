@@ -24,33 +24,33 @@ package org.otcframework.common.dto;
 
 import java.util.Arrays;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcChainDto.
  */
+// TODO: Auto-generated Javadoc
 public final class OtcChainDto {
 
 	/** The otc chain. */
 	public String otcChain;
-	
+
 	/** The collection count. */
 	public int collectionCount;
-	
+
 	/** The dictionary count. */
 	public int dictionaryCount;
-	
+
 	/** The raw otc tokens. */
 	public String[] rawOtcTokens;
-	
+
 	/** The otc tokens. */
 	public String[] otcTokens;
 
 	/**
 	 * Instantiates a new otc chain dto.
 	 */
-	public OtcChainDto() {	
+	public OtcChainDto() {
 	}
-	
+
 	/**
 	 * Instantiates a new otc chain dto.
 	 *
@@ -136,19 +136,19 @@ public final class OtcChainDto {
 	 * The Class Builder.
 	 */
 	public static class Builder {
-		
+
 		/** The otc chain. */
 		private String otcChain;
-		
+
 		/** The collection count. */
 		private int collectionCount;
-		
+
 		/** The dictionary count. */
 		private int dictionaryCount;
-		
+
 		/** The raw otc tokens. */
 		public String[] rawOtcTokens;
-		
+
 		/** The otc tokens. */
 		private String[] otcTokens;
 

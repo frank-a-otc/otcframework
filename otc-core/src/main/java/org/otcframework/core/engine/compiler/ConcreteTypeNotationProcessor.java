@@ -35,10 +35,10 @@ import org.otcframework.core.engine.compiler.exception.SyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConcreteTypeNotationProcessor.
  */
+// TODO: Auto-generated Javadoc
 final class ConcreteTypeNotationProcessor {
 
 	/** The Constant LOGGER. */
@@ -47,12 +47,8 @@ final class ConcreteTypeNotationProcessor {
 	/**
 	 * Process.
 	 *
-	 * @param script the script
+	 * @param script        the script
 	 * @param otcCommandDto the otc command dto
-	 * @param rawOtcToken the raw otc token
-	 * @param otcChain the otc chain
-	 * @param isMapNotation the is map notation
-	 * @param idxArrNotation the idx arr notation
 	 * @return true, if successful
 	 */
 	public static boolean process(ScriptDto script, OtcCommandDto otcCommandDto) {
@@ -64,13 +60,13 @@ final class ConcreteTypeNotationProcessor {
 		String otcChain = null;
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
-			otcChain = copy.to.otcChain;
+			otcChain = copy.to.objectPath;
 			if (copy != null && copy.to != null && copy.to.overrides != null) {
 				overrides = copy.to.overrides;
 			}
 		} else {
 			Execute execute = (Execute) script.command;
-			otcChain = execute.target.otcChain;
+			otcChain = execute.target.objectPath;
 			if (execute != null && execute.target != null && execute.target.overrides != null) {
 				overrides = execute.target.overrides;
 			}
@@ -82,16 +78,16 @@ final class ConcreteTypeNotationProcessor {
 		for (TargetDto.Override override : overrides) {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
-				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId + 
-						".  'overrides.tokenPath: ' is missing.");
+				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
+						+ ".  'overrides.tokenPath: ' is missing.");
 			}
 			if (tokenPath.contains(OtcConstants.ANCHOR)) {
-				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId + 
-						".  Anchor not allowed in 'overrides.tokenPath: '" + tokenPath + "'");
+				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
+						+ ".  Anchor not allowed in 'overrides.tokenPath: '" + tokenPath + "'");
 			}
 			if (!otcChain.startsWith(tokenPath)) {
-				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath + 
-						"' in target's overrides section in command : " + commandId);
+				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath
+						+ "' in target's overrides section in command : " + commandId);
 			}
 			if (!otcCommandDto.tokenPath.equals(tokenPath)) {
 				continue;
@@ -121,8 +117,10 @@ final class ConcreteTypeNotationProcessor {
 				}
 			}
 			if (isErr) {
-				LOGGER.warn("Oops... Error in OTC-Command-Id : {} - 'overrides.concreteType' already set earlier for : '{}" +
-						"' in one of these earlier commands : ", commandId, tokenPath, otcCommandDto.occursInCommands);
+				LOGGER.warn(
+						"Oops... Error in OTC-Command-Id : {} - 'overrides.concreteType' already set earlier for : '{}"
+								+ "' in one of these earlier commands : ",
+						commandId, tokenPath, otcCommandDto.occursInCommands);
 			}
 		}
 		return true;

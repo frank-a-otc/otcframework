@@ -24,10 +24,10 @@ package org.otcframework.common.engine;
 
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface OtcEngine.
  */
+// TODO: Auto-generated Javadoc
 public interface OtcEngine {
 
 	/**
@@ -48,11 +48,11 @@ public interface OtcEngine {
 	/**
 	 * Execute otc.
 	 *
-	 * @param <T> the generic type
-	 * @param <S> the generic type
+	 * @param <T>          the generic type
+	 * @param <S>          the generic type
 	 * @param otcNamespace the otc namespace
-	 * @param targetClz the target clz
-	 * @param data the data
+	 * @param targetClz    the target clz
+	 * @param data         the data
 	 * @return the t
 	 */
 	<T, S> T executeOtc(String otcNamespace, Class<T> targetClz, Map<String, Object> data);
@@ -60,14 +60,13 @@ public interface OtcEngine {
 	/**
 	 * Execute otc.
 	 *
-	 * @param <T> the generic type
-	 * @param <S> the generic type
+	 * @param <T>          the generic type
+	 * @param <S>          the generic type
 	 * @param otcNamespace the otc namespace
-	 * @param source the source
-	 * @param targetClz the target clz
-	 * @param data the data
+	 * @param source       the source
+	 * @param targetClz    the target clz
+	 * @param data         the data
 	 * @return the t
 	 */
 	<T, S> T executeOtc(String otcNamespace, S source, Class<T> targetClz, Map<String, Object> data);
-
 }

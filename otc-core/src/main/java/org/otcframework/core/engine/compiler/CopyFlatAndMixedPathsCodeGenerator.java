@@ -31,10 +31,10 @@ import org.otcframework.core.engine.compiler.command.OtcCommand;
 import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CopyFlatAndMixedPathsCodeGenerator.
  */
+// TODO: Auto-generated Javadoc
 final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**
@@ -46,15 +46,12 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 		OtcCommand otcCommand = executionContext.otcCommand;
 		Class<?> targetClz = executionContext.targetClz;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
-		Class<?> sourceClz = executionContext.sourceClz; 
+		Class<?> sourceClz = executionContext.sourceClz;
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
-
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
-
 		OtcCommandDto targetOCD = null;
 		TargetOtcCommandContext clonedTargetOCC = null;
 		targetOCC.algorithmId = ALGORITHM_ID.FLAT;
-
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
@@ -71,11 +68,11 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 		boolean createNewVarName = false;
 		while (true) {
 			if (sourceOCC.hasDescendantCollectionOrMap() || sourceOCD.isCollectionOrMap()) {
-				otcCommand.appendRetrieveNextSourceCollectionOrMapParent(clonedTargetOCC, sourceOCC, 0, createNewVarName,
-						LogLevel.WARN);
+				otcCommand.appendRetrieveNextSourceCollectionOrMapParent(clonedTargetOCC, sourceOCC, 0,
+						createNewVarName, LogLevel.WARN);
 				sourceOCD = sourceOCC.otcCommandDto;
 			} else {
-				otcCommand.appendIfNullSourceReturn(clonedTargetOCC, sourceOCC, 0, LogLevel.WARN); 
+				otcCommand.appendIfNullSourceReturn(clonedTargetOCC, sourceOCC, 0, LogLevel.WARN);
 			}
 			if (sourceOCC.isLeaf()) {
 				break;
@@ -131,7 +128,6 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 			otcCommand.appendGetSet(clonedTargetOCC, sourceOCC, false);
 		}
 		otcCommand.createJavaFile(clonedTargetOCC, targetClz, sourceClz);
-
 		return;
 	}
 }

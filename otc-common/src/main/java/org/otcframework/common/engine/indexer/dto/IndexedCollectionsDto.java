@@ -24,19 +24,18 @@ package org.otcframework.common.engine.indexer.dto;
 
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IndexedCollectionsDto.
  */
+// TODO: Auto-generated Javadoc
 public class IndexedCollectionsDto {
 
 	/** The id. */
 	public String id;
-	
-	/** The indexed object. */
+
+	/** The indexedd object. */
 	public Object indexeddObject;
-	
+
 	/** The children. */
 	public Map<String, IndexedCollectionsDto> children;
-
 }

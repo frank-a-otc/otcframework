@@ -31,69 +31,72 @@ import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 import org.otcframework.core.engine.compiler.exception.CodeGeneratorException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AddMapKeyTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class AddMapKeyTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new adds the map key template.
 	 */
-	private AddMapKeyTemplate() {}
+	private AddMapKeyTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCD        the source OCD
 	 * @param createNewVarName the create new var name
-	 * @param key the key
-	 * @param idx the idx
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param key              the key
+	 * @param idx              the idx
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto sourceOCD,
-			boolean createNewVarName, String key, Integer idx, Set<String> varNamesSet, Map<String, String> varNamesMap) {
+			boolean createNewVarName, String key, Integer idx, Set<String> varNamesSet,
+			Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, createNewVarName, key, idx, null, varNamesSet, varNamesMap);
 	}
-	
+
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCD        the source OCD
 	 * @param createNewVarName the create new var name
-	 * @param idxVar the idx var
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param idxVar           the idx var
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto sourceOCD, 
+	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto sourceOCD,
 			boolean createNewVarName, String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		return generateCode(targetOCC, sourceOCD, createNewVarName, null, null, idxVar, varNamesSet, varNamesMap);
 	}
-	
+
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCD the source OCD
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCD        the source OCD
 	 * @param createNewVarName the create new var name
-	 * @param key the key
-	 * @param idx the idx
-	 * @param idxVar the idx var
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param key              the key
+	 * @param idx              the idx
+	 * @param idxVar           the idx var
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
-	private static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto sourceOCD, 
-			boolean createNewVarName, String key, Integer idx, String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
+	private static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto sourceOCD,
+			boolean createNewVarName, String key, Integer idx, String idxVar, Set<String> varNamesSet,
+			Map<String, String> varNamesMap) {
 		OtcCommandDto keyOCD = targetOCC.otcCommandDto;
 		if (!keyOCD.isMapKey()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId + 
-					". Command Object is not of Map-key type.");
+			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+					+ ". Command Object is not of Map-key type.");
 		}
 		String keyType = fetchFieldTypeName(targetOCC, null, keyOCD, createNewVarName, varNamesMap);
 		String keyOrVar = fetchValueOrVar(targetOCC, sourceOCD, key, createNewVarName, varNamesSet, varNamesMap);
@@ -104,22 +107,22 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		String createNullVarCode = String.format(createInitVarTemplate, keyType, keyVarName, null);
 		keyType = "";
 		StringBuilder codeSectionBuilder = new StringBuilder(createNullVarCode);
-		
 		OtcCommandDto valueOCD = parentOCD.children.get(OtcConstants.MAP_VALUE_REF + parentOCD.fieldName);
 		String valueType = fetchFieldTypeName(targetOCC, null, valueOCD, createNewVarName, varNamesMap);
 		String valueVarName = createVarName(valueOCD, createNewVarName, varNamesSet, varNamesMap);
 		createNullVarCode = String.format(createInitVarTemplate, valueType, valueVarName, null);
 		codeSectionBuilder.append(createNullVarCode);
 		String ifMapContainsKeyCode = null;
-		if (targetOCC.isLeaf()) { 
+		if (targetOCC.isLeaf()) {
 			ifMapContainsKeyCode = String.format(ifNotContainsMapKeyTemplate, mapVarName, keyOrVar);
 		} else {
 			if (idxVar != null || idx != null) {
 				String icdId = createIcdKey(keyOCD, idxVar, idx);
 				ifMapContainsKeyCode = String.format(ifNullMapKeyICDTemplate, icdId);
-				String retrieveMapKeyFromICDCode = String.format(retrieveMapKeyFromIcdTemplate, "", keyVarName, 
+				String retrieveMapKeyFromICDCode = String.format(retrieveMapKeyFromIcdTemplate, "", keyVarName,
 						keyConcreteType);
-				ifMapContainsKeyCode = ifMapContainsKeyCode.replace(CODE_TO_ADD_ELSE_MAPENTRY, retrieveMapKeyFromICDCode);
+				ifMapContainsKeyCode = ifMapContainsKeyCode.replace(CODE_TO_ADD_ELSE_MAPENTRY,
+						retrieveMapKeyFromICDCode);
 			} else {
 				ifMapContainsKeyCode = CODE_TO_ADD_MAPENTRY;
 			}
@@ -127,7 +130,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (idxVar == null && idx != null) {
 			idxVar = String.valueOf(idx);
 		}
-		String addMapEntryCode = String.format(addMapEntryTemplate, mapVarName, keyVarName, valueVarName, keyVarName, 
+		String addMapEntryCode = String.format(addMapEntryTemplate, mapVarName, keyVarName, valueVarName, keyVarName,
 				idxVar, valueVarName, idxVar);
 		String createInstanceCode = null;
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
@@ -149,7 +152,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 				String valueConcreteType = fetchConcreteTypeName(targetOCC, valueOCD);
 				createInstanceCode = String.format(createInstanceTemplate, "", valueVarName, valueConcreteType);
 				addMapEntryCode = addMapEntryCode.replace(CODE_TO_CREATE_MAPVALUE, createInstanceCode);
-			}			
+			}
 		} else {
 			addMapEntryCode = addMapEntryCode.replace(CODE_TO_CREATE_MAPVALUE, "");
 		}
@@ -162,36 +165,34 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		}
 		return codeSectionBuilder.toString();
 	}
-	
+
 	/**
 	 * Generate post loop code.
 	 *
-	 * @param targetOCC the target OCC
+	 * @param targetOCC        the target OCC
 	 * @param createNewVarName the create new var name
-	 * @param idx the idx
-	 * @param idxVar the idx var
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param idx              the idx
+	 * @param idxVar           the idx var
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generatePostLoopCode(TargetOtcCommandContext targetOCC, boolean createNewVarName, Integer idx,
 			String idxVar, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtcCommandDto keyOCD = targetOCC.otcCommandDto;
 		if (!keyOCD.isMapKey()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId + 
-					". Command Object is not of Map-key type.");
+			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+					+ ". Command Object is not of Map-key type.");
 		}
 		String keyType = fetchFieldTypeName(targetOCC, null, keyOCD, createNewVarName, varNamesMap);
 		OtcCommandDto parentOCD = keyOCD.parent;
 		String mapVarName = createVarName(parentOCD, createNewVarName, varNamesSet, varNamesMap);
 		String keyConcreteType = fetchConcreteTypeName(targetOCC, keyOCD);
 		String keyVarName = createVarName(keyOCD, createNewVarName, varNamesSet, varNamesMap);
-
 		OtcCommandDto valueOCD = parentOCD.children.get(OtcConstants.MAP_VALUE_REF + parentOCD.fieldName);
 		String valueType = fetchFieldTypeName(targetOCC, null, valueOCD, createNewVarName, varNamesMap);
 		String valueVarName = createVarName(valueOCD, createNewVarName, varNamesSet, varNamesMap);
 		String valueConcreteType = fetchConcreteTypeName(targetOCC, valueOCD);
-
 		String icd = "parentICD" + idx;
 		if (!targetOCC.hasAncestralCollectionOrMap()) {
 			icd = "parentTargetICD";
@@ -199,13 +200,13 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		String keyPcdId = createIcdKey(keyOCD, idxVar, null);
 		String valuePcdId = createIcdKey(valueOCD, idxVar, null);
 		String postTargetLoopMapKeyCode = String.format(postTargetLoopMapKeyTemplate, idx, icd, keyPcdId, keyType,
-				keyVarName, idx, mapVarName, keyVarName, valueVarName, idx, icd, keyVarName, keyPcdId, icd, valueVarName,
-				valuePcdId, keyVarName, keyConcreteType, idx);
+				keyVarName, idx, mapVarName, keyVarName, valueVarName, idx, icd, keyVarName, keyPcdId, icd,
+				valueVarName, valuePcdId, keyVarName, keyConcreteType, idx);
 		String mapKeyCode = null;
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
 			mapKeyCode = String.format(createInstanceTemplate, "", keyVarName, keyConcreteType);
 		} else {
-			//TODO - seems there is a mistake in this below line.
+			// TODO - seems there is a mistake in this below line.
 			mapKeyCode = String.format(createInstanceTemplate.replace("new %s()", keyVarName), "", keyVarName,
 					keyConcreteType);
 		}

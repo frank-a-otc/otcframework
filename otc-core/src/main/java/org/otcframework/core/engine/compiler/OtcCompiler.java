@@ -1,5 +1,4 @@
 /**
-/**
 * Copyright (c) otcframework.org
 *
 * @author  Franklin Abel
@@ -27,11 +26,10 @@ import java.util.List;
 
 import org.otcframework.common.engine.compiler.CompilationReport;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Interface OtcCompiler.
  */
+// TODO: Auto-generated Javadoc
 public interface OtcCompiler {
 
 	/**

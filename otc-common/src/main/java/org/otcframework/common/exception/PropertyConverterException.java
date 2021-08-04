@@ -22,10 +22,10 @@
 */
 package org.otcframework.common.exception;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PropertyConverterException.
  */
+// TODO: Auto-generated Javadoc
 public class PropertyConverterException extends OtcException {
 
 	/** The Constant serialVersionUID. */
@@ -44,7 +44,7 @@ public class PropertyConverterException extends OtcException {
 	 * Instantiates a new property converter exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
+	 * @param msg       the msg
 	 */
 	public PropertyConverterException(String errorCode, String msg) {
 		super(errorCode, msg);
@@ -63,7 +63,7 @@ public class PropertyConverterException extends OtcException {
 	 * Instantiates a new property converter exception.
 	 *
 	 * @param errorCode the error code
-	 * @param cause the cause
+	 * @param cause     the cause
 	 */
 	public PropertyConverterException(String errorCode, Throwable cause) {
 		super(errorCode, cause);
@@ -73,8 +73,8 @@ public class PropertyConverterException extends OtcException {
 	 * Instantiates a new property converter exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
-	 * @param cause the cause
+	 * @param msg       the msg
+	 * @param cause     the cause
 	 */
 	public PropertyConverterException(String errorCode, String msg, Throwable cause) {
 		super(errorCode, msg, cause);

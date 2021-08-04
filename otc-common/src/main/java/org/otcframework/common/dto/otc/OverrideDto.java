@@ -22,18 +22,18 @@
 */
 package org.otcframework.common.dto.otc;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class OtcFileDto.
+ * The Class OverrideDto.
  */
+// TODO: Auto-generated Javadoc
 public class OverrideDto {
 
 	/** The token path. */
 	public String tokenPath;
-	
+
 	/** The getter. */
 	public String getter;
-	
+
 	/** The getter helper. */
 	public String getterHelper;
 }

@@ -31,26 +31,27 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IfNullCreateAndSetTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new if null create and set template.
 	 */
-	private IfNullCreateAndSetTemplate() {}
+	private IfNullCreateAndSetTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param value the value
-	 * @param arraySize the array size
+	 * @param targetOCC        the target OCC
+	 * @param value            the value
+	 * @param arraySize        the array size
 	 * @param createNewVarName the create new var name
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, String value, Integer arraySize,
@@ -61,9 +62,9 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 		if (targetOCD.isArray()) {
 			if (TARGET_SOURCE.TARGET == targetOCD.enumTargetSource) {
 				if (arraySize != null) {
-					concreteType = concreteType.replace("[]","[" + arraySize + "]");
+					concreteType = concreteType.replace("[]", "[" + arraySize + "]");
 				} else {
-					concreteType = concreteType.replace("[]","[" + 1 + "]");
+					concreteType = concreteType.replace("[]", "[" + 1 + "]");
 				}
 			}
 		}
@@ -83,11 +84,11 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 			} else {
 				if (targetOCD.isEnum()) {
 					value = createConvertExpression(targetOCD, value);
-					ifNullSetterCode = String.format(ifNullEnumCreateAndSetTemplate, varName, varName, concreteType, value,
-							parentVarName, setter, varName);
+					ifNullSetterCode = String.format(ifNullEnumCreateAndSetTemplate, varName, varName, concreteType,
+							value, parentVarName, setter, varName);
 				} else {
-					ifNullSetterCode = String.format(ifNullCreateAndSetTemplate, varName, varName, concreteType, parentVarName,
-						setter, varName);
+					ifNullSetterCode = String.format(ifNullCreateAndSetTemplate, varName, varName, concreteType,
+							parentVarName, setter, varName);
 				}
 			}
 			if (targetOCD.isArray()) {
@@ -96,5 +97,4 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 		}
 		return ifNullSetterCode;
 	}
-
 }

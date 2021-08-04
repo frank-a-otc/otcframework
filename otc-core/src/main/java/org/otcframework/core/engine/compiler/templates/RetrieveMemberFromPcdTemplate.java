@@ -29,25 +29,26 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RetrieveMemberFromPcdTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new retrieve member from pcd template.
 	 */
-	private RetrieveMemberFromPcdTemplate() {}
+	private RetrieveMemberFromPcdTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
+	 * @param targetOCC        the target OCC
 	 * @param createNewVarName the create new var name
-	 * @param icd the icd
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param icd              the icd
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, boolean createNewVarName, String icd,
@@ -56,7 +57,6 @@ public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 		String memberType = fetchFieldTypeName(targetOCC, null, memberOCD, createNewVarName, varNamesMap);
 		String varName = createVarName(memberOCD, createNewVarName, varNamesSet, varNamesMap);
 		String typecastType = fetchSanitizedTypeName(targetOCC, memberOCD);
-		
 		String retrieveTargetObjectFromPcdCode = String.format(retrieveMemberFromIcdTemplate, memberType, varName,
 				typecastType, icd);
 		return retrieveTargetObjectFromPcdCode;
@@ -65,14 +65,14 @@ public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCC the source OCC
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCC        the source OCC
 	 * @param createNewVarName the create new var name
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC, 
+	public static String generateCode(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtcCommandDto memberOCD = sourceOCC.otcCommandDto;
 		String memberType = fetchFieldTypeName(targetOCC, sourceOCC, memberOCD, createNewVarName, varNamesMap);

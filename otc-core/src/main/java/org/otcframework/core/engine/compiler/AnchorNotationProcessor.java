@@ -27,29 +27,30 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.engine.compiler.OtcCommandContext;
 import org.otcframework.core.engine.compiler.exception.SyntaxException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AnchorNotationProcessor.
  */
+// TODO: Auto-generated Javadoc
 final class AnchorNotationProcessor {
 
 	/**
 	 * Process.
 	 *
-	 * @param scriptId the script id
+	 * @param scriptId      the script id
 	 * @param otcCommandDto the otc command dto
-	 * @param otcToken the otc token
-	 * @param otcChain the otc chain
-	 * @param otcTokens the otc tokens
+	 * @param otcToken      the otc token
+	 * @param otcChain      the otc chain
+	 * @param otcTokens     the otc tokens
 	 * @return true, if successful
 	 */
-	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken,
-			String otcChain, String[] otcTokens) {
+	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken, String otcChain,
+			String[] otcTokens) {
 		int idxAnchor = otcToken.indexOf(OtcConstants.ANCHOR);
 		boolean isAnchored = false;
 		if (idxAnchor > 0) {
-			if (!otcToken.contains(OtcConstants.PRE_ANCHOR) && !otcToken.contains(OtcConstants.POST_ANCHOR) &&
-					!otcToken.contains(OtcConstants.MAP_PRE_ANCHOR) && !otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
+			if (!otcToken.contains(OtcConstants.PRE_ANCHOR) && !otcToken.contains(OtcConstants.POST_ANCHOR)
+					&& !otcToken.contains(OtcConstants.MAP_PRE_ANCHOR)
+					&& !otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
 				throw new SyntaxException("",
 						"Oops... Syntax error in OTC-command : " + scriptId + ". OTC-token didn't pass Syntax-Checker "
 								+ "- misplaced anchors found outside Collection/Map notation '[' and ']' boundaries.");
@@ -59,12 +60,11 @@ final class AnchorNotationProcessor {
 			otcCommandContext.rawOtcTokens = otcTokens;
 			boolean hasAnchoredDescendants = otcCommandContext.hasAnchoredDescendant();
 			if (hasAnchoredDescendants) {
-				throw new SyntaxException("", "Oops... Syntax error in OTC-command : " + scriptId + 
-						". OTC-token didn't pass Syntax-Checker! " + "Atmost only one anchor only can be defined.");
+				throw new SyntaxException("", "Oops... Syntax error in OTC-command : " + scriptId
+						+ ". OTC-token didn't pass Syntax-Checker! " + "Atmost only one anchor only can be defined.");
 			}
 			isAnchored = true;
 		}
 		return isAnchored;
 	}
-
 }

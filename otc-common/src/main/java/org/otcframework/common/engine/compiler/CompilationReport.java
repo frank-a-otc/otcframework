@@ -24,27 +24,27 @@ package org.otcframework.common.engine.compiler;
 
 import org.otcframework.common.dto.OtcDto;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CompilationReport.
  */
+// TODO: Auto-generated Javadoc
 public final class CompilationReport {
 
 	/** The otc namespace. */
 	public String otcNamespace;
-	
+
 	/** The otc file name. */
 	public String otcFileName;
-	
+
 	/** The message. */
 	public String message;
-	
+
 	/** The did succeed. */
 	public boolean didSucceed;
-	
+
 	/** The cause. */
 	public Throwable cause;
-	
+
 	/** The otc dto. */
 	public OtcDto otcDto;
 
@@ -78,8 +78,8 @@ public final class CompilationReport {
 	 */
 	@Override
 	public String toString() {
-		return "CompilationReport [otcPackage=" + otcNamespace + ", otcFileName=" + otcFileName + ", message="
-				+ message + ", didSucceed=" + didSucceed + ", cause=" + cause + "]";
+		return "CompilationReport [otcPackage=" + otcNamespace + ", otcFileName=" + otcFileName + ", message=" + message
+				+ ", didSucceed=" + didSucceed + ", cause=" + cause + "]";
 	}
 
 	/**
@@ -143,22 +143,22 @@ public final class CompilationReport {
 	 * The Class Builder.
 	 */
 	public static class Builder {
-		
+
 		/** The otc namespace. */
 		private String otcNamespace;
-		
+
 		/** The otc file name. */
 		private String otcFileName;
-		
+
 		/** The message. */
 		private String message;
-		
+
 		/** The did succeed. */
 		private boolean didSucceed;
-		
+
 		/** The cause. */
 		private Throwable cause;
-		
+
 		/** The otc dto. */
 		private OtcDto otcDto;
 
@@ -237,5 +237,4 @@ public final class CompilationReport {
 			return new CompilationReport(this);
 		}
 	}
-
 }

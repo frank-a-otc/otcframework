@@ -27,39 +27,39 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.ScriptDto;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcCommandContext.
  */
-public class OtcCommandContext { 
-	
-	/** The script id. */
+// TODO: Auto-generated Javadoc
+public class OtcCommandContext {
+
+	/** The command id. */
 	public String commandId;
-	
+
 	/** The script dto. */
 	public ScriptDto scriptDto;
-	
+
 	/** The otc chain. */
 	public String otcChain;
-	
+
 	/** The otc tokens. */
 	public String[] otcTokens;
-	
+
 	/** The raw otc tokens. */
 	public String[] rawOtcTokens;
-	
+
 	/** The otc command dto. */
 	public OtcCommandDto otcCommandDto;
-	
+
 	/** The indexed collections dto. */
 	public IndexedCollectionsDto indexedCollectionsDto;
-		
+
 	/** The collections count. */
 	public int collectionsCount = 0;
 
 	/** The current collection token index. */
 	public int currentCollectionTokenIndex = 0;
-	
+
 	/**
 	 * Clone.
 	 *
@@ -72,7 +72,7 @@ public class OtcCommandContext {
 		otcCommandContext.rawOtcTokens = rawOtcTokens;
 		otcCommandContext.otcTokens = otcTokens;
 		otcCommandContext.otcCommandDto = otcCommandDto;
-		otcCommandContext.indexedCollectionsDto = indexedCollectionsDto;		
+		otcCommandContext.indexedCollectionsDto = indexedCollectionsDto;
 		return otcCommandContext;
 	}
 
@@ -107,8 +107,8 @@ public class OtcCommandContext {
 	 */
 	public boolean isLeaf() {
 		if (otcCommandDto.otcTokenIndex >= otcTokens.length - 1) {
-			if (otcCommandDto.collectionDescriptor.isNormal() || otcCommandDto.collectionDescriptor.isMapKey() || 
-					otcCommandDto.collectionDescriptor.isMapValue()
+			if (otcCommandDto.collectionDescriptor.isNormal() || otcCommandDto.collectionDescriptor.isMapKey()
+					|| otcCommandDto.collectionDescriptor.isMapValue()
 					|| otcCommandDto.collectionDescriptor.isCollectionMember()) {
 				return true;
 			}
@@ -165,7 +165,7 @@ public class OtcCommandContext {
 		}
 		return (otcTokens.length > otcCommandDto.otcTokenIndex + 1);
 	}
-	
+
 	/**
 	 * Checks for map value descendant.
 	 *
@@ -217,9 +217,9 @@ public class OtcCommandContext {
 	}
 
 	/**
-	 * Checks if is anchored.
+	 * Checks if is current token anchored.
 	 *
-	 * @return true, if is anchored
+	 * @return true, if is current token anchored
 	 */
 	public boolean isCurrentTokenAnchored() {
 		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
@@ -271,5 +271,4 @@ public class OtcCommandContext {
 		}
 		return descendantsCollectionsCount;
 	}
-
 }

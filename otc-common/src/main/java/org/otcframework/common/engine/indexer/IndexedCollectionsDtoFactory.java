@@ -28,19 +28,19 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.engine.compiler.OtcCommandContext;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating IndexedCollectionsDto objects.
  */
+// TODO: Auto-generated Javadoc
 public class IndexedCollectionsDtoFactory {
 
 	/**
 	 * Creates a new IndexedCollectionsDto object.
 	 *
 	 * @param otcCommandDto the otc command dto
-	 * @param hasChildren the has children
-	 * @param value the value
-	 * @param idxStr the idx str
+	 * @param hasChildren   the has children
+	 * @param value         the value
+	 * @param idxStr        the idx str
 	 * @return the indexed collections dto
 	 */
 	public static IndexedCollectionsDto createRoot(OtcCommandDto otcCommandDto, boolean hasChildren, Object value,
@@ -58,9 +58,9 @@ public class IndexedCollectionsDtoFactory {
 	 * Creates the.
 	 *
 	 * @param otcCommandContext the otc command context
-	 * @param parentPCD the parent PCD
-	 * @param value the value
-	 * @param idxStr the idx str
+	 * @param parentPCD         the parent PCD
+	 * @param value             the value
+	 * @param idxStr            the idx str
 	 * @return the indexed collections dto
 	 */
 	public static IndexedCollectionsDto create(OtcCommandContext otcCommandContext, IndexedCollectionsDto parentPCD,
@@ -77,9 +77,9 @@ public class IndexedCollectionsDtoFactory {
 	/**
 	 * Creates the.
 	 *
-	 * @param parentPCD the parent PCD
-	 * @param value the value
-	 * @param idxStr the idx str
+	 * @param parentPCD   the parent PCD
+	 * @param value       the value
+	 * @param idxStr      the idx str
 	 * @param hasChildren the has children
 	 * @return the indexed collections dto
 	 */

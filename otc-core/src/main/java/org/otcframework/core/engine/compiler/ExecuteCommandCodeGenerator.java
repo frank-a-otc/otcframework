@@ -35,10 +35,10 @@ import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 import org.otcframework.core.engine.compiler.exception.CodeGeneratorException;
 import org.otcframework.core.engine.compiler.templates.AbstractTemplate;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ExecuteCommandCodeGenerator.
  */
+// TODO: Auto-generated Javadoc
 final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**
@@ -50,7 +50,7 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		OtcCommand otcCommand = executionContext.otcCommand;
 		Class<?> targetClz = executionContext.targetClz;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
-		Class<?> sourceClz = executionContext.sourceClz; 
+		Class<?> sourceClz = executionContext.sourceClz;
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
 		OtcCommandDto targetOCD = null;
 		int idx = 0;
@@ -65,8 +65,8 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		int sourceCollectionCount = sourceOtcChainDto.collectionCount + sourceOtcChainDto.dictionaryCount;
 		int targetCollectionCount = targetOtcChainDto.collectionCount + targetOtcChainDto.dictionaryCount;
 		if (sourceCollectionCount > 0 && targetCollectionCount > 0) {
-			throw new CodeGeneratorException("", "Code Generation failure for OTC-command : " + scriptDto.command.id + 
-					". Extensions are not applicable when both target and source contain collections.");
+			throw new CodeGeneratorException("", "Code Generation failure for OTC-command : " + scriptDto.command.id
+					+ ". Extensions are not applicable when both target and source contain collections.");
 		}
 		otcCommand.clearCache();
 		if (((Execute) scriptDto.command).otcModule != null) {
@@ -79,7 +79,7 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 			if (sourceCollectionCount > 0) {
 				if (!sourceOCD.isCollectionOrMap()) {
 					sourceOCD = OtcCommand.retrieveNextCollectionOrMapOCD(sourceOCC);
-					sourceOCC.otcCommandDto = sourceOCD; 
+					sourceOCC.otcCommandDto = sourceOCD;
 				}
 				while (true) {
 					otcCommand.appendForLoop(targetOCC, sourceOCC, AbstractTemplate.SOURCE_IDX, false, LogLevel.WARN);
@@ -107,7 +107,7 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 					sourceOCC.otcCommandDto = sourceOCD;
 				}
 			}
-		} 
+		}
 		targetOCD = targetOCC.otcCommandDto;
 		if (!targetOCC.isLeaf()) {
 			if (targetCollectionCount > 0) {
@@ -142,18 +142,18 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		if (scriptDto.hasExecutionOrder) {
 			for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
 				if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(execOrd)) {
-					otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false); 
+					otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
 				} else {
-					otcCommand.appendExecuteModule(targetOCC, sourceOCC, false); 
+					otcCommand.appendExecuteModule(targetOCC, sourceOCC, false);
 				}
 			}
 		} else {
 			if (((Execute) scriptDto.command).otcConverter != null) {
-				otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false); 
-			} 
+				otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
+			}
 			if (((Execute) scriptDto.command).otcModule != null) {
-				otcCommand.appendExecuteModule(targetOCC, sourceOCC, false); 
-			} 
+				otcCommand.appendExecuteModule(targetOCC, sourceOCC, false);
+			}
 		}
 		int loopCounter = 0;
 		if (sourceCollectionCount > 0) {
@@ -167,7 +167,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 		}
 		otcCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-		return ;
+		return;
 	}
-
 }

@@ -24,12 +24,12 @@ package org.otcframework.core.engine.compiler.command;
 
 import org.otcframework.common.engine.compiler.OtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SourceOtcCommandContext.
  */
+// TODO: Auto-generated Javadoc
 public final class SourceOtcCommandContext extends OtcCommandContext {
-	
+
 	/**
 	 * Clone.
 	 *
@@ -42,10 +42,9 @@ public final class SourceOtcCommandContext extends OtcCommandContext {
 		sourceOtcCommandContext.rawOtcTokens = rawOtcTokens;
 		sourceOtcCommandContext.otcTokens = otcTokens;
 		sourceOtcCommandContext.otcCommandDto = otcCommandDto;
-		sourceOtcCommandContext.indexedCollectionsDto = indexedCollectionsDto;		
+		sourceOtcCommandContext.indexedCollectionsDto = indexedCollectionsDto;
 		sourceOtcCommandContext.collectionsCount = collectionsCount;
 		sourceOtcCommandContext.currentCollectionTokenIndex = currentCollectionTokenIndex;
 		return sourceOtcCommandContext;
 	}
-
 }

@@ -26,34 +26,34 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClassDto.
  */
+// TODO: Auto-generated Javadoc
 public class ClassDto {
 
 	/** The imports. */
-	private Map<String,String> imports = new HashMap<>();
-	
+	private Map<String, String> imports = new HashMap<>();
+
 	/** The package name. */
 	public String packageName;
-	
+
 	/** The class name. */
 	public String className;
-	
+
 	/** The code builder. */
 	public StringBuilder codeBuilder = new StringBuilder();
-	
+
 	/** The fully qualified class name. */
 	public String fullyQualifiedClassName;
-	
+
 	/**
 	 * Clear imports.
 	 */
 	public void clearImports() {
 		imports.clear();
 	}
-	
+
 	/**
 	 * Retrieve import fq names.
 	 *
@@ -96,5 +96,4 @@ public class ClassDto {
 			return typeName;
 		}
 	}
-
 }

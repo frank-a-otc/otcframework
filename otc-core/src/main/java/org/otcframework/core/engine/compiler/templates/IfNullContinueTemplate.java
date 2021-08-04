@@ -33,26 +33,27 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IfNullContinueTemplate.
  */
+// TODO: Auto-generated Javadoc
 public class IfNullContinueTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new if null continue template.
 	 */
-	private IfNullContinueTemplate() {}
+	private IfNullContinueTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCC the source OCC
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCC        the source OCC
 	 * @param createNewVarName the create new var name
-	 * @param logLevel the log level
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param logLevel         the log level
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
@@ -85,10 +86,10 @@ public class IfNullContinueTemplate extends AbstractTemplate {
 		}
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			ifNotNullParentChildGetterCode = String.format(helperGetIfNullContinueTemplate, fieldType, varName, 
-					helper, getter, parentVarName, varName, logLevel, logMsg);
+			ifNotNullParentChildGetterCode = String.format(helperGetIfNullContinueTemplate, fieldType, varName, helper,
+					getter, parentVarName, varName, logLevel, logMsg);
 		} else {
-			ifNotNullParentChildGetterCode = String.format(getterIfNullContinueTemplate, fieldType, varName, 
+			ifNotNullParentChildGetterCode = String.format(getterIfNullContinueTemplate, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
 		return ifNotNullParentChildGetterCode;

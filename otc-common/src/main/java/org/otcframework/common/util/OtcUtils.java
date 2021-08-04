@@ -38,10 +38,10 @@ import org.otcframework.common.exception.OtcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcUtils.
  */
+// TODO: Auto-generated Javadoc
 public class OtcUtils {
 
 	/** The Constant LOGGER. */
@@ -49,7 +49,7 @@ public class OtcUtils {
 
 	/** The clz loader. */
 	private static URLClassLoader clzLoader;
-	
+
 	/** The Constant otcLibLocation. */
 	private static final String otcLibLocation = OtcConfig.getOtcLibLocation();
 
@@ -72,8 +72,8 @@ public class OtcUtils {
 	 * Creates the deployment id.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param source the source
-	 * @param targetClz the target clz
+	 * @param source       the source
+	 * @param targetClz    the target clz
 	 * @return the string
 	 */
 	public static String createDeploymentId(String otcNamespace, Object source, Class<?> targetClz) {
@@ -83,25 +83,25 @@ public class OtcUtils {
 			return createDeploymentId(otcNamespace, source.getClass().getName(), targetClz.getName());
 		}
 	}
-	
+
 	/**
 	 * Creates the deployment id.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param sourceClz the source clz
-	 * @param targetClz the target clz
+	 * @param sourceClz    the source clz
+	 * @param targetClz    the target clz
 	 * @return the string
 	 */
 	public static String createDeploymentId(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
 		return createDeploymentId(otcNamespace, sourceClz.getName(), targetClz.getName());
 	}
-	
+
 	/**
 	 * Creates the deployment id.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param sourceClz the source clz
-	 * @param targetClz the target clz
+	 * @param sourceClz    the source clz
+	 * @param targetClz    the target clz
 	 * @return the string
 	 */
 	public static String createDeploymentId(String otcNamespace, String sourceClz, String targetClz) {
@@ -116,7 +116,7 @@ public class OtcUtils {
 		}
 		return deploymentId;
 	}
-	
+
 	/**
 	 * Sanitize otc.
 	 *
@@ -124,7 +124,7 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String sanitizeOtc(String otcChain) {
-		// this method is written this way to enable a future features implementations 
+		// this method is written this way to enable a future features implementations
 		// to support index and map-keys.
 		if (otcChain.contains(OtcConstants.ANCHOR)) {
 			otcChain = otcChain.replace(OtcConstants.ANCHOR, "");
@@ -156,7 +156,7 @@ public class OtcUtils {
 	/**
 	 * Retrieve leaf OCD.
 	 *
-	 * @param mapOCDs the map OC ds
+	 * @param mapOCDs     the map OC ds
 	 * @param rawOtcChain the raw otc chain
 	 * @return the otc command dto
 	 */
@@ -164,7 +164,6 @@ public class OtcUtils {
 		String[] rawOtcTokens = rawOtcChain.split("\\.");
 		String otcChain = OtcUtils.sanitizeOtc(rawOtcChain);
 		String[] otcTokens = otcChain.split("\\.");
-
 		OtcCommandDto otcCommandDto = retrieveNextOCD(mapOCDs, otcTokens[0]);
 		for (int idx = 1; idx < otcTokens.length; idx++) {
 			if (otcCommandDto.isCollectionOrMap()) {
@@ -188,7 +187,7 @@ public class OtcUtils {
 	 * Retrieve next OCD.
 	 *
 	 * @param mapOCDs the map OC ds
-	 * @param ocdKey the ocd key
+	 * @param ocdKey  the ocd key
 	 * @return the otc command dto
 	 */
 	private static OtcCommandDto retrieveNextOCD(Map<String, OtcCommandDto> mapOCDs, String ocdKey) {
@@ -200,17 +199,18 @@ public class OtcUtils {
 		OtcCommandDto otcCommandDto = mapOCDs.get(ocdKey);
 		return otcCommandDto;
 	}
-	
+
 	/**
 	 * Creates the method not found message.
 	 *
-	 * @param clz the clz
-	 * @param methodName the method name
-	 * @param paramTypes the param types
+	 * @param clz           the clz
+	 * @param methodName    the method name
+	 * @param paramTypes    the param types
 	 * @param otcCommandDto the otc command dto
 	 * @return the string
 	 */
-	public static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes, OtcCommandDto otcCommandDto) {
+	public static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes,
+			OtcCommandDto otcCommandDto) {
 		StringBuilder paramsBuilder = null;
 		if (paramTypes != null && paramTypes.length > 0) {
 			for (Class<?> paramType : paramTypes) {
@@ -224,9 +224,9 @@ public class OtcUtils {
 		} else {
 			paramsBuilder = new StringBuilder("()");
 		}
-		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString() +
-				" not found for tokenpath : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) " + 
-				otcCommandDto.occursInCommands;
+		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString()
+				+ " not found for tokenpath : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) "
+				+ otcCommandDto.occursInCommands;
 		return msg;
 	}
 
@@ -242,11 +242,11 @@ public class OtcUtils {
 		String idxCharacter = otcToken.substring(idxCollectionNotation, idxEndCollectionNotation);
 		return idxCharacter;
 	}
-	
+
 	/**
 	 * Checks if is tokenpath leafparent.
 	 *
-	 * @param otcChain the otc chain
+	 * @param otcChain  the otc chain
 	 * @param tokenPath the token path
 	 * @return true, if is tokenpath leafparent
 	 */
@@ -260,7 +260,7 @@ public class OtcUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Load URL class loader.
 	 *
@@ -273,24 +273,24 @@ public class OtcUtils {
 		if (urls == null || urls.isEmpty()) {
 			return null;
 		}
-		URLClassLoader clzLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), 
-				ClassLoader.getSystemClassLoader()); 
+		URLClassLoader clzLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
+				ClassLoader.getSystemClassLoader());
 		return clzLoader;
 	}
 
 	/**
 	 * Creates the UR ls.
 	 *
-	 * @param directory the directory
+	 * @param directory  the directory
 	 * @param fileFilter the file filter
-	 * @param urls the urls
+	 * @param urls       the urls
 	 * @return the list
 	 */
 	public static List<URL> createURLs(File directory, FileFilter fileFilter, List<URL> urls) {
 		for (File file : directory.listFiles(fileFilter)) {
 			if (file.isDirectory()) {
 				if (urls == null) {
-					urls = createURLs(file, fileFilter, urls); 
+					urls = createURLs(file, fileFilter, urls);
 				} else {
 					urls.addAll(createURLs(file, fileFilter, urls));
 				}
@@ -298,7 +298,7 @@ public class OtcUtils {
 				try {
 					URL url = null;
 					if (file.getName().endsWith(".jar")) {
-						url = new URL("jar:file:" + file.getAbsolutePath() +"!/");
+						url = new URL("jar:file:" + file.getAbsolutePath() + "!/");
 					} else {
 						url = new URL("file:" + file.getAbsolutePath());
 					}

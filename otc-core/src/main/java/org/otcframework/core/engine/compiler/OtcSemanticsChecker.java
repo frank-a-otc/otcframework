@@ -42,24 +42,23 @@ import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.core.engine.compiler.exception.SemanticsException;
 import org.otcframework.core.engine.utils.OtcReflectionUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcSemanticsChecker.
  */
+// TODO: Auto-generated Javadoc
 final class OtcSemanticsChecker {
 
 	/**
 	 * Check semantics.
 	 *
-	 * @param factoryHelper the factory helper
-	 * @param script the script
-	 * @param clz the clz
-	 * @param otcChain the otc chain
+	 * @param script        the script
+	 * @param clz           the clz
+	 * @param otcChain      the otc chain
 	 * @param otcCommandDto the otc command dto
-	 * @param otcTokens the otc tokens
+	 * @param otcTokens     the otc tokens
 	 * @return true, if successful
 	 */
-	static boolean checkSemantics(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto, 
+	static boolean checkSemantics(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto,
 			String[] otcTokens) {
 		try {
 			checkNotations(script, clz, otcChain, otcCommandDto);
@@ -75,33 +74,36 @@ final class OtcSemanticsChecker {
 			if (ex instanceof OtcException) {
 				throw ex;
 			} else {
-				throw new SemanticsException("", "Oops... Semantics-Checker error in OTC-command : " + script.command.id +
-						(TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource ? " in from/source field '" :
-								" in to/target field '") + otcCommandDto.fieldName + "' not found.");
+				throw new SemanticsException("",
+						"Oops... Semantics-Checker error in OTC-command : " + script.command.id
+								+ (TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource ? " in from/source field '"
+										: " in to/target field '")
+								+ otcCommandDto.fieldName + "' not found.");
 			}
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Check notations.
 	 *
-	 * @param script the script
-	 * @param clz the clz
-	 * @param otcChain the otc chain
+	 * @param script        the script
+	 * @param clz           the clz
+	 * @param otcChain      the otc chain
 	 * @param otcCommandDto the otc command dto
 	 */
 	private static void checkNotations(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto) {
-
 		if (otcCommandDto.fieldName.equals(OtcConstants.ROOT)) {
 			otcCommandDto.declaringClass = clz;
 			return;
 		}
 		Field field = OtcReflectionUtil.findField(clz, otcCommandDto.fieldName);
 		if (field == null) {
-			throw new SemanticsException("", "Oops... Semantics-Checker error in OTC-command : " + script.command.id +
-					(TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource ? " in from/source field '" :
-						" in to/target field '") + otcCommandDto.fieldName + "' not found.");
+			throw new SemanticsException("",
+					"Oops... Semantics-Checker error in OTC-command : " + script.command.id
+							+ (TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource ? " in from/source field '"
+									: " in to/target field '")
+							+ otcCommandDto.fieldName + "' not found.");
 		}
 		Class<?> fieldType = field.getType();
 		otcCommandDto.field = field;
@@ -114,23 +116,23 @@ final class OtcSemanticsChecker {
 			Execute execute = (Execute) script.command;
 			if (execute.otcModule != null || execute.otcConverter != null) {
 				String typeName = otcCommandDto.fieldType.getName();
-				//TODO this seem to be right - may need correction
-				if (!PackagesFilterUtil.isFilteredPackage(typeName) && !otcCommandDto.hasCollectionNotation &&
-						!otcCommandDto.hasMapNotation) {
+				// TODO this seem to be right - may need correction
+				if (!PackagesFilterUtil.isFilteredPackage(typeName) && !otcCommandDto.hasCollectionNotation
+						&& !otcCommandDto.hasMapNotation) {
 					throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
 							+ execute.id + " - Type : '" + typeName + "' not included in filter found.");
 				}
 			}
 			targetOverrides = execute.target.overrides;
-			targetOtcChain = execute.target.otcChain;
+			targetOtcChain = execute.target.objectPath;
 			sourceOverrides = execute.source.overrides;
-			sourceOtcChain = execute.source.otcChain;
+			sourceOtcChain = execute.source.objectPath;
 		} else {
 			Copy copy = (Copy) script.command;
 			targetOverrides = copy.to.overrides;
-			targetOtcChain = copy.to.otcChain;
+			targetOtcChain = copy.to.objectPath;
 			sourceOverrides = copy.from.overrides;
-			sourceOtcChain = copy.from.otcChain;
+			sourceOtcChain = copy.from.objectPath;
 		}
 		if (targetOverrides != null && targetOtcChain == null) {
 			throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
@@ -145,8 +147,9 @@ final class OtcSemanticsChecker {
 			if (!isCollection) {
 				boolean isArray = fieldType.isArray();
 				if (!isArray) {
-					throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
-							+ script.command.id + ". Field is not a Collection/Array, but Collection-notation is found.");
+					throw new SemanticsException("",
+							"Oops... OTC-command didn't pass Semantics-Checker in Id : " + script.command.id
+									+ ". Field is not a Collection/Array, but Collection-notation is found.");
 				}
 			}
 		} else if (otcCommandDto.hasMapNotation) {

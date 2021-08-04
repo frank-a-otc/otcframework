@@ -29,63 +29,66 @@ import org.otcframework.common.dto.otc.OtcFileDto.Copy;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute;
 import org.otcframework.core.engine.compiler.exception.OtcExtensionsException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcExtensionsValidator.
  */
+// TODO: Auto-generated Javadoc
 final class OtcExtensionsValidator {
 
 	/**
 	 * Validate extensions.
 	 *
-	 * @param script the script
-	 * @param targetClz the target clz
+	 * @param script                   the script
+	 * @param targetClz                the target clz
 	 * @param builderTargetOtcChainDto the builder target otc chain dto
-	 * @param sourceClz the source clz
+	 * @param sourceClz                the source clz
 	 * @param builderSourceOtcChainDto the builder source otc chain dto
 	 * @return true, if successful
 	 */
-	static boolean validateExtensions(ScriptDto script, Class<?> targetClz, OtcChainDto.Builder builderTargetOtcChainDto,
-			Class<?> sourceClz, OtcChainDto.Builder builderSourceOtcChainDto) {
+	static boolean validateExtensions(ScriptDto script, Class<?> targetClz,
+			OtcChainDto.Builder builderTargetOtcChainDto, Class<?> sourceClz,
+			OtcChainDto.Builder builderSourceOtcChainDto) {
 		String targetOtcChain = null;
 		if (script.command instanceof Copy) {
-			targetOtcChain = ((Copy) script.command).to.otcChain;
+			targetOtcChain = ((Copy) script.command).to.objectPath;
 		} else {
-			targetOtcChain = ((Execute) script.command).target.otcChain;
+			targetOtcChain = ((Execute) script.command).target.objectPath;
 		}
 		if (script.command instanceof Execute && targetOtcChain.contains(OtcConstants.ANCHOR)) {
-			throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id +
-					". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
+			throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+					+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
 		}
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
-			if (copy.from != null && copy.from.values != null && copy.from.otcChain != null) {
-				throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " +
-						script.command.id + ". Both 'source: from: otcChain' and 'source: from: values' cannot co-exist.");
+			if (copy.from != null && copy.from.values != null && copy.from.objectPath != null) {
+				throw new OtcExtensionsException("",
+						"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+								+ ". Both 'source: from: otcChain' and 'source: from: values' cannot co-exist.");
 			}
 		} else if (script.command instanceof Execute) {
 			Execute execute = (Execute) script.command;
 			if (execute != null && execute.otcModule != null) {
-				String sourceOtcChain = execute.source.otcChain;
-				if (targetOtcChain.contains(OtcConstants.OPEN_BRACKET) && 
-						sourceOtcChain.contains(OtcConstants.OPEN_BRACKET)) {
-					throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + 
-						script.command.id + ". Extension cannot have Collection/Map notations on both target and source at "
-								+ "the same time 'executeOtcConverter' extension.");
+				String sourceOtcChain = execute.source.objectPath;
+				if (targetOtcChain.contains(OtcConstants.OPEN_BRACKET)
+						&& sourceOtcChain.contains(OtcConstants.OPEN_BRACKET)) {
+					throw new OtcExtensionsException("",
+							"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+									+ ". Extension cannot have Collection/Map notations on both target and source at "
+									+ "the same time 'executeOtcConverter' extension.");
 				}
 				if (execute.executionOrder != null) {
 					for (String exeOrd : execute.executionOrder) {
-						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && 
-								execute.otcConverter == null) {
-							throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " +
-								script.command.id + ". 'executeOtcConverter' defined in 'extensions: executionOrder' "
-								+ "but 'extensions: executeOtcConverter' is undefined.");
+						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.otcConverter == null) {
+							throw new OtcExtensionsException("",
+									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+											+ ". 'executeOtcConverter' defined in 'extensions: executionOrder' "
+											+ "but 'extensions: executeOtcConverter' is undefined.");
 						}
-						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && 
-								execute.otcModule == null) {
-							throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " +
-								script.command.id + ". 'executeOtcModule' defined in 'extensions: executionOrder' "
-								+ "but 'extensions: executeOtcModule' is undefined.");
+						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && execute.otcModule == null) {
+							throw new OtcExtensionsException("",
+									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+											+ ". 'executeOtcModule' defined in 'extensions: executionOrder' "
+											+ "but 'extensions: executeOtcModule' is undefined.");
 						}
 					}
 					script.hasExecutionOrder = true;

@@ -50,18 +50,18 @@ import org.otcframework.core.engine.compiler.templates.MethodEndTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcCodeGeneratorImpl.
  */
+// TODO: Auto-generated Javadoc
 final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements OtcCodeGenerator {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcCodeGeneratorImpl.class);
-	
+
 	/** The otc code generator. */
 	private static OtcCodeGenerator otcCodeGenerator = new OtcCodeGeneratorImpl();
-	
+
 	/** The Constant otcBinDir. */
 	private static final String otcBinDir = OtcConfig.getCompiledCodeLocation();
 
@@ -85,7 +85,6 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 	 * Generate sourcecode.
 	 *
 	 * @param otcDto the otc dto
-	 * @return the list
 	 */
 	@Override
 	public void generateSourcecode(OtcDto otcDto) {
@@ -103,7 +102,7 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 			} else {
 				file = new File(clzPackage);
 			}
-    		generateSourceCode(otcDto, otcFileDto, mainClassDto);
+			generateSourceCode(otcDto, otcFileDto, mainClassDto);
 		} catch (Exception e) {
 			if (!(e instanceof OtcException)) {
 				throw new CodeGeneratorException(e);
@@ -119,13 +118,11 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 	/**
 	 * Generate source code.
 	 *
-	 * @param otcDto the otc dto
-	 * @param otcFileDto the otc file dto
+	 * @param otcDto       the otc dto
+	 * @param otcFileDto   the otc file dto
 	 * @param mainClassDto the main class dto
-	 * @return the list
 	 */
-	private static void generateSourceCode(OtcDto otcDto, OtcFileDto otcFileDto, 
-			ClassDto mainClassDto) {
+	private static void generateSourceCode(OtcDto otcDto, OtcFileDto otcFileDto, ClassDto mainClassDto) {
 		Map<String, OtcCommandDto> sourceOCDStems = otcDto.sourceOCDStems;
 		Map<String, OtcCommandDto> targetOCDStems = otcDto.targetOCDStems;
 		Class<?> sourceClz = otcDto.sourceClz;
@@ -155,10 +152,10 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 		ExecutionContext executionContext = new ExecutionContext();
 		for (ScriptDto scriptDto : otcDto.scriptDtos) {
 			try {
-				if (scriptDto.command.debug) { 
+				if (scriptDto.command.debug) {
 					@SuppressWarnings("unused")
 					int dummy = 0;
-					// -- not guaranteed to be on first iteration - coz this may not be the 
+					// -- not guaranteed to be on first iteration - coz this may not be the
 					// --- first scriptDto in the group marked as debug
 				}
 				targetOCC.factoryClassDto.packageName = otcNamespace;
@@ -200,8 +197,9 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 						CopyFlatAndMixedPathsCodeGenerator.generateSourceCode(executionContext);
 					}
 				}
-				LOGGER.debug("Generated source-code '{}.java' for Command-Id : {} " +
-						scriptDto.command.factoryClassName, scriptDto.command.id);
+				LOGGER.debug(
+						"Generated source-code '{}.java' for Command-Id : {} " + scriptDto.command.factoryClassName,
+						scriptDto.command.id);
 			} catch (Exception ex) {
 				LOGGER.error("Error while compiling OTC-Command with Id : {}", scriptDto.command.id);
 				throw new CodeGeneratorException(ex);
@@ -217,5 +215,4 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 		otcCommand.createJavaFile(mainClassDto);
 		return;
 	}
-
 }

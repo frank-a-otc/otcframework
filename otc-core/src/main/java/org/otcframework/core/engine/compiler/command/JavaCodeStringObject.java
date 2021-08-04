@@ -32,19 +32,19 @@ import javax.tools.SimpleJavaFileObject;
 
 import org.otcframework.core.engine.compiler.exception.OtcCompilerException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class JavaCodeStringObject.
  */
+// TODO: Auto-generated Javadoc
 public final class JavaCodeStringObject extends SimpleJavaFileObject {
-	
+
 	/** The source. */
 	private final String source;
 
 	/**
 	 * Instantiates a new java code string object.
 	 *
-	 * @param name the name
+	 * @param name   the name
 	 * @param source the source
 	 */
 	public JavaCodeStringObject(String name, String source) {

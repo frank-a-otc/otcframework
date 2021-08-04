@@ -30,35 +30,33 @@ import java.util.Map;
 
 import org.otcframework.common.exception.PropertyConverterException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PropertyConverterUtil.
  */
+// TODO: Auto-generated Javadoc
 public class PropertyConverterUtil {
 
 	/** The Constant HEX_PREFIX. */
 	private static final String HEX_PREFIX = "0x";
-	
+
 	/** The Constant HEX_RADIX. */
 	private static final int HEX_RADIX = 16;
-	
+
 	/** The Constant BIN_PREFIX. */
 	private static final String BIN_PREFIX = "0b";
-	
+
 	/** The Constant BIN_RADIX. */
 	private static final int BIN_RADIX = 2;
-	
+
 	/** The Constant CONSTR_ARGS. */
 	private static final Class<?>[] CONSTR_ARGS = { String.class };
-	
 //	private static final char LIST_ESC_CHAR = '\\';
-/** The Constant wrapperTypes. */
+	/** The Constant wrapperTypes. */
 //	private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 	private static final Map<Class<?>, Class<?>> wrapperTypes = new IdentityHashMap<>(9);
-	
+
 	/** The Constant allTypes. */
 	private static final Map<Class<?>, Class<?>> allTypes;
-
 	static {
 		wrapperTypes.put(Boolean.class, boolean.class);
 		wrapperTypes.put(Byte.class, byte.class);
@@ -69,7 +67,6 @@ public class PropertyConverterUtil {
 		wrapperTypes.put(Long.class, long.class);
 		wrapperTypes.put(Short.class, short.class);
 		wrapperTypes.put(Void.class, void.class);
-		
 		allTypes = new IdentityHashMap<>(wrapperTypes);
 		allTypes.put(BigInteger.class, BigInteger.class);
 		allTypes.put(BigDecimal.class, BigDecimal.class);
@@ -95,7 +92,7 @@ public class PropertyConverterUtil {
 	 * To number.
 	 *
 	 * @param value the value
-	 * @param clz the clz
+	 * @param clz   the clz
 	 * @return the number
 	 */
 	static Number toNumber(Object value, Class<?> clz) {
@@ -145,62 +142,62 @@ public class PropertyConverterUtil {
 			return Boolean.TRUE;
 		}
 		switch (str.length()) {
-			case 1: {
-				char ch0 = str.charAt(0);
-				if ((ch0 == 'y' || ch0 == 'Y') || (ch0 == 't' || ch0 == 'T')) {
-					return Boolean.TRUE;
-				}
-				if ((ch0 == 'n' || ch0 == 'N') || (ch0 == 'f' || ch0 == 'F')) {
-					return Boolean.FALSE;
-				}
-				break;
+		case 1: {
+			char ch0 = str.charAt(0);
+			if ((ch0 == 'y' || ch0 == 'Y') || (ch0 == 't' || ch0 == 'T')) {
+				return Boolean.TRUE;
 			}
-			case 2: {
-				char ch0 = str.charAt(0);
-				char ch1 = str.charAt(1);
-				if ((ch0 == 'o' || ch0 == 'O') && (ch1 == 'n' || ch1 == 'N')) {
-					return Boolean.TRUE;
-				}
-				if ((ch0 == 'n' || ch0 == 'N') && (ch1 == 'o' || ch1 == 'O')) {
-					return Boolean.FALSE;
-				}
-				break;
+			if ((ch0 == 'n' || ch0 == 'N') || (ch0 == 'f' || ch0 == 'F')) {
+				return Boolean.FALSE;
 			}
-			case 3: {
-				char ch0 = str.charAt(0);
-				char ch1 = str.charAt(1);
-				char ch2 = str.charAt(2);
-				if ((ch0 == 'y' || ch0 == 'Y') && (ch1 == 'e' || ch1 == 'E') && (ch2 == 's' || ch2 == 'S')) {
-					return Boolean.TRUE;
-				}
-				if ((ch0 == 'o' || ch0 == 'O') && (ch1 == 'f' || ch1 == 'F') && (ch2 == 'f' || ch2 == 'F')) {
-					return Boolean.FALSE;
-				}
-				break;
+			break;
+		}
+		case 2: {
+			char ch0 = str.charAt(0);
+			char ch1 = str.charAt(1);
+			if ((ch0 == 'o' || ch0 == 'O') && (ch1 == 'n' || ch1 == 'N')) {
+				return Boolean.TRUE;
 			}
-			case 4: {
-				char ch0 = str.charAt(0);
-				char ch1 = str.charAt(1);
-				char ch2 = str.charAt(2);
-				char ch3 = str.charAt(3);
-				if ((ch0 == 't' || ch0 == 'T') && (ch1 == 'r' || ch1 == 'R') && (ch2 == 'u' || ch2 == 'U')
-						&& (ch3 == 'e' || ch3 == 'E')) {
-					return Boolean.TRUE;
-				}
-				break;
+			if ((ch0 == 'n' || ch0 == 'N') && (ch1 == 'o' || ch1 == 'O')) {
+				return Boolean.FALSE;
 			}
-			case 5: {
-				char ch0 = str.charAt(0);
-				char ch1 = str.charAt(1);
-				char ch2 = str.charAt(2);
-				char ch3 = str.charAt(3);
-				char ch4 = str.charAt(4);
-				if ((ch0 == 'f' || ch0 == 'F') && (ch1 == 'a' || ch1 == 'A') && (ch2 == 'l' || ch2 == 'L')
-						&& (ch3 == 's' || ch3 == 'S') && (ch4 == 'e' || ch4 == 'E')) {
-					return Boolean.FALSE;
-				}
-				break;
+			break;
+		}
+		case 3: {
+			char ch0 = str.charAt(0);
+			char ch1 = str.charAt(1);
+			char ch2 = str.charAt(2);
+			if ((ch0 == 'y' || ch0 == 'Y') && (ch1 == 'e' || ch1 == 'E') && (ch2 == 's' || ch2 == 'S')) {
+				return Boolean.TRUE;
 			}
+			if ((ch0 == 'o' || ch0 == 'O') && (ch1 == 'f' || ch1 == 'F') && (ch2 == 'f' || ch2 == 'F')) {
+				return Boolean.FALSE;
+			}
+			break;
+		}
+		case 4: {
+			char ch0 = str.charAt(0);
+			char ch1 = str.charAt(1);
+			char ch2 = str.charAt(2);
+			char ch3 = str.charAt(3);
+			if ((ch0 == 't' || ch0 == 'T') && (ch1 == 'r' || ch1 == 'R') && (ch2 == 'u' || ch2 == 'U')
+					&& (ch3 == 'e' || ch3 == 'E')) {
+				return Boolean.TRUE;
+			}
+			break;
+		}
+		case 5: {
+			char ch0 = str.charAt(0);
+			char ch1 = str.charAt(1);
+			char ch2 = str.charAt(2);
+			char ch3 = str.charAt(3);
+			char ch4 = str.charAt(4);
+			if ((ch0 == 'f' || ch0 == 'F') && (ch1 == 'a' || ch1 == 'A') && (ch2 == 'l' || ch2 == 'L')
+					&& (ch3 == 's' || ch3 == 'S') && (ch4 == 'e' || ch4 == 'E')) {
+				return Boolean.FALSE;
+			}
+			break;
+		}
 		}
 		return null;
 	}

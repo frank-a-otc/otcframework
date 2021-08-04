@@ -24,17 +24,17 @@ package org.otcframework.core.engine.exception;
 
 import org.otcframework.common.exception.OtcException;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ObjectProfilerException.
+ * The Class CollectionsIndexerException.
  */
+// TODO: Auto-generated Javadoc
 public class CollectionsIndexerException extends OtcException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7030529648109361953L;
 
 	/**
-	 * Instantiates a new object indexer exception.
+	 * Instantiates a new collections indexer exception.
 	 *
 	 * @param errorCode the error code
 	 */
@@ -43,17 +43,17 @@ public class CollectionsIndexerException extends OtcException {
 	}
 
 	/**
-	 * Instantiates a new object indexer exception.
+	 * Instantiates a new collections indexer exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
+	 * @param msg       the msg
 	 */
 	public CollectionsIndexerException(String errorCode, String msg) {
 		super(errorCode, msg);
 	}
 
 	/**
-	 * Instantiates a new object indexer exception.
+	 * Instantiates a new collections indexer exception.
 	 *
 	 * @param cause the cause
 	 */
@@ -62,21 +62,21 @@ public class CollectionsIndexerException extends OtcException {
 	}
 
 	/**
-	 * Instantiates a new object indexer exception.
+	 * Instantiates a new collections indexer exception.
 	 *
 	 * @param errorCode the error code
-	 * @param cause the cause
+	 * @param cause     the cause
 	 */
 	public CollectionsIndexerException(String errorCode, Throwable cause) {
 		super(errorCode, cause);
 	}
 
 	/**
-	 * Instantiates a new object indexer exception.
+	 * Instantiates a new collections indexer exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
-	 * @param cause the cause
+	 * @param msg       the msg
+	 * @param cause     the cause
 	 */
 	public CollectionsIndexerException(String errorCode, String msg, Throwable cause) {
 		super(errorCode, msg, cause);

@@ -24,10 +24,10 @@ package org.otcframework.core.engine.compiler.exception;
 
 import org.otcframework.common.exception.OtcException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LexicalizerException.
  */
+// TODO: Auto-generated Javadoc
 public class LexicalizerException extends OtcException {
 
 	/** The Constant serialVersionUID. */
@@ -46,7 +46,7 @@ public class LexicalizerException extends OtcException {
 	 * Instantiates a new lexicalizer exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
+	 * @param msg       the msg
 	 */
 	public LexicalizerException(String errorCode, String msg) {
 		super(errorCode, msg);
@@ -65,7 +65,7 @@ public class LexicalizerException extends OtcException {
 	 * Instantiates a new lexicalizer exception.
 	 *
 	 * @param errorCode the error code
-	 * @param cause the cause
+	 * @param cause     the cause
 	 */
 	public LexicalizerException(String errorCode, Throwable cause) {
 		super(errorCode, cause);
@@ -75,8 +75,8 @@ public class LexicalizerException extends OtcException {
 	 * Instantiates a new lexicalizer exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
-	 * @param cause the cause
+	 * @param msg       the msg
+	 * @param cause     the cause
 	 */
 	public LexicalizerException(String errorCode, String msg, Throwable cause) {
 		super(errorCode, msg, cause);

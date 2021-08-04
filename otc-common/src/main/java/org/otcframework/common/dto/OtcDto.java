@@ -29,36 +29,36 @@ import java.util.Map;
 
 import org.otcframework.common.dto.otc.OtcFileDto;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcDto.
  */
+// TODO: Auto-generated Javadoc
 public final class OtcDto {
 
 	/** The otc file dto. */
 	public OtcFileDto otcFileDto;
-	
+
 	/** The otc namespace. */
 	public String otcNamespace;
-	
+
 	/** The otc file name. */
 	public String otcFileName;
-	
+
 	/** The source clz. */
 	public Class<?> sourceClz;
-	
+
 	/** The target clz. */
 	public Class<?> targetClz;
-	
+
 	/** The main class dto. */
 	public ClassDto mainClassDto;
 
 	/** The script dtos. */
 	public List<ScriptDto> scriptDtos;
-	
+
 	/** The source OCD stems. */
 	public Map<String, OtcCommandDto> sourceOCDStems;
-	
+
 	/** The target OCD stems. */
 	public Map<String, OtcCommandDto> targetOCDStems;
 
@@ -91,19 +91,19 @@ public final class OtcDto {
 	 * The Class Builder.
 	 */
 	public static class Builder {
-		
+
 		/** The otc namespace. */
 		private String otcNamespace;
-		
+
 		/** The otc file name. */
 		private String otcFileName;
-		
+
 		/** The deployment id. */
 		public String deploymentId;
-		
+
 		/** The source clz. */
 		private Class<?> sourceClz;
-		
+
 		/** The target clz. */
 		private Class<?> targetClz;
 
@@ -112,7 +112,7 @@ public final class OtcDto {
 
 		/** The source OCD stems. */
 		private Map<String, OtcCommandDto> sourceOCDStems;
-		
+
 		/** The target OCD stems. */
 		private Map<String, OtcCommandDto> targetOCDStems;
 
@@ -226,5 +226,4 @@ public final class OtcDto {
 			return new OtcDto(this);
 		}
 	}
-
 }

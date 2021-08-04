@@ -22,16 +22,17 @@
 */
 package org.otcframework.core.engine.compiler.templates;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MethodEndTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class MethodEndTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new method end template.
 	 */
-	private MethodEndTemplate() {}
+	private MethodEndTemplate() {
+	}
 
 	/**
 	 * Generate code.

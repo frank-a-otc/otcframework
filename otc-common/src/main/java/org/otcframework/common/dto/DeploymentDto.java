@@ -26,67 +26,66 @@ import java.util.Map;
 
 import org.otcframework.common.executor.CodeExecutor;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DeploymentDto.
  */
+// TODO: Auto-generated Javadoc
 public final class DeploymentDto {
 
 	/** The deployment id. */
 	public String deploymentId;
-	
+
 	/** The otc namespace. */
 	public String otcNamespace;
-	
+
 	/** The otc file name. */
 	public String otcFileName;
-	
+
 	/** The deployment file name. */
 	public String deploymentFileName;
-	
+
 	/** The is error. */
 	public boolean isError;
 
 	/** The main class. */
 	public String mainClass;
-	
+
 	/** The source clz. */
 	public Class<?> sourceClz;
-	
+
 	/** The target clz. */
 	public Class<?> targetClz;
-	
+
 	/** The compiled infos. */
 	public Map<String, CompiledInfo> compiledInfos;
-	
+
 	/** The is profiling requried. */
 	public boolean isProfilingRequried;
-	
-	/** The otc code executor. */
+
+	/** The code executor. */
 	public CodeExecutor codeExecutor;
-	
+
 	/**
 	 * The Class CompiledInfo.
 	 */
 	public static final class CompiledInfo {
-		
+
 		/** The id. */
 		public String id;
-		
+
 		/** The factory class name. */
 		public String factoryClassName;
-		
+
 		/** The source OCD stem. */
 		public OtcCommandDto sourceOCDStem;
-		
+
 		/** The target OCD stem. */
 		public OtcCommandDto targetOCDStem;
-		
+
 		/** The source otc chain dto. */
 		public OtcChainDto sourceOtcChainDto;
-		
+
 		/** The target otc chain dto. */
 		public OtcChainDto targetOtcChainDto;
 	}
-	
 }

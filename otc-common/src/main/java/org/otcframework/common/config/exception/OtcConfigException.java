@@ -24,10 +24,10 @@ package org.otcframework.common.config.exception;
 
 import org.otcframework.common.exception.OtcException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcConfigException.
  */
+// TODO: Auto-generated Javadoc
 public class OtcConfigException extends OtcException {
 
 	/** The Constant serialVersionUID. */
@@ -46,7 +46,7 @@ public class OtcConfigException extends OtcException {
 	 * Instantiates a new otc config exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
+	 * @param msg       the msg
 	 */
 	public OtcConfigException(String errorCode, String msg) {
 		super(errorCode, msg);
@@ -65,7 +65,7 @@ public class OtcConfigException extends OtcException {
 	 * Instantiates a new otc config exception.
 	 *
 	 * @param errorCode the error code
-	 * @param cause the cause
+	 * @param cause     the cause
 	 */
 	public OtcConfigException(String errorCode, Throwable cause) {
 		super(errorCode, cause);
@@ -75,8 +75,8 @@ public class OtcConfigException extends OtcException {
 	 * Instantiates a new otc config exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
-	 * @param cause the cause
+	 * @param msg       the msg
+	 * @param cause     the cause
 	 */
 	public OtcConfigException(String errorCode, String msg, Throwable cause) {
 		super(errorCode, msg, cause);

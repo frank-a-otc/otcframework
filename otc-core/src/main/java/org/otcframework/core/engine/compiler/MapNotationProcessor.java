@@ -26,26 +26,26 @@ import org.otcframework.common.OtcConstants;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.core.engine.compiler.exception.SyntaxException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MapNotationProcessor.
  */
+// TODO: Auto-generated Javadoc
 final class MapNotationProcessor {
 
 	/**
 	 * Process.
 	 *
-	 * @param scriptId the script id
-	 * @param otcCommandDto the otc command dto
-	 * @param otcToken the otc token
-	 * @param otcChain the otc chain
+	 * @param scriptId       the script id
+	 * @param otcCommandDto  the otc command dto
+	 * @param otcToken       the otc token
+	 * @param otcChain       the otc chain
 	 * @param idxMapNotation the idx map notation
 	 * @return true, if successful
 	 */
-	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken,
-			String otcChain, int idxMapNotation) {
-		if (!otcToken.contains(OtcConstants.MAP_BEGIN_REF) && !otcToken.contains(OtcConstants.MAP_PRE_ANCHOR) &&
-				!otcToken.contains(OtcConstants.MAP_END_REF) && !otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
+	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken, String otcChain,
+			int idxMapNotation) {
+		if (!otcToken.contains(OtcConstants.MAP_BEGIN_REF) && !otcToken.contains(OtcConstants.MAP_PRE_ANCHOR)
+				&& !otcToken.contains(OtcConstants.MAP_END_REF) && !otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
 			return true;
 		}
 		int firstIdx = otcToken.indexOf(OtcConstants.MAP_BEGIN_REF);
@@ -58,21 +58,20 @@ final class MapNotationProcessor {
 		}
 		if (secondIdx < firstIdx) {
 			throw new SyntaxException("",
-					"Oops... Syntax error in OTC-command : " + scriptId + ". OTC-token didn't pass Syntax-Checker check "
-							+ "- Map notation not well-formed in '" + otcToken + "'");
-
+					"Oops... Syntax error in OTC-command : " + scriptId
+							+ ". OTC-token didn't pass Syntax-Checker check " + "- Map notation not well-formed in '"
+							+ otcToken + "'");
 		}
 		int idxkeyValueNotation = otcToken.indexOf(OtcConstants.MAP_KEY_REF);
 		if (idxkeyValueNotation < 0) {
 			idxkeyValueNotation = otcToken.indexOf(OtcConstants.MAP_VALUE_REF);
 			if (idxkeyValueNotation < 0) {
-				throw new SyntaxException("", "Oops... Syntax error in OTC-command : " + scriptId + 
-						". OTC-token didn't pass Syntax-Checker check - Map notation missing <K> / <V> indicator-suffix "
+				throw new SyntaxException("", "Oops... Syntax error in OTC-command : " + scriptId
+						+ ". OTC-token didn't pass Syntax-Checker check - Map notation missing <K> / <V> indicator-suffix "
 						+ "ending in '" + otcToken + "'");
 			}
 		}
 		otcCommandDto.hasMapNotation = true;
 		return true;
 	}
-
 }

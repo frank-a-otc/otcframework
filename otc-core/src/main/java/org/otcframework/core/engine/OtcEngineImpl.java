@@ -31,23 +31,24 @@ import org.otcframework.core.engine.compiler.OtcCompilerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum OtcEngineImpl.
  */
+// TODO: Auto-generated Javadoc
 public enum OtcEngineImpl implements OtcEngine {
-	
+
 	/** The instance. */
 	instance;
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcEngineImpl.class);
 
 	/** The Constant otcCompiler. */
 	private static final OtcCompiler otcCompiler = OtcCompilerImpl.getInstance();
-	
+
 	/** The Constant deploymentContainer. */
 	private static final DeploymentContainer deploymentContainer = DeploymentContainerImpl.getInstance();
-	
+
 	/** The Constant otcExecutor. */
 	private static final OtcExecutor otcExecutor = OtcExecutorImpl.getInstance();
 
@@ -60,7 +61,7 @@ public enum OtcEngineImpl implements OtcEngine {
 	static {
 		instance.register();
 	}
-	
+
 	/**
 	 * Gets the single instance of OtcEngineImpl.
 	 *
@@ -78,7 +79,7 @@ public enum OtcEngineImpl implements OtcEngine {
 		otcCompiler.compileOtc();
 		return;
 	}
-	
+
 	/**
 	 * Compile source code.
 	 */
@@ -87,25 +88,27 @@ public enum OtcEngineImpl implements OtcEngine {
 		otcCompiler.compileSourceCode();
 		return;
 	}
-	
+
 	/**
 	 * Register.
 	 */
 	@Override
 	public void register() {
 		System.out.println("\n----------------");
-		LOGGER.info("For detailed logging, set 'otc.log.level' property in '{}/config/log.properties' file to 'DEBUG' mode.", 
+		LOGGER.info(
+				"For detailed logging, set 'otc.log.level' property in '{}/config/log.properties' file to 'DEBUG' mode.",
 				OtcConfig.getOtcHomeLocation());
 		deploymentContainer.deploy();
 	}
-	
+
 	/**
 	 * Execute otc.
 	 *
-	 * @param <T> the generic type
-	 * @param <S> the generic type
-	 * @param targetClz the target clz
-	 * @param data the data
+	 * @param <T>          the generic type
+	 * @param <S>          the generic type
+	 * @param otcNamespace the otc namespace
+	 * @param targetClz    the target clz
+	 * @param data         the data
 	 * @return the t
 	 */
 	@Override
@@ -113,16 +116,16 @@ public enum OtcEngineImpl implements OtcEngine {
 		T target = otcExecutor.executeOtc(otcNamespace, targetClz, data);
 		return target;
 	}
-	
+
 	/**
 	 * Execute otc.
 	 *
-	 * @param <T> the generic type
-	 * @param <S> the generic type
+	 * @param <T>          the generic type
+	 * @param <S>          the generic type
 	 * @param otcNamespace the otc namespace
-	 * @param source the source
-	 * @param targetClz the target clz
-	 * @param data the data
+	 * @param source       the source
+	 * @param targetClz    the target clz
+	 * @param data         the data
 	 * @return the t
 	 */
 	@Override

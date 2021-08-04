@@ -22,16 +22,17 @@
 */
 package org.otcframework.core.engine.compiler.templates;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PreloopVarsTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class PreloopVarsTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new preloop vars template.
 	 */
-	private PreloopVarsTemplate() {}
+	private PreloopVarsTemplate() {
+	}
 
 	/**
 	 * Generate code.

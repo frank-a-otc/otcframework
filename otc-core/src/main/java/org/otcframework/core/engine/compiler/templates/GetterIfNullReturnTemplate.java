@@ -33,30 +33,30 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GetterIfNullReturnTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new getter if null return template.
 	 */
-	private GetterIfNullReturnTemplate() {}
+	private GetterIfNullReturnTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param otcCommandDto the otc command dto
+	 * @param targetOCC        the target OCC
+	 * @param otcCommandDto    the otc command dto
 	 * @param createNewVarName the create new var name
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-
 		String fieldType = fetchFieldTypeName(targetOCC, null, otcCommandDto, createNewVarName, varNamesMap);
 		String varName = createVarName(otcCommandDto, createNewVarName, varNamesSet, varNamesMap);
 		String parentVarName = null;
@@ -79,33 +79,32 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 	/**
 	 * Generate getter if null return code.
 	 *
-	 * @param targetOCC the target OCC
+	 * @param targetOCC        the target OCC
 	 * @param createNewVarName the create new var name
-	 * @param logLevel the log level
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param logLevel         the log level
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateGetterIfNullReturnCode(TargetOtcCommandContext targetOCC, boolean createNewVarName,
 			LogLevel logLevel, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-		return generateGetterIfNullReturnCode(targetOCC, null, createNewVarName, logLevel, varNamesSet,
-				varNamesMap);
+		return generateGetterIfNullReturnCode(targetOCC, null, createNewVarName, logLevel, varNamesSet, varNamesMap);
 	}
-	
+
 	/**
 	 * Generate getter if null return code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCC the source OCC
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCC        the source OCC
 	 * @param createNewVarName the create new var name
-	 * @param logLevel the log level
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param logLevel         the log level
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
-	public static String generateGetterIfNullReturnCode(TargetOtcCommandContext targetOCC, 
-			SourceOtcCommandContext sourceOCC, boolean createNewVarName, LogLevel logLevel,
-			Set<String> varNamesSet, Map<String, String> varNamesMap) {
+	public static String generateGetterIfNullReturnCode(TargetOtcCommandContext targetOCC,
+			SourceOtcCommandContext sourceOCC, boolean createNewVarName, LogLevel logLevel, Set<String> varNamesSet,
+			Map<String, String> varNamesMap) {
 		OtcCommandDto otcCommandDto = null;
 		boolean hasMapValueInPath = false;
 		if (sourceOCC != null) {
@@ -136,10 +135,10 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		}
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			ifNotNullParentChildGetterCode = String.format(helperGetIfNullReturnTemplate, fieldType, varName, 
-					helper, getter, parentVarName, varName, logLevel, logMsg);
+			ifNotNullParentChildGetterCode = String.format(helperGetIfNullReturnTemplate, fieldType, varName, helper,
+					getter, parentVarName, varName, logLevel, logMsg);
 		} else {
-			ifNotNullParentChildGetterCode = String.format(getterIfNullReturnTemplate, fieldType, varName, 
+			ifNotNullParentChildGetterCode = String.format(getterIfNullReturnTemplate, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
 		return ifNotNullParentChildGetterCode;

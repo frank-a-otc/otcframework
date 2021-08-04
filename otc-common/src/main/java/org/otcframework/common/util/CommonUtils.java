@@ -40,10 +40,10 @@ import org.otcframework.common.exception.OtcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CommonUtils.
  */
+// TODO: Auto-generated Javadoc
 public class CommonUtils {
 
 	/** The logger. */
@@ -77,7 +77,7 @@ public class CommonUtils {
 	 * Replace last.
 	 *
 	 * @param orginalStr the orginal str
-	 * @param searchStr the search str
+	 * @param searchStr  the search str
 	 * @param replaceStr the replace str
 	 * @return the string
 	 */
@@ -136,10 +136,10 @@ public class CommonUtils {
 	/**
 	 * Do asycn call.
 	 *
-	 * @param <T> the generic type
-	 * @param id the id
-	 * @param mapFutures the map futures
-	 * @param callable the callable
+	 * @param <T>             the generic type
+	 * @param id              the id
+	 * @param mapFutures      the map futures
+	 * @param callable        the callable
 	 * @param executorService the executor service
 	 * @return the future
 	 */
@@ -160,9 +160,10 @@ public class CommonUtils {
 	/**
 	 * Wait for asych calls to complete.
 	 *
-	 * @param <T> the generic type
-	 * @param mapFutures the map futures
-	 * @param responsePollingPauseDurationInMillis the response polling pause duration in millis
+	 * @param <T>                                  the generic type
+	 * @param mapFutures                           the map futures
+	 * @param responsePollingPauseDurationInMillis the response polling pause
+	 *                                             duration in millis
 	 * @return the map
 	 */
 	public static <T> Map<String, T> waitForAsychCallsToComplete(Map<String, Future<T>> mapFutures,
@@ -237,8 +238,8 @@ public class CommonUtils {
 	/**
 	 * Wait for asych calls to complete.
 	 *
-	 * @param <T> the generic type
-	 * @param future the future
+	 * @param <T>               the generic type
+	 * @param future            the future
 	 * @param pollPauseDuration the poll pause duration
 	 * @return the t
 	 */

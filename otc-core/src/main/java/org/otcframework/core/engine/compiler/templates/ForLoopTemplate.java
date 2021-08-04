@@ -32,27 +32,28 @@ import org.otcframework.core.engine.compiler.command.OtcCommand;
 import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ForLoopTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class ForLoopTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new for loop template.
 	 */
-	private ForLoopTemplate() {}
+	private ForLoopTemplate() {
+	}
 
 	/**
 	 * Generate source loop code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param sourceOCC the source OCC
-	 * @param idxPrefix the idx prefix
+	 * @param targetOCC        the target OCC
+	 * @param sourceOCC        the source OCC
+	 * @param idxPrefix        the idx prefix
 	 * @param createNewVarName the create new var name
-	 * @param logLevel the log level
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param logLevel         the log level
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateSourceLoopCode(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
@@ -86,8 +87,8 @@ public final class ForLoopTemplate extends AbstractTemplate {
 					logLevel, logMsg, idx, idx));
 		} else {
 			memberPcd = "memberICD" + (idx - 1);
-			forLoopCodeBuilder.append(String.format(preSourceLoopTemplateCopy, idx, memberPcd, icdId,
-					idx, idx, idx, logLevel, logMsg, idx, idx, idx));
+			forLoopCodeBuilder.append(String.format(preSourceLoopTemplateCopy, idx, memberPcd, icdId, idx, idx, idx,
+					logLevel, logMsg, idx, idx, idx));
 		}
 		forLoopCodeBuilder.append(String.format(forLoopTemplate, idxVar, idxVar, idx, idxVar));
 		OtcCommandDto memberOCD = OtcCommand.retrieveMemberOCD(sourceOCC);
@@ -99,27 +100,27 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		forLoopCodeBuilder.append(String.format(retrieveMemberIcd, idx, parentPcd, icdId));
 		memberPcd = "memberICD" + idx;
 		if (!sourceOCC.hasDescendantCollectionOrMap()) {
-			forLoopCodeBuilder.append(String.format(lastPostSourceLoopTemplate, idx, logLevel, logMsg, fieldType, varName,
-					concreteType, memberPcd));
+			forLoopCodeBuilder.append(String.format(lastPostSourceLoopTemplate, idx, logLevel, logMsg, fieldType,
+					varName, concreteType, memberPcd));
 		} else {
 			forLoopCodeBuilder.append(String.format(postLoopTemplate, idx, idx, idx, logLevel, logMsg));
 			if (!sourceOCC.hasDescendantCollectionOrMap()) {
-				forLoopCodeBuilder.append(String.format(retrieveMemberFromIcdTemplate, fieldType, varName,
-						concreteType, memberPcd));
+				forLoopCodeBuilder.append(
+						String.format(retrieveMemberFromIcdTemplate, fieldType, varName, concreteType, memberPcd));
 			}
 		}
 		return forLoopCodeBuilder.toString();
 	}
-	
+
 	/**
 	 * Generate target loop code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param idxPrefix the idx prefix
+	 * @param targetOCC        the target OCC
+	 * @param idxPrefix        the idx prefix
 	 * @param createNewVarName the create new var name
-	 * @param logLevel the log level
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param logLevel         the log level
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateTargetLoopCode(TargetOtcCommandContext targetOCC, String idxPrefix,
@@ -158,16 +159,16 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			if (!hasAncestor) {
 				preLoopTemplateCopy = preLoopTemplateCopy.replace("continue;", "return;");
 			}
-			forLoopCodeBuilder.append(String.format(preLoopTemplateCopy, idx, memberPcd, icdId, idx, idx, idx,
-					logLevel, logMsg, idx, idx));
+			forLoopCodeBuilder.append(String.format(preLoopTemplateCopy, idx, memberPcd, icdId, idx, idx, idx, logLevel,
+					logMsg, idx, idx));
 		} else {
 			String varName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
 			if (targetOCD.isMap()) {
 				forLoopCodeBuilder.append(String.format(preTargetLoopTemplate.replace(".size();", ".size() / 2;"), idx,
 						idx, memberPcd, icdId, idx, idx, memberPcd, varName, icdId, idx, idx, idx));
 			} else {
-				forLoopCodeBuilder.append(String.format(preTargetLoopTemplate, idx,
-						idx, memberPcd, icdId, idx, idx, memberPcd, varName, icdId, idx, idx, idx));
+				forLoopCodeBuilder.append(String.format(preTargetLoopTemplate, idx, idx, memberPcd, icdId, idx, idx,
+						memberPcd, varName, icdId, idx, idx, idx));
 			}
 		}
 		forLoopCodeBuilder.append(String.format(forLoopTemplate, idxVar, idxVar, idx, idxVar));
@@ -180,14 +181,14 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			} else {
 				addMapKeyCode = AddMapValueTemplate.generatePostLoopCode(targetOCC, createNewVarName, idx, idxVar,
 						LogLevel.WARN, varNamesSet, varNamesMap);
-			} 
+			}
 			forLoopCodeBuilder.append(addMapKeyCode);
 		} else {
 			String postLoopCode = AddToCollectionTemplate.generatePostLoopCode(targetOCC, createNewVarName, idx, idxVar,
 					logLevel, PARENT_ICD, MEMBER_ICD, varNamesSet, varNamesMap);
 			forLoopCodeBuilder.append(postLoopCode);
 			targetOCC.otcCommandDto = memberOCD;
-		} 
+		}
 		return forLoopCodeBuilder.toString();
 	}
 }

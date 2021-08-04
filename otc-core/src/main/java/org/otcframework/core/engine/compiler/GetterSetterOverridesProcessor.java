@@ -35,16 +35,16 @@ import org.otcframework.common.dto.otc.TargetDto;
 import org.otcframework.core.engine.compiler.exception.SemanticsException;
 import org.otcframework.core.engine.compiler.exception.SyntaxException;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GetterSetterProcessor.
+ * The Class GetterSetterOverridesProcessor.
  */
+// TODO: Auto-generated Javadoc
 final class GetterSetterOverridesProcessor {
 
 	/**
 	 * Process.
 	 *
-	 * @param script the script
+	 * @param script        the script
 	 * @param otcCommandDto the otc command dto
 	 */
 	public static void process(ScriptDto script, OtcCommandDto otcCommandDto) {
@@ -58,14 +58,14 @@ final class GetterSetterOverridesProcessor {
 		List<TargetDto.Override> toOverrides = null;
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
-			sourceOtcChain = copy.from.otcChain;
-			targetOtcChain = copy.to.otcChain;
+			sourceOtcChain = copy.from.objectPath;
+			targetOtcChain = copy.to.objectPath;
 			fromOverrides = copy.from.overrides;
 			toOverrides = copy.to.overrides;
 		} else {
 			Execute execute = (Execute) script.command;
-			sourceOtcChain = execute.source.otcChain;
-			targetOtcChain = execute.target.otcChain;
+			sourceOtcChain = execute.source.objectPath;
+			targetOtcChain = execute.target.objectPath;
 			fromOverrides = execute.source.overrides;
 			toOverrides = execute.target.overrides;
 		}
@@ -81,11 +81,19 @@ final class GetterSetterOverridesProcessor {
 		}
 		return;
 	}
-	
-	private static void initToSetterGetter(OtcCommandDto otcCommandDto, String targetOtcChain, 
-			String commandId, List<TargetDto.Override> overrides) {
-		if (overrides == null || TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource ||
-				(otcCommandDto.getter != null && otcCommandDto.setter != null)) {
+
+	/**
+	 * Inits the to setter getter.
+	 *
+	 * @param otcCommandDto  the otc command dto
+	 * @param targetOtcChain the target otc chain
+	 * @param commandId      the command id
+	 * @param overrides      the overrides
+	 */
+	private static void initToSetterGetter(OtcCommandDto otcCommandDto, String targetOtcChain, String commandId,
+			List<TargetDto.Override> overrides) {
+		if (overrides == null || TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource
+				|| (otcCommandDto.getter != null && otcCommandDto.setter != null)) {
 			return;
 		}
 		if (TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource) {
@@ -94,12 +102,12 @@ final class GetterSetterOverridesProcessor {
 		for (TargetDto.Override override : overrides) {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
-				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId + 
-						".  'overrides.tokenPath: ' is missing.");
+				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
+						+ ".  'overrides.tokenPath: ' is missing.");
 			}
 			if (!targetOtcChain.startsWith(tokenPath)) {
-				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath + 
-						"' in targets overrides section in command : " + commandId);
+				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath
+						+ "' in targets overrides section in command : " + commandId);
 			}
 			if (!otcCommandDto.tokenPath.equals(tokenPath)) {
 				continue;
@@ -127,21 +135,29 @@ final class GetterSetterOverridesProcessor {
 			}
 		}
 	}
-	
-	private static void initFromGetter(OtcCommandDto otcCommandDto, String otcChain, 
-			String commandId, List<OverrideDto> overrides) {
+
+	/**
+	 * Inits the from getter.
+	 *
+	 * @param otcCommandDto the otc command dto
+	 * @param otcChain      the otc chain
+	 * @param commandId     the command id
+	 * @param overrides     the overrides
+	 */
+	private static void initFromGetter(OtcCommandDto otcCommandDto, String otcChain, String commandId,
+			List<OverrideDto> overrides) {
 		if (overrides == null || otcCommandDto.getter != null) {
 			return;
 		}
 		for (OverrideDto override : overrides) {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
-				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId + 
-						".  'overrides.tokenPath: ' is missing.");
+				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
+						+ ".  'overrides.tokenPath: ' is missing.");
 			}
 			if (!otcChain.startsWith(tokenPath)) {
-				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath + 
-						"' in source's overrides section in command : " + commandId);
+				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath
+						+ "' in source's overrides section in command : " + commandId);
 			}
 			if (!otcCommandDto.tokenPath.equals(tokenPath)) {
 				continue;

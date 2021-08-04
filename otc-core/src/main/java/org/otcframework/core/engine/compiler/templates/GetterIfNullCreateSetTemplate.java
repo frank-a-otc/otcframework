@@ -31,74 +31,89 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 import org.otcframework.core.engine.compiler.exception.CodeGeneratorException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GetterIfNullCreateSetTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new getter if null create set template.
 	 */
-	private GetterIfNullCreateSetTemplate() {}
+	private GetterIfNullCreateSetTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param otcCommandDto the otc command dto
+	 * @param targetOCC        the target OCC
+	 * @param otcCommandDto    the otc command dto
 	 * @param createNewVarName the create new var name
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (otcCommandDto.isArray()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId +
-					". Type should not be an array.");
+			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+					+ ". Type should not be an array.");
 		}
 		return generateCode(targetOCC, otcCommandDto, null, null, createNewVarName, varNamesSet, varNamesMap);
 	}
-	
+
 	/**
 	 * Generate code for array.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param otcCommandDto the otc command dto
-	 * @param arraySize the array size
+	 * @param targetOCC        the target OCC
+	 * @param otcCommandDto    the otc command dto
+	 * @param arraySize        the array size
 	 * @param createNewVarName the create new var name
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCodeForArray(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (!otcCommandDto.isArray()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId + 
-					". Type should be an array.");
+			throw new CodeGeneratorException("",
+					"Invalid call to method in OTC-command : " + targetOCC.commandId + ". Type should be an array.");
 		}
 		return generateCode(targetOCC, otcCommandDto, null, arraySize, createNewVarName, varNamesSet, varNamesMap);
 	}
-	
-	public static String generateCodeForEnum(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto, String value,
-			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
+
+	/**
+	 * Generate code for enum.
+	 *
+	 * @param targetOCC        the target OCC
+	 * @param otcCommandDto    the otc command dto
+	 * @param value            the value
+	 * @param arraySize        the array size
+	 * @param createNewVarName the create new var name
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
+	 * @return the string
+	 */
+	public static String generateCodeForEnum(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto,
+			String value, Integer arraySize, boolean createNewVarName, Set<String> varNamesSet,
+			Map<String, String> varNamesMap) {
 		if (!otcCommandDto.isEnum()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId + 
-					". Type should be an array.");
+			throw new CodeGeneratorException("",
+					"Invalid call to method in OTC-command : " + targetOCC.commandId + ". Type should be an array.");
 		}
 		return generateCode(targetOCC, otcCommandDto, value, arraySize, createNewVarName, varNamesSet, varNamesMap);
 	}
-	
+
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param otcCommandDto the otc command dto
-	 * @param arraySize the array size
+	 * @param targetOCC        the target OCC
+	 * @param otcCommandDto    the otc command dto
+	 * @param value            the value
+	 * @param arraySize        the array size
 	 * @param createNewVarName the create new var name
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	private static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto, String value,
@@ -109,9 +124,9 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		if (otcCommandDto.isArray()) {
 			if (TARGET_SOURCE.TARGET == otcCommandDto.enumTargetSource) {
 				if (arraySize != null) {
-					concreteType = concreteType.replace("[]","[" + arraySize + "]");
+					concreteType = concreteType.replace("[]", "[" + arraySize + "]");
 				} else {
-					concreteType = concreteType.replace("[]","[" + 1 + "]");
+					concreteType = concreteType.replace("[]", "[" + 1 + "]");
 				}
 			}
 		}
@@ -129,9 +144,8 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		} else {
 			getterCode = String.format(getterTemplate, fieldType, varName, parentVarName, getter);
 		}
-		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize, createNewVarName,
-				varNamesSet, varNamesMap);
+		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize,
+				createNewVarName, varNamesSet, varNamesMap);
 		return getterCode + ifNullCreateAndSetCode;
 	}
-
 }

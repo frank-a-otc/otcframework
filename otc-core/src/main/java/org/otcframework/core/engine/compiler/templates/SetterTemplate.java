@@ -29,27 +29,29 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
-import org.otcframework.dateconverters.DateConverterFacade;
 
-// TODO: Auto-generated Javadoc
+import etree.dateconverters.MutualDateTypesConverterFacade;
+
 /**
  * The Class SetterTemplate.
  */
+// TODO: Auto-generated Javadoc
 public class SetterTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new setter template.
 	 */
-	private SetterTemplate() {}
+	private SetterTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
-	 * @param targetOCC the target OCC
+	 * @param targetOCC        the target OCC
 	 * @param createNewVarName the create new var name
-	 * @param value the value
-	 * @param varNamesSet the var names set
-	 * @param varNamesMap the var names map
+	 * @param value            the value
+	 * @param varNamesSet      the var names set
+	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
 	public static String generateCode(TargetOtcCommandContext targetOCC, boolean createNewVarName, String value,
@@ -73,8 +75,8 @@ public class SetterTemplate extends AbstractTemplate {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			setterCode = String.format(helperSetterTemplate, helper, otcCommandDto.setter, parentVarName, value);
 		} else {
-			if (DateConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
-				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
+			if (MutualDateTypesConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
+				targetOCC.factoryClassDto.addImport(MutualDateTypesConverterFacade.class.getName());
 				String clz = fetchSanitizedTypeName(targetOCC, otcCommandDto);
 				setterCode = String.format(dateConverterTemplate, parentVarName, otcCommandDto.setter, value, clz);
 			} else {

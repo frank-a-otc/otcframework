@@ -25,10 +25,10 @@ package org.otcframework.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PackagesFilterUtil.
  */
+// TODO: Auto-generated Javadoc
 public class PackagesFilterUtil {
 
 	/** The pkgs to filter. */

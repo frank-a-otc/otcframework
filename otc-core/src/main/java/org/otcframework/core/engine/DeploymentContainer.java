@@ -1,6 +1,6 @@
 /**
 * Copyright (c) otcframework.org
-* 
+*
 * @author  Franklin Abel
 * @version 1.0
 * @since   2020-06-08 
@@ -24,10 +24,10 @@ package org.otcframework.core.engine;
 
 import org.otcframework.common.dto.DeploymentDto;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface DeploymentContainer.
  */
+// TODO: Auto-generated Javadoc
 interface DeploymentContainer {
 
 	/**
@@ -46,8 +46,8 @@ interface DeploymentContainer {
 	 * Retrieve deployment dto.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param sourceClz the source clz
-	 * @param targetClz the target clz
+	 * @param sourceClz    the source clz
+	 * @param targetClz    the target clz
 	 * @return the deployment dto
 	 */
 	DeploymentDto retrieveDeploymentDto(String otcNamespace, Class<?> sourceClz, Class<?> targetClz);
@@ -56,10 +56,9 @@ interface DeploymentContainer {
 	 * Retrieve deployment dto.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param source the source
-	 * @param targetClz the target clz
+	 * @param source       the source
+	 * @param targetClz    the target clz
 	 * @return the deployment dto
 	 */
 	DeploymentDto retrieveDeploymentDto(String otcNamespace, Object source, Class<?> targetClz);
-
 }

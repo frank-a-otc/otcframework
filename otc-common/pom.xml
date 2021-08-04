@@ -24,16 +24,16 @@
 	<developers>
 		<developer>
 			<name>Franklin Abel</name>
-			<email>franklin.abel@otcframework.org</email>
+			<email>frank.a.otc@gmail.com</email>
 			<organization>OTC Framework</organization>
 			<organizationUrl>http://www.otcframework.org</organizationUrl>
 		</developer>
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/frankjjava/otc.git</connection>
-		<developerConnection>scm:git:ssh://github.com:frankjjava/otc.git</developerConnection>
-		<url>https://github.com/frankjjava/otc</url>
+		<connection>scm:git:git://github.com/frankjjava/otclframework.git</connection>
+		<developerConnection>scm:git:ssh://github.com:frankjjava/otclframework.git</developerConnection>
+		<url>https://github.com/frankjjava/otclframework</url>
 	</scm>
 
 	<distributionManagement>
@@ -49,7 +49,7 @@
 
     <issueManagement>
         <system>Github Issue</system>
-        <url>https://github.com/fjna-java/octl2issues/issues</url>
+        <url>https://github.com/frankjjava/otcf-issues/issues</url>
     </issueManagement>
 
 	<properties>

@@ -22,42 +22,43 @@
 */
 package org.otcframework.common.dto;
 
-import org.otcframework.common.dto.otc.OtcFileDto.CommandCommonParams;
+import org.otcframework.common.dto.otc.OtcFileDto.CommonCommandParams;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute;
-import org.otcframework.common.dto.otc.OtcFileDto.OtcCommands;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute.OtcModule;
+import org.otcframework.common.dto.otc.OtcFileDto.OtcCommands;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ScriptDto.
  */
+// TODO: Auto-generated Javadoc
 public class ScriptDto {
 
 	/** The command. */
-	public CommandCommonParams command;
-	
+	public CommonCommandParams command;
+
 	/** The target otc chain dto. */
 	public OtcChainDto targetOtcChainDto;
-	
+
 	/** The source otc chain dto. */
 	public OtcChainDto sourceOtcChainDto;
-	
+
 	/** The has set values. */
 	public boolean hasSetValues;
-	
+
 	/** The has execute module. */
 	public boolean hasExecuteModule;
-	
+
 	/** The has execute converter. */
 	public boolean hasExecuteConverter;
-	
+
 	/** The has execution order. */
 	public boolean hasExecutionOrder;
 
 	/**
 	 * Instantiates a new script dto.
 	 */
-	private ScriptDto() { }
+	private ScriptDto() {
+	}
 
 	/**
 	 * Instantiates a new script dto.
@@ -83,7 +84,7 @@ public class ScriptDto {
 			}
 		}
 	}
-	
+
 	/**
 	 * Clone.
 	 *
@@ -117,10 +118,10 @@ public class ScriptDto {
 	 */
 	@Override
 	public String toString() {
-		return "ScriptDto [command=" + command + ", targetOtcChainDto=" + targetOtcChainDto
-				+ ", sourceOtcChainDto=" + sourceOtcChainDto + ", hasSetValueExtension=" + hasSetValues
-				+ ", hasExecuteModule=" + hasExecuteModule + ", hasExecuteConverter=" + hasExecuteConverter
-				+ ", hasExecutionOrder=" + hasExecutionOrder + "]";
+		return "ScriptDto [command=" + command + ", targetOtcChainDto=" + targetOtcChainDto + ", sourceOtcChainDto="
+				+ sourceOtcChainDto + ", hasSetValueExtension=" + hasSetValues + ", hasExecuteModule="
+				+ hasExecuteModule + ", hasExecuteConverter=" + hasExecuteConverter + ", hasExecutionOrder="
+				+ hasExecutionOrder + "]";
 	}
 
 	/**
@@ -182,5 +183,4 @@ public class ScriptDto {
 			return false;
 		return true;
 	}
-
 }

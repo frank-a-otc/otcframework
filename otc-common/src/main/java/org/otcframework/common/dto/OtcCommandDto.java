@@ -32,41 +32,34 @@ import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcCommandDto.
  */
+// TODO: Auto-generated Javadoc
 public class OtcCommandDto {
 
 	/**
 	 * The Enum CollectionDescriptor.
 	 */
 	public enum CollectionDescriptor {
-		
+
 		/** The normal. */
-		NORMAL("None"), 
-		
+		NORMAL("None"),
 		/** The array. */
-		ARRAY("Array"), 
-		
+		ARRAY("Array"),
 		/** The list. */
-		LIST("List"), 
-		
+		LIST("List"),
 		/** The set. */
-		SET("Set"), 
-		
+		SET("Set"),
 		/** The queue. */
 		QUEUE("Queue"),
-		
+
 		/** The collection member. */
-		COLLECTION_MEMBER("Collection.Member"), 
-		
+		COLLECTION_MEMBER("Collection.Member"),
 		/** The map. */
-		MAP("Map"), 
-		
+		MAP("Map"),
 		/** The map key. */
-		MAP_KEY("Map.Key"), 
-		
+		MAP_KEY("Map.Key"),
 		/** The map value. */
 		MAP_VALUE("Map.Value");
 
@@ -155,82 +148,82 @@ public class OtcCommandDto {
 
 	/** The token path. */
 	public String tokenPath;
-	
+
 	/** The enum target source. */
 	public TARGET_SOURCE enumTargetSource;
-	
+
 	/** The otc token. */
 	public String otcToken;
-	
+
 	/** The otc token index. */
 	public int otcTokenIndex;
-	
+
 	/** The is root node. */
 	public boolean isRootNode;
-	
-	/** The is first child. */
+
+	/** The is first node. */
 	public boolean isFirstNode;
-	
+
 	/** The has collection notation. */
 	public boolean hasCollectionNotation;
-	
+
 	/** The has map notation. */
 	public boolean hasMapNotation;
-	
+
 	/** The collection descriptor. */
 	public CollectionDescriptor collectionDescriptor = CollectionDescriptor.NORMAL;
-	
+
 	/** The concrete type name. */
 	public String concreteTypeName;
-	
+
 	/** The map key concrete type. */
 	public String mapKeyConcreteType;
-	
+
 	/** The map value concrete type. */
 	public String mapValueConcreteType;
-	
+
 	/** The field name. */
 	public String fieldName;
-	
+
 	/** The field. */
 	public Field field;
-	
-	/** The enable factory helper getter. */
+
+	/** The enable getter helper. */
 	public boolean enableGetterHelper;
-	
-	/** The enable factory helper setter. */
+
+	/** The enable setter helper. */
 	public boolean enableSetterHelper;
-	
+
 	/** The is getter initialized. */
 	public boolean isGetterInitialized;
-	
+
 	/** The is setter initialized. */
 	public boolean isSetterInitialized;
-	
+
 	/** The getter. */
 	public String getter;
-	
+
 	/** The setter. */
 	public String setter;
-	
+
 	/** The field type. */
 	public Class<?> fieldType;
-	
+
 	/** The concrete type. */
 	public Class<?> concreteType;
-	
+
 	/** The declaring class. */
 	public Class<?> declaringClass;
-	
+
 	/** The parent. */
 	public OtcCommandDto parent;
-	
+
 	/** The children. */
 	public Map<String, OtcCommandDto> children;
 
 	/** The occurs in commands. */
 	public List<String> occursInCommands;
-	
+
 	/**
 	 * Instantiates a new otc command dto.
 	 *
@@ -287,117 +280,116 @@ public class OtcCommandDto {
 	public void addCommandId(String commandId) {
 		occursInCommands.add(commandId);
 	}
-	
-    /**
-     * Checks if is enum.
-     *
-     * @return true, if is enum
-     */
-    @JsonIgnore
-    public boolean isEnum() {
+
+	/**
+	 * Checks if is enum.
+	 *
+	 * @return true, if is enum
+	 */
+	@JsonIgnore
+	public boolean isEnum() {
 		return fieldType.isEnum();
 	}
 
-    /**
-     * Checks if is normal.
-     *
-     * @return true, if is normal
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is normal.
+	 *
+	 * @return true, if is normal
+	 */
+	@JsonIgnore
 	public boolean isNormal() {
 		return collectionDescriptor.isNormal();
 	}
 
-    /**
-     * Checks if is collection or map.
-     *
-     * @return true, if is collection or map
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is collection or map.
+	 *
+	 * @return true, if is collection or map
+	 */
+	@JsonIgnore
 	public boolean isCollectionOrMap() {
 		return isCollection() || isMap();
 	}
 
-    /**
-     * Checks if is collection.
-     *
-     * @return true, if is collection
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is collection.
+	 *
+	 * @return true, if is collection
+	 */
+	@JsonIgnore
 	public boolean isCollection() {
 		return collectionDescriptor.isCollection();
 	}
 
-    /**
-     * Checks if is array.
-     *
-     * @return true, if is array
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is array.
+	 *
+	 * @return true, if is array
+	 */
+	@JsonIgnore
 	public boolean isArray() {
 		return collectionDescriptor.isArray();
 	}
 
-    /**
-     * Checks if is collection or map member.
-     *
-     * @return true, if is collection or map member
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is collection or map member.
+	 *
+	 * @return true, if is collection or map member
+	 */
+	@JsonIgnore
 	public boolean isCollectionOrMapMember() {
 		return isCollectionMember() || isMapMember();
 	}
 
-    /**
-     * Checks if is collection member.
-     *
-     * @return true, if is collection member
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is collection member.
+	 *
+	 * @return true, if is collection member
+	 */
+	@JsonIgnore
 	public boolean isCollectionMember() {
 		return collectionDescriptor.isCollectionMember();
 	}
 
-    /**
-     * Checks if is map.
-     *
-     * @return true, if is map
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is map.
+	 *
+	 * @return true, if is map
+	 */
+	@JsonIgnore
 	public boolean isMap() {
 		return collectionDescriptor.isMap();
 	}
 
-    /**
-     * Checks if is map key.
-     *
-     * @return true, if is map key
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is map key.
+	 *
+	 * @return true, if is map key
+	 */
+	@JsonIgnore
 	public boolean isMapKey() {
 		return collectionDescriptor.isMapKey();
 	}
 
-    /**
-     * Checks if is map value.
-     *
-     * @return true, if is map value
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is map value.
+	 *
+	 * @return true, if is map value
+	 */
+	@JsonIgnore
 	public boolean isMapValue() {
 		return collectionDescriptor.isMapValue();
 	}
 
-    /**
-     * Checks if is map member.
-     *
-     * @return true, if is map member
-     */
-    @JsonIgnore
+	/**
+	 * Checks if is map member.
+	 *
+	 * @return true, if is map member
+	 */
+	@JsonIgnore
 	public boolean isMapMember() {
 		return collectionDescriptor.isMapKey() || collectionDescriptor.isMapValue();
 	}
-
 
 	/**
 	 * To string.
@@ -576,46 +568,46 @@ public class OtcCommandDto {
 	 * The Class Builder.
 	 */
 	public abstract static class Builder {
-		
+
 		/** The occurs in commands. */
 		public List<String> occursInCommands;
 
 		/** The enum target source. */
 		private TARGET_SOURCE enumTargetSource;
-		
+
 		/** The otc token. */
 		private String otcToken;
-		
+
 		/** The token path. */
 		private String tokenPath;
-		
+
 		/** The otc token index. */
 		private int otcTokenIndex;
-		
-		/** The is root node. */
+
+		/** The is first node. */
 		private boolean isFirstNode;
-		
+
 		/** The collection descriptor. */
 		private CollectionDescriptor collectionDescriptor = CollectionDescriptor.NORMAL;
-		
+
 		/** The concrete type name. */
 		private String concreteTypeName;
-		
+
 		/** The field name. */
 		private String fieldName;
-		
+
 		/** The field. */
 		private Field field;
-		
+
 		/** The field type. */
 		private Class<?> fieldType;
-		
+
 		/** The concrete type. */
 		private Class<?> concreteType;
-		
+
 		/** The parent. */
 		private OtcCommandDto parent;
-		
+
 		/** The children. */
 		private Map<String, OtcCommandDto> children;
 
@@ -685,9 +677,9 @@ public class OtcCommandDto {
 		}
 
 		/**
-		 * Adds the is root node.
+		 * Adds the is first node.
 		 *
-		 * @param isFirstNode the is root node
+		 * @param isFirstNode the is first node
 		 * @return the builder
 		 */
 		public Builder addIsFirstNode(boolean isFirstNode) {
@@ -778,7 +770,7 @@ public class OtcCommandDto {
 		/**
 		 * Adds the child.
 		 *
-		 * @param fieldName the field name
+		 * @param fieldName     the field name
 		 * @param otcCommandDto the otc command dto
 		 * @return the builder
 		 */
@@ -789,6 +781,5 @@ public class OtcCommandDto {
 			children.put(fieldName, otcCommandDto);
 			return this;
 		}
-		
 	}
 }

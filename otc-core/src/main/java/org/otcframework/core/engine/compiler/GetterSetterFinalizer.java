@@ -35,19 +35,21 @@ import org.otcframework.core.engine.compiler.exception.SemanticsException;
 import org.otcframework.core.engine.utils.OtcReflectionUtil;
 import org.otcframework.core.engine.utils.OtcReflectionUtil.GETTER_SETTER;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GetterSetterProcessor.
+ * The Class GetterSetterFinalizer.
  */
+// TODO: Auto-generated Javadoc
 final class GetterSetterFinalizer {
-	
+
 	/**
 	 * Process.
 	 *
-	 * @param script the script
-	 * @param otcCommandDto the otc command dto
-	 */	
-	public static void process(Map<String, OtcCommandDto> parentOCDs, Class<?> factoryHelper, TARGET_SOURCE targetSource) {	
+	 * @param parentOCDs    the parent OC ds
+	 * @param factoryHelper the factory helper
+	 * @param targetSource  the target source
+	 */
+	public static void process(Map<String, OtcCommandDto> parentOCDs, Class<?> factoryHelper,
+			TARGET_SOURCE targetSource) {
 		if (parentOCDs == null || parentOCDs.isEmpty()) {
 			return;
 		}
@@ -59,8 +61,15 @@ final class GetterSetterFinalizer {
 		}
 		return;
 	}
-	
-	private static void process(OtcCommandDto otcCommandDto, Class<?> factoryHelper, TARGET_SOURCE targetSource) {	
+
+	/**
+	 * Process.
+	 *
+	 * @param otcCommandDto the otc command dto
+	 * @param factoryHelper the factory helper
+	 * @param targetSource  the target source
+	 */
+	private static void process(OtcCommandDto otcCommandDto, Class<?> factoryHelper, TARGET_SOURCE targetSource) {
 		if (otcCommandDto == null) {
 			return;
 		}
@@ -74,9 +83,11 @@ final class GetterSetterFinalizer {
 					if (otcCommandDto.enableSetterHelper) {
 						setterType = "setterHelper";
 					}
-					throw new SemanticsException("", "Error finalizing " + setterType + " in " + targetOrSource + " '" + otcCommandDto.setter + 
-							"' for : '" + otcCommandDto.tokenPath  + "' - probable conflicts in command(s) " + 
-							otcCommandDto.occursInCommands, ex);
+					throw new SemanticsException("",
+							"Error finalizing " + setterType + " in " + targetOrSource + " '" + otcCommandDto.setter
+									+ "' for : '" + otcCommandDto.tokenPath + "' - probable conflicts in command(s) "
+									+ otcCommandDto.occursInCommands,
+							ex);
 				}
 			}
 			try {
@@ -86,60 +97,67 @@ final class GetterSetterFinalizer {
 				if (otcCommandDto.enableGetterHelper) {
 					getterType = "getterHelper";
 				}
-				throw new SemanticsException("", "Error finalizing " + getterType + " in " + targetOrSource + " '" + otcCommandDto.getter + 
-						"' for : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) " + 
-						otcCommandDto.occursInCommands, ex);
+				throw new SemanticsException("",
+						"Error finalizing " + getterType + " in " + targetOrSource + " '" + otcCommandDto.getter
+								+ "' for : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) "
+								+ otcCommandDto.occursInCommands,
+						ex);
 			}
 		}
 		process(otcCommandDto.children, factoryHelper, targetSource);
 		return;
 	}
 
-	public static void resetLeafHelperTypes(Map<String, OtcFileDto.CommandCommonParams> mapOtcCommands, 
+	/**
+	 * Reset leaf helper types.
+	 *
+	 * @param mapOtcCommands the map otc commands
+	 * @param sourceOCDs     the source OC ds
+	 * @param targetOCDs     the target OC ds
+	 * @param factoryHelper  the factory helper
+	 */
+	public static void resetLeafHelperTypes(Map<String, OtcFileDto.CommonCommandParams> mapOtcCommands,
 			Map<String, OtcCommandDto> sourceOCDs, Map<String, OtcCommandDto> targetOCDs, Class<?> factoryHelper) {
 		for (OtcCommandDto childOCD : targetOCDs.values()) {
 			if (childOCD.isRootNode) {
 				continue;
 			}
 			for (String commandId : childOCD.occursInCommands) {
-				OtcFileDto.CommandCommonParams otcCommand = mapOtcCommands.get(commandId);
+				OtcFileDto.CommonCommandParams otcCommand = mapOtcCommands.get(commandId);
 				Copy copy = null;
 				if (!(otcCommand instanceof Copy)) {
 					continue;
 					// Execute type is not required here.
 				}
 				copy = (Copy) otcCommand;
-				String targetOtcChain = copy.to.otcChain;
-				OtcCommandDto leafTargetOCD = OtcUtils.retrieveLeafOCD(targetOCDs, targetOtcChain); 
+				String targetOtcChain = copy.to.objectPath;
+				OtcCommandDto leafTargetOCD = OtcUtils.retrieveLeafOCD(targetOCDs, targetOtcChain);
 				if (!leafTargetOCD.enableSetterHelper) {
 					continue;
 				}
-				String sourceOtcChain = copy.from.otcChain;
+				String sourceOtcChain = copy.from.objectPath;
 				if (sourceOtcChain == null && copy.from.values != null) {
 					continue;
 				}
-				OtcCommandDto leafSourceOCD = OtcUtils.retrieveLeafOCD(sourceOCDs, sourceOtcChain); 
+				OtcCommandDto leafSourceOCD = OtcUtils.retrieveLeafOCD(sourceOCDs, sourceOtcChain);
 				Class<?> fieldType = leafSourceOCD.fieldType;
 				leafTargetOCD.isSetterInitialized = false;
 				OtcReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.SETTER, leafTargetOCD, fieldType);
 				leafTargetOCD.isSetterInitialized = true;
-
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * Inits the getter setter.
+	 * Inits the setter.
 	 *
 	 * @param factoryHelper the factory helper
 	 * @param otcCommandDto the otc command dto
-	 * @param script the script
 	 */
 	private static void initSetter(Class<?> factoryHelper, OtcCommandDto otcCommandDto) {
-		if (otcCommandDto.isSetterInitialized || otcCommandDto.isCollectionOrMapMember() ||
-				(otcCommandDto.parent != null && otcCommandDto.parent.isEnum()) ||
-				TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource) {
+		if (otcCommandDto.isSetterInitialized || otcCommandDto.isCollectionOrMapMember()
+				|| (otcCommandDto.parent != null && otcCommandDto.parent.isEnum())
+				|| TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource) {
 			return;
 		}
 		if (otcCommandDto.setter == null) {
@@ -163,11 +181,10 @@ final class GetterSetterFinalizer {
 	}
 
 	/**
-	 * Inits the getter setter.
+	 * Inits the getter.
 	 *
 	 * @param factoryHelper the factory helper
 	 * @param otcCommandDto the otc command dto
-	 * @param script the script
 	 */
 	private static void initGetter(Class<?> factoryHelper, OtcCommandDto otcCommandDto) {
 		if (otcCommandDto.isGetterInitialized || otcCommandDto.isCollectionOrMapMember()) {
@@ -175,7 +192,7 @@ final class GetterSetterFinalizer {
 		}
 		if (otcCommandDto.getter == null) {
 			String getter = null;
-			if (Boolean.class.isAssignableFrom(otcCommandDto.fieldType)) { 
+			if (Boolean.class.isAssignableFrom(otcCommandDto.fieldType)) {
 				getter = "is" + CommonUtils.initCap(otcCommandDto.fieldName);
 			} else {
 				getter = "get" + CommonUtils.initCap(otcCommandDto.fieldName);

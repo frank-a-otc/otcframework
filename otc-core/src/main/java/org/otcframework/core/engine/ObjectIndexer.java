@@ -26,20 +26,19 @@ import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.DeploymentDto;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface ObjectProfiler.
+ * The Interface ObjectIndexer.
  */
+// TODO: Auto-generated Javadoc
 interface ObjectIndexer {
 
 	/**
-	 * Profile object.
+	 * Index object.
 	 *
-	 * @param deploymentDto the deployment dto
+	 * @param deploymentDto    the deployment dto
 	 * @param enumTargetSource the enum target source
-	 * @param object the object
+	 * @param object           the object
 	 * @return the indexed collections dto
 	 */
 	IndexedCollectionsDto indexObject(DeploymentDto deploymentDto, TARGET_SOURCE enumTargetSource, Object object);
-
 }

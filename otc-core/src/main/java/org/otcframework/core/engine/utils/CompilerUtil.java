@@ -25,18 +25,18 @@ package org.otcframework.core.engine.utils;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.util.CommonUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CompilerUtil.
  */
+// TODO: Auto-generated Javadoc
 public final class CompilerUtil {
 
 	/**
 	 * Builds the java class name.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param otcFileName the otc file name
-	 * @param otcChain the otc chain
+	 * @param otcFileName  the otc file name
+	 * @param otcChain     the otc chain
 	 * @return the string
 	 */
 	public static String buildJavaClassName(String otcNamespace, String otcFileName, String otcChain) {
@@ -68,7 +68,7 @@ public final class CompilerUtil {
 	 * Builds the java class name.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param otcFileName the otc file name
+	 * @param otcFileName  the otc file name
 	 * @return the string
 	 */
 	public static String buildJavaClassName(String otcNamespace, String otcFileName) {

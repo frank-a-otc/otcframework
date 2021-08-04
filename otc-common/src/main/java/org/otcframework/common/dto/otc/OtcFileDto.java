@@ -29,27 +29,27 @@ import java.util.List;
  * The Class OtcFileDto.
  */
 public final class OtcFileDto {
-	
+
 	/** The file name. */
 	public String fileName;
-	
+
 	/** The metadata. */
 	public Metadata metadata;
-	
-	/** The otc scripts. */
+
+	/** The otc commands. */
 	public List<OtcCommands> otcCommands;
 
 	/**
 	 * The Class Metadata.
 	 */
 	public static final class Metadata {
-		
-		/** The main class name. */
+
+		/** The entry class name. */
 		public String entryClassName;
-		
+
 		/** The helper. */
 		public String helper;
-		
+
 		/** The object types. */
 		public ObjectTypes objectTypes;
 
@@ -57,56 +57,56 @@ public final class OtcFileDto {
 		 * The Class ObjectTypes.
 		 */
 		public static final class ObjectTypes {
-			
+
 			/** The source. */
 			public String source;
-			
+
 			/** The target. */
 			public String target;
 		}
 	}
 
 	/**
-	 * The Class OtcScript.
+	 * The Class OtcCommands.
 	 */
 	public static final class OtcCommands {
-		
+
 		/** The copy. */
 		public Copy copy;
-		
+
 		/** The execute. */
 		public Execute execute;
 	}
 
 	/**
-	 * The Class Command.
+	 * The Class CommonCommandParams.
 	 */
-	public static class CommandCommonParams {
-		
+	public static class CommonCommandParams {
+
 		/** The id. */
 		public String id;
-		
+
 		/** The factory class name. */
 		public String factoryClassName;
-		
+
 		/** The disable. */
 		public boolean disable;
-		
+
 		/** The debug. */
 		public boolean debug;
 	}
-	
+
 	/**
 	 * The Class Copy.
 	 */
-	public static final class Copy extends CommandCommonParams {
-		
+	public static final class Copy extends CommonCommandParams {
+
 		/** The from. */
 		public Source from;
-		
+
 		/** The to. */
 		public TargetDto to;
-		
+
 		/**
 		 * To string.
 		 *
@@ -121,39 +121,38 @@ public final class OtcFileDto {
 		 * The Class Source.
 		 */
 		public static final class Source extends SourceDto {
-			
+
 			/** The values. */
 			public List<String> values;
-			
+
 			/**
 			 * To string.
 			 *
 			 * @return the string
 			 */
 			public String toString() {
-				return "Source [values=" + values + ", otcChain=" + otcChain + ", overrides=" + overrides + "]";
+				return "Source [values=" + values + ", otcChain=" + objectPath + ", overrides=" + overrides + "]";
 			}
-
 		}
 	}
-	
+
 	/**
 	 * The Class Execute.
 	 */
-	public static final class Execute extends CommandCommonParams {
-		
+	public static final class Execute extends CommonCommandParams {
+
 		/** The otc converter. */
 		public String otcConverter;
-		
+
 		/** The otc module. */
 		public OtcModule otcModule;
-		
+
 		/** The execution order. */
 		public List<String> executionOrder;
-		
+
 		/** The source. */
 		public SourceDto source;
-		
+
 		/** The target. */
 		public TargetDto target;
 
@@ -161,10 +160,9 @@ public final class OtcFileDto {
 		 * The Class OtcModule.
 		 */
 		public static final class OtcModule {
-			
+
 			/** The otc namespace. */
 			public String otcNamespace;
 		}
 	}
-
 }

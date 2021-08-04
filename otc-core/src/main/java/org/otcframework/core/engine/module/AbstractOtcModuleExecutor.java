@@ -28,13 +28,30 @@ import org.otcframework.common.engine.OtcEngine;
 import org.otcframework.core.engine.OtcEngineImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+// TODO: Auto-generated Javadoc
 
+/**
+ * The Class AbstractOtcModuleExecutor.
+ */
 public abstract class AbstractOtcModuleExecutor {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOtcModuleExecutor.class);
 
+	/** The otc engine. */
 	private static OtcEngine otcEngine = OtcEngineImpl.getInstance();
-	
+
+	/**
+	 * Execute module.
+	 *
+	 * @param <S>          the generic type
+	 * @param <T>          the generic type
+	 * @param otcNamespace the otc namespace
+	 * @param source       the source
+	 * @param target       the target
+	 * @param config       the config
+	 * @return the t
+	 */
 	protected static <S, T> T executeModule(String otcNamespace, S source, T target, Map<String, Object> config) {
 		LOGGER.debug(AbstractOtcModuleExecutor.class.getName() + " called!");
 		T newTarget = null;
@@ -45,5 +62,4 @@ public abstract class AbstractOtcModuleExecutor {
 		}
 		return newTarget;
 	}
-
 }

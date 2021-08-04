@@ -28,26 +28,25 @@ import org.otcframework.common.dto.ScriptDto;
 import org.otcframework.common.util.OtcUtils;
 import org.otcframework.common.util.PropertyConverterUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcSytaxChecker.
  */
+// TODO: Auto-generated Javadoc
 final class OtcSytaxChecker {
 
 	/**
 	 * Check syntax.
 	 *
-	 * @param script the script
-	 * @param clz the clz
-	 * @param factoryHelper the factory helper
+	 * @param script        the script
+	 * @param clz           the clz
 	 * @param otcCommandDto the otc command dto
-	 * @param otcChain the otc chain
-	 * @param otcTokens the otc tokens
-	 * @param rawOtcToken the raw otc token
+	 * @param otcChain      the otc chain
+	 * @param otcTokens     the otc tokens
+	 * @param rawOtcToken   the raw otc token
 	 * @return true, if successful
 	 */
-	static boolean checkSyntax(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto, String otcChain, 
-		String[] otcTokens, String rawOtcToken) {
+	static boolean checkSyntax(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto, String otcChain,
+			String[] otcTokens, String rawOtcToken) {
 		boolean isAnchored = rawOtcToken.contains(OtcConstants.ANCHOR);
 		if (isAnchored) {
 			AnchorNotationProcessor.process(script.command.id, otcCommandDto, rawOtcToken, otcChain, otcTokens);
@@ -73,8 +72,7 @@ final class OtcSytaxChecker {
 				// then chain has a collection
 				isCollectionNotation = true;
 				otcCommandDto.hasCollectionNotation = true;
-				if (!rawOtcToken.contains(OtcConstants.ARR_REF)
-						&& !rawOtcToken.contains(OtcConstants.PRE_ANCHOR)
+				if (!rawOtcToken.contains(OtcConstants.ARR_REF) && !rawOtcToken.contains(OtcConstants.PRE_ANCHOR)
 						&& !rawOtcToken.contains(OtcConstants.POST_ANCHOR)) {
 					String idxCharacter = OtcUtils.retrieveIndexCharacter(rawOtcToken);
 					// -- throw exception if cannot be converted to integer.
@@ -105,5 +103,4 @@ final class OtcSytaxChecker {
 		otcCommandDto.otcToken = otcToken;
 		return true;
 	}
-
 }

@@ -37,10 +37,10 @@ import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CopyValuesCommandCodeGenerator.
  */
+// TODO: Auto-generated Javadoc
 final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/** The Constant LOGGER. */
@@ -55,9 +55,8 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		OtcCommand otcCommand = executionContext.otcCommand;
 		Class<?> targetClz = executionContext.targetClz;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
-		Class<?> sourceClz = executionContext.sourceClz; 
+		Class<?> sourceClz = executionContext.sourceClz;
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
-
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
 		targetOCC.algorithmId = ALGORITHM_ID.COPYVALUES;
 		boolean addLogger = false;
@@ -66,23 +65,22 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		}
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
 		TargetOtcCommandContext clonedTargetOCC = null;
-
 		int offsetIdx = 0;
-		int scriptGroupIdx = 0;	
-
-		if (scriptDto.command.debug) { 
+		int scriptGroupIdx = 0;
+		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
 			int dummy = 0;
 		}
 		List<String> values = ((Copy) scriptDto.command).from.values;
 		if (values == null) {
-			LOGGER.warn("'values:' property in OTC-command : {} is empty! Skiping Code-generation.", scriptDto.command.id);
+			LOGGER.warn("'values:' property in OTC-command : {} is empty! Skiping Code-generation.",
+					scriptDto.command.id);
 			return;
 		}
 		otcCommand.clearCache();
 		otcCommand.appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, addLogger);
 		clonedTargetOCC = targetOCC.clone();
-		if (!clonedTargetOCC.isLeaf()) { 
+		if (!clonedTargetOCC.isLeaf()) {
 			otcCommand.appendInitUptoAnchoredOrLastCollectionOrLeaf(clonedTargetOCC, 0, false, LogLevel.WARN);
 			if (clonedTargetOCC.otcCommandDto.isCollectionOrMap()) {
 				targetOCD = OtcCommand.retrieveMemberOCD(clonedTargetOCC);
@@ -97,22 +95,22 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		otcCommand.createJavaFile(targetOCC, targetClz, sourceClz);
 		return;
 	}
-	
+
 	/**
 	 * Process remaining path.
 	 *
-	 * @param targetOCC the target OCC
-	 * @param otcCommand the otc command
-	 * @param scriptDto the script dto
+	 * @param targetOCC      the target OCC
+	 * @param otcCommand     the otc command
+	 * @param scriptDto      the script dto
 	 * @param scriptGroupIdx the script group idx
-	 * @param offsetIdx the offset idx
+	 * @param offsetIdx      the offset idx
 	 * @return the int
 	 */
 	private static int processRemainingPath(TargetOtcCommandContext targetOCC, OtcCommand otcCommand,
 			ScriptDto scriptDto, int scriptGroupIdx, int offsetIdx) {
 		OtcCommandDto memberOCD = targetOCC.otcCommandDto;
 		if (targetOCC.hasPreAnchor) {
-			otcCommand.appendAssignParentPcdToAnchoredPcd(targetOCC); 
+			otcCommand.appendAssignParentPcdToAnchoredPcd(targetOCC);
 		}
 		OtcCommandDto childOCD = memberOCD;
 		OtcCommandDto lastMemberOCD = null;
@@ -143,7 +141,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 				if (childOCD.isCollectionOrMapMember()) {
 					Integer memberIdx = getIndex(targetOCC, idx, scriptGroupIdx, offsetIdx);
 					if (childOCD.isMapKey()) {
-						if (targetOCC.hasDescendantCollectionOrMap()) { 
+						if (targetOCC.hasDescendantCollectionOrMap()) {
 							if (targetOCC.hasMapValueDescendant()) {
 								otcCommand.appendIfNullTargetMemberPcdReturn(targetOCC, memberIdx, LogLevel.WARN);
 							} else {
@@ -156,15 +154,15 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 						otcCommand.appendAddMapValue(targetOCC, null, value, memberIdx, LogLevel.WARN);
 					} else if (childOCD.isCollectionMember()) {
 						if (targetOCC.hasMapValueDescendant()) {
-							if (isCurrentPreAnchored || (isCurrentPostAnchored && idx == 0) ||
-									(!targetOCC.hasAnchorInChain && offsetIdx == 0) ||
-									!targetOCC.hasDescendantCollectionOrMap() || offsetIdx == 0) {
+							if (isCurrentPreAnchored || (isCurrentPostAnchored && idx == 0)
+									|| (!targetOCC.hasAnchorInChain && offsetIdx == 0)
+									|| !targetOCC.hasDescendantCollectionOrMap() || offsetIdx == 0) {
 								otcCommand.appendIfNullTargetMemberPcdReturn(targetOCC, memberIdx, LogLevel.WARN);
 							}
 						} else {
-							if (isCurrentPreAnchored || (isCurrentPostAnchored && idx == 0) ||
-									(!targetOCC.hasAnchorInChain && offsetIdx == 0) ||
-									!targetOCC.hasDescendantCollectionOrMap() || offsetIdx == 0) {
+							if (isCurrentPreAnchored || (isCurrentPostAnchored && idx == 0)
+									|| (!targetOCC.hasAnchorInChain && offsetIdx == 0)
+									|| !targetOCC.hasDescendantCollectionOrMap() || offsetIdx == 0) {
 								otcCommand.appendAddToCollection(targetOCC, null, memberIdx, value);
 							}
 						}
@@ -187,13 +185,13 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 				if (childOCD.isCollectionOrMap()) {
 					childOCD = OtcCommand.retrieveMemberOCD(targetOCC);
-					targetOCC.otcCommandDto = childOCD; 
+					targetOCC.otcCommandDto = childOCD;
 					if (!targetOCC.hasDescendantCollectionOrMap()) {
 						lastMemberOCD = childOCD;
 					}
 				} else {
-					if ((childOCD.isCollectionMember() || childOCD.isMapMember()) && 
-							!targetOCC.hasDescendantCollectionOrMap()) {
+					if ((childOCD.isCollectionMember() || childOCD.isMapMember())
+							&& !targetOCC.hasDescendantCollectionOrMap()) {
 						lastMemberOCD = childOCD;
 					}
 					childOCD = OtcCommand.retrieveNextOCD(targetOCC);

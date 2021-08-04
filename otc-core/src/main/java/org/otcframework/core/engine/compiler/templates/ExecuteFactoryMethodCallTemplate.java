@@ -24,23 +24,24 @@ package org.otcframework.core.engine.compiler.templates;
 
 import org.otcframework.common.util.CommonUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ExecuteFactoryMethodCallTemplate.
  */
+// TODO: Auto-generated Javadoc
 public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 
 	/**
 	 * Instantiates a new execute factory method call template.
 	 */
-	private ExecuteFactoryMethodCallTemplate() {}
+	private ExecuteFactoryMethodCallTemplate() {
+	}
 
 	/**
 	 * Generate code.
 	 *
 	 * @param factoryClzName the factory clz name
-	 * @param targetClz the target clz
-	 * @param sourceClz the source clz
+	 * @param targetClz      the target clz
+	 * @param sourceClz      the source clz
 	 * @return the string
 	 */
 	public static String generateCode(String factoryClzName, Class<?> targetClz, Class<?> sourceClz) {
@@ -51,9 +52,8 @@ public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 			sourceVar = CommonUtils.initLower(sourceClz.getSimpleName());
 			sourceICD = "sourceICD";
 		}
-		String executeMethodCallCode = String.format(executeFactoryMethodCallTemplate, factoryClzName, sourceVar, sourceICD, 
-				targetVar);
+		String executeMethodCallCode = String.format(executeFactoryMethodCallTemplate, factoryClzName, sourceVar,
+				sourceICD, targetVar);
 		return executeMethodCallCode;
 	}
-
 }

@@ -34,16 +34,17 @@ import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 import org.otcframework.core.engine.compiler.templates.AbstractTemplate;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CopyCollectionPathsCodeGenerator.
  */
+// TODO: Auto-generated Javadoc
 final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
-	
+
 	/**
 	 * Instantiates a new copy collection paths code generator.
 	 */
-	private CopyCollectionPathsCodeGenerator() { }
+	private CopyCollectionPathsCodeGenerator() {
+	}
 
 	/**
 	 * Generate source code.
@@ -54,12 +55,10 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 		OtcCommand otcCommand = executionContext.otcCommand;
 		Class<?> targetClz = executionContext.targetClz;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
-		Class<?> sourceClz = executionContext.sourceClz; 
+		Class<?> sourceClz = executionContext.sourceClz;
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
-		
 		targetOCC.algorithmId = ALGORITHM_ID.COLLECTIONS;
 		boolean addLogger = true;
-				
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
@@ -82,25 +81,22 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 	}
 
 	/**
-	 * Execute otc recursive.
+	 * Generate code.
 	 *
 	 * @param executionContext the execution context
 	 */
 	@SuppressWarnings("unchecked")
 	private static void generateCode(ExecutionContext executionContext) {
-
 		OtcCommand otcCommand = executionContext.otcCommand;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
-
 		int sourceCollectionsCount = sourceOCC.collectionsCount;
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
-
 		int targetCollectionsCount = targetOCC.collectionsCount;
 		if (!sourceOCD.isCollectionOrMap()) {
 			sourceOCD = OtcCommand.retrieveNextCollectionOrMapOCD(sourceOCC);
-			sourceOCC.otcCommandDto = sourceOCD; 
+			sourceOCC.otcCommandDto = sourceOCD;
 		}
 		while (true) {
 			if (sourceCollectionsCount > 0) {
@@ -177,15 +173,15 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 	 * Append init anchored.
 	 *
 	 * @param executionContext the execution context
-	 * @param otcCommand the otc command
+	 * @param otcCommand       the otc command
 	 */
 	private static void appendInitAnchored(ExecutionContext executionContext, OtcCommand otcCommand) {
 		String idxVar = null;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
-		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionComparisonType = 
-				executionContext.currentCollectionSizeType(targetOCC);
-		if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == currentCollectionComparisonType ||
-				CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == currentCollectionComparisonType) {
+		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionComparisonType = executionContext
+				.currentCollectionSizeType(targetOCC);
+		if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == currentCollectionComparisonType
+				|| CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == currentCollectionComparisonType) {
 			idxVar = AbstractTemplate.SOURCE_IDX + 0;
 		} else if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE == currentCollectionComparisonType) {
 			if (targetOCC.currentCollectionTokenIndex < targetOCC.collectionsCount) {
@@ -200,18 +196,19 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 		targetOCC.anchorIndex = targetOCC.currentCollectionTokenIndex;
 		return;
 	}
-	
+
 	/**
 	 * Append init has anchor.
 	 *
 	 * @param executionContext the execution context
-	 * @param otcCommand the otc command
+	 * @param otcCommand       the otc command
 	 */
 	private static void appendInitHasAnchor(ExecutionContext executionContext, OtcCommand otcCommand) {
 		String idxVar = null;
 		OtcCommandContext sourceOCC = executionContext.sourceOCC;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
-		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionComparisonType = executionContext.currentCollectionSizeType(targetOCC);
+		CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionComparisonType = executionContext
+				.currentCollectionSizeType(targetOCC);
 		if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == currentCollectionComparisonType) {
 			if (targetOCC.currentCollectionTokenIndex > sourceOCC.collectionsCount) {
 				otcCommand.appendInitMember(targetOCC, sourceOCC, 0, false, LogLevel.WARN);
@@ -219,8 +216,8 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 				idxVar = AbstractTemplate.SOURCE_IDX + (targetOCC.currentCollectionTokenIndex - targetOCC.anchorIndex);
 				otcCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 			}
-		} else if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE == currentCollectionComparisonType ||
-				CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == currentCollectionComparisonType) {
+		} else if (CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE == currentCollectionComparisonType
+				|| CHAINS_COLLECTION_COMPARISON_TYPE.EQUAL_SIZE == currentCollectionComparisonType) {
 			if (targetOCC.currentCollectionTokenIndex < targetOCC.collectionsCount) {
 				idxVar = AbstractTemplate.SOURCE_IDX + (targetOCC.currentCollectionTokenIndex - targetOCC.anchorIndex);
 				otcCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
@@ -236,12 +233,12 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 		}
 		return;
 	}
-	
+
 	/**
-	 * Append init no anchor.
+	 * Append init non anchored.
 	 *
 	 * @param executionContext the execution context
-	 * @param otcCommand the otc command
+	 * @param otcCommand       the otc command
 	 */
 	private static void appendInitNonAnchored(ExecutionContext executionContext, OtcCommand otcCommand) {
 		String idxVar = null;
@@ -273,5 +270,4 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 		}
 	}
-
 }

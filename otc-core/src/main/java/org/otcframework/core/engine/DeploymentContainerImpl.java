@@ -51,10 +51,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DeploymentContainerImpl.
  */
+// TODO: Auto-generated Javadoc
 final class DeploymentContainerImpl implements DeploymentContainer {
 
 	/** The Constant LOGGER. */
@@ -62,19 +62,19 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 
 	/** The map packaged otc dtos. */
 	private Map<String, DeploymentDto> mapPackagedOtcDtos = new HashMap<>();
-	
+
 	/** The Constant otcDeploymentContainer. */
 	private static final DeploymentContainer otcDeploymentContainer = new DeploymentContainerImpl();
-	
+
 	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
-	
+
 	/** The Constant msgPack. */
 	private static final MessagePack msgPack = new MessagePack();
-	
+
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-	
+
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader = OtcConfig.getTargetClassLoader();
 
@@ -116,17 +116,19 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 				byte[] contents = msgPack.read(fis, byte[].class);
 				DeploymentDto deploymentDto = objectMapper.readValue(contents, DeploymentDto.class);
 				if (deploymentDto.isError) {
-					LOGGER.error("Ignoring deployment of {}. " +
-							"Probable cause: full compilation did not succeed on previous attempt.", file.getAbsolutePath());
+					LOGGER.error(
+							"Ignoring deployment of {}. "
+									+ "Probable cause: full compilation did not succeed on previous attempt.",
+							file.getAbsolutePath());
 					continue;
 				}
 				for (CompiledInfo compiledInfo : deploymentDto.compiledInfos.values()) {
 					// init source
 					initOtcCommandDto(compiledInfo.id, compiledInfo.sourceOCDStem, deploymentDto.sourceClz,
-							compiledInfo.sourceOtcChainDto); 
+							compiledInfo.sourceOtcChainDto);
 					// init target
 					initOtcCommandDto(compiledInfo.id, compiledInfo.targetOCDStem, deploymentDto.targetClz,
-							compiledInfo.targetOtcChainDto); 
+							compiledInfo.targetOtcChainDto);
 				}
 				deploy(deploymentDto);
 				hasDeployments = true;
@@ -142,14 +144,14 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		}
 		return;
 	}
-	
+
 	/**
 	 * Inits the otc command dto.
 	 *
-	 * @param id the id
+	 * @param id            the id
 	 * @param otcCommandDto the otc command dto
-	 * @param clz the clz
-	 * @param otcChainDto the otc chain dto
+	 * @param clz           the clz
+	 * @param otcChainDto   the otc chain dto
 	 */
 	private void initOtcCommandDto(String id, OtcCommandDto otcCommandDto, Class<?> clz, OtcChainDto otcChainDto) {
 		if (otcCommandDto == null) {
@@ -170,7 +172,8 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 					if (otcChainDto.rawOtcTokens[otcCommandDto.otcTokenIndex].contains(OtcConstants.MAP_KEY_REF)) {
 						otcCommandDto = otcCommandDto.children.get(OtcConstants.MAP_KEY_REF + otcCommandDto.fieldName);
 					} else {
-						otcCommandDto = otcCommandDto.children.get(OtcConstants.MAP_VALUE_REF + otcCommandDto.fieldName);
+						otcCommandDto = otcCommandDto.children
+								.get(OtcConstants.MAP_VALUE_REF + otcCommandDto.fieldName);
 					}
 				}
 			}
@@ -181,7 +184,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		}
 		return;
 	}
-	
+
 	/**
 	 * Deploy.
 	 *
@@ -220,8 +223,8 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	 * Retrieve deployment dto.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param source the source
-	 * @param targetClz the target clz
+	 * @param source       the source
+	 * @param targetClz    the target clz
 	 * @return the deployment dto
 	 */
 	@Override
@@ -234,8 +237,8 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	 * Retrieve deployment dto.
 	 *
 	 * @param otcNamespace the otc namespace
-	 * @param sourceClz the source clz
-	 * @param targetClz the target clz
+	 * @param sourceClz    the source clz
+	 * @param targetClz    the target clz
 	 * @return the deployment dto
 	 */
 	@Override
@@ -258,5 +261,4 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 		}
 		return deploymentDto;
 	}
-
 }

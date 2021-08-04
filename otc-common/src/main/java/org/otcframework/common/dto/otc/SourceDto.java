@@ -24,15 +24,15 @@ package org.otcframework.common.dto.otc;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class OtcFileDto.
+ * The Class SourceDto.
  */
+// TODO: Auto-generated Javadoc
 public class SourceDto {
-		
+
 	/** The otc chain. */
-	public String otcChain;
-	
+	public String objectPath;
+
 	/** The overrides. */
 	public List<OverrideDto> overrides;
 }

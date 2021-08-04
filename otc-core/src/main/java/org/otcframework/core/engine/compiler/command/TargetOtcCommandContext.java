@@ -26,46 +26,46 @@ import org.otcframework.common.OtcConstants.ALGORITHM_ID;
 import org.otcframework.common.dto.ClassDto;
 import org.otcframework.common.engine.compiler.OtcCommandContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TargetOtcCommandContext.
  */
+// TODO: Auto-generated Javadoc
 public final class TargetOtcCommandContext extends OtcCommandContext {
 
 	/** The helper. */
 	public String helper;
-		
+
 	/** The main class dto. */
 	public ClassDto mainClassDto;
-	
+
 	/** The factory class dto. */
 	public ClassDto factoryClassDto;
-	
-	/** The has anchor. */
+
+	/** The has anchor in chain. */
 	public boolean hasAnchorInChain;
-	
+
 	/** The has pre anchor. */
 	public boolean hasPreAnchor;
-	
+
 	/** The has post anchor. */
 	public boolean hasPostAnchor;
-	
+
 	/** The execute module otc namespace. */
 	public String executeModuleOtcNamespace;
-	
+
 	/** The has execute module. */
 	public boolean hasExecuteModule;
-	
+
 	/** The execute otc converter. */
 	public String executeOtcConverter;
-	
+
 	/** The has execute converter. */
 	public boolean hasExecuteConverter;
-	
+
 	/** The algorithm id. */
 	public ALGORITHM_ID algorithmId;
 
-	/** The loop counter. */
+	/** The loops counter. */
 	public int loopsCounter;
 
 	/** The anchor index. */

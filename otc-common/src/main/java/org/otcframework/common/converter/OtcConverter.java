@@ -24,20 +24,20 @@ package org.otcframework.common.converter;
 
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface OtcConverter.
  */
+// TODO: Auto-generated Javadoc
 public interface OtcConverter {
 
 	/**
 	 * Convert.
 	 *
-	 * @param <S> the generic type
-	 * @param <T> the generic type
+	 * @param <S>          the generic type
+	 * @param <T>          the generic type
 	 * @param sourceObject the source object
 	 * @param targetObject the target object
-	 * @param data the data
+	 * @param data         the data
 	 * @return the t
 	 */
 	public <S, T> T convert(S sourceObject, T targetObject, Map<String, Object> data);

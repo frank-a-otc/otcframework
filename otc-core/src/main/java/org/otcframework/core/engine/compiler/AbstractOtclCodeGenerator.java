@@ -39,23 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
-/**
- * The Class AbstractOtcCodeGenerator.
- */
-abstract class AbstractOtcCodeGenerator  {
-		
-	/** The Constant LOGGER. */
+abstract class AbstractOtcCodeGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOtcCodeGenerator.class);
 
-	/**
-	 * Gets the index.
-	 *
-	 * @param targetOCC the target OCC
-	 * @param currentIdx the current idx
-	 * @param scriptGroupIdx the script group idx
-	 * @param offsetIdx the offset idx
-	 * @return the index
-	 */
 	protected static Integer getIndex(TargetOtcCommandContext targetOCC, Integer currentIdx, int scriptGroupIdx,
 			Integer offsetIdx) {
 		Integer idx = null;
@@ -78,13 +64,7 @@ abstract class AbstractOtcCodeGenerator  {
 		}
 		return idx;
 	}
-	
-	/**
-	 * Reset OCC.
-	 *
-	 * @param targetOCC the target OCC
-	 * @param scriptDto the script dto
-	 */
+
 	protected static void resetOCC(TargetOtcCommandContext targetOCC, ScriptDto scriptDto) {
 		targetOCC.scriptDto = scriptDto;
 		String commandId = scriptDto.command.id;
@@ -95,11 +75,11 @@ abstract class AbstractOtcCodeGenerator  {
 		targetOCC.otcTokens = targetOtcChainDto.otcTokens;
 		targetOCC.rawOtcTokens = targetOtcChainDto.rawOtcTokens;
 		targetOCC.hasAnchorInChain = targetOtcChain.contains(OtcConstants.ANCHOR);
-		boolean hasPreAnchor = targetOtcChain.contains(OtcConstants.PRE_ANCHOR) || 
-				targetOtcChain.contains(OtcConstants.MAP_PRE_ANCHOR);
+		boolean hasPreAnchor = targetOtcChain.contains(OtcConstants.PRE_ANCHOR)
+				|| targetOtcChain.contains(OtcConstants.MAP_PRE_ANCHOR);
 		targetOCC.hasPreAnchor = hasPreAnchor;
-		boolean hasPostAnchor = targetOtcChain.contains(OtcConstants.POST_ANCHOR) || 
-				targetOtcChain.contains(OtcConstants.MAP_POST_ANCHOR);
+		boolean hasPostAnchor = targetOtcChain.contains(OtcConstants.POST_ANCHOR)
+				|| targetOtcChain.contains(OtcConstants.MAP_POST_ANCHOR);
 		targetOCC.hasPostAnchor = hasPostAnchor;
 		if (scriptDto.command instanceof Execute) {
 			Execute execute = (Execute) scriptDto.command;
@@ -123,7 +103,9 @@ abstract class AbstractOtcCodeGenerator  {
 		}
 		targetOCC.factoryClassDto.className = factoryClzName;
 		if (factoryClzName.contains(".")) {
-			LOGGER.warn("Stripping illegal presence of Namespace/Package name in 'factoryClassName' property in command-id : {}", commandId);
+			LOGGER.warn(
+					"Stripping illegal presence of Namespace/Package name in 'factoryClassName' property in command-id : {}",
+					commandId);
 			int idx = factoryClzName.lastIndexOf(".");
 			String pkg = factoryClzName.substring(0, idx);
 			String clzName = factoryClzName.substring(idx + 1);
@@ -132,13 +114,7 @@ abstract class AbstractOtcCodeGenerator  {
 		}
 		targetOCC.currentCollectionTokenIndex = 0;
 	}
-	
-	/**
-	 * Reset OCC.
-	 *
-	 * @param sourceOCC the source OCC
-	 * @param scriptDto the script dto
-	 */
+
 	protected static void resetOCC(SourceOtcCommandContext sourceOCC, ScriptDto scriptDto) {
 		OtcChainDto sourceOtcChainDto = scriptDto.sourceOtcChainDto;
 		if (sourceOtcChainDto != null) {
@@ -148,15 +124,8 @@ abstract class AbstractOtcCodeGenerator  {
 		}
 		sourceOCC.currentCollectionTokenIndex = 0;
 	}
-	
-	/**
-	 * Adds the java string object.
-	 *
-	 * @param javaFileObjects the java file objects
-	 * @param javaStringObject the java string object
-	 * @return the list
-	 */
-	protected static List<JavaFileObject> addJavaStringObject(List<JavaFileObject> javaFileObjects, 
+
+	protected static List<JavaFileObject> addJavaStringObject(List<JavaFileObject> javaFileObjects,
 			JavaCodeStringObject javaStringObject) {
 		if (javaFileObjects == null) {
 			javaFileObjects = new ArrayList<>();
@@ -164,5 +133,4 @@ abstract class AbstractOtcCodeGenerator  {
 		javaFileObjects.add(javaStringObject);
 		return javaFileObjects;
 	}
-
 }

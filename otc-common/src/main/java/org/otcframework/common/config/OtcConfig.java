@@ -40,21 +40,21 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.common.util.PropertyConverterUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum OtcConfig.
  */
+// TODO: Auto-generated Javadoc
 public enum OtcConfig {
-	
+
 	/** The instance. */
 	instance;
 
 	/** The Constant OTC_HOME_ENV_VAR. */
 	private static final String OTC_HOME_ENV_VAR = "OTC_HOME";
 
-	/** The otc test source. */
+	/** The Constant OTC_UNITTEST_FOLDER. */
 	private static final String OTC_UNITTEST_FOLDER = "/otc-unittest";
-	
+
 	/** The Constant COMPILER_CODEGEN_SOURCE_BASEDIR. */
 	private static final String COMPILER_CODEGEN_SOURCE_BASEDIR = "compiler.codegen.source.basedir";
 
@@ -63,13 +63,13 @@ public enum OtcConfig {
 
 	/** The Constant COMPILER_SOURCECODE_FAILONERROR. */
 	private static final String COMPILER_SOURCECODE_FAILONERROR = "compiler.sourcecode.failonerror";
-	
-	/** The Constant compilerSourcecodeFailonerror. */
+
+	/** The compiler sourcecode failonerror. */
 	private static boolean compilerSourcecodeFailonerror = false;
 
 	/** The Constant otcHome. */
 	private static final String otcHome;
-	
+
 	/** The Constant otcConfigProps. */
 	private static final Properties otcConfigProps = new Properties();
 
@@ -86,7 +86,7 @@ public enum OtcConfig {
 		Map<String, String> sysEnv = System.getenv();
 		if (!sysEnv.containsKey(OTC_HOME_ENV_VAR)) {
 			throw new OtcConfigException("",
-					"Oops... Cannot proceed - 'otc_home' not set! Please set otc_home environment variable.");
+					"Oops... Cannot proceed - 'otc_home' not set! Please set 'otc_home' environment variable.");
 		}
 		otcHome = sysEnv.get(OTC_HOME_ENV_VAR);
 		if (CommonUtils.isEmpty(otcHome)) {
@@ -95,8 +95,8 @@ public enum OtcConfig {
 		try (InputStream inStream = new FileInputStream(otcHome + "/config/otc.properties")) {
 			otcConfigProps.load(inStream);
 			if (!otcConfigProps.containsKey(EXECUTOR_PACKAGES_FILTER)) {
-				throw new OtcConfigException("", "Oops... Cannot proceed - 'otc.pkgsToInclude' not set in '"
-						+ otcHome + "/config/otc.properties' file");
+				throw new OtcConfigException("", "Oops... Cannot proceed - 'otc.pkgsToInclude' not set in '" + otcHome
+						+ "/config/otc.properties' file");
 			}
 		} catch (IOException ex) {
 			throw new OtcConfigException(ex);
@@ -104,9 +104,9 @@ public enum OtcConfig {
 		String filteredPackages = otcConfigProps.getProperty(EXECUTOR_PACKAGES_FILTER);
 		String compilerSourcecodeFailonerror = otcConfigProps.getProperty(COMPILER_SOURCECODE_FAILONERROR);
 		try {
-			OtcConfig.compilerSourcecodeFailonerror = PropertyConverterUtil.toBooleanObject(compilerSourcecodeFailonerror);
+			OtcConfig.compilerSourcecodeFailonerror = PropertyConverterUtil
+					.toBooleanObject(compilerSourcecodeFailonerror);
 		} catch (Exception ex) {
-			
 		}
 		if (!filteredPackages.contains(",") && filteredPackages.contains(" ")) {
 			filteredPackages = filteredPackages.replace("  ", " ").replace(" ", ",");
@@ -158,9 +158,9 @@ public enum OtcConfig {
 	}
 
 	/**
-	 * Gets the generated code source location.
+	 * Gets the source code location.
 	 *
-	 * @return the generated code source location
+	 * @return the source code location
 	 */
 	public static String getSourceCodeLocation() {
 		String sourceCodeLocation = null;
@@ -187,9 +187,9 @@ public enum OtcConfig {
 	}
 
 	/**
-	 * Gets the otc target location.
+	 * Gets the compiled code location.
 	 *
-	 * @return the otc target location
+	 * @return the compiled code location
 	 */
 	public static String getCompiledCodeLocation() {
 		checkOtcHomeSet();
@@ -197,9 +197,9 @@ public enum OtcConfig {
 	}
 
 	/**
-	 * Gets the expected result location.
+	 * Gets the test case expected result location.
 	 *
-	 * @return the expected result location
+	 * @return the test case expected result location
 	 */
 	public static String getTestCaseExpectedResultLocation() {
 		checkOtcHomeSet();
@@ -210,7 +210,12 @@ public enum OtcConfig {
 		}
 		return expectedLocation;
 	}
-	
+
+	/**
+	 * Gets the test case actual result location.
+	 *
+	 * @return the test case actual result location
+	 */
 	public static String getTestCaseActualResultLocation() {
 		String expectedLocation = otcHome + File.separator + "tc_actual" + File.separator;
 		File file = new File(expectedLocation);
@@ -219,7 +224,7 @@ public enum OtcConfig {
 		}
 		return expectedLocation;
 	}
-	
+
 	/**
 	 * Gets the compiler sourcecode failonerror.
 	 *
@@ -237,11 +242,13 @@ public enum OtcConfig {
 	public static URLClassLoader getTargetClassLoader() {
 		return clzLoader;
 	}
-	
+
+	/**
+	 * Check otc home set.
+	 */
 	private static void checkOtcHomeSet() {
 		if (CommonUtils.isEmpty(otcHome)) {
 			throw new OtcException("", "Oops... Environment variable 'otc.home' not set! ");
 		}
 	}
-
 }

@@ -22,15 +22,15 @@
 */
 package org.otcframework.common.exception;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcException.
  */
+// TODO: Auto-generated Javadoc
 public class OtcException extends RuntimeException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6218106303823662498L;
-	
+
 	/** The error code. */
 	private String errorCode;
 
@@ -47,7 +47,7 @@ public class OtcException extends RuntimeException {
 	 * Instantiates a new otc exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
+	 * @param msg       the msg
 	 */
 	public OtcException(String errorCode, String msg) {
 		super(msg);
@@ -67,7 +67,7 @@ public class OtcException extends RuntimeException {
 	 * Instantiates a new otc exception.
 	 *
 	 * @param errorCode the error code
-	 * @param cause the cause
+	 * @param cause     the cause
 	 */
 	public OtcException(String errorCode, Throwable cause) {
 		super(cause);
@@ -78,8 +78,8 @@ public class OtcException extends RuntimeException {
 	 * Instantiates a new otc exception.
 	 *
 	 * @param errorCode the error code
-	 * @param msg the msg
-	 * @param cause the cause
+	 * @param msg       the msg
+	 * @param cause     the cause
 	 */
 	public OtcException(String errorCode, String msg, Throwable cause) {
 		super(msg, cause);

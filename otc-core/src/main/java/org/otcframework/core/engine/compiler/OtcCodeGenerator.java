@@ -24,11 +24,10 @@ package org.otcframework.core.engine.compiler;
 
 import org.otcframework.common.dto.OtcDto;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Interface OtcCodeGenerator.
  */
+// TODO: Auto-generated Javadoc
 public interface OtcCodeGenerator {
 
 	/**
@@ -37,5 +36,4 @@ public interface OtcCodeGenerator {
 	 * @param otcDto the otc dto
 	 */
 	void generateSourcecode(OtcDto otcDto);
-
 }

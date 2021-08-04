@@ -22,50 +22,54 @@
 */
 package org.otcframework.core.engine.compiler.command;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ExecutionContext.
  */
+// TODO: Auto-generated Javadoc
 public class ExecutionContext {
 
 	/**
-	 * The Enum CHAIN_COLLECTION_SIZE.
+	 * The Enum CHAINS_COLLECTION_COMPARISON_TYPE.
 	 */
 	public enum CHAINS_COLLECTION_COMPARISON_TYPE {
+
 		/** The large source. */
-		LARGE_SOURCE, 
-		
+		LARGE_SOURCE,
+
 		/** The large target. */
-		LARGE_TARGET, 
-		
-		/** The equal. */
+		LARGE_TARGET,
+
+		/** The equal size. */
 		EQUAL_SIZE
 	};
 
 	/** The target OCC. */
 	public TargetOtcCommandContext targetOCC;
-	
+
 	/** The source OCC. */
 	public SourceOtcCommandContext sourceOCC;
-	
+
 	/** The otc command. */
 	public OtcCommand otcCommand;
-	
+
 	/** The target clz. */
 	public Class<?> targetClz;
-	
+
 	/** The source clz. */
 	public Class<?> sourceClz;
-	
+
 	/** The collections comparison type. */
 	public CHAINS_COLLECTION_COMPARISON_TYPE collectionsComparisonType;
-	
+
 	/** The should increment offset idx. */
 	public boolean shouldIncrementOffsetIdx;
 
 	/** The is offset idx already added. */
 	public boolean isOffsetIdxAlreadyAdded = false;
-	
+
+	/**
+	 * Inits the collection size type.
+	 */
 	public void initCollectionSizeType() {
 		int sourceDescendantsCollectionsCount = sourceOCC.descendantsCollectionsCountInclusive();
 		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCountInclusive();
@@ -78,6 +82,12 @@ public class ExecutionContext {
 		}
 	}
 
+	/**
+	 * Current collection size type.
+	 *
+	 * @param targetOCC the target OCC
+	 * @return the chains collection comparison type
+	 */
 	public CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionSizeType(TargetOtcCommandContext targetOCC) {
 		int sourceCollectionsCount = 0;
 		if (targetOCC.isCurrentTokenAnchored() || !targetOCC.hasAnchorInChain) {
@@ -96,7 +106,12 @@ public class ExecutionContext {
 		}
 		return currentCollectionSizeType;
 	}
-	
+
+	/**
+	 * Current collection inclusive size type.
+	 *
+	 * @return the chains collection comparison type
+	 */
 	public CHAINS_COLLECTION_COMPARISON_TYPE currentCollectionInclusiveSizeType() {
 		int sourceCollectionsCount = sourceOCC.collectionsCount;
 		int targetDescendantsCollectionsCount = targetOCC.descendantsCollectionsCountInclusive();
@@ -110,7 +125,7 @@ public class ExecutionContext {
 		}
 		return currentCollectionSizeType;
 	}
-	
+
 	/**
 	 * Checks if is large source.
 	 *
@@ -119,7 +134,7 @@ public class ExecutionContext {
 	public boolean isLargeSource() {
 		return CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_SOURCE == collectionsComparisonType;
 	}
-	
+
 	/**
 	 * Checks if is large target.
 	 *
@@ -128,5 +143,4 @@ public class ExecutionContext {
 	public boolean isLargeTarget() {
 		return CHAINS_COLLECTION_COMPARISON_TYPE.LARGE_TARGET == collectionsComparisonType;
 	}
-	
 }

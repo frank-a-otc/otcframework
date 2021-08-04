@@ -24,15 +24,15 @@ package org.otcframework.common.dto.otc;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class OtcFileDto.
+ * The Class TargetDto.
  */
+// TODO: Auto-generated Javadoc
 public class TargetDto {
 
 	/** The otc chain. */
-	public String otcChain;
-	
+	public String objectPath;
+
 	/** The overrides. */
 	public List<Override> overrides;
 
@@ -40,7 +40,7 @@ public class TargetDto {
 	 * The Class Override.
 	 */
 	public static final class Override extends OverrideDto {
-		
+
 		/** The concrete type. */
 		public String concreteType;
 
@@ -51,5 +51,3 @@ public class TargetDto {
 		public String setterHelper;
 	}
 }
-
-
