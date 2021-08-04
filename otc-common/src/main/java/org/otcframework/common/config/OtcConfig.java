@@ -203,7 +203,7 @@ public enum OtcConfig {
 	 */
 	public static String getTestCaseExpectedResultLocation() {
 		checkOtcHomeSet();
-		String expectedLocation = otcHome + File.separator + "tc_expected" + File.separator;
+		String expectedLocation = otcHome + File.separator + "test_expected_results" + File.separator;
 		File file = new File(expectedLocation);
 		if (!file.exists()) {
 			file.mkdir();
