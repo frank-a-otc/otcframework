@@ -86,8 +86,8 @@ public class OtcCompilerImpl implements OtcCompiler {
 	/** The Constant otcTargetDir. */
 	private static final String otcTargetDir = OtcConfig.getCompiledCodeLocation();
 
-	/** The Constant otcBinDir. */
-	private static final String otcBinDir = OtcConfig.getOtcBinLocation();
+	/** The Constant otcTmdDir. */
+	private static final String otcTmdDir = OtcConfig.getOtcTmdLocation();
 
 	/** The Constant compilerSourcecodeFailonerror. */
 	private static final boolean compilerSourcecodeFailonerror = OtcConfig.getCompilerSourcecodeFailonerror();
@@ -200,12 +200,12 @@ public class OtcCompilerImpl implements OtcCompiler {
 				if (!CommonUtils.isEmpty(compilationReport.otcNamespace)) {
 					depFileName = compilationReport.otcNamespace + "." + depFileName;
 				}
-				File binDir = new File(otcBinDir);
+				File binDir = new File(otcTmdDir);
 				if (!binDir.exists()) {
 					binDir.mkdirs();
 					binDir = null;
 				}
-				depFileName = otcBinDir + depFileName;
+				depFileName = otcTmdDir + depFileName;
 				DeploymentDto deploymentDto = createDeploymentDto(compilationReport);
 				deploymentDto.deploymentFileName = depFileName;
 				createDeploymentFile(deploymentDto);
@@ -367,7 +367,7 @@ public class OtcCompilerImpl implements OtcCompiler {
 	public void compileSourceCode() {
 		LOGGER.info("Compiling source-code files. Please wait.......");
 		long startTime = System.nanoTime();
-		File binDir = new File(otcBinDir);
+		File binDir = new File(otcTmdDir);
 		List<DeploymentDto> deploymentDtos = null;
 		Thread.currentThread().setContextClassLoader(OtcUtils.fetchCurrentURLClassLoader());
 		for (File depFile : binDir.listFiles(depFileFilter)) {

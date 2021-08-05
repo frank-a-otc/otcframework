@@ -98,7 +98,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	 */
 	@Override
 	public void deploy() {
-		String binDir = OtcConfig.getOtcBinLocation();
+		String binDir = OtcConfig.getOtcTmdLocation();
 		File directory = new File(binDir);
 		File[] files = directory.listFiles(depFileFilter);
 		if (files == null) {

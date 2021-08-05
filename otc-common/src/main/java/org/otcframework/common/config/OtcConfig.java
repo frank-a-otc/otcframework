@@ -143,7 +143,7 @@ public enum OtcConfig {
 	 * @return the otc lib location
 	 */
 	public static String getOtcLibLocation() {
-		checkOtcHomeSet();
+		isOtcHomeSet();
 		return otcHome + File.separator + "lib" + File.separator;
 	}
 
@@ -153,7 +153,7 @@ public enum OtcConfig {
 	 * @return the otc source location
 	 */
 	public static String getOtcSourceLocation() {
-		checkOtcHomeSet();
+		isOtcHomeSet();
 		return otcHome + OTC_UNITTEST_FOLDER;
 	}
 
@@ -181,9 +181,9 @@ public enum OtcConfig {
 	 *
 	 * @return the otc bin location
 	 */
-	public static String getOtcBinLocation() {
-		checkOtcHomeSet();
-		return otcHome + File.separator + "bin" + File.separator;
+	public static String getOtcTmdLocation() {
+		isOtcHomeSet();
+		return otcHome + File.separator + "tmd" + File.separator;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public enum OtcConfig {
 	 * @return the compiled code location
 	 */
 	public static String getCompiledCodeLocation() {
-		checkOtcHomeSet();
+		isOtcHomeSet();
 		return otcHome + File.separator + "target" + File.separator;
 	}
 
@@ -202,22 +202,8 @@ public enum OtcConfig {
 	 * @return the test case expected result location
 	 */
 	public static String getTestCaseExpectedResultLocation() {
-		checkOtcHomeSet();
-		String expectedLocation = otcHome + File.separator + "test_expected_results" + File.separator;
-		File file = new File(expectedLocation);
-		if (!file.exists()) {
-			file.mkdir();
-		}
-		return expectedLocation;
-	}
-
-	/**
-	 * Gets the test case actual result location.
-	 *
-	 * @return the test case actual result location
-	 */
-	public static String getTestCaseActualResultLocation() {
-		String expectedLocation = otcHome + File.separator + "tc_actual" + File.separator;
+		isOtcHomeSet();
+		String expectedLocation = otcHome + File.separator + "result_expected" + File.separator;
 		File file = new File(expectedLocation);
 		if (!file.exists()) {
 			file.mkdir();
@@ -246,9 +232,10 @@ public enum OtcConfig {
 	/**
 	 * Check otc home set.
 	 */
-	private static void checkOtcHomeSet() {
+	private static boolean isOtcHomeSet() {
 		if (CommonUtils.isEmpty(otcHome)) {
 			throw new OtcException("", "Oops... Environment variable 'otc.home' not set! ");
 		}
+		return true;
 	}
 }
