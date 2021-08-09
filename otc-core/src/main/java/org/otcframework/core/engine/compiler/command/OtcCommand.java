@@ -342,11 +342,11 @@ public class OtcCommand {
 		String fileName = targetOCC.factoryClassDto.fullyQualifiedClassName.replace(".", File.separator);
 		File file = new File(otcBinDir + fileName + ".class");
 		if (file.exists()) {
-			boolean isDeleted = file.delete();
+			file.delete();
 		}
 		file = new File(otcSourceDir + fileName + ".java");
 		if (file.exists()) {
-			boolean isDeleted = file.delete();
+			file.delete();
 		}
 		targetOCC.factoryClassDto.codeBuilder = new StringBuilder();
 		targetOCC.factoryClassDto.clearImports();

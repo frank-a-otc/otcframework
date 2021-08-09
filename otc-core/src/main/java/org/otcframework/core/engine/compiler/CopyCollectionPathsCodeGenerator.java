@@ -85,7 +85,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 	 *
 	 * @param executionContext the execution context
 	 */
-	@SuppressWarnings("unchecked")
 	private static void generateCode(ExecutionContext executionContext) {
 		OtcCommand otcCommand = executionContext.otcCommand;
 		TargetOtcCommandContext targetOCC = executionContext.targetOCC;
