@@ -72,6 +72,17 @@ public class OtcUtils {
 	 * Creates the deployment id.
 	 *
 	 * @param otcNamespace the otc namespace
+	 * @param targetClz the target clz
+	 * @return the string
+	 */
+	public static String createDeploymentId(String otcNamespace, Class<?> targetClz) {
+		return createDeploymentId(otcNamespace, null, targetClz.getName());
+	}
+
+	/**
+	 * Creates the deployment id.
+	 *
+	 * @param otcNamespace the otc namespace
 	 * @param source       the source
 	 * @param targetClz    the target clz
 	 * @return the string
