@@ -6,7 +6,7 @@
 
 	<groupId>org.otcframework</groupId>
 	<artifactId>otc</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
@@ -140,12 +140,13 @@
 			    <artifactId>msgpack</artifactId>
 			    <version>${msgpack.version}</version>
 			</dependency>
+<!-- 
 			<dependency>
 			    <groupId>org.sonarsource.scanner.maven</groupId>
 			    <artifactId>sonar-maven-plugin</artifactId>
 			    <version>${sonarqube.version}</version>
 			</dependency>
-
+ -->
 		</dependencies>
 	</dependencyManagement>
 
@@ -158,7 +159,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>

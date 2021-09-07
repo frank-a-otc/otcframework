@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.otcframework</groupId>
 		<artifactId>otc</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>otc-core</artifactId>
 
@@ -137,11 +137,12 @@
 			<groupId>org.msgpack</groupId>
 			<artifactId>msgpack</artifactId>
 		</dependency>
+<!-- 
 		<dependency>
 			<groupId>org.sonarsource.scanner.maven</groupId>
 			<artifactId>sonar-maven-plugin</artifactId>
 		</dependency>
-
+ -->
 	</dependencies>
 
 </project>
