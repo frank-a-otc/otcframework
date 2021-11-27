@@ -116,9 +116,9 @@ public enum OtcConfig {
 		URL url;
 		try {
 			String targetDir = getCompiledCodeLocation();
-			File binFolder = new File(targetDir);
-			if (!binFolder.exists()) {
-				binFolder.mkdir();
+			File targetFolder = new File(targetDir);
+			if (!targetFolder.exists()) {
+				targetFolder.mkdir();
 			}
 			url = new File(targetDir).toURI().toURL();
 			URL[] urls = new URL[] { url };
@@ -176,10 +176,11 @@ public enum OtcConfig {
 		return sourceCodeLocation;
 	}
 
+
 	/**
-	 * Gets the otc bin location.
+	 * Gets the otc tmd location.
 	 *
-	 * @return the otc bin location
+	 * @return the otc tmd location
 	 */
 	public static String getOtcTmdLocation() {
 		isOtcHomeSet();
