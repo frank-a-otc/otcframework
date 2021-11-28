@@ -31,9 +31,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/frankjjava/otclframework.git</connection>
-		<developerConnection>scm:git:ssh://github.com:frankjjava/otclframework.git</developerConnection>
-		<url>https://github.com/frankjjava/otclframework</url>
+		<connection>scm:git:git://github.com/frankjjava/otcframework.git</connection>
+		<developerConnection>scm:git:ssh://github.com:frankjjava/otcframework.git</developerConnection>
+		<url>https://github.com/frankjjava/otcframework</url>
 	</scm>
 
 	<distributionManagement>
@@ -71,7 +71,7 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
-
+<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -85,6 +85,7 @@
 					</execution>
 				</executions>
 			</plugin>
+ -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
