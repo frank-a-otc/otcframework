@@ -30,10 +30,10 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.otc.OtcFileDto;
 import org.otcframework.common.dto.otc.OtcFileDto.Copy;
 import org.otcframework.common.util.CommonUtils;
+import org.otcframework.common.util.OtcReflectionUtil;
+import org.otcframework.common.util.OtcReflectionUtil.GETTER_SETTER;
 import org.otcframework.common.util.OtcUtils;
 import org.otcframework.core.engine.compiler.exception.SemanticsException;
-import org.otcframework.core.engine.utils.OtcReflectionUtil;
-import org.otcframework.core.engine.utils.OtcReflectionUtil.GETTER_SETTER;
 
 /**
  * The Class GetterSetterFinalizer.

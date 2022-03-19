@@ -33,7 +33,7 @@ public interface OtcEngine {
 	/**
 	 * Compile otc.
 	 */
-	void compileOtc();
+	void compileOtcl();
 
 	/**
 	 * Compile source code.

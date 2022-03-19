@@ -30,14 +30,14 @@ import org.otcframework.common.engine.compiler.CompilationReport;
  * The Interface OtcCompiler.
  */
 // TODO: Auto-generated Javadoc
-public interface OtcCompiler {
+public interface OtclCompiler {
 
 	/**
 	 * Compile otc.
 	 *
 	 * @return the list
 	 */
-	List<CompilationReport> compileOtc();
+	List<CompilationReport> compile();
 
 	/**
 	 * Compile source code.

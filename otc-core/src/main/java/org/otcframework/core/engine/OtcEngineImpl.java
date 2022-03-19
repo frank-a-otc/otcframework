@@ -26,8 +26,12 @@ import java.util.Map;
 
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.engine.OtcEngine;
-import org.otcframework.core.engine.compiler.OtcCompiler;
-import org.otcframework.core.engine.compiler.OtcCompilerImpl;
+import org.otcframework.core.engine.compiler.OtclCompiler;
+import org.otcframework.core.engine.compiler.OtclCompilerImpl;
+import org.otcframework.executor.OtcRegistry;
+import org.otcframework.executor.OtcRegistryImpl;
+import org.otcframework.executor.OtcExecutor;
+import org.otcframework.executor.OtcExecutorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,20 +39,19 @@ import org.slf4j.LoggerFactory;
  * The Enum OtcEngineImpl.
  */
 // TODO: Auto-generated Javadoc
-public enum OtcEngineImpl implements OtcEngine {
+public final class OtcEngineImpl implements OtcEngine {
 
-	/** The instance. */
-	instance;
+	private static final OtcEngine otclEngine = new OtcEngineImpl();
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcEngineImpl.class);
 
-	/** The Constant otcCompiler. */
-	private static final OtcCompiler otcCompiler = OtcCompilerImpl.getInstance();
+	/** The Constant otclCompiler. */
+	private static final OtclCompiler otclCompiler = OtclCompilerImpl.getInstance();
 
-	/** The Constant deploymentContainer. */
-	private static final DeploymentContainer deploymentContainer = DeploymentContainerImpl.getInstance();
-
+	/** The Constant otcRegistry. */
+	private static final OtcRegistry otcRegistry = OtcRegistryImpl.instance;
+	
 	/** The Constant otcExecutor. */
 	private static final OtcExecutor otcExecutor = OtcExecutorImpl.getInstance();
 
@@ -59,7 +62,7 @@ public enum OtcEngineImpl implements OtcEngine {
 	}
 
 	static {
-		instance.register();
+		otclEngine.register();
 	}
 
 	/**
@@ -68,15 +71,15 @@ public enum OtcEngineImpl implements OtcEngine {
 	 * @return single instance of OtcEngineImpl
 	 */
 	public static OtcEngine getInstance() {
-		return instance;
+		return otclEngine;
 	}
 
 	/**
 	 * Compile otc.
 	 */
 	@Override
-	public void compileOtc() {
-		otcCompiler.compileOtc();
+	public void compileOtcl() {
+		otclCompiler.compile();
 		return;
 	}
 
@@ -85,7 +88,7 @@ public enum OtcEngineImpl implements OtcEngine {
 	 */
 	@Override
 	public void compileSourceCode() {
-		otcCompiler.compileSourceCode();
+		otclCompiler.compileSourceCode();
 		return;
 	}
 
@@ -94,11 +97,10 @@ public enum OtcEngineImpl implements OtcEngine {
 	 */
 	@Override
 	public void register() {
-		System.out.println("\n----------------");
 		LOGGER.info(
 				"For detailed logging, set 'otc.log.level' property in '{}/config/log.properties' file to 'DEBUG' mode.",
 				OtcConfig.getOtcHomeLocation());
-		deploymentContainer.deploy();
+		otcRegistry.register();
 	}
 
 	/**
@@ -113,7 +115,7 @@ public enum OtcEngineImpl implements OtcEngine {
 	 */
 	@Override
 	public <T, S> T executeOtc(String otcNamespace, Class<T> targetClz, Map<String, Object> data) {
-		T target = otcExecutor.executeOtc(otcNamespace, targetClz, data);
+		T target = otcExecutor.execute(otcNamespace, targetClz, data);
 		return target;
 	}
 
@@ -130,6 +132,6 @@ public enum OtcEngineImpl implements OtcEngine {
 	 */
 	@Override
 	public <T, S> T executeOtc(String otcNamespace, S source, Class<T> targetClz, Map<String, Object> data) {
-		return otcExecutor.executeOtc(otcNamespace, source, targetClz, data);
+		return otcExecutor.execute(otcNamespace, source, targetClz, data);
 	}
 }

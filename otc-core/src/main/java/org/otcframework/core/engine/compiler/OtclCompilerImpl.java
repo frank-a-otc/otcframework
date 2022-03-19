@@ -54,8 +54,8 @@ import org.otcframework.common.util.OtcUtils;
 import org.otcframework.core.engine.compiler.command.JavaCodeStringObject;
 import org.otcframework.core.engine.compiler.exception.CodeGeneratorException;
 import org.otcframework.core.engine.compiler.exception.OtcCompilerException;
-import org.otcframework.core.engine.exception.OtcEngineException;
 import org.otcframework.core.engine.utils.CompilerUtil;
+import org.otcframework.executor.exception.OtcExecutorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,13 +66,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * The Class OtcCompilerImpl.
  */
 // TODO: Auto-generated Javadoc
-public class OtcCompilerImpl implements OtcCompiler {
+final public class OtclCompilerImpl implements OtclCompiler {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(OtcCompilerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OtclCompilerImpl.class);
 
 	/** The Constant otcCompilerImpl. */
-	private static final OtcCompilerImpl otcCompilerImpl = new OtcCompilerImpl();
+	private static final OtclCompiler otclCompiler = new OtclCompilerImpl();
 
 	/** The Constant otcCodeGenerator. */
 	private static final OtcCodeGenerator otcCodeGenerator = OtcCodeGeneratorImpl.getInstance();
@@ -135,8 +135,8 @@ public class OtcCompilerImpl implements OtcCompiler {
 	 *
 	 * @return single instance of OtcCompilerImpl
 	 */
-	public static OtcCompilerImpl getInstance() {
-		return otcCompilerImpl;
+	public static OtclCompiler getInstance() {
+		return otclCompiler;
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class OtcCompilerImpl implements OtcCompiler {
 	 * @return the list
 	 */
 	@Override
-	public List<CompilationReport> compileOtc() {
+	public List<CompilationReport> compile() {
 		long startTime = System.nanoTime();
 		LOGGER.info("Initiating OTC file compilations in {}", otcSrcDir);
 		File otcSourceDirectory = new File(otcSrcDir);
@@ -164,7 +164,7 @@ public class OtcCompilerImpl implements OtcCompiler {
 		LOGGER.info("Completed {}/{} OTC deployments, Failed : {}/{}. in {} millis.", successful, total, failed, total,
 				((endTime - startTime) / 1000000.0));
 		if (successful == 0) {
-			throw new OtcEngineException("", "Oops... Cannot continue due to 0 deployments!");
+			throw new OtcExecutorException("", "Oops... Cannot continue due to 0 deployments!");
 		}
 		return compilationReports;
 	}

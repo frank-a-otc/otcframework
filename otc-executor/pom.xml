@@ -7,10 +7,10 @@
 		<artifactId>otcframework</artifactId>
 		<version>1.0</version>
 	</parent>
-	<artifactId>otc-core</artifactId>
+	<artifactId>otc-executor</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>Main OTC Engine module.</description>
+	<description>OTC executor module.</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>
@@ -132,12 +132,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.otcframework</groupId>
-			<artifactId>otc-executor</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.otcframework</groupId>
 			<artifactId>dateconverters</artifactId>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>org.msgpack</groupId>
 			<artifactId>msgpack</artifactId>

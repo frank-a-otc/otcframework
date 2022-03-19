@@ -20,7 +20,7 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine;
+package org.otcframework.executor;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,8 +39,8 @@ import org.otcframework.common.engine.compiler.OtcCommandContext;
 import org.otcframework.common.engine.indexer.IndexedCollectionsDtoFactory;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 import org.otcframework.common.util.CommonUtils;
+import org.otcframework.common.util.OtcReflectionUtil;
 import org.otcframework.common.util.OtcUtils;
-import org.otcframework.core.engine.utils.OtcReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

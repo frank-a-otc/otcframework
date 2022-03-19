@@ -20,65 +20,65 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine.compiler.exception;
+package org.otcframework.executor.exception;
 
 import org.otcframework.common.exception.OtcException;
 
 /**
- * The Class DeploymentContainerException.
+ * The Class OtcEngineException.
  */
 // TODO: Auto-generated Javadoc
-public class DeploymentContainerException extends OtcException {
+public class OtcExecutorException extends OtcException {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 6981095407201965987L;
+	private static final long serialVersionUID = -3222880717814289359L;
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new otc engine exception.
 	 *
 	 * @param errorCode the error code
 	 */
-	public DeploymentContainerException(String errorCode) {
+	public OtcExecutorException(String errorCode) {
 		super(errorCode);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new otc engine exception.
 	 *
 	 * @param errorCode the error code
 	 * @param msg       the msg
 	 */
-	public DeploymentContainerException(String errorCode, String msg) {
+	public OtcExecutorException(String errorCode, String msg) {
 		super(errorCode, msg);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new otc engine exception.
 	 *
 	 * @param cause the cause
 	 */
-	public DeploymentContainerException(Throwable cause) {
+	public OtcExecutorException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new otc engine exception.
 	 *
 	 * @param errorCode the error code
 	 * @param cause     the cause
 	 */
-	public DeploymentContainerException(String errorCode, Throwable cause) {
+	public OtcExecutorException(String errorCode, Throwable cause) {
 		super(errorCode, cause);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new otc engine exception.
 	 *
 	 * @param errorCode the error code
 	 * @param msg       the msg
 	 * @param cause     the cause
 	 */
-	public DeploymentContainerException(String errorCode, String msg, Throwable cause) {
+	public OtcExecutorException(String errorCode, String msg, Throwable cause) {
 		super(errorCode, msg, cause);
 	}
 }

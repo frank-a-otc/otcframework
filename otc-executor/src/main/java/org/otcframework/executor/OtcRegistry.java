@@ -20,7 +20,7 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine;
+package org.otcframework.executor;
 
 import org.otcframework.common.dto.DeploymentDto;
 
@@ -28,12 +28,12 @@ import org.otcframework.common.dto.DeploymentDto;
  * The Interface DeploymentContainer.
  */
 // TODO: Auto-generated Javadoc
-interface DeploymentContainer {
+public interface OtcRegistry {
 
 	/**
 	 * Deploy.
 	 */
-	void deploy();
+	void register();
 
 	/**
 	 * Deploy.

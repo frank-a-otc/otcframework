@@ -37,10 +37,10 @@ import org.otcframework.common.dto.otc.OverrideDto;
 import org.otcframework.common.dto.otc.TargetDto;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.factory.OtcCommandDtoFactory;
+import org.otcframework.common.util.OtcReflectionUtil;
 import org.otcframework.common.util.OtcUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.core.engine.compiler.exception.SemanticsException;
-import org.otcframework.core.engine.utils.OtcReflectionUtil;
 
 /**
  * The Class OtcSemanticsChecker.

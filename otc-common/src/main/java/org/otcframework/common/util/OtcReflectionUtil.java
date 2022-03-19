@@ -20,7 +20,7 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine.utils;
+package org.otcframework.common.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -29,8 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
-import org.otcframework.common.util.CommonUtils;
-import org.otcframework.core.engine.compiler.exception.SemanticsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,7 +161,7 @@ public class OtcReflectionUtil {
 					return method;
 				} catch (NoSuchMethodException | SecurityException e) {
 					String msg = createMethodNotFoundMessage(parentConcreteType, methodName, paramTypes, otcCommandDto);
-					throw new SemanticsException("", msg, e);
+					throw new OtcException("", msg, e);
 				}
 			}
 		} else {
@@ -184,7 +182,7 @@ public class OtcReflectionUtil {
 					}
 				} catch (NoSuchMethodException | SecurityException e) {
 					String msg = createMethodNotFoundMessage(parentConcreteType, methodName, paramTypes, otcCommandDto);
-					throw new SemanticsException("", msg, e);
+					throw new OtcException("", msg, e);
 				}
 			}
 		}
@@ -259,7 +257,7 @@ public class OtcReflectionUtil {
 			method = clz.getMethod(methodName, paramTypes);
 		} catch (NoSuchMethodException | SecurityException e) {
 			String msg = createMethodNotFoundMessage(clz, methodName, paramTypes, otcCommandDto);
-			throw new SemanticsException("", msg, e);
+			throw new OtcException("", msg, e);
 		}
 		return method;
 	}

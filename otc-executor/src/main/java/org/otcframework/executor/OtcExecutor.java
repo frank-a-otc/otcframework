@@ -20,7 +20,7 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine;
+package org.otcframework.executor;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public interface OtcExecutor {
 	 * @param data         the data
 	 * @return the t
 	 */
-	<T, S> T executeOtc(String otcNamespace, S source, Class<T> targetClz, Map<String, Object> data);
+	<T, S> T execute(String otcNamespace, S source, Class<T> targetClz, Map<String, Object> data);
 
 	/**
 	 * Execute otc.
@@ -52,5 +52,5 @@ public interface OtcExecutor {
 	 * @param data         the data
 	 * @return the t
 	 */
-	<T> T executeOtc(String otcNamespace, Class<T> targetClz, Map<String, Object> data);
+	<T> T execute(String otcNamespace, Class<T> targetClz, Map<String, Object> data);
 }

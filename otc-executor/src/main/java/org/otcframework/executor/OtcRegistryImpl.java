@@ -20,7 +20,7 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine;
+package org.otcframework.executor;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -42,10 +42,9 @@ import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.executor.CodeExecutor;
 import org.otcframework.common.factory.OtcCommandDtoFactory;
 import org.otcframework.common.util.CommonUtils;
+import org.otcframework.common.util.OtcReflectionUtil;
 import org.otcframework.common.util.OtcUtils;
-import org.otcframework.core.engine.compiler.exception.DeploymentContainerException;
-import org.otcframework.core.engine.exception.OtcEngineException;
-import org.otcframework.core.engine.utils.OtcReflectionUtil;
+import org.otcframework.executor.exception.DeploymentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,16 +54,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * The Class DeploymentContainerImpl.
  */
 // TODO: Auto-generated Javadoc
-final class DeploymentContainerImpl implements DeploymentContainer {
+public enum OtcRegistryImpl implements OtcRegistry {
+
+	/** The instance. */
+	instance;
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentContainerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OtcRegistryImpl.class);
 
 	/** The map packaged otc dtos. */
 	private Map<String, DeploymentDto> mapPackagedOtcDtos = new HashMap<>();
 
 	/** The Constant otcDeploymentContainer. */
-	private static final DeploymentContainer otcDeploymentContainer = new DeploymentContainerImpl();
+//	private static final OtcRegistry otcDeploymentContainer = new OtcRegistryImpl();
 
 	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
@@ -81,23 +83,23 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	/**
 	 * Instantiates a new deployment container impl.
 	 */
-	private DeploymentContainerImpl() {
+	private OtcRegistryImpl() {
 	}
 
-	/**
-	 * Gets the single instance of DeploymentContainerImpl.
-	 *
-	 * @return single instance of DeploymentContainerImpl
-	 */
-	public static DeploymentContainer getInstance() {
-		return otcDeploymentContainer;
-	}
+//	/**
+//	 * Gets the single instance of DeploymentContainerImpl.
+//	 *
+//	 * @return single instance of DeploymentContainerImpl
+//	 */
+//	public static OtcRegistry getInstance() {
+//		return instance;
+//	}
 
 	/**
 	 * Deploy.
 	 */
 	@Override
-	public void deploy() {
+	public void register() {
 		String binDir = OtcConfig.getOtcTmdLocation();
 		File directory = new File(binDir);
 		File[] files = directory.listFiles(depFileFilter);
@@ -133,7 +135,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 				deploy(deploymentDto);
 				hasDeployments = true;
 			} catch (IOException e) {
-				throw new OtcEngineException("", e);
+				throw new DeploymentException("", e);
 			}
 		}
 		long endTime = System.nanoTime();
@@ -243,7 +245,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	 */
 	@Override
 	public DeploymentDto retrieveDeploymentDto(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
-		String deploymentId = OtcUtils.createDeploymentId(otcNamespace, sourceClz, targetClz);
+		String deploymentId = OtcUtils.createRegistryId(otcNamespace, sourceClz, targetClz);
 		return retrieveDeploymentDto(deploymentId);
 	}
 
@@ -256,7 +258,7 @@ final class DeploymentContainerImpl implements DeploymentContainer {
 	private DeploymentDto retrieveDeploymentDto(String deploymentId) {
 		DeploymentDto deploymentDto = mapPackagedOtcDtos.get(deploymentId);
 		if (deploymentDto == null) {
-			throw new DeploymentContainerException("",
+			throw new DeploymentException("",
 					"OTC deployment with ID '" + deploymentId + "' not found or not compiled and deployed!");
 		}
 		return deploymentDto;

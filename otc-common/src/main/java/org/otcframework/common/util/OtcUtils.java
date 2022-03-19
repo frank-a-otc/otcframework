@@ -103,7 +103,7 @@ public class OtcUtils {
 	 * @param targetClz    the target clz
 	 * @return the string
 	 */
-	public static String createDeploymentId(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
+	public static String createRegistryId(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
 		return createDeploymentId(otcNamespace, sourceClz.getName(), targetClz.getName());
 	}
 

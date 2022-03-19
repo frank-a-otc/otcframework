@@ -20,7 +20,7 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.core.engine;
+package org.otcframework.executor;
 
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.DeploymentDto;
