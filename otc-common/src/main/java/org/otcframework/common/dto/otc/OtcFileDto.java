@@ -37,7 +37,7 @@ public final class OtcFileDto {
 	public Metadata metadata;
 
 	/** The otc commands. */
-	public List<OtcCommands> otcCommands;
+	public List<OtclCommand> otclCommands;
 
 	/**
 	 * The Class Metadata.
@@ -69,7 +69,7 @@ public final class OtcFileDto {
 	/**
 	 * The Class OtcCommands.
 	 */
-	public static final class OtcCommands {
+	public static final class OtclCommand {
 
 		/** The copy. */
 		public Copy copy;

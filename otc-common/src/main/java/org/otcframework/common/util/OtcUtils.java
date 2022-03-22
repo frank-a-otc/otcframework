@@ -64,39 +64,39 @@ public class OtcUtils {
 		if (CommonUtils.isEmpty(targetClz)) {
 			throw new OtcException("", "Target-class cannot be null.");
 		}
-		String fileName = createDeploymentId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
+		String fileName = createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
 		return fileName;
 	}
 
 	/**
-	 * Creates the deployment id.
+	 * Creates the registry id.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param targetClz the target clz
 	 * @return the string
 	 */
-	public static String createDeploymentId(String otcNamespace, Class<?> targetClz) {
-		return createDeploymentId(otcNamespace, null, targetClz.getName());
+	public static String createRegistryId(String otcNamespace, Class<?> targetClz) {
+		return createRegistryId(otcNamespace, null, targetClz.getName());
 	}
 
 	/**
-	 * Creates the deployment id.
+	 * Creates the registry id.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param source       the source
 	 * @param targetClz    the target clz
 	 * @return the string
 	 */
-	public static String createDeploymentId(String otcNamespace, Object source, Class<?> targetClz) {
+	public static String createRegistryId(String otcNamespace, Object source, Class<?> targetClz) {
 		if (source == null) {
-			return createDeploymentId(otcNamespace, null, targetClz.getName());
+			return createRegistryId(otcNamespace, null, targetClz.getName());
 		} else {
-			return createDeploymentId(otcNamespace, source.getClass().getName(), targetClz.getName());
+			return createRegistryId(otcNamespace, source.getClass().getName(), targetClz.getName());
 		}
 	}
 
 	/**
-	 * Creates the deployment id.
+	 * Creates the registry id.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param sourceClz    the source clz
@@ -104,28 +104,28 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String createRegistryId(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
-		return createDeploymentId(otcNamespace, sourceClz.getName(), targetClz.getName());
+		return createRegistryId(otcNamespace, sourceClz.getName(), targetClz.getName());
 	}
 
 	/**
-	 * Creates the deployment id.
+	 * Creates the registry id.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param sourceClz    the source clz
 	 * @param targetClz    the target clz
 	 * @return the string
 	 */
-	public static String createDeploymentId(String otcNamespace, String sourceClz, String targetClz) {
-		String deploymentId = null;
+	public static String createRegistryId(String otcNamespace, String sourceClz, String targetClz) {
+		String registryId = null;
 		if (sourceClz == null) {
-			deploymentId = targetClz;
+			registryId = targetClz;
 		} else {
-			deploymentId = sourceClz + "_" + targetClz;
+			registryId = sourceClz + "_" + targetClz;
 		}
 		if (!CommonUtils.isEmpty(otcNamespace)) {
-			deploymentId = otcNamespace + "." + deploymentId;
+			registryId = otcNamespace + "." + registryId;
 		}
-		return deploymentId;
+		return registryId;
 	}
 
 	/**

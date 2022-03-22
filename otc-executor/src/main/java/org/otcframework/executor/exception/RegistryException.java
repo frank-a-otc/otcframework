@@ -25,60 +25,60 @@ package org.otcframework.executor.exception;
 import org.otcframework.common.exception.OtcException;
 
 /**
- * The Class DeploymentContainerException.
+ * The Class RegistryException.
  */
 // TODO: Auto-generated Javadoc
-public class DeploymentException extends OtcException {
+public class RegistryException extends OtcException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6981095407201965987L;
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new registry exception.
 	 *
 	 * @param errorCode the error code
 	 */
-	public DeploymentException(String errorCode) {
+	public RegistryException(String errorCode) {
 		super(errorCode);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new registry exception.
 	 *
 	 * @param errorCode the error code
 	 * @param msg       the msg
 	 */
-	public DeploymentException(String errorCode, String msg) {
+	public RegistryException(String errorCode, String msg) {
 		super(errorCode, msg);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new registry exception.
 	 *
 	 * @param cause the cause
 	 */
-	public DeploymentException(Throwable cause) {
+	public RegistryException(Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new registry exception.
 	 *
 	 * @param errorCode the error code
 	 * @param cause     the cause
 	 */
-	public DeploymentException(String errorCode, Throwable cause) {
+	public RegistryException(String errorCode, Throwable cause) {
 		super(errorCode, cause);
 	}
 
 	/**
-	 * Instantiates a new deployment container exception.
+	 * Instantiates a new registry exception.
 	 *
 	 * @param errorCode the error code
 	 * @param msg       the msg
 	 * @param cause     the cause
 	 */
-	public DeploymentException(String errorCode, String msg, Throwable cause) {
+	public RegistryException(String errorCode, String msg, Throwable cause) {
 		super(errorCode, msg, cause);
 	}
 }

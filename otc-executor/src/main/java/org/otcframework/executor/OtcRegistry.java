@@ -22,43 +22,43 @@
 */
 package org.otcframework.executor;
 
-import org.otcframework.common.dto.DeploymentDto;
+import org.otcframework.common.dto.RegistryDto;
 
 /**
- * The Interface DeploymentContainer.
+ * The Interface OtcRegistry.
  */
 // TODO: Auto-generated Javadoc
 public interface OtcRegistry {
 
 	/**
-	 * Deploy.
+	 * register.
 	 */
 	void register();
 
 	/**
-	 * Deploy.
+	 * register.
 	 *
-	 * @param deploymentDtos the deployment dtos
+	 * @param registryDto the registry dto
 	 */
-	void deploy(DeploymentDto deploymentDtos);
+	void register(RegistryDto registryDto);
 
 	/**
-	 * Retrieve deployment dto.
+	 * Retrieve registry dto.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param sourceClz    the source clz
 	 * @param targetClz    the target clz
-	 * @return the deployment dto
+	 * @return the registry dto
 	 */
-	DeploymentDto retrieveDeploymentDto(String otcNamespace, Class<?> sourceClz, Class<?> targetClz);
+	RegistryDto retrieveRegistryDto(String otcNamespace, Class<?> sourceClz, Class<?> targetClz);
 
 	/**
-	 * Retrieve deployment dto.
+	 * Retrieve registry dto.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param source       the source
 	 * @param targetClz    the target clz
-	 * @return the deployment dto
+	 * @return the registry dto
 	 */
-	DeploymentDto retrieveDeploymentDto(String otcNamespace, Object source, Class<?> targetClz);
+	RegistryDto retrieveRegistryDto(String otcNamespace, Object source, Class<?> targetClz);
 }

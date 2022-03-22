@@ -25,7 +25,7 @@ package org.otcframework.common.dto;
 import org.otcframework.common.dto.otc.OtcFileDto.CommonCommandParams;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute.OtcModule;
-import org.otcframework.common.dto.otc.OtcFileDto.OtcCommands;
+import org.otcframework.common.dto.otc.OtcFileDto.OtclCommand;
 
 /**
  * The Class ScriptDto.
@@ -65,7 +65,7 @@ public class ScriptDto {
 	 *
 	 * @param script the script
 	 */
-	public ScriptDto(OtcCommands script) {
+	public ScriptDto(OtclCommand script) {
 		if (script.copy != null) {
 			command = script.copy;
 		} else {

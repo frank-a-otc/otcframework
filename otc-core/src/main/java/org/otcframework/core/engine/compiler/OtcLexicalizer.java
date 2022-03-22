@@ -90,7 +90,7 @@ final class OtcLexicalizer {
 	 */
 	static OtcDto lexicalize(File file, String otcNamespace) {
 		OtcFileDto otcFileDto = loadOtc(file);
-		if (otcFileDto.otcCommands == null) {
+		if (otcFileDto.otclCommands == null) {
 			throw new LexicalizerException("", "No OTC commmands to execute! OTC-Scripts are missing.");
 		}
 		String fileName = file.getName();
@@ -189,12 +189,12 @@ final class OtcLexicalizer {
 				factorClzNames.add(mainClassName);
 			}
 		}
-		OtcDto.Builder builderDeploymentDto = OtcDto.newBuilder().addOtcNamespace(otcNamespace).addOtcFileName(fileName)
+		OtcDto.Builder builderRegistryDto = OtcDto.newBuilder().addOtcNamespace(otcNamespace).addOtcFileName(fileName)
 				.addSourceClz(sourceClz).addTargetClz(targetClz);
 		Map<String, OtcCommandDto> mapTargetOCDs = new LinkedHashMap<>();
 		Map<String, OtcCommandDto> mapSourceOCDs = new LinkedHashMap<>();
 		Set<String> scriptIds = new HashSet<>();
-		for (OtcFileDto.OtcCommands otcCommand : otcFileDto.otcCommands) {
+		for (OtcFileDto.OtclCommand otcCommand : otcFileDto.otclCommands) {
 			if ((otcCommand.copy != null && otcCommand.copy.debug)
 					|| (otcCommand.execute != null && otcCommand.execute.debug)) {
 				@SuppressWarnings("unused")
@@ -257,14 +257,14 @@ final class OtcLexicalizer {
 			}
 			try {
 				OtcCommandDto targetStemOCD = tokenizeTargetChain(builderTargetOtcChainDto, targetOtcChain, scriptDto,
-						targetClz, mapTargetOCDs, builderDeploymentDto);
+						targetClz, mapTargetOCDs, builderRegistryDto);
 				OtcChainDto targetOtcChainDto = scriptDto.targetOtcChainDto;
 				int targetCollectionsCount = targetOtcChainDto.collectionCount + targetOtcChainDto.dictionaryCount;
 				int sourceCollectionsCount = 0;
 				OtcChainDto sourceOtcChainDto = null;
 				if (!CommonUtils.isEmpty(sourceOtcChain)) {
 					OtcCommandDto sourceStemOCD = tokenizeSourceChain(builderSourceOtcChainDto, sourceOtcChain,
-							scriptDto, sourceClz, mapSourceOCDs, builderDeploymentDto);
+							scriptDto, sourceClz, mapSourceOCDs, builderRegistryDto);
 					sourceOtcChainDto = scriptDto.sourceOtcChainDto;
 					OtcCommandContext targetOCC = new OtcCommandContext();
 					targetOCC.otcCommandDto = targetStemOCD;
@@ -288,7 +288,7 @@ final class OtcLexicalizer {
 					scriptDto.command.factoryClassName = CompilerUtil.buildJavaClassName(otcNamespace, fileName,
 							chainPathToParentLeaf);
 				}
-				builderDeploymentDto.addScriptDto(scriptDto);
+				builderRegistryDto.addScriptDto(scriptDto);
 			} catch (Exception ex) {
 				LOGGER.error("", ex);
 				if (ex instanceof OtcException) {
@@ -298,7 +298,7 @@ final class OtcLexicalizer {
 						ex);
 			}
 		}
-		return builderDeploymentDto.build();
+		return builderRegistryDto.build();
 	}
 
 	/**
@@ -391,18 +391,18 @@ final class OtcLexicalizer {
 	 * @param scriptDto                the script dto
 	 * @param targetClz                the target clz
 	 * @param mapTargetOCDs            the map target OC ds
-	 * @param builderDeploymentDto     the builder deployment dto
+	 * @param builderRegistryDto     the builder registry dto
 	 * @return the otc command dto
 	 */
 	private static OtcCommandDto tokenizeTargetChain(OtcChainDto.Builder builderTargetOtcChainDto,
 			String targetOtcChain, ScriptDto scriptDto, Class<?> targetClz, Map<String, OtcCommandDto> mapTargetOCDs,
-			OtcDto.Builder builderDeploymentDto) {
+			OtcDto.Builder builderRegistryDto) {
 		builderTargetOtcChainDto.addOtcChain(targetOtcChain);
 		// --- tokenize targetOtcChain
 		OtcCommandDto targetStemOCD = tokenize(scriptDto, targetClz, targetOtcChain, mapTargetOCDs,
 				builderTargetOtcChainDto, TARGET_SOURCE.TARGET, null);
 		mapTargetOCDs.put(targetStemOCD.otcToken, targetStemOCD);
-		builderDeploymentDto.addTargetOtcCommandDtoStem(targetStemOCD);
+		builderRegistryDto.addTargetOtcCommandDtoStem(targetStemOCD);
 		OtcChainDto targetOtcChainDto = builderTargetOtcChainDto.build();
 		scriptDto.targetOtcChainDto = targetOtcChainDto;
 		targetStemOCD.isRootNode = targetStemOCD.fieldName.equals(OtcConstants.ROOT);
@@ -417,12 +417,12 @@ final class OtcLexicalizer {
 	 * @param scriptDto                the script dto
 	 * @param sourceClz                the source clz
 	 * @param mapSourceOCDs            the map source OC ds
-	 * @param builderDeploymentDto     the builder deployment dto
+	 * @param builderRegistryDto     the builder registry dto
 	 * @return the otc command dto
 	 */
 	private static OtcCommandDto tokenizeSourceChain(OtcChainDto.Builder builderSourceOtcChainDto,
 			String sourceOtcChain, ScriptDto scriptDto, Class<?> sourceClz, Map<String, OtcCommandDto> mapSourceOCDs,
-			OtcDto.Builder builderDeploymentDto) {
+			OtcDto.Builder builderRegistryDto) {
 		if (sourceClz == null) {
 			throw new LexicalizerException("", "Otc Lexicalizer-phase failure! in Command with Id : "
 					+ scriptDto.command.id
@@ -433,7 +433,7 @@ final class OtcLexicalizer {
 		OtcCommandDto sourceStemOCD = tokenize(scriptDto, sourceClz, sourceOtcChain, mapSourceOCDs,
 				builderSourceOtcChainDto, TARGET_SOURCE.SOURCE, null);
 		mapSourceOCDs.put(sourceStemOCD.otcToken, sourceStemOCD);
-		builderDeploymentDto.addSourceOtcCommandDtoStem(sourceStemOCD);
+		builderRegistryDto.addSourceOtcCommandDtoStem(sourceStemOCD);
 		OtcChainDto sourceOtcChainDto = builderSourceOtcChainDto.build();
 		scriptDto.sourceOtcChainDto = sourceOtcChainDto;
 		sourceStemOCD.isRootNode = sourceStemOCD.fieldName.equals(OtcConstants.ROOT);
@@ -448,7 +448,7 @@ final class OtcLexicalizer {
 	 * @param scriptId         the script id
 	 * @param factorClzNames   the factor clz names
 	 */
-	private static void santizeFactoryClassName(String factoryClassName, OtcFileDto.OtcCommands otcScript,
+	private static void santizeFactoryClassName(String factoryClassName, OtcFileDto.OtclCommand otcScript,
 			String scriptId, Set<String> factorClzNames) {
 		if (factoryClassName == null) {
 			return;

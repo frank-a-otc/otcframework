@@ -27,13 +27,13 @@ import java.util.Map;
 import org.otcframework.common.executor.CodeExecutor;
 
 /**
- * The Class DeploymentDto.
+ * The Class RegistryDto.
  */
 // TODO: Auto-generated Javadoc
-public final class DeploymentDto {
+public final class RegistryDto {
 
-	/** The deployment id. */
-	public String deploymentId;
+	/** The registry id. */
+	public String registryId;
 
 	/** The otc namespace. */
 	public String otcNamespace;
@@ -41,8 +41,8 @@ public final class DeploymentDto {
 	/** The otc file name. */
 	public String otcFileName;
 
-	/** The deployment file name. */
-	public String deploymentFileName;
+	/** The registry file name. */
+	public String registryFileName;
 
 	/** The is error. */
 	public boolean isError;

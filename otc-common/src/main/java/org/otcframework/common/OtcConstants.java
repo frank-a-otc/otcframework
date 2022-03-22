@@ -104,7 +104,7 @@ public interface OtcConstants {
 	String REGEX_OTC_ON_DOT = new String("[.](?![^<]*>)(?![^\\[]*\\])(?![^\\(]*\\))");
 
 	/** The regex check otcchain. */
-	String REGEX_CHECK_OTCCHAIN = "(?s)from:\\sotcChain:";
+	String REGEX_CHECK_OTCCHAIN = "(?s)from:\\sobjectPath:";
 
 	/** The root. */
 	String ROOT = "$";

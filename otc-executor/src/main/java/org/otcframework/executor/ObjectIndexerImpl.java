@@ -31,8 +31,8 @@ import java.util.Set;
 
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
-import org.otcframework.common.dto.DeploymentDto;
-import org.otcframework.common.dto.DeploymentDto.CompiledInfo;
+import org.otcframework.common.dto.RegistryDto;
+import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.dto.OtcChainDto;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.engine.compiler.OtcCommandContext;
@@ -74,13 +74,13 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 	/**
 	 * Index object.
 	 *
-	 * @param deploymentDto    the deployment dto
+	 * @param registryDto    the registry dto
 	 * @param enumTargetSource the enum target source
 	 * @param indexedObject    the indexed object
 	 * @return the indexed collections dto
 	 */
 	@Override
-	public IndexedCollectionsDto indexObject(DeploymentDto deploymentDto, TARGET_SOURCE enumTargetSource,
+	public IndexedCollectionsDto indexObject(RegistryDto registryDto, TARGET_SOURCE enumTargetSource,
 			Object indexedObject) {
 		LOGGER.trace("Initiating object-indexing for instance of {}", indexedObject.getClass().getName());
 		long startTime = System.nanoTime();
@@ -88,7 +88,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 		IndexedCollectionsDto rootICD = null;
 		Map<String, IndexedCollectionsDto> mapICDs = null;
 		OtcCommandContext otcCommandContext = new OtcCommandContext();
-		for (Entry<String, CompiledInfo> entry : deploymentDto.compiledInfos.entrySet()) {
+		for (Entry<String, CompiledInfo> entry : registryDto.compiledInfos.entrySet()) {
 			CompiledInfo compiledInfo = entry.getValue();
 			OtcChainDto otcChainDto = null;
 			OtcCommandDto otcCommandDto = null;

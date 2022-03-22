@@ -34,8 +34,8 @@ import java.util.Map;
 import org.msgpack.MessagePack;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
-import org.otcframework.common.dto.DeploymentDto;
-import org.otcframework.common.dto.DeploymentDto.CompiledInfo;
+import org.otcframework.common.dto.RegistryDto;
+import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.dto.OtcChainDto;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
@@ -44,14 +44,14 @@ import org.otcframework.common.factory.OtcCommandDtoFactory;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.OtcReflectionUtil;
 import org.otcframework.common.util.OtcUtils;
-import org.otcframework.executor.exception.DeploymentException;
+import org.otcframework.executor.exception.RegistryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The Class DeploymentContainerImpl.
+ * The Class OtcRegistryImpl.
  */
 // TODO: Auto-generated Javadoc
 public enum OtcRegistryImpl implements OtcRegistry {
@@ -63,10 +63,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcRegistryImpl.class);
 
 	/** The map packaged otc dtos. */
-	private Map<String, DeploymentDto> mapPackagedOtcDtos = new HashMap<>();
-
-	/** The Constant otcDeploymentContainer. */
-//	private static final OtcRegistry otcDeploymentContainer = new OtcRegistryImpl();
+	private Map<String, RegistryDto> mapPackagedOtcDtos = new HashMap<>();
 
 	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
@@ -81,22 +78,13 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	private static final URLClassLoader clzLoader = OtcConfig.getTargetClassLoader();
 
 	/**
-	 * Instantiates a new deployment container impl.
+	 * Instantiates a new otc registry impl.
 	 */
 	private OtcRegistryImpl() {
 	}
 
-//	/**
-//	 * Gets the single instance of DeploymentContainerImpl.
-//	 *
-//	 * @return single instance of DeploymentContainerImpl
-//	 */
-//	public static OtcRegistry getInstance() {
-//		return instance;
-//	}
-
 	/**
-	 * Deploy.
+	 * register.
 	 */
 	@Override
 	public void register() {
@@ -106,9 +94,9 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		if (files == null) {
 			return;
 		}
-		LOGGER.info("Begining OTC deployment from {}", binDir);
+		LOGGER.info("Begining OTC registrations from {}", binDir);
 		long startTime = System.nanoTime();
-		boolean hasDeployments = false;
+		boolean hasRegistrations = false;
 		for (File file : files) {
 			if (file.isDirectory()) {
 				continue;
@@ -116,33 +104,33 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			try {
 				FileInputStream fis = new FileInputStream(file);
 				byte[] contents = msgPack.read(fis, byte[].class);
-				DeploymentDto deploymentDto = objectMapper.readValue(contents, DeploymentDto.class);
-				if (deploymentDto.isError) {
+				RegistryDto registryDto = objectMapper.readValue(contents, RegistryDto.class);
+				if (registryDto.isError) {
 					LOGGER.error(
-							"Ignoring deployment of {}. "
+							"Ignoring registry of {}. "
 									+ "Probable cause: full compilation did not succeed on previous attempt.",
 							file.getAbsolutePath());
 					continue;
 				}
-				for (CompiledInfo compiledInfo : deploymentDto.compiledInfos.values()) {
+				for (CompiledInfo compiledInfo : registryDto.compiledInfos.values()) {
 					// init source
-					initOtcCommandDto(compiledInfo.id, compiledInfo.sourceOCDStem, deploymentDto.sourceClz,
+					initOtcCommandDto(compiledInfo.id, compiledInfo.sourceOCDStem, registryDto.sourceClz,
 							compiledInfo.sourceOtcChainDto);
 					// init target
-					initOtcCommandDto(compiledInfo.id, compiledInfo.targetOCDStem, deploymentDto.targetClz,
+					initOtcCommandDto(compiledInfo.id, compiledInfo.targetOCDStem, registryDto.targetClz,
 							compiledInfo.targetOtcChainDto);
 				}
-				deploy(deploymentDto);
-				hasDeployments = true;
+				register(registryDto);
+				hasRegistrations = true;
 			} catch (IOException e) {
-				throw new DeploymentException("", e);
+				throw new RegistryException("", e);
 			}
 		}
 		long endTime = System.nanoTime();
-		if (hasDeployments) {
-			LOGGER.info("Completed OTC deployments in {} millis.", ((endTime - startTime) / 1000000.0));
+		if (hasRegistrations) {
+			LOGGER.info("Completed OTC registrations in {} millis.", ((endTime - startTime) / 1000000.0));
 		} else {
-			LOGGER.info("Nothing to deploy - no deployment files found !!");
+			LOGGER.info("Nothing to register - no registration files found !!");
 		}
 		return;
 	}
@@ -188,17 +176,17 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	}
 
 	/**
-	 * Deploy.
+	 * register.
 	 *
-	 * @param deploymentDto the deployment dto
+	 * @param registryDto the registry dto
 	 */
 	@Override
-	public void deploy(DeploymentDto deploymentDto) {
-		if (deploymentDto == null) {
-			LOGGER.warn("Nothing to deploy!");
+	public void register(RegistryDto registryDto) {
+		if (registryDto == null) {
+			LOGGER.warn("Nothing to register!");
 			return;
 		}
-		String mainClass = deploymentDto.mainClass;
+		String mainClass = registryDto.mainClass;
 		// exception will be thrown for loadclass if class is not compiled.
 		Class<?> mainClz = null;
 		try {
@@ -213,54 +201,54 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		CodeExecutor codeExecutor;
 		try {
 			codeExecutor = (CodeExecutor) mainClz.newInstance();
-			deploymentDto.codeExecutor = codeExecutor;
+			registryDto.codeExecutor = codeExecutor;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new OtcException("", e);
 		}
-		mapPackagedOtcDtos.put(deploymentDto.deploymentId, deploymentDto);
+		mapPackagedOtcDtos.put(registryDto.registryId, registryDto);
 		return;
 	}
 
 	/**
-	 * Retrieve deployment dto.
+	 * Retrieve registry dto.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param source       the source
 	 * @param targetClz    the target clz
-	 * @return the deployment dto
+	 * @return the registry dto
 	 */
 	@Override
-	public DeploymentDto retrieveDeploymentDto(String otcNamespace, Object source, Class<?> targetClz) {
-		String deploymentId = OtcUtils.createDeploymentId(otcNamespace, source, targetClz);
-		return retrieveDeploymentDto(deploymentId);
+	public RegistryDto retrieveRegistryDto(String otcNamespace, Object source, Class<?> targetClz) {
+		String registryId = OtcUtils.createRegistryId(otcNamespace, source, targetClz);
+		return retrieveRegistryDto(registryId);
 	}
 
 	/**
-	 * Retrieve deployment dto.
+	 * Retrieve registry dto.
 	 *
 	 * @param otcNamespace the otc namespace
 	 * @param sourceClz    the source clz
 	 * @param targetClz    the target clz
-	 * @return the deployment dto
+	 * @return the registry dto
 	 */
 	@Override
-	public DeploymentDto retrieveDeploymentDto(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
-		String deploymentId = OtcUtils.createRegistryId(otcNamespace, sourceClz, targetClz);
-		return retrieveDeploymentDto(deploymentId);
+	public RegistryDto retrieveRegistryDto(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
+		String registryId = OtcUtils.createRegistryId(otcNamespace, sourceClz, targetClz);
+		return retrieveRegistryDto(registryId);
 	}
 
 	/**
-	 * Retrieve deployment dto.
+	 * Retrieve registry dto.
 	 *
-	 * @param deploymentId the deployment id
-	 * @return the deployment dto
+	 * @param regisgryId the registry id
+	 * @return the registry dto
 	 */
-	private DeploymentDto retrieveDeploymentDto(String deploymentId) {
-		DeploymentDto deploymentDto = mapPackagedOtcDtos.get(deploymentId);
-		if (deploymentDto == null) {
-			throw new DeploymentException("",
-					"OTC deployment with ID '" + deploymentId + "' not found or not compiled and deployed!");
+	private RegistryDto retrieveRegistryDto(String registryId) {
+		RegistryDto registryDto = mapPackagedOtcDtos.get(registryId);
+		if (registryDto == null) {
+			throw new RegistryException("",
+					"OTC registry with ID '" + registryId + "' not found or not compiled and registered!");
 		}
-		return deploymentDto;
+		return registryDto;
 	}
 }

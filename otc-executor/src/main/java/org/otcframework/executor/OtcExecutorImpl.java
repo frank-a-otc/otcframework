@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
-import org.otcframework.common.dto.DeploymentDto;
+import org.otcframework.common.dto.RegistryDto;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 import org.otcframework.common.executor.CodeExecutor;
 import org.otcframework.common.util.OtcUtils;
@@ -95,19 +95,19 @@ public final class OtcExecutorImpl implements OtcExecutor {
 	 */
 	@Override
 	public <T, S> T execute(String otcNamespace, S source, Class<T> targetClz, Map<String, Object> data) {
-		DeploymentDto deploymentDto = otcRegistry.retrieveDeploymentDto(otcNamespace, source, targetClz);
-		if (deploymentDto == null) {
-			String otcFile = OtcUtils.createDeploymentId(otcNamespace, source, targetClz)
+		RegistryDto registryDto = otcRegistry.retrieveRegistryDto(otcNamespace, source, targetClz);
+		if (registryDto == null) {
+			String otcFile = OtcUtils.createRegistryId(otcNamespace, source, targetClz)
 					+ OtcConstants.OTC_SCRIPT_EXTN;
 			String errMsg = "Oops... Cannot proceed. Missing or uncompiled OTC file! " + otcFile;
 			LOGGER.error(errMsg);
 			throw new OtcExecutorException(errMsg);
 		}
 		IndexedCollectionsDto indexedCollectionsDto = null;
-		if (source != null && deploymentDto.isProfilingRequried) {
-			indexedCollectionsDto = objectIndexer.indexObject(deploymentDto, TARGET_SOURCE.SOURCE, source);
+		if (source != null && registryDto.isProfilingRequried) {
+			indexedCollectionsDto = objectIndexer.indexObject(registryDto, TARGET_SOURCE.SOURCE, source);
 		}
-		CodeExecutor<S, T> codeExecutor = deploymentDto.codeExecutor;
+		CodeExecutor<S, T> codeExecutor = registryDto.codeExecutor;
 		return (T) codeExecutor.execute(source, indexedCollectionsDto, data);
 	}
 }

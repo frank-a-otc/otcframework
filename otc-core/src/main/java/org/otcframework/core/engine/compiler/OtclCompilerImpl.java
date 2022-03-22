@@ -43,8 +43,8 @@ import org.msgpack.MessagePack;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.ClassDto;
-import org.otcframework.common.dto.DeploymentDto;
-import org.otcframework.common.dto.DeploymentDto.CompiledInfo;
+import org.otcframework.common.dto.RegistryDto;
+import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.OtcDto;
 import org.otcframework.common.dto.ScriptDto;
@@ -161,10 +161,10 @@ final public class OtclCompilerImpl implements OtclCompiler {
 		}
 		int total = successful + failed;
 		long endTime = System.nanoTime();
-		LOGGER.info("Completed {}/{} OTC deployments, Failed : {}/{}. in {} millis.", successful, total, failed, total,
+		LOGGER.info("Completed {}/{} OTC registration(s), Failed : {}/{}. in {} millis.", successful, total, failed, total,
 				((endTime - startTime) / 1000000.0));
 		if (successful == 0) {
-			throw new OtcExecutorException("", "Oops... Cannot continue due to 0 deployments!");
+			throw new OtcExecutorException("", "Oops... Cannot continue due to 0 registrations!");
 		}
 		return compilationReports;
 	}
@@ -206,9 +206,9 @@ final public class OtclCompilerImpl implements OtclCompiler {
 					binDir = null;
 				}
 				depFileName = otcTmdDir + depFileName;
-				DeploymentDto deploymentDto = createDeploymentDto(compilationReport);
-				deploymentDto.deploymentFileName = depFileName;
-				createDeploymentFile(deploymentDto);
+				RegistryDto registryDto = createregistryDto(compilationReport);
+				registryDto.registryFileName = depFileName;
+				createRegistrationFile(registryDto);
 				compilationReports.add(compilationReport);
 			}
 		}
@@ -216,15 +216,15 @@ final public class OtclCompilerImpl implements OtclCompiler {
 	}
 
 	/**
-	 * Creates the deployment file.
+	 * Creates the registration file.
 	 *
-	 * @param deploymentDto the deployment dto
+	 * @param registryDto the registry dto
 	 */
-	private void createDeploymentFile(DeploymentDto deploymentDto) {
+	private void createRegistrationFile(RegistryDto registryDto) {
 		FileOutputStream fos = null;
 		try {
-			String str = objectMapper.writeValueAsString(deploymentDto);
-			fos = new FileOutputStream(deploymentDto.deploymentFileName);
+			String str = objectMapper.writeValueAsString(registryDto);
+			fos = new FileOutputStream(registryDto.registryFileName);
 			msgPack.write(fos, str.getBytes());
 			fos.flush();
 		} catch (IOException e) {
@@ -241,43 +241,43 @@ final public class OtclCompilerImpl implements OtclCompiler {
 	}
 
 	/**
-	 * Creates the deployment dto.
+	 * Creates the registry dto.
 	 *
 	 * @param compilationReport the compilation report
-	 * @return the deployment dto
+	 * @return the registry dto
 	 */
-	private DeploymentDto createDeploymentDto(CompilationReport compilationReport) {
-		DeploymentDto deploymentDto = new DeploymentDto();
+	private RegistryDto createregistryDto(CompilationReport compilationReport) {
+		RegistryDto registryDto = new RegistryDto();
 		OtcDto otcDto = compilationReport.otcDto;
-		deploymentDto.mainClass = otcDto.mainClassDto.fullyQualifiedClassName;
-		deploymentDto.sourceClz = otcDto.sourceClz;
-		deploymentDto.targetClz = otcDto.targetClz;
-		deploymentDto.otcNamespace = otcDto.otcNamespace;
+		registryDto.mainClass = otcDto.mainClassDto.fullyQualifiedClassName;
+		registryDto.sourceClz = otcDto.sourceClz;
+		registryDto.targetClz = otcDto.targetClz;
+		registryDto.otcNamespace = otcDto.otcNamespace;
 		String otcNamespace = otcDto.otcNamespace;
-		deploymentDto.otcFileName = otcDto.otcFileName;
-		String deploymentId = otcDto.otcFileName;
-		deploymentId = deploymentId.substring(0, deploymentId.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
+		registryDto.otcFileName = otcDto.otcFileName;
+		String registryId = otcDto.otcFileName;
+		registryId = registryId.substring(0, registryId.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
 		if (!CommonUtils.isEmpty(otcNamespace)) {
-			deploymentId = otcNamespace + "." + deploymentId;
+			registryId = otcNamespace + "." + registryId;
 		}
-		deploymentDto.deploymentId = deploymentId;
+		registryDto.registryId = registryId;
 		List<ScriptDto> scriptDtos = otcDto.scriptDtos;
 		for (ScriptDto scriptDto : scriptDtos) {
-			if (deploymentDto.compiledInfos == null) {
-				deploymentDto.compiledInfos = new LinkedHashMap<>();
+			if (registryDto.compiledInfos == null) {
+				registryDto.compiledInfos = new LinkedHashMap<>();
 			}
 			String id = scriptDto.command.id;
 			CompiledInfo compiledInfo = new CompiledInfo();
-			deploymentDto.compiledInfos.put(id, compiledInfo);
+			registryDto.compiledInfos.put(id, compiledInfo);
 			compiledInfo.factoryClassName = scriptDto.command.factoryClassName;
 			if (otcDto.sourceOCDStems != null && scriptDto.sourceOtcChainDto != null) {
 				compiledInfo.sourceOtcChainDto = scriptDto.sourceOtcChainDto;
 				String[] otcTokens = scriptDto.sourceOtcChainDto.otcTokens;
 				compiledInfo.sourceOCDStem = otcDto.sourceOCDStems.get(otcTokens[0]);
 				nullifyFields(compiledInfo.sourceOCDStem);
-				if (!deploymentDto.isProfilingRequried && (scriptDto.sourceOtcChainDto.collectionCount > 0
+				if (!registryDto.isProfilingRequried && (scriptDto.sourceOtcChainDto.collectionCount > 0
 						|| scriptDto.sourceOtcChainDto.dictionaryCount > 0)) {
-					deploymentDto.isProfilingRequried = true;
+					registryDto.isProfilingRequried = true;
 				}
 			}
 			compiledInfo.targetOtcChainDto = scriptDto.targetOtcChainDto;
@@ -285,7 +285,7 @@ final public class OtclCompilerImpl implements OtclCompiler {
 			compiledInfo.targetOCDStem = otcDto.targetOCDStems.get(otcTokens[0]);
 			nullifyFields(compiledInfo.targetOCDStem);
 		}
-		return deploymentDto;
+		return registryDto;
 	}
 
 	/**
@@ -368,18 +368,18 @@ final public class OtclCompilerImpl implements OtclCompiler {
 		LOGGER.info("Compiling source-code files. Please wait.......");
 		long startTime = System.nanoTime();
 		File binDir = new File(otcTmdDir);
-		List<DeploymentDto> deploymentDtos = null;
+		List<RegistryDto> registryDtos = null;
 		Thread.currentThread().setContextClassLoader(OtcUtils.fetchCurrentURLClassLoader());
 		for (File depFile : binDir.listFiles(depFileFilter)) {
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(depFile);
 				String str = msgPack.read(fis, String.class);
-				DeploymentDto deploymentDto = objectMapper.readValue(str, DeploymentDto.class);
-				if (deploymentDtos == null) {
-					deploymentDtos = new ArrayList<>();
+				RegistryDto registryDto = objectMapper.readValue(str, RegistryDto.class);
+				if (registryDtos == null) {
+					registryDtos = new ArrayList<>();
 				}
-				deploymentDtos.add(deploymentDto);
+				registryDtos.add(registryDto);
 			} catch (IOException e) {
 				LOGGER.error("", e);
 			} finally {
@@ -393,7 +393,7 @@ final public class OtclCompilerImpl implements OtclCompiler {
 			}
 		}
 		try {
-			createCompilationUnitsAndCompile(deploymentDtos, null);
+			createCompilationUnitsAndCompile(registryDtos, null);
 		} catch (OtcCompilerException e) {
 			LOGGER.error("", e);
 			throw e;
@@ -406,14 +406,14 @@ final public class OtclCompilerImpl implements OtclCompiler {
 	/**
 	 * Creates the compilation units and compile.
 	 *
-	 * @param deploymentDtos  the deployment dtos
+	 * @param registryDtos  the registry dtos
 	 * @param javaFileObjects the java file objects
 	 * @return the list
 	 */
-	private List<JavaFileObject> createCompilationUnitsAndCompile(List<DeploymentDto> deploymentDtos,
+	private List<JavaFileObject> createCompilationUnitsAndCompile(List<RegistryDto> registryDtos,
 			List<JavaFileObject> javaFileObjects) {
-		for (DeploymentDto deploymentDto : deploymentDtos) {
-			String mainClz = deploymentDto.mainClass;
+		for (RegistryDto registryDto : registryDtos) {
+			String mainClz = registryDto.mainClass;
 			String absoluteFileName = srcDir + File.separator + mainClz.replace(".", File.separator)
 					+ OtcConstants.OTC_GENERATEDCODE_EXTN;
 			File file = new File(absoluteFileName);
@@ -424,9 +424,9 @@ final public class OtclCompilerImpl implements OtclCompiler {
 				javaFileObjects = new ArrayList<>();
 			}
 			javaFileObjects.add(new JavaCodeStringObject(file));
-			for (CompiledInfo compiledInfo : deploymentDto.compiledInfos.values()) {
+			for (CompiledInfo compiledInfo : registryDto.compiledInfos.values()) {
 				String factoryClassName = compiledInfo.factoryClassName;
-				String otcNamespace = deploymentDto.otcNamespace;
+				String otcNamespace = registryDto.otcNamespace;
 				if (!CommonUtils.isEmpty(otcNamespace) && !factoryClassName.startsWith(otcNamespace)) {
 					factoryClassName = otcNamespace + "." + factoryClassName;
 				}
@@ -439,7 +439,7 @@ final public class OtclCompilerImpl implements OtclCompiler {
 				javaFileObjects.add(new JavaCodeStringObject(file));
 			}
 			// -- compile source-code files...
-			compileSourceCode(javaFileObjects, deploymentDto);
+			compileSourceCode(javaFileObjects, registryDto);
 		}
 		return javaFileObjects;
 	}
@@ -448,9 +448,9 @@ final public class OtclCompilerImpl implements OtclCompiler {
 	 * Compile source code.
 	 *
 	 * @param javaFileObjects the java file objects
-	 * @param deploymentDto   the deployment dto
+	 * @param registryDto   the registry dto
 	 */
-	private void compileSourceCode(List<JavaFileObject> javaFileObjects, DeploymentDto deploymentDto) {
+	private void compileSourceCode(List<JavaFileObject> javaFileObjects, RegistryDto registryDto) {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 		File fileClzPathRoot = new File(otcTargetDir);
@@ -466,13 +466,13 @@ final public class OtclCompilerImpl implements OtclCompiler {
 				javaFileObjects);
 		if (!task.call()) {
 			diagnostics.getDiagnostics().forEach((diagnostic) -> {
-				if (!deploymentDto.isError && diagnostic.getCode().contains("compiler.err")) {
-					deploymentDto.isError = true;
+				if (!registryDto.isError && diagnostic.getCode().contains("compiler.err")) {
+					registryDto.isError = true;
 				}
 				System.out.println(diagnostic);
 			});
-			if (deploymentDto.isError) {
-				createDeploymentFile(deploymentDto);
+			if (registryDto.isError) {
+				createRegistrationFile(registryDto);
 				if (compilerSourcecodeFailonerror) {
 					throw new OtcCompilerException("", "Source code compilation failed.");
 				}

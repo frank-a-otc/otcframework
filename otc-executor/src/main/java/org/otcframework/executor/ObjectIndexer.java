@@ -23,7 +23,7 @@
 package org.otcframework.executor;
 
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
-import org.otcframework.common.dto.DeploymentDto;
+import org.otcframework.common.dto.RegistryDto;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 
 /**
@@ -35,10 +35,10 @@ interface ObjectIndexer {
 	/**
 	 * Index object.
 	 *
-	 * @param deploymentDto    the deployment dto
+	 * @param registryDto    the registry dto
 	 * @param enumTargetSource the enum target source
 	 * @param object           the object
 	 * @return the indexed collections dto
 	 */
-	IndexedCollectionsDto indexObject(DeploymentDto deploymentDto, TARGET_SOURCE enumTargetSource, Object object);
+	IndexedCollectionsDto indexObject(RegistryDto registryDto, TARGET_SOURCE enumTargetSource, Object object);
 }

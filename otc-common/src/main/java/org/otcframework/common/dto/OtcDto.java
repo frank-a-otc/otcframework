@@ -98,8 +98,8 @@ public final class OtcDto {
 		/** The otc file name. */
 		private String otcFileName;
 
-		/** The deployment id. */
-		public String deploymentId;
+		/** The registryId id. */
+		public String registryId;
 
 		/** The source clz. */
 		private Class<?> sourceClz;
@@ -139,13 +139,13 @@ public final class OtcDto {
 		}
 
 		/**
-		 * Adds the deployment id.
+		 * Adds the registry id.
 		 *
-		 * @param deploymentId the deployment id
+		 * @param registryId the registry id
 		 * @return the builder
 		 */
-		public Builder addDeploymentId(String deploymentId) {
-			this.deploymentId = deploymentId;
+		public Builder addRegistryId(String registryId) {
+			this.registryId = registryId;
 			return this;
 		}
 
