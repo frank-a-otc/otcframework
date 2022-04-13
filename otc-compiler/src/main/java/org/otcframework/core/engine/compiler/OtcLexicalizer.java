@@ -248,7 +248,7 @@ final class OtcLexicalizer {
 			OtcChainDto.Builder builderSourceOtcChainDto = OtcChainDto.newBuilder();
 			ScriptDto scriptDto = new ScriptDto(otcCommand);
 			Execute execute = scriptDto.command instanceof Execute ? (Execute) scriptDto.command : null;
-			if (isValues || (execute != null && (execute.otcConverter != null || execute.otcModule != null))) {
+			if (isValues || (execute != null && (execute.otclConverter != null || execute.otclModule != null))) {
 				OtcExtensionsValidator.validateExtensions(scriptDto, targetClz, builderTargetOtcChainDto, sourceClz,
 						builderSourceOtcChainDto);
 				if (isValues) {
@@ -362,7 +362,7 @@ final class OtcLexicalizer {
 		if (execute.executionOrder != null) {
 			for (String execExt : execute.executionOrder) {
 				if (OtcConstants.EXECUTE_OTC_MODULE.equals(execExt)) {
-					if (execute.otcModule == null) {
+					if (execute.otclModule == null) {
 						throw new LexicalizerException("",
 								"Otc Lexicalizer-phase failure in Command with Id : " + execute.id
 										+ ". 'executeOtcModule' definition "
@@ -371,7 +371,7 @@ final class OtcLexicalizer {
 					break;
 				}
 				if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(execExt)) {
-					if (execute.otcConverter == null) {
+					if (execute.otclConverter == null) {
 						throw new LexicalizerException("",
 								"Otc Lexicalizer-phase failure in Command with Id : " + execute.id
 										+ ". 'executeOtcConverter' definition is missing - "

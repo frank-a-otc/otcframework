@@ -95,10 +95,10 @@ public interface OtcConstants {
 	};
 
 	/** The execute otc converter. */
-	String EXECUTE_OTC_CONVERTER = "otcConverter";
+	String EXECUTE_OTC_CONVERTER = "otclConverter";
 
 	/** The execute otc module. */
-	String EXECUTE_OTC_MODULE = "otcModule";
+	String EXECUTE_OTC_MODULE = "otclModule";
 
 	/** The regex otc on dot. */
 	String REGEX_OTC_ON_DOT = new String("[.](?![^<]*>)(?![^\\[]*\\])(?![^\\(]*\\))");

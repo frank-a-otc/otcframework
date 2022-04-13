@@ -24,7 +24,7 @@ package org.otcframework.common.dto;
 
 import org.otcframework.common.dto.otc.OtcFileDto.CommonCommandParams;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute;
-import org.otcframework.common.dto.otc.OtcFileDto.Execute.OtcModule;
+import org.otcframework.common.dto.otc.OtcFileDto.Execute.OtclModule;
 import org.otcframework.common.dto.otc.OtcFileDto.OtclCommand;
 
 /**
@@ -76,10 +76,10 @@ public class ScriptDto {
 			if (execute.executionOrder != null) {
 				hasExecutionOrder = true;
 			}
-			if (execute.otcConverter != null) {
+			if (execute.otclConverter != null) {
 				hasExecuteConverter = true;
 			}
-			if (execute.otcModule != null) {
+			if (execute.otclModule != null) {
 				hasExecuteModule = true;
 			}
 		}
@@ -96,11 +96,11 @@ public class ScriptDto {
 			Execute execute = (Execute) command;
 			Execute executeClone = new Execute();
 			scriptDto.command = executeClone;
-			if (execute.otcModule != null) {
-				executeClone.otcModule = new OtcModule();
-				executeClone.otcModule.otcNamespace = execute.otcModule.otcNamespace;
+			if (execute.otclModule != null) {
+				executeClone.otclModule = new OtclModule();
+				executeClone.otclModule.otclNamespace = execute.otclModule.otclNamespace;
 			}
-			executeClone.otcConverter = execute.otcConverter;
+			executeClone.otclConverter = execute.otclConverter;
 			executeClone.executionOrder = execute.executionOrder;
 		}
 		scriptDto.hasSetValues = hasSetValues;

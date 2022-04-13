@@ -27,7 +27,7 @@ import org.otcframework.common.engine.compiler.OtcCommandContext;
 import org.otcframework.core.engine.compiler.command.OtcCommand;
 import org.otcframework.core.engine.compiler.exception.LexicalizerException;
 
-import etree.dateconverters.MutualDateTypesConverterFacade;
+import etree.dateconverters.DateConverterFacade;
 
 /**
  * The Class OtcLeavesSemanticsChecker.
@@ -44,9 +44,9 @@ final class OtcLeavesSemanticsChecker {
 	 */
 	static boolean checkLeavesSemantics(OtcCommandContext targetOCC, OtcCommandContext sourceOCC) {
 		OtcCommandDto targetOCD = OtcCommand.retrieveLeafOCD(targetOCC);
-		if (MutualDateTypesConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {
+		if (DateConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {
 			OtcCommandDto sourceOCD = OtcCommand.retrieveLeafOCD(sourceOCC);
-			if (!MutualDateTypesConverterFacade.isOfAnyDateType(sourceOCD.fieldType)
+			if (!DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)
 					&& String.class != sourceOCD.fieldType) {
 				throw new LexicalizerException("",
 						"Target leaf-node is one of date-type. " + "But Source leaf-node is not a compatible type.");

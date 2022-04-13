@@ -104,7 +104,11 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String createRegistryId(String otcNamespace, Class<?> sourceClz, Class<?> targetClz) {
-		return createRegistryId(otcNamespace, sourceClz.getName(), targetClz.getName());
+		if (sourceClz == null) {
+			return createRegistryId(otcNamespace, null, targetClz.getName());
+		} else {
+			return createRegistryId(otcNamespace, sourceClz.getName(), targetClz.getName());			
+		}
 	}
 
 	/**

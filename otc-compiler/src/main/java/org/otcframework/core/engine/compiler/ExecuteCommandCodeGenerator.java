@@ -66,10 +66,11 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		int targetCollectionCount = targetOtcChainDto.collectionCount + targetOtcChainDto.dictionaryCount;
 		if (sourceCollectionCount > 0 && targetCollectionCount > 0) {
 			throw new CodeGeneratorException("", "Code Generation failure for OTC-command : " + scriptDto.command.id
-					+ ". Extensions are not applicable when both target and source contain collections.");
+					+ ". Execute commmand cannot have collections in both target and source. "
+					+ "Any one of them only may have collections.");
 		}
 		otcCommand.clearCache();
-		if (((Execute) scriptDto.command).otcModule != null) {
+		if (((Execute) scriptDto.command).otclModule != null) {
 			otcCommand.appendBeginModuleClass(targetOCC, sourceOCC, targetClz, sourceClz, true);
 		} else {
 			otcCommand.appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, true);
@@ -148,10 +149,10 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 			}
 		} else {
-			if (((Execute) scriptDto.command).otcConverter != null) {
+			if (((Execute) scriptDto.command).otclConverter != null) {
 				otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
 			}
-			if (((Execute) scriptDto.command).otcModule != null) {
+			if (((Execute) scriptDto.command).otclModule != null) {
 				otcCommand.appendExecuteModule(targetOCC, sourceOCC, false);
 			}
 		}

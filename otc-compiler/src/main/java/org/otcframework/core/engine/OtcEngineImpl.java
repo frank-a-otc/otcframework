@@ -28,10 +28,10 @@ import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.engine.OtcEngine;
 import org.otcframework.core.engine.compiler.OtclCompiler;
 import org.otcframework.core.engine.compiler.OtclCompilerImpl;
-import org.otcframework.executor.OtcRegistry;
-import org.otcframework.executor.OtcRegistryImpl;
 import org.otcframework.executor.OtcExecutor;
 import org.otcframework.executor.OtcExecutorImpl;
+import org.otcframework.executor.OtcRegistry;
+import org.otcframework.executor.OtcRegistryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

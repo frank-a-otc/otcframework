@@ -31,7 +31,7 @@ import org.otcframework.core.engine.compiler.command.SourceOtcCommandContext;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 import org.otcframework.core.engine.compiler.exception.CodeGeneratorException;
 
-import etree.dateconverters.MutualDateTypesConverterFacade;
+import etree.dateconverters.DateConverterFacade;
 
 /**
  * The Class GetSetTemplate.
@@ -171,9 +171,9 @@ public final class GetSetTemplate extends AbstractTemplate {
 			getSetCode = String.format(setterTargetEnumTemplate, targetParentVarName, targetOCD.setter, targetEnumType,
 					sourceVarName);
 		} else {
-			if (MutualDateTypesConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {
-				targetOCC.factoryClassDto.addImport(MutualDateTypesConverterFacade.class.getName());
-				if (MutualDateTypesConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
+			if (DateConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {
+				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
+				if (DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
 					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
 							sourceVarName, targetOCD.fieldType);
 				} else {
@@ -184,8 +184,8 @@ public final class GetSetTemplate extends AbstractTemplate {
 					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
 							sourceVarName, sourceOCD.fieldType);
 				}
-			} else if (MutualDateTypesConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
-				targetOCC.factoryClassDto.addImport(MutualDateTypesConverterFacade.class.getName());
+			} else if (DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
+				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				if (String.class != targetOCD.fieldType) {
 					throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to "
 							+ targetOCD.fieldType + " in " + targetOCC.commandId);

@@ -114,7 +114,7 @@ final class OtcSemanticsChecker {
 		String sourceOtcChain = null;
 		if (script.command instanceof Execute) {
 			Execute execute = (Execute) script.command;
-			if (execute.otcModule != null || execute.otcConverter != null) {
+			if (execute.otclModule != null || execute.otclConverter != null) {
 				String typeName = otcCommandDto.fieldType.getName();
 				// TODO this seem to be right - may need correction
 				if (!PackagesFilterUtil.isFilteredPackage(typeName) && !otcCommandDto.hasCollectionNotation

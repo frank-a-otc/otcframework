@@ -30,7 +30,8 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.core.engine.compiler.command.TargetOtcCommandContext;
 
-import etree.dateconverters.MutualDateTypesConverterFacade;
+import etree.dateconverters.DateConverterFacade;
+
 
 /**
  * The Class SetterTemplate.
@@ -75,8 +76,8 @@ public class SetterTemplate extends AbstractTemplate {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 			setterCode = String.format(helperSetterTemplate, helper, otcCommandDto.setter, parentVarName, value);
 		} else {
-			if (MutualDateTypesConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
-				targetOCC.factoryClassDto.addImport(MutualDateTypesConverterFacade.class.getName());
+			if (DateConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
+				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				String clz = fetchSanitizedTypeName(targetOCC, otcCommandDto);
 				setterCode = String.format(dateConverterTemplate, parentVarName, otcCommandDto.setter, value, clz);
 			} else {

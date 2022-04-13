@@ -84,11 +84,11 @@ abstract class AbstractOtcCodeGenerator {
 		if (scriptDto.command instanceof Execute) {
 			Execute execute = (Execute) scriptDto.command;
 			targetOCC.hasExecuteModule = scriptDto.hasExecuteModule;
-			if (execute.otcModule != null) {
-				targetOCC.executeModuleOtcNamespace = execute.otcModule.otcNamespace;
+			if (execute.otclModule != null) {
+				targetOCC.executeModuleOtcNamespace = execute.otclModule.otclNamespace;
 			}
 			targetOCC.hasExecuteConverter = scriptDto.hasExecuteConverter;
-			targetOCC.executeOtcConverter = execute.otcConverter;
+			targetOCC.executeOtcConverter = execute.otclConverter;
 		} else {
 			targetOCC.hasExecuteConverter = false;
 			targetOCC.hasExecuteModule = false;

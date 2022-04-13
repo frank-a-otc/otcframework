@@ -28,7 +28,8 @@ import java.util.Map;
  * The Interface OtcConverter.
  */
 // TODO: Auto-generated Javadoc
-public interface OtcConverter {
+@FunctionalInterface
+public interface OtclConverter {
 
 	/**
 	 * Convert.

@@ -54,10 +54,12 @@ final class OtcExtensionsValidator {
 		} else {
 			targetOtcChain = ((Execute) script.command).target.objectPath;
 		}
-		if (script.command instanceof Execute && targetOtcChain.contains(OtcConstants.ANCHOR)) {
-			throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
-					+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
-		}
+//		if (script.command instanceof Execute) {
+//			if (targetOtcChain.contains(OtcConstants.ANCHOR)) {
+//				throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+//						+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
+//			}
+//		}
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
 			if (copy.from != null && copy.from.values != null && copy.from.objectPath != null) {
@@ -66,25 +68,29 @@ final class OtcExtensionsValidator {
 								+ ". Both 'source: from: otcChain' and 'source: from: values' cannot co-exist.");
 			}
 		} else if (script.command instanceof Execute) {
+			if (targetOtcChain.contains(OtcConstants.ANCHOR)) {
+				throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+						+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
+			}
 			Execute execute = (Execute) script.command;
-			if (execute != null && execute.otcModule != null) {
+			if (execute != null && execute.otclModule != null) {
 				String sourceOtcChain = execute.source.objectPath;
 				if (targetOtcChain.contains(OtcConstants.OPEN_BRACKET)
 						&& sourceOtcChain.contains(OtcConstants.OPEN_BRACKET)) {
 					throw new OtcExtensionsException("",
 							"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
-									+ ". Extension cannot have Collection/Map notations on both target and source at "
-									+ "the same time 'executeOtcConverter' extension.");
+									+ ". Execute commmand cannot have Collection/Map notations on both target and source at "
+									+ "the same time in 'executeOtcConverter' extension.");
 				}
 				if (execute.executionOrder != null) {
 					for (String exeOrd : execute.executionOrder) {
-						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.otcConverter == null) {
+						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.otclConverter == null) {
 							throw new OtcExtensionsException("",
 									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
 											+ ". 'executeOtcConverter' defined in 'extensions: executionOrder' "
 											+ "but 'extensions: executeOtcConverter' is undefined.");
 						}
-						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && execute.otcModule == null) {
+						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && execute.otclModule == null) {
 							throw new OtcExtensionsException("",
 									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
 											+ ". 'executeOtcModule' defined in 'extensions: executionOrder' "
@@ -93,10 +99,10 @@ final class OtcExtensionsValidator {
 					}
 					script.hasExecutionOrder = true;
 				}
-				if (execute.otcModule != null) {
+				if (execute.otclModule != null) {
 					script.hasExecuteModule = true;
 				}
-				if (execute.otcConverter != null) {
+				if (execute.otclConverter != null) {
 					script.hasExecuteConverter = true;
 				}
 			}
