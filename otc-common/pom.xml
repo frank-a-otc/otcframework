@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.otcframework</groupId>
 		<artifactId>otcframework</artifactId>
-		<version>2.0</version>
+		<version>2.1</version>
 	</parent>
 	<artifactId>otc-common</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>Otc-Commons required by both the OTC Engine and the Editor.</description>
+	<description>Otc-Commons module - use Ver 2.1 or above only</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>
@@ -54,8 +54,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<logback.version>1.2.3</logback.version>
-		<slf4j.version>1.7.30</slf4j.version>
 	</properties>
 
 	<build>
