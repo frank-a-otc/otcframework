@@ -10,7 +10,7 @@
 	<artifactId>otc-compiler</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC Compiler module - use Ver 2.1 or above only.</description>
+	<description>OTC Compiler module - use Ver 2.2 or above only.</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>

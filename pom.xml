@@ -11,7 +11,7 @@
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>
-		OTC's BOM POM for "otc-common", "otc-compiler" and "otc-executor" modules. Use v2.1 or above only.
+		OTC's BOM POM for "otc-common", "otc-compiler" and "otc-executor" modules. Use v2.2 or above only.
 		Do not use "otc-core" - it is renamed to "otc-compiler" starting v2.0.
 	</description>
 	<url>http://www.otcframework.org</url>

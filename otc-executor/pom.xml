@@ -10,7 +10,7 @@
 	<artifactId>otc-executor</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC executor module.</description>
+	<description>OTC executor module - use Ver 2.2 or above only.</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>
