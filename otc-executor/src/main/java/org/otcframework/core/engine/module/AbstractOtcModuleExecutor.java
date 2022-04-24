@@ -20,53 +20,46 @@
 *  along with OTC framework project.  If not, see <https://www.gnu.org/licenses/>.
 *
 */
-package org.otcframework.common.engine;
+package org.otcframework.core.engine.module;
 
 import java.util.Map;
 
-/**
- * The Interface OtcEngine.
- */
+import org.otcframework.executor.OtcExecutor;
+import org.otcframework.executor.OtcExecutorImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 // TODO: Auto-generated Javadoc
-public interface OtcEngine {
+
+/**
+ * The Class AbstractOtcModuleExecutor.
+ */
+public abstract class AbstractOtcModuleExecutor {
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOtcModuleExecutor.class);
+
+	/** The otc engine. */
+	private static OtcExecutor otcExecutor = OtcExecutorImpl.getInstance();
 
 	/**
-	 * Compile otc.
-	 */
-	void compileOtcl();
-
-	/**
-	 * Compile source code.
-	 */
-	void compileSourceCode();
-
-	/**
-	 * Register.
-	 */
-	void register();
-
-	/**
-	 * Execute otc.
+	 * Execute module.
 	 *
-	 * @param <T>          the generic type
 	 * @param <S>          the generic type
-	 * @param otcNamespace the otc namespace
-	 * @param targetClz    the target clz
-	 * @param data         the data
-	 * @return the t
-	 */
-	<T, S> T executeOtc(String otcNamespace, Class<T> targetClz, Map<String, Object> data);
-
-	/**
-	 * Execute otc.
-	 *
 	 * @param <T>          the generic type
-	 * @param <S>          the generic type
 	 * @param otcNamespace the otc namespace
 	 * @param source       the source
-	 * @param targetClz    the target clz
-	 * @param data         the data
+	 * @param target       the target
+	 * @param config       the config
 	 * @return the t
 	 */
-	<T, S> T executeOtc(String otcNamespace, S source, Class<T> targetClz, Map<String, Object> data);
+	protected static <S, T> T executeModule(String otcNamespace, S source, T target, Map<String, Object> config) {
+		LOGGER.debug(AbstractOtcModuleExecutor.class.getName() + " called!");
+		T newTarget = null;
+		try {
+			newTarget = (T) otcExecutor.execute(otcNamespace, source, target.getClass(), config);
+		} catch (Exception ex) {
+			LOGGER.error(ex.getMessage());
+		}
+		return newTarget;
+	}
 }

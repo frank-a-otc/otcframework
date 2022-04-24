@@ -55,7 +55,6 @@ import org.otcframework.core.engine.compiler.command.JavaCodeStringObject;
 import org.otcframework.core.engine.compiler.exception.CodeGeneratorException;
 import org.otcframework.core.engine.compiler.exception.OtcCompilerException;
 import org.otcframework.core.engine.utils.CompilerUtil;
-import org.otcframework.executor.exception.OtcExecutorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,7 +163,7 @@ final public class OtclCompilerImpl implements OtclCompiler {
 		LOGGER.info("Completed {}/{} OTC registration(s), Failed : {}/{}. in {} millis.", successful, total, failed, total,
 				((endTime - startTime) / 1000000.0));
 		if (successful == 0) {
-			throw new OtcExecutorException("", "Oops... Cannot continue due to 0 registrations!");
+			throw new OtcCompilerException("", "Oops... Cannot continue due to 0 registrations!");
 		}
 		return compilationReports;
 	}
