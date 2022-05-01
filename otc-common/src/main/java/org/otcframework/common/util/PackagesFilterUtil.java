@@ -22,8 +22,9 @@
 */
 package org.otcframework.common.util;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The Class PackagesFilterUtil.
@@ -32,7 +33,7 @@ import java.util.List;
 public class PackagesFilterUtil {
 
 	/** The pkgs to filter. */
-	private static List<String> pkgsToFilter;
+	private static Set<String> pkgsToFilter;
 
 	/**
 	 * Sets the filtered packages.
@@ -41,7 +42,7 @@ public class PackagesFilterUtil {
 	 */
 	public static void setFilteredPackages(List<String> pkgsToFilter) {
 		if (PackagesFilterUtil.pkgsToFilter == null) {
-			PackagesFilterUtil.pkgsToFilter = new ArrayList<>();
+			PackagesFilterUtil.pkgsToFilter = new HashSet<>();
 		}
 		for (String pkg : pkgsToFilter) {
 			if (pkg.endsWith("*")) {

@@ -48,6 +48,7 @@ import org.otcframework.core.engine.compiler.exception.SemanticsException;
 // TODO: Auto-generated Javadoc
 final class OtcSemanticsChecker {
 
+	private static final String err_msg = "Oops... OTC-command didn't pass Semantics-Checker for Id : ";
 	/**
 	 * Check semantics.
 	 *
@@ -119,8 +120,8 @@ final class OtcSemanticsChecker {
 				// TODO this seem to be right - may need correction
 				if (!PackagesFilterUtil.isFilteredPackage(typeName) && !otcCommandDto.hasCollectionNotation
 						&& !otcCommandDto.hasMapNotation) {
-					throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
-							+ execute.id + " - Type : '" + typeName + "' not included in filter found.");
+					throw new SemanticsException("", err_msg + execute.id + " - Type : '" + typeName + 
+							"' not included in filter found.");
 				}
 			}
 			targetOverrides = execute.target.overrides;
@@ -135,28 +136,27 @@ final class OtcSemanticsChecker {
 			sourceOtcChain = copy.from.objectPath;
 		}
 		if (targetOverrides != null && targetOtcChain == null) {
-			throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
-					+ script.command.id + " 'target: overrides' may be defined only if 'target: otcChain' is defined.");
+			throw new SemanticsException("", err_msg + script.command.id + 
+					" 'target: overrides' may be defined only if 'target: otcChain' is defined.");
 		}
 		if (sourceOverrides != null && sourceOtcChain == null) {
-			throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
-					+ script.command.id + " 'source: overrides' may be defined only if 'source: otcChain' is defined.");
+			throw new SemanticsException("", err_msg + script.command.id + 
+					" 'source: overrides' may be defined only if 'source: otcChain' is defined.");
 		}
 		if (otcCommandDto.hasCollectionNotation) {
 			boolean isCollection = Collection.class.isAssignableFrom(fieldType);
 			if (!isCollection) {
 				boolean isArray = fieldType.isArray();
 				if (!isArray) {
-					throw new SemanticsException("",
-							"Oops... OTC-command didn't pass Semantics-Checker in Id : " + script.command.id
+					throw new SemanticsException("",err_msg + script.command.id
 									+ ". Field is not a Collection/Array, but Collection-notation is found.");
 				}
 			}
 		} else if (otcCommandDto.hasMapNotation) {
 			boolean isMap = Map.class.isAssignableFrom(fieldType);
 			if (!isMap) {
-				throw new SemanticsException("", "Oops... OTC-command didn't pass Semantics-Checker in Id : "
-						+ script.command.id + ". Field is not a Map, but Map-notation is found.");
+				throw new SemanticsException("", err_msg + script.command.id + 
+						". Field is not a Map, but Map-notation is found.");
 			}
 		}
 	}
