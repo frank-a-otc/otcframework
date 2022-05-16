@@ -6,19 +6,19 @@
 
 	<groupId>org.otcframework</groupId>
 	<artifactId>otcframework</artifactId>
-	<version>2.3</version>
+	<version>2.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>
-		OTC's BOM POM for "otc-common", "otc-compiler" and "otc-executor" modules. Use v2.3 or above only.
+		OTC's parent POM for "otc-common", "otc-compiler" and "otc-executor" modules. Use v2.4 or above only.
 	</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>
 		<license>
-			<name>GNU General Public License, v3.0</name>
-			<url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
 
@@ -30,12 +30,6 @@
 			<organizationUrl>http://www.otcframework.org</organizationUrl>
 		</developer>
 	</developers>
-
-	<scm>
-		<connection>scm:git:git://github.com/frankjjava/otcframework.git</connection>
-		<developerConnection>scm:git:ssh://github.com:frankjjava/otcframework.git</developerConnection>
-		<url>https://github.com/frankjjava/otcframework</url>
-	</scm>
 
 	<distributionManagement>
 		<snapshotRepository>
