@@ -76,10 +76,10 @@ public class ScriptDto {
 			if (execute.executionOrder != null) {
 				hasExecutionOrder = true;
 			}
-			if (execute.otclConverter != null) {
+			if (execute.converter != null) {
 				hasExecuteConverter = true;
 			}
-			if (execute.otclModule != null) {
+			if (execute.module != null) {
 				hasExecuteModule = true;
 			}
 		}
@@ -96,11 +96,11 @@ public class ScriptDto {
 			Execute execute = (Execute) command;
 			Execute executeClone = new Execute();
 			scriptDto.command = executeClone;
-			if (execute.otclModule != null) {
-				executeClone.otclModule = new OtclModule();
-				executeClone.otclModule.otclNamespace = execute.otclModule.otclNamespace;
+			if (execute.module != null) {
+				executeClone.module = new OtclModule();
+				executeClone.module.namespace = execute.module.namespace;
 			}
-			executeClone.otclConverter = execute.otclConverter;
+			executeClone.converter = execute.converter;
 			executeClone.executionOrder = execute.executionOrder;
 		}
 		scriptDto.hasSetValues = hasSetValues;

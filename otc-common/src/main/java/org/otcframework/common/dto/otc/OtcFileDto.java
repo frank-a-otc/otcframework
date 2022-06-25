@@ -142,10 +142,10 @@ public final class OtcFileDto {
 	public static final class Execute extends CommonCommandParams {
 
 		/** The otc converter. */
-		public String otclConverter;
+		public String converter;
 
 		/** The otc module. */
-		public OtclModule otclModule;
+		public OtclModule module;
 
 		/** The execution order. */
 		public List<String> executionOrder;
@@ -162,7 +162,7 @@ public final class OtcFileDto {
 		public static final class OtclModule {
 
 			/** The otc namespace. */
-			public String otclNamespace;
+			public String namespace;
 		}
 	}
 }

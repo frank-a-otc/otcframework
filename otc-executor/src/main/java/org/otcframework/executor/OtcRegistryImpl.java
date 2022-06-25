@@ -31,15 +31,13 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.msgpack.MessagePack;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
-import org.otcframework.common.dto.RegistryDto;
-import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.dto.OtcChainDto;
 import org.otcframework.common.dto.OtcCommandDto;
+import org.otcframework.common.dto.RegistryDto;
+import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.executor.CodeExecutor;
 import org.otcframework.common.factory.OtcCommandDtoFactory;

@@ -73,7 +73,7 @@ final class OtcExtensionsValidator {
 						+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
 			}
 			Execute execute = (Execute) script.command;
-			if (execute != null && execute.otclModule != null) {
+			if (execute != null && execute.module != null) {
 				String sourceOtcChain = execute.source.objectPath;
 				if (targetOtcChain.contains(OtcConstants.OPEN_BRACKET)
 						&& sourceOtcChain.contains(OtcConstants.OPEN_BRACKET)) {
@@ -84,13 +84,13 @@ final class OtcExtensionsValidator {
 				}
 				if (execute.executionOrder != null) {
 					for (String exeOrd : execute.executionOrder) {
-						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.otclConverter == null) {
+						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.converter == null) {
 							throw new OtcExtensionsException("",
 									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
 											+ ". 'executeOtcConverter' defined in 'extensions: executionOrder' "
 											+ "but 'extensions: executeOtcConverter' is undefined.");
 						}
-						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && execute.otclModule == null) {
+						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && execute.module == null) {
 							throw new OtcExtensionsException("",
 									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
 											+ ". 'executeOtcModule' defined in 'extensions: executionOrder' "
@@ -99,10 +99,10 @@ final class OtcExtensionsValidator {
 					}
 					script.hasExecutionOrder = true;
 				}
-				if (execute.otclModule != null) {
+				if (execute.module != null) {
 					script.hasExecuteModule = true;
 				}
-				if (execute.otclConverter != null) {
+				if (execute.converter != null) {
 					script.hasExecuteConverter = true;
 				}
 			}

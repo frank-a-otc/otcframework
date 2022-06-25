@@ -70,7 +70,7 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 					+ "Any one of them only may have collections.");
 		}
 		otcCommand.clearCache();
-		if (((Execute) scriptDto.command).otclModule != null) {
+		if (((Execute) scriptDto.command).module != null) {
 			otcCommand.appendBeginModuleClass(targetOCC, sourceOCC, targetClz, sourceClz, true);
 		} else {
 			otcCommand.appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, true);
@@ -144,15 +144,15 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 			for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
 				if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(execOrd)) {
 					otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
-				} else {
+				} else if (OtcConstants.EXECUTE_OTC_MODULE.equals(execOrd)) {
 					otcCommand.appendExecuteModule(targetOCC, sourceOCC, false);
 				}
 			}
 		} else {
-			if (((Execute) scriptDto.command).otclConverter != null) {
+			if (((Execute) scriptDto.command).converter != null) {
 				otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
 			}
-			if (((Execute) scriptDto.command).otclModule != null) {
+			if (((Execute) scriptDto.command).module != null) {
 				otcCommand.appendExecuteModule(targetOCC, sourceOCC, false);
 			}
 		}
