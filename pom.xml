@@ -61,7 +61,7 @@
 		<commons-configuration.version>1.8</commons-configuration.version>
 		<logback.version>1.2.11</logback.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<dateconverters.version>1.2</dateconverters.version>
+		<dateconverters.version>1.4</dateconverters.version>
 		<jackson.version>2.13.2.2</jackson.version>
 		<jackson.annotations.version>2.13.2</jackson.annotations.version>
 		<jackson.dataformat.version>2.7.0</jackson.dataformat.version>
@@ -156,12 +156,13 @@
 			    <artifactId>dateconverters</artifactId>
 			    <version>${dateconverters.version}</version>
 			</dependency>
-
+<!-- 
 			<dependency>
 			    <groupId>org.msgpack</groupId>
 			    <artifactId>msgpack</artifactId>
 			    <version>${msgpack.version}</version>
 			</dependency>
+ -->
 <!-- 
 			<dependency>
 			    <groupId>org.sonarsource.scanner.maven</groupId>

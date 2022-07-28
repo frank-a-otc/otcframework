@@ -33,7 +33,7 @@ import etree.dateconverters.DateConverterFacade;
  * The Class OtcLeavesSemanticsChecker.
  */
 // TODO: Auto-generated Javadoc
-final class OtcLeavesSemanticsChecker {
+final class OtcLeavesSemanticsProcessor {
 
 	/**
 	 * Check leaves semantics.
@@ -42,14 +42,14 @@ final class OtcLeavesSemanticsChecker {
 	 * @param sourceOCC the source OCC
 	 * @return true, if successful
 	 */
-	static boolean checkLeavesSemantics(OtcCommandContext targetOCC, OtcCommandContext sourceOCC) {
+	static boolean process(OtcCommandContext targetOCC, OtcCommandContext sourceOCC) {
 		OtcCommandDto targetOCD = OtcCommand.retrieveLeafOCD(targetOCC);
 		if (DateConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {
 			OtcCommandDto sourceOCD = OtcCommand.retrieveLeafOCD(sourceOCC);
 			if (!DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)
 					&& String.class != sourceOCD.fieldType) {
-				throw new LexicalizerException("",
-						"Target leaf-node is one of date-type. " + "But Source leaf-node is not a compatible type.");
+				throw new LexicalizerException("", "Target leaf-node is one of the date-types. " + 
+						"But Source leaf-node is not a compatible type.");
 			}
 		}
 		return true;

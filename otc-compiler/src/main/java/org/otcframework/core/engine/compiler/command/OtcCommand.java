@@ -170,9 +170,12 @@ public class OtcCommand {
 		targetOCC.appendCode(methodEndCode);
 		targetOCC.appendCode("\n}");
 		StringBuilder importsBuilder = new StringBuilder();
-		for (String fqTypeName : targetOCC.factoryClassDto.retrieveImportFqNames()) {
+//		for (String fqTypeName : targetOCC.factoryClassDto.retrieveImportFqNames()) {
+//			importsBuilder.append("\nimport ").append(fqTypeName).append(";");
+//		}
+		targetOCC.factoryClassDto.retrieveImportFqNames().forEach(fqTypeName -> {
 			importsBuilder.append("\nimport ").append(fqTypeName).append(";");
-		}
+		});
 		StringBuilder codeBuilder = targetOCC.factoryClassDto.codeBuilder;
 		int idx = codeBuilder.indexOf(CODE_TO_IMPORT);
 		codeBuilder.replace(idx, idx + CODE_TO_IMPORT.length(), importsBuilder.toString());

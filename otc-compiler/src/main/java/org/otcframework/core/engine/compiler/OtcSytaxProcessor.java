@@ -32,7 +32,7 @@ import org.otcframework.common.util.PropertyConverterUtil;
  * The Class OtcSytaxChecker.
  */
 // TODO: Auto-generated Javadoc
-final class OtcSytaxChecker {
+final class OtcSytaxProcessor {
 
 	/**
 	 * Check syntax.
@@ -45,7 +45,7 @@ final class OtcSytaxChecker {
 	 * @param rawOtcToken   the raw otc token
 	 * @return true, if successful
 	 */
-	static boolean checkSyntax(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto, String otcChain,
+	static boolean process(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto, String otcChain,
 			String[] otcTokens, String rawOtcToken) {
 		boolean isAnchored = rawOtcToken.contains(OtcConstants.ANCHOR);
 		if (isAnchored) {
@@ -90,7 +90,7 @@ final class OtcSytaxChecker {
 		}
 		otcCommandDto.fieldName = fldName;
 		// --- process semantics
-		OtcSemanticsChecker.checkSemantics(script, clz, otcChain, otcCommandDto, otcTokens);
+		OtcSemanticsProcessor.process(script, clz, otcChain, otcCommandDto, otcTokens);
 		String otcToken = rawOtcToken;
 		if (isCollectionNotation) {
 			otcToken = fldName + OtcConstants.ARR_REF;

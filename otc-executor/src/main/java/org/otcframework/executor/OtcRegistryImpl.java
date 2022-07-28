@@ -31,7 +31,6 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.msgpack.MessagePack;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.OtcChainDto;
@@ -69,7 +68,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
 
 	/** The Constant msgPack. */
-	private static final MessagePack msgPack = new MessagePack();
+//	private static final MessagePack msgPack = new MessagePack();
 
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -103,9 +102,11 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			}
 			try {
 				FileInputStream fis = new FileInputStream(file);
-				byte[] contents = msgPack.read(fis, byte[].class);
+//				byte[] contents = msgPack.read(fis, byte[].class);
+				byte[] contents = new byte[fis.available()];
+				fis.read(contents);
 				RegistryDto registryDto = objectMapper.readValue(contents, RegistryDto.class);
-				if (registryDto.isError) {
+				if (registryDto.hasError) {
 					LOGGER.error(
 							"Ignoring registry of {}. "
 									+ "Probable cause: full compilation did not succeed on previous attempt.",

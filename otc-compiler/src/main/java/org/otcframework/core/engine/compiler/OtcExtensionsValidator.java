@@ -83,7 +83,8 @@ final class OtcExtensionsValidator {
 									+ "the same time in 'executeOtcConverter' extension.");
 				}
 				if (execute.executionOrder != null) {
-					for (String exeOrd : execute.executionOrder) {
+//					for (String exeOrd : execute.executionOrder) {
+					execute.executionOrder.forEach(exeOrd -> {
 						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.converter == null) {
 							throw new OtcExtensionsException("",
 									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
@@ -96,7 +97,7 @@ final class OtcExtensionsValidator {
 											+ ". 'executeOtcModule' defined in 'extensions: executionOrder' "
 											+ "but 'extensions: executeOtcModule' is undefined.");
 						}
-					}
+					});
 					script.hasExecutionOrder = true;
 				}
 				if (execute.module != null) {

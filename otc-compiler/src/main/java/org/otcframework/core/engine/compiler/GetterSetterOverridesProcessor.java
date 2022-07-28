@@ -99,7 +99,8 @@ final class GetterSetterOverridesProcessor {
 		if (TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource) {
 			return;
 		}
-		for (TargetDto.Override override : overrides) {
+//		for (TargetDto.Override override : overrides) {
+		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
 				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
@@ -110,7 +111,7 @@ final class GetterSetterOverridesProcessor {
 						+ "' in targets overrides section in command : " + commandId);
 			}
 			if (!otcCommandDto.tokenPath.equals(tokenPath)) {
-				continue;
+				return;
 			}
 			if (otcCommandDto.getter == null) {
 				if (override.getterHelper != null) {
@@ -123,7 +124,7 @@ final class GetterSetterOverridesProcessor {
 				}
 			}
 			if (otcCommandDto.setter != null) {
-				continue;
+				return;
 			}
 			if (override.setterHelper != null) {
 				otcCommandDto.setter = override.setterHelper;
@@ -133,7 +134,7 @@ final class GetterSetterOverridesProcessor {
 				otcCommandDto.setter = override.setter;
 				otcCommandDto.isSetterInitialized = false;
 			}
-		}
+		});
 	}
 
 	/**
@@ -149,7 +150,8 @@ final class GetterSetterOverridesProcessor {
 		if (overrides == null || otcCommandDto.getter != null) {
 			return;
 		}
-		for (OverrideDto override : overrides) {
+//		for (OverrideDto override : overrides) {
+		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
 				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
@@ -160,7 +162,7 @@ final class GetterSetterOverridesProcessor {
 						+ "' in source's overrides section in command : " + commandId);
 			}
 			if (!otcCommandDto.tokenPath.equals(tokenPath)) {
-				continue;
+				return;
 			}
 			if (override.getterHelper != null) {
 				otcCommandDto.enableGetterHelper = true;
@@ -170,6 +172,6 @@ final class GetterSetterOverridesProcessor {
 				otcCommandDto.getter = override.getter;
 				otcCommandDto.isGetterInitialized = false;
 			}
-		}
+		});
 	}
 }

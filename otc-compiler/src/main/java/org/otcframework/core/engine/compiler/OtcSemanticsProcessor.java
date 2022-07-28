@@ -46,7 +46,7 @@ import org.otcframework.core.engine.compiler.exception.SemanticsException;
  * The Class OtcSemanticsChecker.
  */
 // TODO: Auto-generated Javadoc
-final class OtcSemanticsChecker {
+final class OtcSemanticsProcessor {
 
 	private static final String err_msg = "Oops... OTC-command didn't pass Semantics-Checker for Id : ";
 	/**
@@ -59,7 +59,7 @@ final class OtcSemanticsChecker {
 	 * @param otcTokens     the otc tokens
 	 * @return true, if successful
 	 */
-	static boolean checkSemantics(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto,
+	static boolean process(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto,
 			String[] otcTokens) {
 		try {
 			checkNotations(script, clz, otcChain, otcCommandDto);

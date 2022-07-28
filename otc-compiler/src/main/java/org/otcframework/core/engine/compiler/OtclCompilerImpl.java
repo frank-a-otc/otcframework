@@ -39,7 +39,6 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
-import org.msgpack.MessagePack;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.ClassDto;
@@ -98,7 +97,7 @@ final public class OtclCompilerImpl implements OtclCompiler {
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
 
 	/** The Constant msgPack. */
-	private static final MessagePack msgPack = new MessagePack();
+//	private static final MessagePack msgPack = new MessagePack();
 
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper;
@@ -224,7 +223,8 @@ final public class OtclCompilerImpl implements OtclCompiler {
 		try {
 			String str = objectMapper.writeValueAsString(registryDto);
 			fos = new FileOutputStream(registryDto.registryFileName);
-			msgPack.write(fos, str.getBytes());
+//			msgPack.write(fos, str.getBytes());
+			fos.write(str.getBytes());
 			fos.flush();
 		} catch (IOException e) {
 			throw new OtcCompilerException(e);
@@ -261,7 +261,8 @@ final public class OtclCompilerImpl implements OtclCompiler {
 		}
 		registryDto.registryId = registryId;
 		List<ScriptDto> scriptDtos = otcDto.scriptDtos;
-		for (ScriptDto scriptDto : scriptDtos) {
+//		for (ScriptDto scriptDto : scriptDtos) {
+		scriptDtos.forEach(scriptDto -> {
 			if (registryDto.compiledInfos == null) {
 				registryDto.compiledInfos = new LinkedHashMap<>();
 			}
@@ -283,7 +284,7 @@ final public class OtclCompilerImpl implements OtclCompiler {
 			String[] otcTokens = scriptDto.targetOtcChainDto.otcTokens;
 			compiledInfo.targetOCDStem = otcDto.targetOCDStems.get(otcTokens[0]);
 			nullifyFields(compiledInfo.targetOCDStem);
-		}
+		});
 		return registryDto;
 	}
 
@@ -296,9 +297,10 @@ final public class OtclCompilerImpl implements OtclCompiler {
 		otcCommandDto.field = null;
 		otcCommandDto.parent = null;
 		if (otcCommandDto.children != null) {
-			for (OtcCommandDto childOCD : otcCommandDto.children.values()) {
+//			for (OtcCommandDto childOCD : otcCommandDto.children.values()) {
+			otcCommandDto.children.values().forEach(childOCD -> {
 				nullifyFields(childOCD);
-			}
+			});
 		}
 	}
 
@@ -373,7 +375,10 @@ final public class OtclCompilerImpl implements OtclCompiler {
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(depFile);
-				String str = msgPack.read(fis, String.class);
+//				String str = msgPack.read(fis, String.class);
+				byte bytes[] = new byte[fis.available()];
+				fis.read(bytes);
+				String str = new String(bytes);
 				RegistryDto registryDto = objectMapper.readValue(str, RegistryDto.class);
 				if (registryDtos == null) {
 					registryDtos = new ArrayList<>();
@@ -465,17 +470,18 @@ final public class OtclCompilerImpl implements OtclCompiler {
 				javaFileObjects);
 		if (!task.call()) {
 			diagnostics.getDiagnostics().forEach((diagnostic) -> {
-				if (!registryDto.isError && diagnostic.getCode().contains("compiler.err")) {
-					registryDto.isError = true;
+				if (!registryDto.hasError && diagnostic.getCode().contains("compiler.err")) {
+					registryDto.hasError = true;
 				}
 				System.out.println(diagnostic);
 			});
-			if (registryDto.isError) {
-				createRegistrationFile(registryDto);
+			if (registryDto.hasError) {
+//				createRegistrationFile(registryDto);
 				if (compilerSourcecodeFailonerror) {
 					throw new OtcCompilerException("", "Source code compilation failed.");
 				}
 			}
+			createRegistrationFile(registryDto);
 		} else {
 			javaFileObjects.forEach((javaFile) -> {
 				LOGGER.debug("Compiled source code : {}", javaFile.getName());

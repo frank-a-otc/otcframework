@@ -53,12 +53,13 @@ final class GetterSetterFinalizer {
 		if (parentOCDs == null || parentOCDs.isEmpty()) {
 			return;
 		}
-		for (OtcCommandDto childOCD : parentOCDs.values()) {
+//		for (OtcCommandDto childOCD : parentOCDs.values()) {
+		parentOCDs.values().forEach(childOCD -> {
 			if (childOCD.isRootNode) {
-				continue;
+				return;
 			}
 			process(childOCD, factoryHelper, targetSource);
-		}
+		});
 		return;
 	}
 
@@ -118,34 +119,36 @@ final class GetterSetterFinalizer {
 	 */
 	public static void resetLeafHelperTypes(Map<String, OtcFileDto.CommonCommandParams> mapOtcCommands,
 			Map<String, OtcCommandDto> sourceOCDs, Map<String, OtcCommandDto> targetOCDs, Class<?> factoryHelper) {
-		for (OtcCommandDto childOCD : targetOCDs.values()) {
+//		for (OtcCommandDto childOCD : targetOCDs.values()) {
+		targetOCDs.values().forEach(childOCD -> {
 			if (childOCD.isRootNode) {
-				continue;
+				return;
 			}
-			for (String commandId : childOCD.occursInCommands) {
+//			for (String commandId : childOCD.occursInCommands) {
+			childOCD.occursInCommands.forEach(commandId -> {
 				OtcFileDto.CommonCommandParams otcCommand = mapOtcCommands.get(commandId);
 				Copy copy = null;
 				if (!(otcCommand instanceof Copy)) {
-					continue;
+					return;
 					// Execute type is not required here.
 				}
 				copy = (Copy) otcCommand;
 				String targetOtcChain = copy.to.objectPath;
 				OtcCommandDto leafTargetOCD = OtcUtils.retrieveLeafOCD(targetOCDs, targetOtcChain);
 				if (!leafTargetOCD.enableSetterHelper) {
-					continue;
+					return;
 				}
 				String sourceOtcChain = copy.from.objectPath;
 				if (sourceOtcChain == null && copy.from.values != null) {
-					continue;
+					return;
 				}
 				OtcCommandDto leafSourceOCD = OtcUtils.retrieveLeafOCD(sourceOCDs, sourceOtcChain);
 				Class<?> fieldType = leafSourceOCD.fieldType;
 				leafTargetOCD.isSetterInitialized = false;
 				OtcReflectionUtil.findHelperMethodName(factoryHelper, GETTER_SETTER.SETTER, leafTargetOCD, fieldType);
 				leafTargetOCD.isSetterInitialized = true;
-			}
-		}
+			});
+		});
 	}
 
 	/**

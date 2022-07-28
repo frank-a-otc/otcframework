@@ -141,13 +141,14 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		}
 		// innermost loop - if null continue code.
 		if (scriptDto.hasExecutionOrder) {
-			for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
+//			for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
+			(((Execute) scriptDto.command).executionOrder).forEach(execOrd -> {
 				if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(execOrd)) {
 					otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
 				} else if (OtcConstants.EXECUTE_OTC_MODULE.equals(execOrd)) {
 					otcCommand.appendExecuteModule(targetOCC, sourceOCC, false);
 				}
-			}
+			});
 		} else {
 			if (((Execute) scriptDto.command).converter != null) {
 				otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);

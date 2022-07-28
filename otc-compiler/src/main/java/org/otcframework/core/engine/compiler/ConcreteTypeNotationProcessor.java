@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 final class ConcreteTypeNotationProcessor {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(OtcLexicalizer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConcreteTypeNotationProcessor.class);
 
 	/**
 	 * Process.
@@ -57,7 +57,7 @@ final class ConcreteTypeNotationProcessor {
 		}
 		String commandId = script.command.id;
 		List<TargetDto.Override> overrides = null;
-		String otcChain = null;
+		String otcChain;
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
 			otcChain = copy.to.objectPath;
@@ -75,7 +75,8 @@ final class ConcreteTypeNotationProcessor {
 			return true;
 		}
 		otcCommandDto.concreteTypeName = null;
-		for (TargetDto.Override override : overrides) {
+//		for (TargetDto.Override override : overrides) {
+		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
 				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
@@ -90,11 +91,11 @@ final class ConcreteTypeNotationProcessor {
 						+ "' in target's overrides section in command : " + commandId);
 			}
 			if (!otcCommandDto.tokenPath.equals(tokenPath)) {
-				continue;
+				return;
 			}
 			String concreteType = override.concreteType;
 			if (concreteType == null) {
-				continue;
+				return;
 			}
 			boolean isErr = false;
 			if (tokenPath.endsWith(OtcConstants.MAP_KEY_REF)) {
@@ -122,7 +123,7 @@ final class ConcreteTypeNotationProcessor {
 								+ "' in one of these earlier commands : ",
 						commandId, tokenPath, otcCommandDto.occursInCommands);
 			}
-		}
+		});
 		return true;
 	}
 }

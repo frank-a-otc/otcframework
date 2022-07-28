@@ -148,9 +148,9 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 		if (otcFileDto.metadata != null) {
 			targetOCC.helper = otcFileDto.metadata.helper;
 		}
-		List<JavaFileObject> javaFileObjects = null;
 		ExecutionContext executionContext = new ExecutionContext();
-		for (ScriptDto scriptDto : otcDto.scriptDtos) {
+//		for (ScriptDto scriptDto : otcDto.scriptDtos) {
+		otcDto.scriptDtos.forEach(scriptDto -> {
 			try {
 				if (scriptDto.command.debug) {
 					@SuppressWarnings("unused")
@@ -173,9 +173,6 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 				}
 				boolean isCopyValues = false;
 				boolean isExtensions = false;
-				if (javaFileObjects == null) {
-					javaFileObjects = new ArrayList<>();
-				}
 				executionContext.otcCommand = otcCommand;
 				executionContext.targetClz = targetClz;
 				executionContext.sourceClz = sourceClz;
@@ -204,13 +201,14 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 				LOGGER.error("Error while compiling OTC-Command with Id : {}", scriptDto.command.id);
 				throw new CodeGeneratorException(ex);
 			}
-		}
+		});
 		String rootTargetVariable = CommonUtils.initLower(targetClz.getSimpleName());
 		String endExecuteMethod = MethodEndTemplate.generateCode(rootTargetVariable);
 		targetOCC.mainClassDto.codeBuilder.append(endExecuteMethod).append("\n}");
 		String javaCode = targetOCC.mainClassDto.codeBuilder.toString();
 		String fqClzName = mainClassDto.className;
 		JavaCodeStringObject javaStringObject = new JavaCodeStringObject(fqClzName, javaCode);
+		List<JavaFileObject> javaFileObjects = new ArrayList<>();
 		javaFileObjects.add(javaStringObject);
 		otcCommand.createJavaFile(mainClassDto);
 		return;

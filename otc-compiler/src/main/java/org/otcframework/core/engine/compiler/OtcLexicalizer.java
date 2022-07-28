@@ -46,18 +46,14 @@ import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.factory.OtcCommandDtoFactory;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.OtcUtils;
+import org.otcframework.common.util.YamlSerializationHelper;
 import org.otcframework.core.engine.compiler.exception.LexicalizerException;
 import org.otcframework.core.engine.compiler.exception.OtcExtensionsException;
 import org.otcframework.core.engine.utils.CompilerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 
 /**
  * The Class OtcLexicalizer.
@@ -70,16 +66,6 @@ final class OtcLexicalizer {
 
 	/** The Constant FROM_OTCCHAIN_PATTERN. */
 	private static final Pattern FROM_OTCCHAIN_PATTERN = Pattern.compile(OtcConstants.REGEX_CHECK_OTCCHAIN);
-
-	/** The Constant objectMapper. */
-	private static final ObjectMapper objectMapper;
-	static {
-		YAMLFactory yamlFactory = new YAMLFactory();
-		yamlFactory.enable(YAMLGenerator.Feature.MINIMIZE_QUOTES);
-		objectMapper = new ObjectMapper(yamlFactory);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
-	}
 
 	/**
 	 * Lexicalize.
@@ -100,16 +86,17 @@ final class OtcLexicalizer {
 		String targetClzName = null;
 		if (idx <= 0) {
 //			source-class-name can be null if no scripts with from/source : otcChain: is present.
-			String json;
+			String yaml;
 			try {
-				json = objectMapper.writeValueAsString(otcFileDto);
+//				json = objectMapper.writeValueAsString(otcFileDto);
+				yaml = YamlSerializationHelper.serialize(otcFileDto);
 			} catch (JsonProcessingException e) {
 				throw new LexicalizerException("", e);
 			}
-			Matcher matcher = FROM_OTCCHAIN_PATTERN.matcher(json);
+			Matcher matcher = FROM_OTCCHAIN_PATTERN.matcher(yaml);
 			if (matcher.find()) {
 				throw new LexicalizerException("",
-						"Incorrect file-name! File-name should contain source and target class " + "names.");
+						"Incorrect file-name! File-name should contain source and target class names.");
 			}
 			targetClzName = fileName.substring(0, fileName.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
 		} else {
@@ -159,7 +146,7 @@ final class OtcLexicalizer {
 	static OtcFileDto loadOtc(File file) {
 		OtcFileDto otcFileDto = null;
 		try {
-			otcFileDto = objectMapper.readValue(file, OtcFileDto.class);
+			otcFileDto = YamlSerializationHelper.deserialize(file, OtcFileDto.class);
 		} catch (IOException e) {
 			throw new LexicalizerException("", e);
 		}
@@ -194,7 +181,8 @@ final class OtcLexicalizer {
 		Map<String, OtcCommandDto> mapTargetOCDs = new LinkedHashMap<>();
 		Map<String, OtcCommandDto> mapSourceOCDs = new LinkedHashMap<>();
 		Set<String> scriptIds = new HashSet<>();
-		for (OtcFileDto.OtclCommand otcCommand : otcFileDto.otclCommands) {
+//		for (OtcFileDto.OtclCommand otcCommand : otcFileDto.otclCommands) {
+		otcFileDto.otclCommands.forEach(otcCommand -> {
 			if ((otcCommand.copy != null && otcCommand.copy.debug)
 					|| (otcCommand.execute != null && otcCommand.execute.debug)) {
 				@SuppressWarnings("unused")
@@ -211,7 +199,7 @@ final class OtcLexicalizer {
 			if ((otcCommand.copy != null && otcCommand.copy.disable)
 					|| (otcCommand.execute != null && otcCommand.execute.disable)) {
 				LOGGER.warn("Ignoring disabled OTC-command : {}", commandId);
-				continue;
+				return;
 			}
 			LOGGER.debug("Compiling OTC-command : {}", commandId);
 			validateScriptIds(scriptIds, commandId);
@@ -274,7 +262,7 @@ final class OtcLexicalizer {
 					sourceOCC.otcCommandDto = sourceStemOCD;
 					sourceOCC.otcTokens = builderSourceOtcChainDto.getOtcTokens();
 					sourceOCC.rawOtcTokens = builderSourceOtcChainDto.getRawOtcTokens();
-					OtcLeavesSemanticsChecker.checkLeavesSemantics(targetOCC, sourceOCC);
+					OtcLeavesSemanticsProcessor.process(targetOCC, sourceOCC);
 					sourceCollectionsCount = sourceOtcChainDto.collectionCount + sourceOtcChainDto.dictionaryCount;
 				}
 				String chainPathToParentLeaf = targetOtcChain;
@@ -297,7 +285,7 @@ final class OtcLexicalizer {
 				throw new LexicalizerException("", "Otc Lexicalizer-phase failure compiling Command-Id : " + commandId,
 						ex);
 			}
-		}
+		});
 		return builderRegistryDto.build();
 	}
 
@@ -519,7 +507,7 @@ final class OtcLexicalizer {
 				if (otcCommandDto.isFirstNode) {
 					stemOCD = otcCommandDto;
 				}
-				OtcSytaxChecker.checkSyntax(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
+				OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
 				if (otcCommandDto.isCollection()) {
 					builderOtcChainDto.incrementCollectionCount();
 					otcCommandDto = otcCommandDto.children.get(otcCommandDto.fieldName);
@@ -558,7 +546,7 @@ final class OtcLexicalizer {
 			otcCommandDto = OtcCommandDtoFactory.create(commandId, enumTargetOrSource, otcToken,
 					tokenPathBuilder.toString(), idx, null, null, isFirstNode, null, null, null, isLeaf);
 			otcCommandDto.parent = parentOCD;
-			OtcSytaxChecker.checkSyntax(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
+			OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
 			if (parentOCD != null) {
 				parentOCD.addChild(otcCommandDto);
 			}
