@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.otcframework</groupId>
 		<artifactId>otcframework</artifactId>
-		<version>2.5</version>
+		<version>2.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>otc-common</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC Commons - use v2.5 or above only</description>
+	<description>OTC Commons - use v2.6 or above only</description>
 
 	<build>
 		<plugins>

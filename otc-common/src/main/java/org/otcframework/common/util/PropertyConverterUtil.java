@@ -50,9 +50,8 @@ public class PropertyConverterUtil {
 
 	/** The Constant CONSTR_ARGS. */
 	private static final Class<?>[] CONSTR_ARGS = { String.class };
-//	private static final char LIST_ESC_CHAR = '\\';
+
 	/** The Constant wrapperTypes. */
-//	private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 	private static final Map<Class<?>, Class<?>> wrapperTypes = new IdentityHashMap<>(9);
 
 	/** The Constant allTypes. */

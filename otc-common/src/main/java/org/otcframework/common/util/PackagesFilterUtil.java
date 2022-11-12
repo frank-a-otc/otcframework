@@ -40,15 +40,6 @@ public class PackagesFilterUtil {
 	 * @param pkgsToFilter the new filtered packages
 	 */
 	public static void setFilteredPackages(Set<String> pkgsToFilter) {
-//		if (PackagesFilterUtil.pkgsToFilter == null) {
-//			PackagesFilterUtil.pkgsToFilter = new HashSet<>();
-//		}
-//		for (String pkg : pkgsToFilter) {
-//			if (pkg.endsWith("*")) {
-//				pkg = pkg.replace("*", "");
-//			}
-//			PackagesFilterUtil.pkgsToFilter.add(pkg);
-//		}
 		PackagesFilterUtil.pkgsToFilter = pkgsToFilter.stream().map(pkg -> {
 			if (pkg.endsWith("*")) {
 				pkg = pkg.replace("*", "");

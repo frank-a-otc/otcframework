@@ -26,12 +26,14 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.otcframework.common.config.exception.OtcConfigException;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.util.CommonUtils;
+import org.otcframework.common.util.OtcUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.common.util.YamlSerializationHelper;
 
@@ -88,11 +90,11 @@ public enum OtcConfig {
 		Map<String, String> sysEnv = System.getenv();
 		if (!sysEnv.containsKey(OTC_HOME_ENV_VAR)) {
 			throw new OtcConfigException("",
-					"Oops... Cannot proceed - 'otc_home' not set! Please set 'otc_home' environment variable.");
+					"Oops... Cannot proceed - 'otc_home' not found! Please set 'otc_home' environment variable.");
 		}
 		otcHome = sysEnv.get(OTC_HOME_ENV_VAR);
 		if (CommonUtils.isEmpty(otcHome)) {
-			throw new OtcException("", "Oops... Environment variable 'otc.home' not set! ");
+			throw new OtcException("", "Oops... Environment variable '" + OTC_HOME_ENV_VAR + "' not set! ");
 		}
 //		try (InputStream inStream = new FileInputStream(otcHome + "/config/otc.properties")) {
 //			otcConfigProps.load(inStream);
@@ -139,12 +141,11 @@ public enum OtcConfig {
 
 		if (yamlConfig.compiler != null) {
 			sourceCodeLocation = yamlConfig.compiler.sourceCodeLocation;
-			if (!sourceCodeLocation.endsWith(File.separator)) {
-				sourceCodeLocation += File.separator;
-			}
 		}
 		if (CommonUtils.isEmpty(sourceCodeLocation)) {
 			sourceCodeLocation = otcHome + File.separator + "src" + File.separator;
+		} else if (!sourceCodeLocation.endsWith(File.separator)) {
+			sourceCodeLocation += File.separator;
 		}
 	}
 
@@ -241,6 +242,24 @@ public enum OtcConfig {
 	}
 
 	/**
+	 * Gets the concrete types.
+	 *
+	 * @return the concrete types
+	 */
+	public static Map<Class<?>, String> getConcreteTypes() {
+		Map<String, String> yamlConcreteTypes = yamlConfig.concreteTypes;
+		if (yamlConcreteTypes != null) {
+			IdentityHashMap<Class<?>, String> concreteTypes = new IdentityHashMap<Class<?>, String>(yamlConcreteTypes.size());
+			yamlConcreteTypes.forEach((key, value) -> {
+				Class<?> clz = OtcUtils.loadClass(key);
+				concreteTypes.put(clz, value);
+			});
+			return concreteTypes;
+		}
+		return null;
+	}
+
+	/**
 	 * Check otc home set.
 	 */
 	private static boolean isOtcHomeSet() {
@@ -251,11 +270,11 @@ public enum OtcConfig {
 	}
 	
 	public static final class YamlConfig {
-		public Compiler compiler;
+		public CompilerProps compiler;
 		public Map<String, String> concreteTypes;
 		public Set<String> filterPackages;
 		
-		public static final class Compiler {
+		public static final class CompilerProps {
 			public Boolean failOnError;
 			public String sourceCodeLocation;
 		}

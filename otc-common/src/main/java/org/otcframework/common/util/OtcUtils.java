@@ -52,7 +52,7 @@ public class OtcUtils {
 
 	/** The Constant otcLibLocation. */
 	private static final String otcLibLocation = OtcConfig.getOtcLibLocation();
-
+	
 	/**
 	 * Creates the otc file name.
 	 *
@@ -67,18 +67,7 @@ public class OtcUtils {
 		String fileName = createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
 		return fileName;
 	}
-
-	/**
-	 * Creates the registry id.
-	 *
-	 * @param otcNamespace the otc namespace
-	 * @param targetClz the target clz
-	 * @return the string
-	 */
-	public static String createRegistryId(String otcNamespace, Class<?> targetClz) {
-		return createRegistryId(otcNamespace, null, targetClz.getName());
-	}
-
+	
 	/**
 	 * Creates the registry id.
 	 *
@@ -93,6 +82,17 @@ public class OtcUtils {
 		} else {
 			return createRegistryId(otcNamespace, source.getClass().getName(), targetClz.getName());
 		}
+	}
+
+	/**
+	 * Creates the registry id.
+	 *
+	 * @param otcNamespace the otc namespace
+	 * @param targetClz the target clz
+	 * @return the string
+	 */
+	public static String createRegistryId(String otcNamespace, Class<?> targetClz) {
+		return createRegistryId(otcNamespace, null, targetClz.getName());
 	}
 
 	/**
@@ -192,7 +192,6 @@ public class OtcUtils {
 				}
 				otcCommandDto = otcCommandDto.children.get(memberName);
 			}
-//			otcCommandDto = otcCommandDto.children.get(otcTokens[otcCommandDto.otcTokenIndex + 1]);
 			otcCommandDto = retrieveNextOCD(otcCommandDto.children, otcTokens[otcCommandDto.otcTokenIndex + 1]);
 		}
 		return otcCommandDto;
@@ -216,36 +215,6 @@ public class OtcUtils {
 	}
 
 	/**
-	 * Creates the method not found message.
-	 *
-	 * @param clz           the clz
-	 * @param methodName    the method name
-	 * @param paramTypes    the param types
-	 * @param otcCommandDto the otc command dto
-	 * @return the string
-	 */
-	public static String createMethodNotFoundMessage(Class<?> clz, String methodName, Class<?>[] paramTypes,
-			OtcCommandDto otcCommandDto) {
-		StringBuilder paramsBuilder = null;
-		if (paramTypes != null && paramTypes.length > 0) {
-			for (Class<?> paramType : paramTypes) {
-				if (paramsBuilder == null) {
-					paramsBuilder = new StringBuilder("(").append(paramType.getName());
-				} else {
-					paramsBuilder.append(",").append(paramType.getName());
-				}
-			}
-			paramsBuilder.append(")");
-		} else {
-			paramsBuilder = new StringBuilder("()");
-		}
-		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString()
-				+ " not found for tokenpath : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) "
-				+ otcCommandDto.occursInCommands;
-		return msg;
-	}
-
-	/**
 	 * Retrieve index character.
 	 *
 	 * @param otcToken the otc token
@@ -256,24 +225,6 @@ public class OtcUtils {
 		int idxEndCollectionNotation = otcToken.indexOf(OtcConstants.CLOSE_BRACKET);
 		String idxCharacter = otcToken.substring(idxCollectionNotation, idxEndCollectionNotation);
 		return idxCharacter;
-	}
-
-	/**
-	 * Checks if is tokenpath leafparent.
-	 *
-	 * @param otcChain  the otc chain
-	 * @param tokenPath the token path
-	 * @return true, if is tokenpath leafparent
-	 */
-	public static boolean isTokenpathLeafparent(String otcChain, String tokenPath) {
-		String remainderChain = otcChain.replace(tokenPath, "");
-		if (!CommonUtils.isEmpty(remainderChain)) {
-			if (remainderChain.startsWith(".")) {
-				remainderChain = remainderChain.substring(1);
-			}
-			return remainderChain.split("\\.").length == 1;
-		}
-		return false;
 	}
 
 	/**

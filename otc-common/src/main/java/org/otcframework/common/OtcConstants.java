@@ -152,7 +152,7 @@ public interface OtcConstants {
 	String MAP_VALUE_REF = "<V>";
 
 	/** The otc script extn. */
-	String OTC_SCRIPT_EXTN = ".otcl";
+	String OTC_SCRIPT_EXTN = ".otcs";
 
 	/** The otc generatedcode extn. */
 	String OTC_GENERATEDCODE_EXTN = ".java";

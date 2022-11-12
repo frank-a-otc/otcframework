@@ -6,12 +6,12 @@
 
 	<groupId>org.otcframework</groupId>
 	<artifactId>otcframework</artifactId>
-	<version>2.5</version>
+	<version>2.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>
-		OTC's parent POM for "otc-common", "otc-compiler" and "otc-executor" modules. Use v2.5 or above only.
+		OTC's parent POM for "otc-common", "otc-compiler" and "otc-executor" modules. Use v2.6 or above only.
 	</description>
 	<url>http://www.otcframework.org</url>
 
@@ -62,9 +62,11 @@
 		<logback.version>1.2.11</logback.version>
 		<slf4j.version>1.7.30</slf4j.version>
 		<dateconverters.version>1.4</dateconverters.version>
-		<jackson.version>2.13.2.2</jackson.version>
-		<jackson.annotations.version>2.13.2</jackson.annotations.version>
-		<jackson.dataformat.version>2.7.0</jackson.dataformat.version>
+		
+		<jackson.annotations.version>2.13.4</jackson.annotations.version>
+		<jackson.dataformat.version>2.13.4</jackson.dataformat.version>
+		<jackson.databind.version>2.13.4.1</jackson.databind.version>
+		
 		<snakeyaml.version>1.30</snakeyaml.version>
 		<msgpack.version>0.6.12</msgpack.version>
 		<lombok.version>1.18.24</lombok.version>
@@ -113,7 +115,7 @@
 			<dependency>
 			    <groupId>com.fasterxml.jackson.core</groupId>
 			    <artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
+				<version>${jackson.databind.version}</version>
 			</dependency>
 			<dependency>
 			    <groupId>com.fasterxml.jackson.core</groupId>
