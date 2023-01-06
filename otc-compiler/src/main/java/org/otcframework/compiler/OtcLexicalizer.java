@@ -76,15 +76,17 @@ final class OtcLexicalizer {
 	 */
 	static OtcDto lexicalize(File file, String otcNamespace) {
 		OtcFileDto otcFileDto = loadOtc(file);
+		if (otcFileDto.metadata == null || otcFileDto.metadata.objectTypes == null || 
+				otcFileDto.metadata.objectTypes.target == null) {
+			throw new LexicalizerException("", "metadata.objectTypes and / or metadata.objectTypes.target is missing.");
+		}
 		if (otcFileDto.commands == null) {
 			throw new LexicalizerException("", "No OTC commmands to execute! OTC-Scripts are missing.");
 		}
-		String fileName = file.getName();
-		int idx = fileName.indexOf("_");
-		String sourceClzName = null;
+		String sourceClzName = otcFileDto.metadata.objectTypes.source;
 		Class<?> sourceClz = null;
-		String targetClzName = null;
-		if (idx <= 0) {
+		String targetClzName = otcFileDto.metadata.objectTypes.target;
+		if (sourceClzName == null) {
 //			source-class-name can be null if no scripts with from/source : otcChain: is present.
 			String yaml;
 			try {
@@ -97,11 +99,8 @@ final class OtcLexicalizer {
 				throw new LexicalizerException("",
 						"Incorrect file-name! File-name should contain source and target class names.");
 			}
-			targetClzName = fileName.substring(0, fileName.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
 		} else {
-			sourceClzName = fileName.substring(0, idx);
 			sourceClz = OtcUtils.loadClass(sourceClzName);
-			targetClzName = fileName.substring(idx + 1, fileName.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
 		}
 		Class<?> targetClz = OtcUtils.loadClass(targetClzName);
 		if (otcFileDto.metadata != null && otcFileDto.metadata.objectTypes != null) {
@@ -126,6 +125,7 @@ final class OtcLexicalizer {
 		}
 		otcNamespace = otcNamespace == null ? "" : otcNamespace;
 		Map<String, OtcFileDto.CommonCommandParams> mapOtcCommands = new HashMap<>();
+		String fileName = OtcUtils.createOtcFileName(sourceClzName, targetClzName);
 		OtcDto otcDto = tokenize(otcNamespace, fileName, otcFileDto, targetClz, sourceClz, mapOtcCommands);
 		Class<?> factoryHelper = fetchFactoryHelper(otcFileDto);
 		GetterSetterFinalizer.process(otcDto.sourceOCDStems, factoryHelper, TARGET_SOURCE.SOURCE);
@@ -180,7 +180,6 @@ final class OtcLexicalizer {
 		Map<String, OtcCommandDto> mapTargetOCDs = new LinkedHashMap<>();
 		Map<String, OtcCommandDto> mapSourceOCDs = new LinkedHashMap<>();
 		Set<String> scriptIds = new HashSet<>();
-//		for (OtcFileDto.OtclCommand otcCommand : otcFileDto.otclCommands) {
 		otcFileDto.commands.forEach(otcCommand -> {
 			if ((otcCommand.copy != null && otcCommand.copy.debug)
 					|| (otcCommand.execute != null && otcCommand.execute.debug)) {
