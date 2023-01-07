@@ -45,7 +45,7 @@ public final class RegistryDto {
 	public String registryFileName;
 
 	/** The is error. */
-	public boolean isError;
+	public boolean hasError;
 
 	/** The main class. */
 	public String mainClass;

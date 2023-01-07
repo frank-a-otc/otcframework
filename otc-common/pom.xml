@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.otcframework</groupId>
 		<artifactId>otcframework</artifactId>
-		<version>2.5</version>
+		<version>2.6</version>
 	</parent>
 	<artifactId>otc-common</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC Commons - use v2.5 or above only</description>
+	<description>OTC Commons - use v2.6 or above only</description>
 
 	<build>
 		<plugins>
@@ -26,7 +26,7 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
-<!-- 
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -40,7 +40,7 @@
 					</execution>
 				</executions>
 			</plugin>
- -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -75,6 +75,14 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-annotations</artifactId>
+		</dependency>
+ 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
 		<dependency>
 		    <groupId>org.slf4j</groupId>
