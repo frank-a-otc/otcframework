@@ -32,9 +32,9 @@
 	</developers>
 	
 	<scm>
-		<connection>scm:git:git://github.com/frankjjava/otcframework.git</connection>
-		<developerConnection>scm:git:ssh://github.com:frankjjava/otcframework.git</developerConnection>
-		<url>https://github.com/frankjjava/otcframework</url>
+		<connection>scm:git:git://github.com/frank-a-otc/otcframework.git</connection>
+		<developerConnection>scm:git:ssh://github.com:frank-a-otc/otcframework.git</developerConnection>
+		<url>https://github.com/frank-a-otc/otcframework</url>
 	</scm>
 
 	<distributionManagement>
@@ -50,7 +50,7 @@
 
     <issueManagement>
         <system>Github Issue</system>
-        <url>https://github.com/frankjjava/otcf-issues/issues</url>
+        <url>https://github.com/frank-a-otc/otcframework/issues</url>
     </issueManagement>
 
 	<properties>
