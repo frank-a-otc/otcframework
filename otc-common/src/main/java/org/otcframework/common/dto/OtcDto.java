@@ -22,12 +22,12 @@
 */
 package org.otcframework.common.dto;
 
+import org.otcframework.common.dto.otc.OtcFileDto;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.otcframework.common.dto.otc.OtcFileDto;
 
 /**
  * The Class OtcDto.

@@ -22,15 +22,15 @@
 */
 package org.otcframework.common.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Class OtcReflectionUtil.

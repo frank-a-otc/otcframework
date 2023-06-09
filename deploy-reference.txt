@@ -1,0 +1,5 @@
+
+https://jenkov.com/tutorials/maven/publish-to-central-maven-repository.html
+
+https://central.sonatype.org/publish/requirements/gpg/#individual-projects-open-source-software-repository-hosting-ossrh
+

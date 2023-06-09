@@ -22,6 +22,13 @@
 */
 package org.otcframework.common.config;
 
+import org.otcframework.common.config.exception.OtcConfigException;
+import org.otcframework.common.exception.OtcException;
+import org.otcframework.common.util.CommonUtils;
+import org.otcframework.common.util.OtcUtils;
+import org.otcframework.common.util.PackagesFilterUtil;
+import org.otcframework.common.util.YamlSerializationHelper;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,13 +36,6 @@ import java.net.URLClassLoader;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.otcframework.common.config.exception.OtcConfigException;
-import org.otcframework.common.exception.OtcException;
-import org.otcframework.common.util.CommonUtils;
-import org.otcframework.common.util.OtcUtils;
-import org.otcframework.common.util.PackagesFilterUtil;
-import org.otcframework.common.util.YamlSerializationHelper;
 
 /**
  * The Enum OtcConfig.
@@ -90,7 +90,7 @@ public enum OtcConfig {
 		Map<String, String> sysEnv = System.getenv();
 		if (!sysEnv.containsKey(OTC_HOME_ENV_VAR)) {
 			throw new OtcConfigException("",
-					"Oops... Cannot proceed - 'otc_home' not found! Please set 'otc_home' environment variable.");
+					"Oops... Cannot proceed - 'OTC_HOME' not set! Please set 'OTC_HOME' environment variable.");
 		}
 		otcHome = sysEnv.get(OTC_HOME_ENV_VAR);
 		if (CommonUtils.isEmpty(otcHome)) {

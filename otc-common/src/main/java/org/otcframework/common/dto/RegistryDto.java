@@ -22,9 +22,9 @@
 */
 package org.otcframework.common.dto;
 
-import java.util.Map;
-
 import org.otcframework.common.executor.CodeExecutor;
+
+import java.util.Map;
 
 /**
  * The Class RegistryDto.

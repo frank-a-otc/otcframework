@@ -22,18 +22,18 @@
 */
 package org.otcframework.compiler;
 
-import java.util.List;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.ScriptDto;
 import org.otcframework.common.dto.otc.OtcFileDto.Copy;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute;
-import org.otcframework.compiler.exception.SemanticsException;
-import org.otcframework.compiler.exception.SyntaxException;
 import org.otcframework.common.dto.otc.OverrideDto;
 import org.otcframework.common.dto.otc.TargetDto;
+import org.otcframework.compiler.exception.SemanticsException;
+import org.otcframework.compiler.exception.SyntaxException;
+
+import java.util.List;
 
 /**
  * The Class GetterSetterOverridesProcessor.

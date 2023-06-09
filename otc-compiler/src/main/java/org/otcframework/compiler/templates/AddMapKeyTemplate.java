@@ -22,20 +22,23 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.otcframework.compiler.exception.CodeGeneratorException;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class AddMapKeyTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class AddMapKeyTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			AddMapKeyTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new adds the map key template.
@@ -163,7 +166,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (targetOCC.hasDescendantCollectionOrMap()) {
 			codeSectionBuilder.append(assignKeyToMemberIcdTemplate);
 		}
-		return codeSectionBuilder.toString();
+		return addInlineComments(inlineComments, codeSectionBuilder.toString());
 	}
 
 	/**
@@ -218,6 +221,6 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 			mapValueCode = String.format(createInstanceTemplate.replace("new %s()", "null"), valueType, valueVarName);
 		}
 		postTargetLoopMapKeyCode = postTargetLoopMapKeyCode.replace(CODE_TO_CREATE_MAPVALUE, mapValueCode);
-		return postTargetLoopMapKeyCode;
+		return addInlineComments(inlineComments, postTargetLoopMapKeyCode);
 	}
 }

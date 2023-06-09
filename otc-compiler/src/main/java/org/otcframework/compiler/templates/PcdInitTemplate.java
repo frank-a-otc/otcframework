@@ -22,9 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.LogLevel;
 import org.otcframework.common.dto.OtcCommandDto;
@@ -32,12 +29,17 @@ import org.otcframework.common.indexer.IndexedCollectionsDtoFactory;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class PcdInitTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class PcdInitTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			PcdInitTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new pcd init template.
 	 */

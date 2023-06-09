@@ -22,32 +22,13 @@
 */
 package org.otcframework.compiler;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.compiler.CompilationReport;
 import org.otcframework.common.config.OtcConfig;
-import org.otcframework.common.dto.ClassDto;
-import org.otcframework.common.dto.OtcCommandDto;
-import org.otcframework.common.dto.OtcDto;
-import org.otcframework.common.dto.RegistryDto;
+import org.otcframework.common.dto.*;
 import org.otcframework.common.dto.RegistryDto.CompiledInfo;
-import org.otcframework.common.dto.ScriptDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.OtcUtils;
 import org.otcframework.compiler.command.JavaCodeStringObject;
@@ -57,8 +38,12 @@ import org.otcframework.compiler.utils.CompilerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import javax.tools.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * The Class OtcCompilerImpl.
@@ -146,7 +131,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	@Override
 	public List<CompilationReport> compile() {
 		long startTime = System.nanoTime();
-		LOGGER.info("Initiating OTC file compilations in {}", otcSrcDir);
+		LOGGER.info("Initiating OTCS file compilations in {}", otcSrcDir);
 		File otcSourceDirectory = new File(otcSrcDir);
 		List<CompilationReport> compilationReports = compileOtc(otcSourceDirectory, null);
 		int successful = 0;
@@ -160,7 +145,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		}
 		int total = successful + failed;
 		long endTime = System.nanoTime();
-		LOGGER.info("Completed {}/{} OTC compilation(s), Failed : {}/{}. in {} millis.", successful, total, failed, total,
+		LOGGER.info("Completed {}/{} OTCS compilation(s), Failed : {}/{}. in {} millis.", successful, total, failed, total,
 				((endTime - startTime) / 1000000.0));
 		if (successful == 0) {
 			throw new OtcCompilerException("", "Oops... Cannot continue due to 0 registrations!");
@@ -262,7 +247,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		}
 		registryDto.registryId = registryId;
 		List<ScriptDto> scriptDtos = otcDto.scriptDtos;
-//		for (ScriptDto scriptDto : scriptDtos) {
+		// loop through scriptDtos and register in registry
 		scriptDtos.forEach(scriptDto -> {
 			if (registryDto.compiledInfos == null) {
 				registryDto.compiledInfos = new LinkedHashMap<>();
@@ -320,7 +305,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				.addOtcNamespace(otcNamespace).addOtcFileName(otcFileName);
 		String message = null;
 		try {
-			LOGGER.info("Compiling OTC file : {}->{}", otcNamespace, otcFileName);
+			LOGGER.info("Compiling OTCS file : {}->{}", otcNamespace, otcFileName);
 			long startTime = System.nanoTime();
 			otcDto = OtcLexicalizer.lexicalize(file, otcNamespace);
 			if (otcDto.scriptDtos == null || otcDto.scriptDtos.size() == 0) {
@@ -347,13 +332,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				}
 			}
 			long endTime = System.nanoTime();
-			message = "Successfully compiled OTC file in " + ((endTime - startTime) / 1000000.0)
+			message = "Successfully compiled OTCS file in " + ((endTime - startTime) / 1000000.0)
 					+ " millis - OTC-Filename: " + otcNamespace + "->" + otcFileName;
 			LOGGER.info(message);
 			otcCodeGenerator.generateSourcecode(otcDto);
 			compilationReportBuilder.addDidSucceed(true).addOtcDto(otcDto).addMessage(message);
 		} catch (Exception ex) {
-			message = "Error while compiling OTC file : " + otcNamespace + "->" + otcFileName;
+			message = "Error while compiling OTCS file : " + otcNamespace + "->" + otcFileName;
 			compilationReportBuilder.addDidSucceed(false).addMessage(message).addCause(ex);
 			LOGGER.error(message, ex);
 		}

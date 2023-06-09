@@ -22,20 +22,23 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class IfNullCreateAndSetTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			IfNullCreateAndSetTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new if null create and set template.
@@ -95,6 +98,6 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 				ifNullSetterCode = ifNullSetterCode.replace("]()", "]");
 			}
 		}
-		return ifNullSetterCode;
+		return addInlineComments(inlineComments, ifNullSetterCode);
 	}
 }

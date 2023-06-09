@@ -22,12 +22,12 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Class ExecuteConverterTemplate.
@@ -35,6 +35,8 @@ import org.otcframework.compiler.command.TargetOtcCommandContext;
 // TODO: Auto-generated Javadoc
 public final class ExecuteConverterTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			ExecuteConverterTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new execute converter template.
 	 */
@@ -62,6 +64,6 @@ public final class ExecuteConverterTemplate extends AbstractTemplate {
 		String otcConverterVarName = createVarName(otcConverter, varNamesSet, false);
 		String executeConverterCode = String.format(executeConverterTemplate, otcConverterVarName, sourceVarName,
 				targetVarName);
-		return executeConverterCode;
+		return addInlineComments(inlineComments, executeConverterCode);
 	}
 }

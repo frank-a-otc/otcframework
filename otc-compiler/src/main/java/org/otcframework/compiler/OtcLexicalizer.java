@@ -22,17 +22,7 @@
 */
 package org.otcframework.compiler;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.compiler.OtcCommandContext;
@@ -53,7 +43,11 @@ import org.otcframework.compiler.utils.CompilerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Class OtcLexicalizer.
@@ -336,7 +330,7 @@ final class OtcLexicalizer {
 	 * @param execute  the execute
 	 * @param scriptId the script id
 	 */
-	private static void validateExecuteCommand(OtcFileDto.Execute execute, String scriptId) {
+	private static void validateExecuteCommand(Execute execute, String scriptId) {
 		if (execute.target == null || execute.target.objectPath == null) {
 			throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + scriptId
 					+ ". The 'target: otcChain' is missing.");

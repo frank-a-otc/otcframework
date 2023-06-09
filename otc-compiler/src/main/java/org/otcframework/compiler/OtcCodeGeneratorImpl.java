@@ -22,33 +22,27 @@
 */
 package org.otcframework.compiler;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.tools.JavaFileObject;
-
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.ClassDto;
 import org.otcframework.common.dto.OtcChainDto;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.OtcDto;
-import org.otcframework.common.dto.ScriptDto;
 import org.otcframework.common.dto.otc.OtcFileDto;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.util.CommonUtils;
-import org.otcframework.compiler.command.ExecutionContext;
-import org.otcframework.compiler.command.JavaCodeStringObject;
-import org.otcframework.compiler.command.OtcCommand;
-import org.otcframework.compiler.command.SourceOtcCommandContext;
-import org.otcframework.compiler.command.TargetOtcCommandContext;
+import org.otcframework.compiler.command.*;
 import org.otcframework.compiler.exception.CodeGeneratorException;
 import org.otcframework.compiler.templates.ClassBeginTemplate;
 import org.otcframework.compiler.templates.MethodEndTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.tools.JavaFileObject;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class OtcCodeGeneratorImpl.

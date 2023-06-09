@@ -22,8 +22,6 @@
 */
 package org.otcframework.compiler;
 
-import java.util.Map;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
@@ -32,8 +30,10 @@ import org.otcframework.common.dto.otc.OtcFileDto.Copy;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.OtcReflectionUtil;
 import org.otcframework.common.util.OtcReflectionUtil.GETTER_SETTER;
-import org.otcframework.compiler.exception.SemanticsException;
 import org.otcframework.common.util.OtcUtils;
+import org.otcframework.compiler.exception.SemanticsException;
+
+import java.util.Map;
 
 /**
  * The Class GetterSetterFinalizer.

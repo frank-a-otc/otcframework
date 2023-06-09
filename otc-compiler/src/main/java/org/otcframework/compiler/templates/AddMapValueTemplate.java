@@ -22,9 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.LogLevel;
 import org.otcframework.common.compiler.OtcCommandContext;
@@ -33,11 +30,17 @@ import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.otcframework.compiler.exception.CodeGeneratorException;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class AddMapValueTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class AddMapValueTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			AddMapValueTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new adds the map value template.
@@ -166,7 +169,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			}
 			codeSectionBuilder.append(mapValueCode);
 		}
-		return codeSectionBuilder.toString();
+		return addInlineComments(inlineComments, codeSectionBuilder.toString());
 	}
 
 	/**
@@ -209,6 +212,6 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 		String pdcId = createIcdKey(valueOCD, idxVar, null);
 		String postTargetLoopMapValueCode = String.format(postTargetLoopMapValueTemplate, idx, icd, pdcId, idx,
 				logLevel, logMsg, valueType, valueVarName, valueConcreteType, idx);
-		return postTargetLoopMapValueCode;
+		return addInlineComments(inlineComments, postTargetLoopMapValueCode);
 	}
 }

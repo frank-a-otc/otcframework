@@ -22,12 +22,12 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Class RetrieveMemberFromPcdTemplate.
@@ -35,6 +35,8 @@ import org.otcframework.compiler.command.TargetOtcCommandContext;
 // TODO: Auto-generated Javadoc
 public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			RetrieveMemberFromPcdTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new retrieve member from pcd template.
 	 */

@@ -22,11 +22,6 @@
 */
 package org.otcframework.compiler;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.tools.JavaFileObject;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.dto.OtcChainDto;
 import org.otcframework.common.dto.ScriptDto;
@@ -37,6 +32,10 @@ import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.tools.JavaFileObject;
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 abstract class AbstractOtcCodeGenerator {

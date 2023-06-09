@@ -22,9 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.LogLevel;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
@@ -33,11 +30,17 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class GetterIfNullReturnTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class GetterIfNullReturnTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			GetterIfNullReturnTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new getter if null return template.
@@ -73,7 +76,7 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		} else {
 			getterCode = String.format(getterTemplate, fieldType, varName, parentVarName, getterName);
 		}
-		return getterCode;
+		return addInlineComments(inlineComments, getterCode);
 	}
 
 	/**
@@ -141,6 +144,6 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 			ifNotNullParentChildGetterCode = String.format(getterIfNullReturnTemplate, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
-		return ifNotNullParentChildGetterCode;
+		return addInlineComments(inlineComments, ifNotNullParentChildGetterCode);
 	}
 }

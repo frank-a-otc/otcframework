@@ -22,15 +22,13 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
+import etree.dateconverters.DateConverterFacade;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
-import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 
-import etree.dateconverters.DateConverterFacade;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -38,6 +36,9 @@ import etree.dateconverters.DateConverterFacade;
  */
 // TODO: Auto-generated Javadoc
 public class SetterTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			SetterTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new setter template.
@@ -68,9 +69,9 @@ public class SetterTemplate extends AbstractTemplate {
 			parentVarName = createVarName(otcCommandDto.parent, false, varNamesSet, varNamesMap);
 		}
 		String setterCode = null;
-		if (PackagesFilterUtil.isFilteredPackage(otcCommandDto.fieldType)) {
+//		if (PackagesFilterUtil.isFilteredPackage(otcCommandDto.fieldType)) {
 			targetOCC.factoryClassDto.addImport(otcCommandDto.fieldType.getName());
-		}
+//		}
 		value = createConvertExpression(otcCommandDto, value);
 		if (otcCommandDto.enableSetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
@@ -79,11 +80,12 @@ public class SetterTemplate extends AbstractTemplate {
 			if (DateConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				String clz = fetchSanitizedTypeName(targetOCC, otcCommandDto);
-				setterCode = String.format(dateConverterTemplate, parentVarName, otcCommandDto.setter, value, clz);
+				setterCode = String.format(dateConverterTemplate, parentVarName, otcCommandDto.setter, value,
+						clz);
 			} else {
 				setterCode = String.format(setterTemplate, parentVarName, otcCommandDto.setter, value);
 			}
 		}
-		return setterCode;
+		return addInlineComments(inlineComments, setterCode);
 	}
 }

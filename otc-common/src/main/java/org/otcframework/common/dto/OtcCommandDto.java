@@ -22,15 +22,14 @@
 */
 package org.otcframework.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.otcframework.common.OtcConstants.TARGET_SOURCE;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.otcframework.common.OtcConstants.TARGET_SOURCE;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The Class OtcCommandDto.

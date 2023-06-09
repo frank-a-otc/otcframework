@@ -28,10 +28,10 @@ import org.otcframework.common.compiler.OtcCommandContext;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.ScriptDto;
 import org.otcframework.compiler.command.ExecutionContext;
+import org.otcframework.compiler.command.ExecutionContext.CHAINS_COLLECTION_COMPARISON_TYPE;
 import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
-import org.otcframework.compiler.command.ExecutionContext.CHAINS_COLLECTION_COMPARISON_TYPE;
 import org.otcframework.compiler.templates.AbstractTemplate;
 
 /**

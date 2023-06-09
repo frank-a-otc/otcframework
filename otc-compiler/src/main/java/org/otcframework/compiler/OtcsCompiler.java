@@ -22,9 +22,9 @@
 */
 package org.otcframework.compiler;
 
-import java.util.List;
-
 import org.otcframework.common.compiler.CompilationReport;
+
+import java.util.List;
 
 /**
  * The Interface OtcCompiler.

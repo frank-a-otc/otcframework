@@ -22,12 +22,11 @@
 */
 package org.otcframework.compiler;
 
+import etree.dateconverters.DateConverterFacade;
 import org.otcframework.common.compiler.OtcCommandContext;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.exception.LexicalizerException;
-
-import etree.dateconverters.DateConverterFacade;
 
 /**
  * The Class OtcLeavesSemanticsChecker.

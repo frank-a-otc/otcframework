@@ -22,11 +22,11 @@
 */
 package org.otcframework.common.indexer;
 
-import java.util.HashMap;
-
 import org.otcframework.common.compiler.OtcCommandContext;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
+
+import java.util.HashMap;
 
 /**
  * A factory for creating IndexedCollectionsDto objects.

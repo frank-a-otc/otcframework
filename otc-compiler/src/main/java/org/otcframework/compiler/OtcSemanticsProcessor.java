@@ -22,11 +22,6 @@
 */
 package org.otcframework.compiler;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
@@ -41,6 +36,11 @@ import org.otcframework.common.util.OtcReflectionUtil;
 import org.otcframework.common.util.OtcUtils;
 import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.exception.SemanticsException;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Class OtcSemanticsChecker.

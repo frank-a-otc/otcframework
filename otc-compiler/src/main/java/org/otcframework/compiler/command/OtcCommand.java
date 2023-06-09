@@ -22,16 +22,6 @@
 */
 package org.otcframework.compiler.command;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.ALGORITHM_ID;
 import org.otcframework.common.OtcConstants.LogLevel;
@@ -41,26 +31,15 @@ import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.ClassDto;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.compiler.exception.CodeGeneratorException;
-import org.otcframework.compiler.templates.AbstractTemplate;
-import org.otcframework.compiler.templates.AddMapKeyTemplate;
-import org.otcframework.compiler.templates.AddMapValueTemplate;
-import org.otcframework.compiler.templates.AddToCollectionTemplate;
-import org.otcframework.compiler.templates.ClassBeginTemplate;
-import org.otcframework.compiler.templates.ExecuteConverterTemplate;
-import org.otcframework.compiler.templates.ExecuteFactoryMethodCallTemplate;
-import org.otcframework.compiler.templates.ExecuteModuleTemplate;
-import org.otcframework.compiler.templates.ForLoopTemplate;
-import org.otcframework.compiler.templates.GetSetTemplate;
-import org.otcframework.compiler.templates.GetterIfNullCreateSetTemplate;
-import org.otcframework.compiler.templates.GetterIfNullReturnTemplate;
-import org.otcframework.compiler.templates.IfNullContinueTemplate;
-import org.otcframework.compiler.templates.MethodEndTemplate;
-import org.otcframework.compiler.templates.PcdInitTemplate;
-import org.otcframework.compiler.templates.PreloopVarsTemplate;
-import org.otcframework.compiler.templates.RetrieveMemberFromPcdTemplate;
-import org.otcframework.compiler.templates.SetterTemplate;
+import org.otcframework.compiler.templates.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * The Class OtcCommand.
@@ -576,8 +555,8 @@ public class OtcCommand {
 		if (targetOCD.isCollectionOrMap()) {
 			String icdCode = null;
 			if (!targetOCC.hasAncestralCollectionOrMap()) {
-				if (OtcConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId
-						&& OtcConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
+				if (ALGORITHM_ID.MODULE != targetOCC.algorithmId
+						&& ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
 					icdCode = PcdInitTemplate.generateIfNullTargetRootPcdCreateCode(targetOCC, varNamesSet,
 							varNamesMap);
 					ifNullReturnCodeBuilder.append(icdCode);
@@ -610,8 +589,8 @@ public class OtcCommand {
 		if (targetOCD.isCollectionOrMap()) {
 			String icdCode = null;
 			if (!targetOCC.hasAncestralCollectionOrMap()) {
-				if (OtcConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId
-						&& OtcConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) { // &&
+				if (ALGORITHM_ID.MODULE != targetOCC.algorithmId
+						&& ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) { // &&
 					icdCode = PcdInitTemplate.generateIfNullTargetRootPcdReturnCode(targetOCC, logLevel);
 					ifNullReturnCodeBuilder.append(icdCode);
 				}
@@ -969,8 +948,8 @@ public class OtcCommand {
 					if (targetOCC.hasAncestralCollectionOrMap()) {
 						icdCode = PcdInitTemplate.generateIfNullTargetParentPcdCreateCode(targetOCC, varNamesSet,
 								varNamesMap);
-					} else if (OtcConstants.ALGORITHM_ID.MODULE != targetOCC.algorithmId
-							&& OtcConstants.ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
+					} else if (ALGORITHM_ID.MODULE != targetOCC.algorithmId
+							&& ALGORITHM_ID.CONVERTER != targetOCC.algorithmId) {
 						icdCode = PcdInitTemplate.generateIfNullTargetRootPcdCreateCode(targetOCC, varNamesSet,
 								varNamesMap);
 					}

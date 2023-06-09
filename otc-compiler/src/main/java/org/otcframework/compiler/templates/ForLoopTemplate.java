@@ -22,9 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.LogLevel;
 import org.otcframework.common.dto.OtcCommandDto;
@@ -32,11 +29,17 @@ import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class ForLoopTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class ForLoopTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			ForLoopTemplate.class.getSimpleName() + ".generateSourceLoopCode(...) \n";
 
 	/**
 	 * Instantiates a new for loop template.
@@ -109,7 +112,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 						String.format(retrieveMemberFromIcdTemplate, fieldType, varName, concreteType, memberPcd));
 			}
 		}
-		return forLoopCodeBuilder.toString();
+		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
 	}
 
 	/**
@@ -189,6 +192,6 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			forLoopCodeBuilder.append(postLoopCode);
 			targetOCC.otcCommandDto = memberOCD;
 		}
-		return forLoopCodeBuilder.toString();
+		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
 	}
 }

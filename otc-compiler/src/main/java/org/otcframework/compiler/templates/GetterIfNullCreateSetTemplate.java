@@ -22,14 +22,14 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.otcframework.compiler.exception.CodeGeneratorException;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Class GetterIfNullCreateSetTemplate.
@@ -37,6 +37,8 @@ import org.otcframework.compiler.exception.CodeGeneratorException;
 // TODO: Auto-generated Javadoc
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			GetterIfNullCreateSetTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new getter if null create set template.
 	 */
@@ -146,6 +148,7 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		}
 		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize,
 				createNewVarName, varNamesSet, varNamesMap);
-		return getterCode + ifNullCreateAndSetCode;
+		String getterWithIfNullCreateSet = getterCode + (ifNullCreateAndSetCode == null ? "" : ifNullCreateAndSetCode);
+		return addInlineComments(inlineComments, getterWithIfNullCreateSet);
 	}
 }

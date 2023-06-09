@@ -22,22 +22,24 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
+import etree.dateconverters.DateConverterFacade;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.otcframework.compiler.exception.CodeGeneratorException;
 
-import etree.dateconverters.DateConverterFacade;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Class GetSetTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class GetSetTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			GetSetTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new gets the set template.
@@ -69,7 +71,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 		} else {
 			getSetCode = generateCodeForGetterSetter(targetOCC, sourceOCC, createNewVarName, varNamesSet, varNamesMap);
 		}
-		return getSetCode;
+		return addInlineComments(inlineComments, getSetCode);
 	}
 
 	/**
@@ -130,7 +132,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 			getSetCode = String.format(getHelperTemplate, targetVarName, targetOCD.setter, targetParentVarName, helper,
 					sourceOCD.getter, sourceParentVarName);
 		}
-		return getSetCode;
+		return addInlineComments(inlineComments, getSetCode);
 	}
 
 	/**
@@ -175,20 +177,20 @@ public final class GetSetTemplate extends AbstractTemplate {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				if (DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
 					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
-							sourceVarName, targetOCD.fieldType);
+							sourceVarName, targetOCD.fieldType.getName());
 				} else {
 					if (String.class != sourceOCD.fieldType) {
 						throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to "
-								+ targetOCD.fieldType + " in " + targetOCC.commandId);
+								+ targetOCD.fieldType.getName() + " in " + targetOCC.commandId);
 					}
 					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
-							sourceVarName, sourceOCD.fieldType);
+							sourceVarName, sourceOCD.fieldType.getName());
 				}
 			} else if (DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				if (String.class != targetOCD.fieldType) {
 					throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to "
-							+ targetOCD.fieldType + " in " + targetOCC.commandId);
+							+ targetOCD.fieldType.getName() + " in " + targetOCC.commandId);
 				}
 				getSetCode = String.format(dateToStringConverterTemplate, targetParentVarName, targetOCD.setter,
 						sourceVarName);
@@ -196,6 +198,6 @@ public final class GetSetTemplate extends AbstractTemplate {
 				getSetCode = String.format(setterTemplate, targetParentVarName, targetOCD.setter, sourceVarName);
 			}
 		}
-		return getSetCode;
+		return addInlineComments(inlineComments, getSetCode);
 	}
 }

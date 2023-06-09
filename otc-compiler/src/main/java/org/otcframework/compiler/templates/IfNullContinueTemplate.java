@@ -22,9 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.LogLevel;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
@@ -33,12 +30,17 @@ import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class IfNullContinueTemplate.
  */
 // TODO: Auto-generated Javadoc
 public class IfNullContinueTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			IfNullContinueTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new if null continue template.
 	 */
@@ -92,6 +94,6 @@ public class IfNullContinueTemplate extends AbstractTemplate {
 			ifNotNullParentChildGetterCode = String.format(getterIfNullContinueTemplate, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
-		return ifNotNullParentChildGetterCode;
+		return addInlineComments(inlineComments, ifNotNullParentChildGetterCode);
 	}
 }

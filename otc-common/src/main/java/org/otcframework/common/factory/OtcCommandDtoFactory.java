@@ -22,15 +22,6 @@
 */
 package org.otcframework.common.factory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
@@ -38,6 +29,11 @@ import org.otcframework.common.dto.OtcCommandDto.CollectionDescriptor;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.OtcUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * A factory for creating OtcCommandDto objects.

@@ -30,6 +30,8 @@ import org.otcframework.common.util.CommonUtils;
 // TODO: Auto-generated Javadoc
 public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			ExecuteFactoryMethodCallTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new execute factory method call template.
 	 */

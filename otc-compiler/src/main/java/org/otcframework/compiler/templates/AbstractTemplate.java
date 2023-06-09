@@ -22,29 +22,20 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
-import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.otcframework.compiler.exception.CodeGeneratorException;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.*;
 
 /**
  * The Class AbstractTemplate.
@@ -830,39 +821,10 @@ public abstract class AbstractTemplate {
 		return expr;
 	}
 
-	/**
-	 * Creates the convert expression.
-	 *
-	 * @param targetOCC        the target OCC
-	 * @param sourceOCC        the source OCC
-	 * @param createNewVarName the create new var name
-	 * @param varNamesSet      the var names set
-	 * @param varNamesMap      the var names map
-	 * @return the string
-	 */
-//	public static String createConvertExpression(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
-//			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-//		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
-//		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
-//		Class<?> targetType = targetOCD.fieldType;
-//		Class<?> sourceType = sourceOCD.fieldType;
-//		if (PackagesFilterUtil.isFilteredPackage(targetType) || PackagesFilterUtil.isFilteredPackage(sourceType)) {
-//			throw new CodeGeneratorException("",
-//					"Invalid call to method! The type should not be of a filtered package.");
-//		}
-//		String expr = null;
-//		String sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
-//		if (targetType.isAssignableFrom(sourceType)) {
-//			return sourceVarName;
-//		} else if (String.class == targetType) {
-//			expr = String.format(toTypeConvertExpressions.get(String.class), sourceVarName);
-//		} else if (fromTypes.contains(sourceType)) {
-//			if (toTypeConvertExpressions.containsKey(targetType)) {
-//				expr = String.format(toTypeConvertExpressions.get(targetType), sourceVarName);
-//			} else if (String.class == sourceType) {
-//				expr = String.format(convertFromStringExpressions.get(targetType), sourceVarName);
-//			}
-//		}
-//		return expr;
-//	}
+	protected static String addInlineComments(String inlineComments, String generatedCode) {
+		if (CommonUtils.isEmpty(generatedCode)) {
+			return null;
+		}
+		return inlineComments + generatedCode;
+	}
 }

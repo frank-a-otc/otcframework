@@ -22,10 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.LogLevel;
 import org.otcframework.common.dto.OtcCommandDto;
@@ -34,11 +30,18 @@ import org.otcframework.common.util.PackagesFilterUtil;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.otcframework.compiler.exception.CodeGeneratorException;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The Class AddToCollectionTemplate.
  */
 // TODO: Auto-generated Javadoc
 public final class AddToCollectionTemplate extends AbstractTemplate {
+
+	private static final String inlineComments = "\n// ---- generator - " +
+			AddToCollectionTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new adds the to collection template.
@@ -115,7 +118,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 					fieldTypecastType, varName, varName, icdId);
 		}
 		initMembers = initMembers.replace(CODE_TO_REPLACE, codeToReplace);
-		return initMembers;
+		return addInlineComments(inlineComments, initMembers);
 	}
 
 	/**
@@ -185,7 +188,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			}
 			codeToReplace += String.format(addToCollectionTemplate, parentVarName, varName);
 		}
-		return codeToReplace;
+		return addInlineComments(inlineComments, codeToReplace);
 	}
 
 	/**
@@ -244,6 +247,6 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			int startIdx = forLoopCodeBuilder.indexOf(CODE_TO_REPLACE);
 			forLoopCodeBuilder.replace(startIdx, startIdx + CODE_TO_REPLACE.length(), createMemberCode);
 		}
-		return forLoopCodeBuilder.toString();
+		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
 	}
 }

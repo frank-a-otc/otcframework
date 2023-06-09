@@ -22,15 +22,14 @@
 */
 package org.otcframework.compiler.command;
 
+import org.otcframework.compiler.exception.OtcCompilerException;
+
+import javax.tools.SimpleJavaFileObject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import javax.tools.SimpleJavaFileObject;
-
-import org.otcframework.compiler.exception.OtcCompilerException;
 
 /**
  * The Class JavaCodeStringObject.

@@ -22,12 +22,12 @@
 */
 package org.otcframework.compiler.templates;
 
-import java.util.Set;
-
 import org.otcframework.common.dto.ClassDto;
 import org.otcframework.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * The Class ClassBeginTemplate.
@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 // TODO: Auto-generated Javadoc
 public final class ClassBeginTemplate extends AbstractTemplate {
 
+	private static final String inlineComments = "\n// ---- generator - " +
+			ClassBeginTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new class begin template.
 	 */

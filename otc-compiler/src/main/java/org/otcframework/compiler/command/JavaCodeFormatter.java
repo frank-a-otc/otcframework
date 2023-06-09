@@ -22,9 +22,9 @@
 */
 package org.otcframework.compiler.command;
 
-import java.util.Scanner;
-
 import org.otcframework.common.util.CommonUtils;
+
+import java.util.Scanner;
 
 /**
  * The Class JavaCodeFormatter.

@@ -22,8 +22,6 @@
 */
 package org.otcframework.compiler;
 
-import java.util.List;
-
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.ALGORITHM_ID;
 import org.otcframework.common.OtcConstants.LogLevel;
@@ -36,6 +34,8 @@ import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * The Class CopyValuesCommandCodeGenerator.
