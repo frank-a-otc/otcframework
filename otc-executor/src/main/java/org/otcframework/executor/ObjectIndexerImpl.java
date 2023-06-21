@@ -1,25 +1,25 @@
 /**
-* Copyright (c) otcframework.org
-*
-* @author  Franklin J Abel
-* @version 1.0
-* @since   2020-06-08 
-*
-* This file is part of the OTC framework.
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      https://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
+ * Copyright (c) otcframework.org
+ *
+ * @author  Franklin J Abel
+ * @version 1.0
+ * @since   2020-06-08
+ *
+ * This file is part of the OTC framework.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.otcframework.executor;
 
 import org.otcframework.common.OtcConstants;
@@ -50,7 +50,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ObjectIndexerImpl.class);
 
 	/** The object indexer impl. */
-	private static ObjectIndexerImpl objectIndexerImpl = new ObjectIndexerImpl();;
+	private static final ObjectIndexerImpl objectIndexerImpl = new ObjectIndexerImpl();
 
 	/**
 	 * Instantiates a new object indexer impl.
@@ -75,19 +75,19 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 	 * @param indexedObject    the indexed object
 	 * @return the indexed collections dto
 	 */
+
 	@Override
 	public IndexedCollectionsDto indexObject(RegistryDto registryDto, TARGET_SOURCE enumTargetSource,
-			Object indexedObject) {
+											 Object indexedObject) {
 		LOGGER.trace("Initiating object-indexing for instance of {}", indexedObject.getClass().getName());
 		long startTime = System.nanoTime();
 		Set<String> loadedOtcTokens = null;
 		IndexedCollectionsDto rootICD = null;
-		Map<String, IndexedCollectionsDto> mapICDs = null;
 		OtcCommandContext otcCommandContext = new OtcCommandContext();
 		for (Entry<String, CompiledInfo> entry : registryDto.compiledInfos.entrySet()) {
 			CompiledInfo compiledInfo = entry.getValue();
-			OtcChainDto otcChainDto = null;
-			OtcCommandDto otcCommandDto = null;
+			OtcChainDto otcChainDto;
+			OtcCommandDto otcCommandDto;
 			if (TARGET_SOURCE.SOURCE == enumTargetSource) {
 				otcChainDto = compiledInfo.sourceOtcChainDto;
 				otcCommandDto = compiledInfo.sourceOCDStem;
@@ -96,6 +96,10 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				otcCommandDto = compiledInfo.targetOCDStem;
 			}
 			if (otcChainDto == null || CommonUtils.isEmpty(otcChainDto.otcChain)) {
+				continue;
+			}
+			String otcChain = otcChainDto.otcChain;
+			if (loadedOtcTokens != null && loadedOtcTokens.contains(otcChain)) {
 				continue;
 			}
 			int collectionsCount = otcChainDto.collectionCount + otcChainDto.dictionaryCount;
@@ -107,37 +111,28 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 			if (value == null) {
 				continue;
 			}
-			String otcChain = otcChainDto.otcChain;
-			if (loadedOtcTokens != null && loadedOtcTokens.contains(otcChain)) {
-				continue;
-			}
-			String indexId = otcChain.substring(0, otcChain.indexOf("]") + 1);
+			String key = otcChain.substring(0, otcChain.indexOf("]") + 1);
 			if (TARGET_SOURCE.TARGET == otcCommandDto.enumTargetSource) {
-				indexId = OtcUtils.sanitizeOtc(indexId);
-			}
-			IndexedCollectionsDto parentICD = null;
-			if (mapICDs != null) {
-				parentICD = mapICDs.get(indexId);
+				key = OtcUtils.sanitizeOtc(key);
 			}
 			otcCommandContext.otcTokens = otcTokens;
 			otcCommandContext.rawOtcTokens = otcChainDto.rawOtcTokens;
 			otcCommandContext.otcCommandDto = otcCommandDto;
-			parentICD = indexObject(otcCommandContext, value, parentICD);
+			IndexedCollectionsDto parentICD = indexObject(otcCommandContext, value, rootICD);
 			if (parentICD != null) {
 				if (loadedOtcTokens == null) {
 					loadedOtcTokens = new HashSet<>();
 				}
 				loadedOtcTokens.add(otcChain);
 				if (rootICD == null) {
-					rootICD = IndexedCollectionsDtoFactory.createRoot(otcCommandDto, true, value, null);
-					mapICDs = rootICD.children;
+					rootICD = IndexedCollectionsDtoFactory.create(null, value, null, true);
 				}
-				if (!mapICDs.containsKey(indexId)) {
-					mapICDs.put(indexId, parentICD);
+				if (!rootICD.children.containsKey(key)) {
+					rootICD.children.put(key, parentICD);
 				}
 			}
 		}
-		LOGGER.debug("Completed object-indexing for instance of '{}' in millis.", indexedObject.getClass().getName(),
+		LOGGER.debug("Completed object-indexing for instance of '{}' in {} millis.", indexedObject.getClass().getName(),
 				((System.nanoTime() - startTime) / 1000000.0));
 		return rootICD;
 	}
@@ -151,10 +146,10 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 	 * @return the indexed collections dto
 	 */
 	private static IndexedCollectionsDto indexObject(OtcCommandContext otcCommandContext, Object indexedObject,
-			IndexedCollectionsDto parentICD) {
+													 IndexedCollectionsDto parentICD) {
 		String[] otcTokens = otcCommandContext.otcTokens;
 		OtcCommandDto otcCommandDto = otcCommandContext.otcCommandDto;
-		Object value = null;
+		Object value;
 		while (!otcCommandDto.isCollectionOrMap()) {
 			int idx = otcCommandDto.otcTokenIndex + 1;
 			String otcToken = otcTokens[idx];
@@ -166,12 +161,34 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 			indexedObject = value;
 			otcCommandContext.otcCommandDto = otcCommandDto;
 		}
-		if (otcCommandDto.isCollection()) {
-			parentICD = indexCollection(otcCommandContext, indexedObject, parentICD);
-		} else if (otcCommandDto.isMap()) {
-			parentICD = indexMap(otcCommandContext, indexedObject, parentICD);
+		if (indexedObject instanceof Collection) {
+			if (((Collection) indexedObject).isEmpty()) {
+				return null;
+			}
+		} else if (indexedObject instanceof Map) {
+			if (((Map) indexedObject).isEmpty()) {
+				return null;
+			}
 		}
-		return parentICD;
+		String key;
+		if (otcCommandContext.hasAncestralCollectionOrMap()) {
+			key = otcCommandDto.otcToken;
+		} else {
+			key = otcCommandDto.tokenPath.substring(0, otcCommandDto.tokenPath.indexOf("]") + 1);
+		}
+		IndexedCollectionsDto nextParentICD = null;
+		if (parentICD != null) {
+			nextParentICD = parentICD.children.get(key);
+		}
+		if (nextParentICD == null) {
+			nextParentICD = IndexedCollectionsDtoFactory.create(parentICD, indexedObject, key, true);
+		}
+		if (otcCommandDto.isCollection()) {
+			indexTheCollection(otcCommandContext, indexedObject, nextParentICD);
+		} else if (otcCommandDto.isMap()) {
+			indexTheMap(otcCommandContext, indexedObject, nextParentICD);
+		}
+		return nextParentICD;
 	}
 
 	/**
@@ -180,13 +197,11 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 	 * @param otcCommandContext the otc command context
 	 * @param indexedObject     the indexed object
 	 * @param parentICD         the parent ICD
-	 * @return the indexed collections dto
 	 */
-	private static IndexedCollectionsDto indexCollection(OtcCommandContext otcCommandContext, Object indexedObject,
-			IndexedCollectionsDto parentICD) {
+	private static void indexTheCollection(OtcCommandContext otcCommandContext, Object indexedObject,
+										   IndexedCollectionsDto parentICD) {
 		OtcCommandDto otcCommandDto = otcCommandContext.otcCommandDto;
-		IndexedCollectionsDto memberICD = null;
-		int size = 0;
+		int size;
 		Object[] objArr = null;
 		Iterator<?> iter = null;
 		if (otcCommandDto.isArray()) {
@@ -198,40 +213,26 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 			size = collection.size();
 		}
 		if (size == 0) {
-			return null;
+			return;
 		}
 		OtcCommandDto memberOCD = otcCommandDto.children.get(otcCommandDto.fieldName);
-		if (parentICD == null) {
-			String indexId = null;
-			if (otcCommandContext.hasAncestralCollectionOrMap()) {
-				indexId = otcCommandDto.otcToken;
-			} else {
-				indexId = otcCommandDto.tokenPath.substring(0, otcCommandDto.tokenPath.indexOf("]") + 1);
-			}
-			parentICD = IndexedCollectionsDtoFactory.createRoot(otcCommandDto, true, indexedObject, indexId);
-		}
 		otcCommandContext.otcCommandDto = memberOCD;
 		for (int idx = 0; idx < size; idx++) {
-			Object member = null;
-			memberICD = parentICD.children.get("" + idx);
+			Object member;
+			String key = Integer.toString(idx);
+			IndexedCollectionsDto memberICD = parentICD.children.get(key);
 			if (memberICD == null) {
 				if (objArr != null) {
 					member = objArr[idx];
 				} else {
 					member = iter.next();
 				}
-				memberICD = IndexedCollectionsDtoFactory.create(otcCommandContext, parentICD, member, "" + idx);
-			} else {
-				member = memberICD.indexedObject;
+				memberICD = IndexedCollectionsDtoFactory.create(parentICD, member, key, true);
 			}
 			if (otcCommandContext.hasDescendantCollectionOrMap()) {
-				IndexedCollectionsDto nextICD = indexObject(otcCommandContext.clone(), member, null);
-				if (nextICD != null) {
-					memberICD.children.put(nextICD.id, nextICD);
-				}
+				indexObject(otcCommandContext.clone(), memberICD.indexedObject, memberICD);
 			}
 		}
-		return parentICD;
 	}
 
 	/**
@@ -240,73 +241,48 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 	 * @param otcCommandContext the otc command context
 	 * @param indexedObject     the indexed object
 	 * @param parentICD         the parent ICD
-	 * @return the indexed collections dto
 	 */
 	@SuppressWarnings("unchecked")
-	private static IndexedCollectionsDto indexMap(OtcCommandContext otcCommandContext, Object indexedObject,
-			IndexedCollectionsDto parentICD) {
-		String[] rawOtcTokens = otcCommandContext.rawOtcTokens;
-		OtcCommandDto otcCommandDto = otcCommandContext.otcCommandDto;
+	private static void indexTheMap(OtcCommandContext otcCommandContext, Object indexedObject,
+									IndexedCollectionsDto parentICD) {
 		Map<?, ?> map = (Map<?, ?>) indexedObject;
 		int size = map.size();
 		if (size == 0) {
-			return null;
+			return;
 		}
 		Set<?> entrySet = map.entrySet();
 		Iterator<Entry<?, ?>> iter = (Iterator<Entry<?, ?>>) entrySet.iterator();
-		String keyOtcToken = OtcConstants.MAP_KEY_REF + otcCommandDto.fieldName;
-		String valueOtcToken = OtcConstants.MAP_VALUE_REF + otcCommandDto.fieldName;
-		OtcCommandDto keyOCD = otcCommandDto.children.get(keyOtcToken);
-		OtcCommandDto valueOCD = otcCommandDto.children.get(valueOtcToken);
-		OtcCommandDto memberOCD = null;
+		OtcCommandDto otcCommandDto = otcCommandContext.otcCommandDto;
 		int otcTokenIndex = otcCommandDto.otcTokenIndex;
-		String rawOtcToken = rawOtcTokens[otcTokenIndex];
+		String rawOtcToken = otcCommandContext.rawOtcTokens[otcTokenIndex];
+		OtcCommandDto memberOCD;
 		if (rawOtcToken.contains(OtcConstants.MAP_KEY_REF)) {
-			memberOCD = keyOCD;
+			memberOCD = otcCommandDto.children.get(OtcConstants.MAP_KEY_REF + otcCommandDto.fieldName);
 		} else {
-			memberOCD = valueOCD;
+			memberOCD = otcCommandDto.children.get(OtcConstants.MAP_VALUE_REF + otcCommandDto.fieldName);
 		}
-		if (parentICD == null) {
-			String indexId = null;
-			if (otcCommandContext.hasAncestralCollectionOrMap()) {
-				indexId = otcCommandDto.otcToken;
-			} else {
-				indexId = otcCommandDto.tokenPath.substring(0, otcCommandDto.tokenPath.indexOf("]") + 1);
-			}
-			parentICD = IndexedCollectionsDtoFactory.createRoot(otcCommandDto, true, indexedObject, indexId);
-		}
+		otcCommandContext.otcCommandDto = memberOCD;
 		for (int idx = 0; idx < size; idx++) {
-			IndexedCollectionsDto keyICD = null;
-			IndexedCollectionsDto valueICD = null;
-			if (parentICD.children.size() > 0) {
-				keyICD = parentICD.children.get(idx + OtcConstants.MAP_KEY_REF);
-				valueICD = parentICD.children.get(idx + OtcConstants.MAP_VALUE_REF);
-			}
-			if (keyICD == null) {
-				Entry<?, ?> entry = iter.next();
-				otcCommandContext.otcCommandDto = keyOCD;
-				keyICD = IndexedCollectionsDtoFactory.create(otcCommandContext.clone(), parentICD, entry.getKey(),
-						idx + OtcConstants.MAP_KEY_REF);
-				otcCommandContext.otcCommandDto = valueOCD;
-				valueICD = IndexedCollectionsDtoFactory.create(otcCommandContext.clone(), parentICD, entry.getValue(),
-						idx + OtcConstants.MAP_VALUE_REF);
-			}
-			IndexedCollectionsDto memberICD = null;
+			String key;
 			if (memberOCD.isMapKey()) {
-				memberICD = keyICD;
-				otcCommandContext.otcCommandDto = keyOCD;
+				key = idx + OtcConstants.MAP_KEY_REF;
 			} else {
-				memberICD = valueICD;
-				otcCommandContext.otcCommandDto = valueOCD;
+				key = idx + OtcConstants.MAP_VALUE_REF;
+			}
+			IndexedCollectionsDto memberICD = parentICD.children.get(key);
+			if (memberICD == null) {
+				Entry<?, ?> entry = iter.next();
+				Object member;
+				if (memberOCD.isMapKey()) {
+					member = entry.getKey();
+				} else {
+					member = entry.getValue();
+				}
+				memberICD = IndexedCollectionsDtoFactory.create(parentICD, member, key, true);
 			}
 			if (otcCommandContext.hasDescendantCollectionOrMap()) {
-				Object member = memberICD.indexedObject;
-				IndexedCollectionsDto nextICD = indexObject(otcCommandContext, member, null);
-				if (nextICD != null) {
-					memberICD.children.put(nextICD.id, nextICD);
-				}
+				indexObject(otcCommandContext.clone(), memberICD.indexedObject, memberICD);
 			}
 		}
-		return parentICD;
 	}
 }
