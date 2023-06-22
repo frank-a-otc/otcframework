@@ -52,23 +52,11 @@ public enum OtcConfig {
 	/** The Constant OTC_UNITTEST_FOLDER. */
 	private static final String OTC_UNITTEST_FOLDER = "/otc-unittest";
 
-	/** The Constant COMPILER_CODEGEN_SOURCE_BASEDIR. */
-	private static final String COMPILER_CODEGEN_SOURCE_BASEDIR = "compiler.codegen.source.basedir";
-
-	/** The Constant EXECUTOR_PACKAGES_FILTER. */
-	private static final String EXECUTOR_PACKAGES_FILTER = "executor.packages.filter";
-
-	/** The Constant COMPILER_SOURCECODE_FAILONERROR. */
-	private static final String COMPILER_SOURCECODE_FAILONERROR = "compiler.sourcecode.failonerror";
-
 	/** The compiler sourcecode failonerror. */
 	private static boolean compilerSourcecodeFailonerror = false;
 
 	/** The Constant otcHome. */
 	private static final String otcHome;
-
-	/** The Constant otcConfigProps. */
-//	private static final Properties otcConfigProps = new Properties();
 
 	/** The Constant yamlConfig. */
 	private static final YamlConfig yamlConfig;
@@ -79,11 +67,10 @@ public enum OtcConfig {
 	/** The Constant sourceCodeLocation. */
 	private static String sourceCodeLocation;
 
-
 	/**
 	 * Instantiates a new otc config.
 	 */
-	private OtcConfig() {
+	OtcConfig() {
 	}
 
 	static {
@@ -96,15 +83,6 @@ public enum OtcConfig {
 		if (CommonUtils.isEmpty(otcHome)) {
 			throw new OtcException("", "Oops... Environment variable '" + OTC_HOME_ENV_VAR + "' not set! ");
 		}
-//		try (InputStream inStream = new FileInputStream(otcHome + "/config/otc.properties")) {
-//			otcConfigProps.load(inStream);
-//			if (!otcConfigProps.containsKey(EXECUTOR_PACKAGES_FILTER)) {
-//				throw new OtcConfigException("", "Oops... Cannot proceed - 'otc.pkgsToInclude' not set in '" + otcHome
-//						+ "/config/otc.properties' file");
-//			}
-//		} catch (IOException ex) {
-//			throw new OtcConfigException(ex);
-//		}
 		try {
 			yamlConfig = YamlSerializationHelper.deserialize(otcHome + "/config/otc.yaml", YamlConfig.class);
 		} catch (Exception ex) {
@@ -122,20 +100,9 @@ public enum OtcConfig {
 		} catch (MalformedURLException e) {
 			throw new OtcConfigException(e);
 		}
-//		String filteredPackages = otcConfigProps.getProperty(EXECUTOR_PACKAGES_FILTER);
-//		String compilerSourcecodeFailonerror = otcConfigProps.getProperty(COMPILER_SOURCECODE_FAILONERROR);
 		if (yamlConfig.compiler != null) {
 			OtcConfig.compilerSourcecodeFailonerror = yamlConfig.compiler.failOnError;
 		}
-//		try {
-//			OtcConfig.compilerSourcecodeFailonerror = PropertyConverterUtil
-//					.toBooleanObject(compilerSourcecodeFailonerror);
-//		} catch (Exception ex) {
-//		}
-//		if (!filteredPackages.contains(",") && filteredPackages.contains(" ")) {
-//			filteredPackages = filteredPackages.replace("  ", " ").replace(" ", ",");
-//		}
-//		List<String> lstFilteredPackages = Arrays.asList(filteredPackages.split(","));
 		Set<String> filteredPackages = yamlConfig.filterPackages;
 		PackagesFilterUtil.setFilteredPackages(filteredPackages);
 
@@ -186,7 +153,6 @@ public enum OtcConfig {
 	public static String getSourceCodeLocation() {
 		return sourceCodeLocation;
 	}
-
 
 	/**
 	 * Gets the otc tmd location.
