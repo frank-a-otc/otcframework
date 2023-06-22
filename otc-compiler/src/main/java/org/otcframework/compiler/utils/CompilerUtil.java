@@ -40,9 +40,9 @@ public final class CompilerUtil {
 	 * @return the string
 	 */
 	public static String buildJavaClassName(String otcNamespace, String otcFileName, String otcChain) {
-		if (otcFileName.endsWith(".otc")) {
-			otcFileName = otcFileName.replace(otcFileName.substring(otcFileName.lastIndexOf(".otc")), "");
-		}
+//		if (otcFileName.endsWith(".otc")) {
+//			otcFileName = otcFileName.replace(otcFileName.substring(otcFileName.lastIndexOf(".otc")), "");
+//		}
 		String factoryClzName = sanitizeJavaIdentifier(otcFileName);
 		if (!CommonUtils.isEmpty(otcNamespace)) {
 			factoryClzName = otcNamespace + "." + factoryClzName;

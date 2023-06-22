@@ -39,7 +39,7 @@ import java.util.Set;
 public final class ForLoopTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +
-			ForLoopTemplate.class.getSimpleName() + ".generateSourceLoopCode(...) \n";
+			ForLoopTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new for loop template.

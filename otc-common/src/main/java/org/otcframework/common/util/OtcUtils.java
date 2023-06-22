@@ -67,7 +67,7 @@ public class OtcUtils {
 		String fileName = createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
 		return fileName;
 	}
-	
+
 	/**
 	 * Creates the registry id.
 	 *
@@ -120,7 +120,7 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String createRegistryId(String otcNamespace, String sourceClz, String targetClz) {
-		String registryId = null;
+		String registryId;
 		if (sourceClz == null) {
 			registryId = targetClz;
 		} else {

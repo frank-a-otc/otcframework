@@ -61,25 +61,25 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	private static final OtcCodeGenerator otcCodeGenerator = OtcCodeGeneratorImpl.getInstance();
 
 	/** The Constant otcSrcDir. */
-	private static final String otcSrcDir = OtcConfig.getOtcSourceLocation();
+	private static final String OTCS_SOURCE_LOCATION = OtcConfig.getOtcSourceLocation();
 
 	/** The Constant srcDir. */
-	private static final String srcDir = OtcConfig.getSourceCodeLocation();
+	private static final String SOURCE_CODE_LOCATION = OtcConfig.getSourceCodeLocation();
 
 	/** The Constant otcTargetDir. */
-	private static final String otcTargetDir = OtcConfig.getCompiledCodeLocation();
+	private static final String OTC_TARGET_LOCATION = OtcConfig.getCompiledCodeLocation();
 
 	/** The Constant otcTmdDir. */
-	private static final String otcTmdDir = OtcConfig.getOtcTmdLocation();
+	private static final String OTC_TMD_LOCATION = OtcConfig.getOtcTmdLocation();
 
 	/** The Constant compilerSourcecodeFailonerror. */
 	private static final boolean compilerSourcecodeFailonerror = OtcConfig.getCompilerSourcecodeFailonerror();
 
 	/** The Constant otcFileFilter. */
-	private static final FileFilter otcFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_SCRIPT_EXTN);
+	private static final FileFilter OTC_FILE_FILTER = CommonUtils.createFilenameFilter(OtcConstants.OTC_SCRIPT_EXTN);
 
 	/** The Constant depFileFilter. */
-	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
+	private static final FileFilter TMD_FILE_FILTER = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
 
 	/** The Constant msgPack. */
 //	private static final MessagePack msgPack = new MessagePack();
@@ -107,9 +107,9 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			}
 		}
 		if (otcLibClassPath == null || otcLibClassPath.length() == 0) {
-			optionList.add(System.getProperty("java.class.path") + File.pathSeparator + otcTargetDir);
+			optionList.add(System.getProperty("java.class.path") + File.pathSeparator + OTC_TARGET_LOCATION);
 		} else {
-			optionList.add(System.getProperty("java.class.path") + File.pathSeparator + otcTargetDir
+			optionList.add(System.getProperty("java.class.path") + File.pathSeparator + OTC_TARGET_LOCATION
 					+ otcLibClassPath.toString());
 		}
 	}
@@ -131,9 +131,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	@Override
 	public List<CompilationReport> compile() {
 		long startTime = System.nanoTime();
-		LOGGER.info("Initiating OTCS file compilations in {}", otcSrcDir);
-		File otcSourceDirectory = new File(otcSrcDir);
+		LOGGER.info("Initiating OTCS file compilations in {}", OTCS_SOURCE_LOCATION);
+		File otcSourceDirectory = new File(OTCS_SOURCE_LOCATION);
 		List<CompilationReport> compilationReports = compileOtc(otcSourceDirectory, null);
+		if (compilationReports == null) {
+			LOGGER.info("No OTCS files to compile in '{}'", OTCS_SOURCE_LOCATION);
+			return null;
+		}
 		int successful = 0;
 		int failed = 0;
 		for (CompilationReport compilationReport : compilationReports) {
@@ -162,7 +166,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	 */
 	private List<CompilationReport> compileOtc(File directory, String otcNamespace) {
 		List<CompilationReport> compilationReports = null;
-		for (File file : directory.listFiles(otcFileFilter)) {
+		for (File file : directory.listFiles(OTC_FILE_FILTER)) {
 			if (file.isDirectory()) {
 				String newOtcNamespacePackage = otcNamespace == null ? file.getName()
 						: otcNamespace + "." + file.getName();
@@ -184,12 +188,12 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				if (!CommonUtils.isEmpty(compilationReport.otcNamespace)) {
 					depFileName = compilationReport.otcNamespace + "." + depFileName;
 				}
-				File binDir = new File(otcTmdDir);
+				File binDir = new File(OTC_TMD_LOCATION);
 				if (!binDir.exists()) {
 					binDir.mkdirs();
 					binDir = null;
 				}
-				depFileName = otcTmdDir + depFileName;
+				depFileName = OTC_TMD_LOCATION + depFileName;
 				RegistryDto registryDto = createregistryDto(compilationReport);
 				registryDto.registryFileName = depFileName;
 				createRegistrationFile(registryDto);
@@ -354,10 +358,15 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	public void compileSourceCode() {
 		LOGGER.info("Compiling source-code files. Please wait.......");
 		long startTime = System.nanoTime();
-		File binDir = new File(otcTmdDir);
+		File binDir = new File(OTC_TMD_LOCATION);
+		File[] files = binDir.listFiles(TMD_FILE_FILTER);
+		if (files == null) {
+			LOGGER.info("No Token-Metadata file(s) found in '{}' for registration", OTC_TMD_LOCATION);
+			return;
+		}
 		List<RegistryDto> registryDtos = null;
 		Thread.currentThread().setContextClassLoader(OtcUtils.fetchCurrentURLClassLoader());
-		for (File depFile : binDir.listFiles(depFileFilter)) {
+		for (File depFile : files) {
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(depFile);
@@ -382,6 +391,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				}
 			}
 		}
+
 		try {
 			createCompilationUnitsAndCompile(registryDtos, null);
 		} catch (OtcCompilerException e) {
@@ -389,8 +399,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			throw e;
 		}
 		long endTime = System.nanoTime();
-		LOGGER.info("Completed source-Code file compilations in {} millis.", ((endTime - startTime) / 1000000.0));
-		return;
+		LOGGER.info("Completed source-Code compilation-phase in {} millis.", ((endTime - startTime) / 1000000.0));
 	}
 
 	/**
@@ -402,9 +411,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	 */
 	private List<JavaFileObject> createCompilationUnitsAndCompile(List<RegistryDto> registryDtos,
 			List<JavaFileObject> javaFileObjects) {
+		if (registryDtos == null) {
+			LOGGER.info("Registry has no record of Java source-code file(s) for compilation");
+			return null;
+		}
 		for (RegistryDto registryDto : registryDtos) {
 			String mainClz = registryDto.mainClass;
-			String absoluteFileName = srcDir + File.separator + mainClz.replace(".", File.separator)
+			String absoluteFileName = SOURCE_CODE_LOCATION + File.separator + mainClz.replace(".", File.separator)
 					+ OtcConstants.OTC_GENERATEDCODE_EXTN;
 			File file = new File(absoluteFileName);
 			if (!file.exists()) {
@@ -420,7 +433,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				if (!CommonUtils.isEmpty(otcNamespace) && !factoryClassName.startsWith(otcNamespace)) {
 					factoryClassName = otcNamespace + "." + factoryClassName;
 				}
-				absoluteFileName = srcDir + File.separator + factoryClassName.replace(".", File.separator)
+				absoluteFileName = SOURCE_CODE_LOCATION + File.separator + factoryClassName.replace(".", File.separator)
 						+ OtcConstants.OTC_GENERATEDCODE_EXTN;
 				file = new File(absoluteFileName);
 				if (!file.exists()) {
@@ -443,10 +456,10 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	private void compileSourceCode(List<JavaFileObject> javaFileObjects, RegistryDto registryDto) {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-		File fileClzPathRoot = new File(otcTargetDir);
+		File fileClzPathRoot = new File(OTC_TARGET_LOCATION);
 		try {
 			fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(fileClzPathRoot));
-			File fileSrcPathRoot = new File(srcDir);
+			File fileSrcPathRoot = new File(SOURCE_CODE_LOCATION);
 			fileManager.setLocation(StandardLocation.SOURCE_OUTPUT, Arrays.asList(fileSrcPathRoot));
 		} catch (IOException e) {
 			LOGGER.error("Could not set root locations!. ", e);
