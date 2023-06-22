@@ -157,6 +157,8 @@ public interface OtcConstants {
 	/** The otc generatedcode extn. */
 	String OTC_GENERATEDCODE_EXTN = ".java";
 
+	String CLASS_EXTN = ".class";
+
 	/** The otc tmd extn. */
 	String OTC_TMD_EXTN = ".tmd";
 }
