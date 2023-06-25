@@ -245,6 +245,18 @@ public class OtcUtils {
 	}
 
 	/**
+	 *
+	 * @param path
+	 * @return
+	 */
+	public static URLClassLoader getClassLoader(String path) {
+		if (clzLoader == null) {
+			clzLoader = loadURLClassLoader(otcLibLocation);
+		}
+		return clzLoader;
+	}
+
+	/**
 	 * Creates the UR ls.
 	 *
 	 * @param directory  the directory
