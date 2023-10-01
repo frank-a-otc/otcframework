@@ -6,7 +6,7 @@
 
 	<groupId>org.otcframework</groupId>
 	<artifactId>otcframework</artifactId>
-	<version>2.7.0</version>
+	<version>2.7.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
@@ -22,7 +22,7 @@
 
 	<developers>
 		<developer>
-			<name>Franklin Abel</name>
+			<name>Franklin J Abel</name>
 			<email>frank.a.otc@gmail.com</email>
 			<organization>OTC Framework</organization>
 			<organizationUrl>http://www.otcframework.org</organizationUrl>
@@ -53,8 +53,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+		<maven.compiler.source>8</maven.compiler.source>
 		
 		<commons-configuration.version>1.8</commons-configuration.version>
 		<logback.version>1.2.11</logback.version>
@@ -156,20 +156,6 @@
 			    <artifactId>dateconverters</artifactId>
 			    <version>${dateconverters.version}</version>
 			</dependency>
-<!-- 
-			<dependency>
-			    <groupId>org.msgpack</groupId>
-			    <artifactId>msgpack</artifactId>
-			    <version>${msgpack.version}</version>
-			</dependency>
- -->
-<!-- 
-			<dependency>
-			    <groupId>org.sonarsource.scanner.maven</groupId>
-			    <artifactId>sonar-maven-plugin</artifactId>
-			    <version>${sonarqube.version}</version>
-			</dependency>
- -->
 		</dependencies>
 	</dependencyManagement>
 

@@ -122,13 +122,13 @@ public class OtcCommand {
 				fileOutputStream.flush();
 			}
 		} catch (IOException e) {
-			LOGGER.warn("", e);
+			LOGGER.warn(e.getMessage(), e);
 		} finally {
 			if (fileOutputStream != null) {
 				try {
 					fileOutputStream.close();
 				} catch (IOException e) {
-					LOGGER.warn("", e);
+					LOGGER.warn(e.getMessage(), e);
 				}
 			}
 		}

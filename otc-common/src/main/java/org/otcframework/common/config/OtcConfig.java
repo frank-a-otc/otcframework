@@ -51,6 +51,11 @@ public enum OtcConfig {
 
 	/** The Constant OTC_UNITTEST_FOLDER. */
 	private static final String OTC_UNITTEST_FOLDER = "/otc-unittest";
+	private static final String OTC_LIB_FOLDER = "/lib";
+	private static final String OTC_SRC_FOLDER = "/src";
+	private static final String OTC_TMD_FOLDER = "/tmd";
+	private static final String OTC_TARGET_FOLDER = "/target";
+	private static final String OTC_CONFIG_FILE = "/config/otc.yaml";
 
 	/** The compiler sourcecode failonerror. */
 	private static boolean compilerSourcecodeFailonerror = false;
@@ -67,6 +72,8 @@ public enum OtcConfig {
 	/** The Constant sourceCodeLocation. */
 	private static String sourceCodeLocation;
 
+	private static final Integer defaultCyclicDependencyDepth = 2;
+
 	/**
 	 * Instantiates a new otc config.
 	 */
@@ -77,14 +84,15 @@ public enum OtcConfig {
 		Map<String, String> sysEnv = System.getenv();
 		if (!sysEnv.containsKey(OTC_HOME_ENV_VAR)) {
 			throw new OtcConfigException("",
-					"Oops... Cannot proceed - 'OTC_HOME' not set! Please set 'OTC_HOME' environment variable.");
+					"Oops... Cannot proceed - '" + OTC_HOME_ENV_VAR + "' not set! Please set '" +
+							OTC_HOME_ENV_VAR + "' environment variable.");
 		}
 		otcHome = sysEnv.get(OTC_HOME_ENV_VAR);
 		if (CommonUtils.isEmpty(otcHome)) {
 			throw new OtcException("", "Oops... Environment variable '" + OTC_HOME_ENV_VAR + "' not set! ");
 		}
 		try {
-			yamlConfig = YamlSerializationHelper.deserialize(otcHome + "/config/otc.yaml", YamlConfig.class);
+			yamlConfig = YamlSerializationHelper.deserialize(otcHome + OTC_CONFIG_FILE, YamlConfig.class);
 		} catch (Exception ex) {
 			throw new OtcConfigException(ex);
 		}
@@ -110,7 +118,7 @@ public enum OtcConfig {
 			sourceCodeLocation = yamlConfig.compiler.sourceCodeLocation;
 		}
 		if (CommonUtils.isEmpty(sourceCodeLocation)) {
-			sourceCodeLocation = otcHome + File.separator + "src" + File.separator;
+			sourceCodeLocation = otcHome + OTC_SRC_FOLDER + File.separator;
 		} else if (!sourceCodeLocation.endsWith(File.separator)) {
 			sourceCodeLocation += File.separator;
 		}
@@ -132,7 +140,7 @@ public enum OtcConfig {
 	 */
 	public static String getOtcLibLocation() {
 		isOtcHomeSet();
-		return otcHome + File.separator + "lib" + File.separator;
+		return otcHome + OTC_LIB_FOLDER + File.separator;
 	}
 
 	/**
@@ -154,6 +162,13 @@ public enum OtcConfig {
 		return sourceCodeLocation;
 	}
 
+	public static Integer getCyclicDependencyDepth() {
+		if (yamlConfig.compiler.cyclicDependencyDepth != null && yamlConfig.compiler.cyclicDependencyDepth > 0) {
+			return yamlConfig.compiler.cyclicDependencyDepth;
+		}
+		return defaultCyclicDependencyDepth;
+	}
+
 	/**
 	 * Gets the otc tmd location.
 	 *
@@ -161,7 +176,7 @@ public enum OtcConfig {
 	 */
 	public static String getOtcTmdLocation() {
 		isOtcHomeSet();
-		return otcHome + File.separator + "tmd" + File.separator;
+		return otcHome + OTC_TMD_FOLDER + File.separator;
 	}
 
 	/**
@@ -171,7 +186,7 @@ public enum OtcConfig {
 	 */
 	public static String getCompiledCodeLocation() {
 		isOtcHomeSet();
-		return otcHome + File.separator + "target" + File.separator;
+		return otcHome + OTC_TARGET_FOLDER + File.separator;
 	}
 
 	/**
@@ -243,6 +258,7 @@ public enum OtcConfig {
 		public static final class CompilerProps {
 			public Boolean failOnError;
 			public String sourceCodeLocation;
+			public Integer cyclicDependencyDepth;
 		}
 
 	}

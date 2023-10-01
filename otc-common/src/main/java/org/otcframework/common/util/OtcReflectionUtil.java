@@ -338,6 +338,7 @@ public class OtcReflectionUtil {
 				result = clazz.getDeclaredFields();
 				fieldsCache.put(clazz, (result.length == 0 ? ZERO_LENGTH_FIELD_ARRAY : result));
 			} catch (Throwable ex) {
+				LOGGER.error(ex.getMessage(), ex);
 				throw new IllegalStateException("Failed to introspect Class [" + clazz.getName()
 						+ "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
 			}

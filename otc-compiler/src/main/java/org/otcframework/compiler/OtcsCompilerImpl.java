@@ -380,13 +380,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				}
 				registryDtos.add(registryDto);
 			} catch (IOException e) {
-				LOGGER.error("", e);
+				LOGGER.error(e.getMessage(), e);
 			} finally {
 				if (fis != null) {
 					try {
 						fis.close();
 					} catch (IOException e) {
-						LOGGER.error("", e);
+						LOGGER.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -395,7 +395,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		try {
 			createCompilationUnitsAndCompile(registryDtos, null);
 		} catch (OtcCompilerException e) {
-			LOGGER.error("", e);
+			LOGGER.error(e.getMessage(), e);
 			throw e;
 		}
 		long endTime = System.nanoTime();

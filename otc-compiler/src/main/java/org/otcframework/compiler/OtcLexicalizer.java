@@ -104,8 +104,7 @@ final class OtcLexicalizer {
                     throw new LexicalizerException("",
                             "Source class-name in filename and in metadata is not matching!");
                 } else if (!sourceClzName.equals(metadataSourceClzName)) {
-                    LOGGER.warn("",
-                            "Ignoring source definition in metadata! Source class-name in filename and in metadata "
+                    LOGGER.warn("Ignoring source definition in metadata! Source class-name in filename and in metadata "
                                     + "are not matching!");
                 }
             }
@@ -113,7 +112,7 @@ final class OtcLexicalizer {
             metadataTargetClzName = metadataTargetClzName != null ? metadataTargetClzName.trim()
                     : metadataTargetClzName;
             if (metadataTargetClzName != null && !targetClzName.equals(metadataTargetClzName)) {
-                LOGGER.warn("", "Ignoring target definition in metadata! Target class-name in filename and in metadata "
+                LOGGER.warn("Ignoring target definition in metadata! Target class-name in filename and in metadata "
                         + "are not matching!");
             }
         }
@@ -270,7 +269,7 @@ final class OtcLexicalizer {
                 }
                 builderRegistryDto.addScriptDto(scriptDto);
             } catch (Exception ex) {
-                LOGGER.error("", ex);
+                LOGGER.error(ex.getMessage(), ex);
                 if (ex instanceof OtcException) {
                     throw ex;
                 }
@@ -383,8 +382,7 @@ final class OtcLexicalizer {
                 builderTargetOtcChainDto, TARGET_SOURCE.TARGET, null);
         mapTargetOCDs.put(targetStemOCD.otcToken, targetStemOCD);
         builderRegistryDto.addTargetOtcCommandDtoStem(targetStemOCD);
-        OtcChainDto targetOtcChainDto = builderTargetOtcChainDto.build();
-        scriptDto.targetOtcChainDto = targetOtcChainDto;
+        scriptDto.targetOtcChainDto = builderTargetOtcChainDto.build();
         targetStemOCD.isRootNode = targetStemOCD.fieldName.equals(OtcConstants.ROOT);
         return targetStemOCD;
     }
