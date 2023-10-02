@@ -34,7 +34,6 @@ import java.util.Map;
 /**
  * The Class OtcCommandDto.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommandDto {
 
 	/**
@@ -80,7 +79,7 @@ public class OtcCommandDto {
 		 * @return true, if is normal
 		 */
 		public boolean isNormal() {
-			return (NORMAL.value == this.value);
+			return (NORMAL.value.equals(this.value));
 		}
 
 		/**
@@ -89,8 +88,8 @@ public class OtcCommandDto {
 		 * @return true, if is collection
 		 */
 		public boolean isCollection() {
-			return (ARRAY.value == this.value || LIST.value == this.value || SET.value == this.value
-					|| QUEUE.value == this.value);
+			return (ARRAY.value.equals(this.value) || LIST.value.equals(this.value) || SET.value.equals(this.value)
+					|| QUEUE.value.equals(this.value));
 		}
 
 		/**
@@ -99,7 +98,7 @@ public class OtcCommandDto {
 		 * @return true, if is array
 		 */
 		public boolean isArray() {
-			return (ARRAY.value == this.value);
+			return (ARRAY.value.equals(this.value));
 		}
 
 		/**
@@ -108,7 +107,7 @@ public class OtcCommandDto {
 		 * @return true, if is collection member
 		 */
 		public boolean isCollectionMember() {
-			return (COLLECTION_MEMBER.value == this.value);
+			return (COLLECTION_MEMBER.value.equals(this.value));
 		}
 
 		/**
@@ -117,7 +116,7 @@ public class OtcCommandDto {
 		 * @return true, if is map
 		 */
 		public boolean isMap() {
-			return (MAP.value == this.value);
+			return (MAP.value.equals(this.value));
 		}
 
 		/**
@@ -126,7 +125,7 @@ public class OtcCommandDto {
 		 * @return true, if is map key
 		 */
 		public boolean isMapKey() {
-			return (MAP_KEY.value == this.value);
+			return (MAP_KEY.value.equals(this.value));
 		}
 
 		/**
@@ -135,7 +134,7 @@ public class OtcCommandDto {
 		 * @return true, if is map value
 		 */
 		public boolean isMapValue() {
-			return (MAP_VALUE.value == this.value);
+			return (MAP_VALUE.value.equals(this.value));
 		}
 	}
 
@@ -625,7 +624,7 @@ public class OtcCommandDto {
 		 */
 		public Builder addCommandId(String commandId) {
 			if (occursInCommands == null) {
-				occursInCommands = new ArrayList<String>();
+				occursInCommands = new ArrayList<>();
 			}
 			occursInCommands.add(commandId);
 			return this;

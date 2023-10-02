@@ -27,24 +27,6 @@ import org.otcframework.common.compiler.OtcCommandContext;
 /**
  * The Class SourceOtcCommandContext.
  */
-// TODO: Auto-generated Javadoc
 public final class SourceOtcCommandContext extends OtcCommandContext {
 
-	/**
-	 * Clone.
-	 *
-	 * @return the source otc command context
-	 */
-	@Override
-	public SourceOtcCommandContext clone() {
-		SourceOtcCommandContext sourceOtcCommandContext = new SourceOtcCommandContext();
-		sourceOtcCommandContext.otcChain = otcChain;
-		sourceOtcCommandContext.rawOtcTokens = rawOtcTokens;
-		sourceOtcCommandContext.otcTokens = otcTokens;
-		sourceOtcCommandContext.otcCommandDto = otcCommandDto;
-		sourceOtcCommandContext.indexedCollectionsDto = indexedCollectionsDto;
-		sourceOtcCommandContext.collectionsCount = collectionsCount;
-		sourceOtcCommandContext.currentCollectionTokenIndex = currentCollectionTokenIndex;
-		return sourceOtcCommandContext;
-	}
 }

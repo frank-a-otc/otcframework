@@ -29,7 +29,6 @@ import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 /**
  * The Interface ObjectIndexer.
  */
-// TODO: Auto-generated Javadoc
 interface ObjectIndexer {
 
 	/**

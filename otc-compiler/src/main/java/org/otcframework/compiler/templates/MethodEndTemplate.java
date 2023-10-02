@@ -25,10 +25,9 @@ package org.otcframework.compiler.templates;
 /**
  * The Class MethodEndTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class MethodEndTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			MethodEndTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new method end template.
@@ -43,7 +42,6 @@ public final class MethodEndTemplate extends AbstractTemplate {
 	 * @return the string
 	 */
 	public static String generateCode(String varName) {
-		String endExecuteMethod = String.format(methodEndTemplate, varName);
-		return endExecuteMethod;
+		return String.format(METHOD_END_TEMPLATE, varName);
 	}
 }

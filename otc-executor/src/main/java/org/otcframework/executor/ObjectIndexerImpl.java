@@ -22,6 +22,7 @@
  */
 package org.otcframework.executor;
 
+import org.otcframework.common.factory.Factory;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.compiler.OtcCommandContext;
@@ -43,7 +44,6 @@ import java.util.Map.Entry;
 /**
  * The Class ObjectIndexerImpl.
  */
-// TODO: Auto-generated Javadoc
 final class ObjectIndexerImpl implements ObjectIndexer {
 
 	/** The Constant LOGGER. */
@@ -165,10 +165,8 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 			if (((Collection) indexedObject).isEmpty()) {
 				return null;
 			}
-		} else if (indexedObject instanceof Map) {
-			if (((Map) indexedObject).isEmpty()) {
-				return null;
-			}
+		} else if (indexedObject instanceof Map && ((Map) indexedObject).isEmpty()) {
+			return null;
 		}
 		String key;
 		if (otcCommandContext.hasAncestralCollectionOrMap()) {
@@ -230,7 +228,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				memberICD = IndexedCollectionsDtoFactory.create(parentICD, member, key, true);
 			}
 			if (otcCommandContext.hasDescendantCollectionOrMap()) {
-				indexObject(otcCommandContext.clone(), memberICD.indexedObject, memberICD);
+				indexObject(Factory.create(otcCommandContext), memberICD.indexedObject, memberICD);
 			}
 		}
 	}
@@ -281,7 +279,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				memberICD = IndexedCollectionsDtoFactory.create(parentICD, member, key, true);
 			}
 			if (otcCommandContext.hasDescendantCollectionOrMap()) {
-				indexObject(otcCommandContext.clone(), memberICD.indexedObject, memberICD);
+				indexObject(Factory.create(otcCommandContext), memberICD.indexedObject, memberICD);
 			}
 		}
 	}

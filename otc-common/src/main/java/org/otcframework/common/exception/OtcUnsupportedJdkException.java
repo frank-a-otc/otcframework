@@ -25,7 +25,6 @@ package org.otcframework.common.exception;
 /**
  * The Class OtcException.
  */
-// TODO: Auto-generated Javadoc
 public class OtcUnsupportedJdkException extends OtcException {
 
 	/**

@@ -29,7 +29,6 @@ import org.otcframework.common.dto.ClassDto;
 /**
  * The Class TargetOtcCommandContext.
  */
-// TODO: Auto-generated Javadoc
 public final class TargetOtcCommandContext extends OtcCommandContext {
 
 	/** The helper. */
@@ -79,37 +78,6 @@ public final class TargetOtcCommandContext extends OtcCommandContext {
 		if (factoryClassDto == null) {
 			factoryClassDto = new ClassDto();
 		}
-	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return the target otc command context
-	 */
-	@Override
-	public TargetOtcCommandContext clone() {
-		TargetOtcCommandContext targetOtcCommandContext = new TargetOtcCommandContext();
-		targetOtcCommandContext.commandId = commandId;
-		targetOtcCommandContext.scriptDto = scriptDto;
-		targetOtcCommandContext.helper = helper;
-		targetOtcCommandContext.mainClassDto = mainClassDto;
-		targetOtcCommandContext.factoryClassDto = factoryClassDto;
-		targetOtcCommandContext.otcChain = otcChain;
-		targetOtcCommandContext.rawOtcTokens = rawOtcTokens;
-		targetOtcCommandContext.otcTokens = otcTokens;
-		targetOtcCommandContext.otcCommandDto = otcCommandDto;
-		targetOtcCommandContext.indexedCollectionsDto = indexedCollectionsDto;
-		targetOtcCommandContext.hasAnchorInChain = hasAnchorInChain;
-		targetOtcCommandContext.hasPreAnchor = hasPreAnchor;
-		targetOtcCommandContext.hasPostAnchor = hasPostAnchor;
-		targetOtcCommandContext.hasExecuteModule = hasExecuteModule;
-		targetOtcCommandContext.hasExecuteConverter = hasExecuteConverter;
-		targetOtcCommandContext.executeModuleOtcNamespace = executeModuleOtcNamespace;
-		targetOtcCommandContext.executeOtcConverter = executeOtcConverter;
-		targetOtcCommandContext.algorithmId = algorithmId;
-		targetOtcCommandContext.collectionsCount = collectionsCount;
-		targetOtcCommandContext.currentCollectionTokenIndex = currentCollectionTokenIndex;
-		return targetOtcCommandContext;
 	}
 
 	/**

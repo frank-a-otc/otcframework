@@ -40,11 +40,10 @@ import java.util.Set;
 /**
  * The Enum OtcConfig.
  */
-// TODO: Auto-generated Javadoc
 public enum OtcConfig {
 
 	/** The instance. */
-	instance;
+	INSTANCE;
 
 	/** The Constant OTC_HOME_ENV_VAR. */
 	private static final String OTC_HOME_ENV_VAR = "OTC_HOME";
@@ -61,7 +60,7 @@ public enum OtcConfig {
 	private static boolean compilerSourcecodeFailonerror = false;
 
 	/** The Constant otcHome. */
-	private static final String otcHome;
+	private static final String OTC_HOME;
 
 	/** The Constant yamlConfig. */
 	private static final YamlConfig yamlConfig;
@@ -72,7 +71,7 @@ public enum OtcConfig {
 	/** The Constant sourceCodeLocation. */
 	private static String sourceCodeLocation;
 
-	private static final Integer defaultCyclicDependencyDepth = 2;
+	private static final Integer DEFAULT_CYCLIC_DEPENDENCY_DEPTH = 2;
 
 	/**
 	 * Instantiates a new otc config.
@@ -87,12 +86,12 @@ public enum OtcConfig {
 					"Oops... Cannot proceed - '" + OTC_HOME_ENV_VAR + "' not set! Please set '" +
 							OTC_HOME_ENV_VAR + "' environment variable.");
 		}
-		otcHome = sysEnv.get(OTC_HOME_ENV_VAR);
-		if (CommonUtils.isEmpty(otcHome)) {
+		OTC_HOME = sysEnv.get(OTC_HOME_ENV_VAR);
+		if (CommonUtils.isEmpty(OTC_HOME)) {
 			throw new OtcException("", "Oops... Environment variable '" + OTC_HOME_ENV_VAR + "' not set! ");
 		}
 		try {
-			yamlConfig = YamlSerializationHelper.deserialize(otcHome + OTC_CONFIG_FILE, YamlConfig.class);
+			yamlConfig = YamlSerializationHelper.deserialize(OTC_HOME + OTC_CONFIG_FILE, YamlConfig.class);
 		} catch (Exception ex) {
 			throw new OtcConfigException(ex);
 		}
@@ -118,7 +117,7 @@ public enum OtcConfig {
 			sourceCodeLocation = yamlConfig.compiler.sourceCodeLocation;
 		}
 		if (CommonUtils.isEmpty(sourceCodeLocation)) {
-			sourceCodeLocation = otcHome + OTC_SRC_FOLDER + File.separator;
+			sourceCodeLocation = OTC_HOME + OTC_SRC_FOLDER + File.separator;
 		} else if (!sourceCodeLocation.endsWith(File.separator)) {
 			sourceCodeLocation += File.separator;
 		}
@@ -130,7 +129,7 @@ public enum OtcConfig {
 	 * @return the otc home location
 	 */
 	public static String getOtcHomeLocation() {
-		return otcHome;
+		return OTC_HOME;
 	}
 
 	/**
@@ -140,7 +139,7 @@ public enum OtcConfig {
 	 */
 	public static String getOtcLibLocation() {
 		isOtcHomeSet();
-		return otcHome + OTC_LIB_FOLDER + File.separator;
+		return OTC_HOME + OTC_LIB_FOLDER + File.separator;
 	}
 
 	/**
@@ -150,7 +149,7 @@ public enum OtcConfig {
 	 */
 	public static String getOtcSourceLocation() {
 		isOtcHomeSet();
-		return otcHome + OTC_UNITTEST_FOLDER;
+		return OTC_HOME + OTC_UNITTEST_FOLDER;
 	}
 
 	/**
@@ -166,7 +165,7 @@ public enum OtcConfig {
 		if (yamlConfig.compiler.cyclicDependencyDepth != null && yamlConfig.compiler.cyclicDependencyDepth > 0) {
 			return yamlConfig.compiler.cyclicDependencyDepth;
 		}
-		return defaultCyclicDependencyDepth;
+		return DEFAULT_CYCLIC_DEPENDENCY_DEPTH;
 	}
 
 	/**
@@ -176,7 +175,7 @@ public enum OtcConfig {
 	 */
 	public static String getOtcTmdLocation() {
 		isOtcHomeSet();
-		return otcHome + OTC_TMD_FOLDER + File.separator;
+		return OTC_HOME + OTC_TMD_FOLDER + File.separator;
 	}
 
 	/**
@@ -186,7 +185,7 @@ public enum OtcConfig {
 	 */
 	public static String getCompiledCodeLocation() {
 		isOtcHomeSet();
-		return otcHome + OTC_TARGET_FOLDER + File.separator;
+		return OTC_HOME + OTC_TARGET_FOLDER + File.separator;
 	}
 
 	/**
@@ -196,7 +195,7 @@ public enum OtcConfig {
 	 */
 	public static String getTestCaseExpectedResultLocation() {
 		isOtcHomeSet();
-		String expectedLocation = otcHome + File.separator + "result_expected" + File.separator;
+		String expectedLocation = OTC_HOME + File.separator + "result_expected" + File.separator;
 		File file = new File(expectedLocation);
 		if (!file.exists()) {
 			file.mkdir();
@@ -230,7 +229,7 @@ public enum OtcConfig {
 	public static Map<Class<?>, String> getConcreteTypes() {
 		Map<String, String> yamlConcreteTypes = yamlConfig.concreteTypes;
 		if (yamlConcreteTypes != null) {
-			IdentityHashMap<Class<?>, String> concreteTypes = new IdentityHashMap<Class<?>, String>(yamlConcreteTypes.size());
+			IdentityHashMap<Class<?>, String> concreteTypes = new IdentityHashMap<>(yamlConcreteTypes.size());
 			yamlConcreteTypes.forEach((key, value) -> {
 				Class<?> clz = OtcUtils.loadClass(key);
 				concreteTypes.put(clz, value);
@@ -244,7 +243,7 @@ public enum OtcConfig {
 	 * Check otc home set.
 	 */
 	private static boolean isOtcHomeSet() {
-		if (CommonUtils.isEmpty(otcHome)) {
+		if (CommonUtils.isEmpty(OTC_HOME)) {
 			throw new OtcException("", "Oops... Environment variable 'otc.home' not set! ");
 		}
 		return true;

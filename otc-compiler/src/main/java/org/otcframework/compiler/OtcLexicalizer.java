@@ -52,11 +52,14 @@ import java.util.regex.Pattern;
 /**
  * The Class OtcLexicalizer.
  */
-// TODO: Auto-generated Javadoc
 final class OtcLexicalizer {
+
+    private OtcLexicalizer() {}
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(OtcLexicalizer.class);
+
+    private static final String LEXICALIZATION_FAILURE = "Otc Lexicalizer-phase failure in Command with Id : ";
 
     /** The Constant FROM_OTCCHAIN_PATTERN. */
     private static final Pattern FROM_OTCCHAIN_PATTERN = Pattern.compile(OtcConstants.REGEX_CHECK_OTCCHAIN);
@@ -228,8 +231,7 @@ final class OtcLexicalizer {
             ScriptDto scriptDto = new ScriptDto(otcCommand);
             Execute execute = scriptDto.command instanceof Execute ? (Execute) scriptDto.command : null;
             if (isValues || (execute != null && (execute.converter != null || execute.module != null))) {
-                OtcExtensionsValidator.validateExtensions(scriptDto, targetClz, builderTargetOtcChainDto, sourceClz,
-                        builderSourceOtcChainDto);
+                OtcExtensionsValidator.validateExtensions(scriptDto, builderTargetOtcChainDto);
                 if (isValues) {
                     scriptDto.hasSetValues = true;
                 }
@@ -273,8 +275,8 @@ final class OtcLexicalizer {
                 if (ex instanceof OtcException) {
                     throw ex;
                 }
-                throw new LexicalizerException("", "Otc Lexicalizer-phase failure compiling Command-Id : " + commandId,
-                        ex);
+                throw new LexicalizerException("", "Otc Lexicalization-phase failure compiling Command-Id : " +
+                        commandId, ex);
             }
         });
         return builderRegistryDto.build();
@@ -288,11 +290,11 @@ final class OtcLexicalizer {
      */
     private static void validateScriptIds(Set<String> scriptIds, String commandId) {
         if (commandId == null) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + commandId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + commandId
                     + ". The 'id' property is mandatory in every commmand-block but one or more are missing.");
         }
         if (scriptIds.contains(commandId)) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + commandId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + commandId
                     + ". Duplicate Command-Id : " + commandId + " found.");
         }
     }
@@ -305,22 +307,21 @@ final class OtcLexicalizer {
      */
     private static void validateCopyCommand(OtcFileDto.Copy copy, String commandId) {
         if (copy.to == null || copy.to.objectPath == null) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + commandId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + commandId
                     + ". The 'to: otcChain:' property/value is missing.");
         }
         if (copy.from == null || (copy.from.objectPath == null && copy.from.values == null)) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + commandId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + commandId
                     + ". Either one of 'from: otcChain/values:' is mandatory - but both are missing.");
         }
         if (copy.from.objectPath != null && copy.from.values != null) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + commandId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + commandId
                     + ". Either one of 'from: otcChain/values:' should only be defined.");
         }
         if (copy.from.values != null && copy.from.overrides != null) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + commandId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + commandId
                     + ". Property 'copy: from: overrides:' cannot be defined for 'from: values:' property.");
         }
-        return;
     }
 
     /**
@@ -331,11 +332,11 @@ final class OtcLexicalizer {
      */
     private static void validateExecuteCommand(Execute execute, String scriptId) {
         if (execute.target == null || execute.target.objectPath == null) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + scriptId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + scriptId
                     + ". The 'target: otcChain' is missing.");
         }
         if (execute.source == null || execute.source.objectPath == null) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + scriptId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + scriptId
                     + ". The 'source: otcChain' property/value is missing.");
         }
         if (execute.executionOrder != null) {
@@ -343,7 +344,7 @@ final class OtcLexicalizer {
                 if (OtcConstants.EXECUTE_OTC_MODULE.equals(execExt)) {
                     if (execute.module == null) {
                         throw new LexicalizerException("",
-                                "Otc Lexicalizer-phase failure in Command with Id : " + execute.id
+                                LEXICALIZATION_FAILURE + execute.id
                                         + ". 'executeOtcModule' definition "
                                         + "is missing - but specified in 'executionOrder'");
                     }
@@ -352,7 +353,7 @@ final class OtcLexicalizer {
                 if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(execExt)) {
                     if (execute.converter == null) {
                         throw new LexicalizerException("",
-                                "Otc Lexicalizer-phase failure in Command with Id : " + execute.id
+                                LEXICALIZATION_FAILURE + execute.id
                                         + ". 'executeOtcConverter' definition is missing - "
                                         + "but referenced in 'executionOrder'");
                     }
@@ -379,7 +380,7 @@ final class OtcLexicalizer {
         builderTargetOtcChainDto.addOtcChain(targetOtcChain);
         // --- tokenize targetOtcChain
         OtcCommandDto targetStemOCD = tokenize(scriptDto, targetClz, targetOtcChain, mapTargetOCDs,
-                builderTargetOtcChainDto, TARGET_SOURCE.TARGET, null);
+                builderTargetOtcChainDto, TARGET_SOURCE.TARGET);
         mapTargetOCDs.put(targetStemOCD.otcToken, targetStemOCD);
         builderRegistryDto.addTargetOtcCommandDtoStem(targetStemOCD);
         scriptDto.targetOtcChainDto = builderTargetOtcChainDto.build();
@@ -402,14 +403,14 @@ final class OtcLexicalizer {
                                                      String sourceOtcChain, ScriptDto scriptDto, Class<?> sourceClz, Map<String, OtcCommandDto> mapSourceOCDs,
                                                      OtcDto.Builder builderRegistryDto) {
         if (sourceClz == null) {
-            throw new LexicalizerException("", "Otc Lexicalizer-phase failure! in Command with Id : "
+            throw new LexicalizerException("", LEXICALIZATION_FAILURE
                     + scriptDto.command.id
                     + ". The 'from.otcChain / source.otcChain' property is defined - but the OTC filename is inconsistent due to missing source-type.");
         }
         builderSourceOtcChainDto.addOtcChain(sourceOtcChain);
         // --- tokenize sourceOtcChain
         OtcCommandDto sourceStemOCD = tokenize(scriptDto, sourceClz, sourceOtcChain, mapSourceOCDs,
-                builderSourceOtcChainDto, TARGET_SOURCE.SOURCE, null);
+                builderSourceOtcChainDto, TARGET_SOURCE.SOURCE);
         mapSourceOCDs.put(sourceStemOCD.otcToken, sourceStemOCD);
         builderRegistryDto.addSourceOtcCommandDtoStem(sourceStemOCD);
         OtcChainDto sourceOtcChainDto = builderSourceOtcChainDto.build();
@@ -442,7 +443,7 @@ final class OtcLexicalizer {
             }
         }
         if (factorClzNames.contains(factoryClassName)) {
-            throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in Command with Id : " + scriptId
+            throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + scriptId
                     + ". Duplicate 'target: factoryClassName'" + factoryClassName + " found.");
         }
         factorClzNames.add(factoryClassName);
@@ -457,12 +458,11 @@ final class OtcLexicalizer {
      * @param stemMapOCDs        the stem map OC ds
      * @param builderOtcChainDto the builder otc chain dto
      * @param enumTargetOrSource the enum target or source
-     * @param logs               the logs
      * @return the otc command dto
      */
     private static OtcCommandDto tokenize(ScriptDto script, Class<?> clz, String otcChain,
                                           Map<String, OtcCommandDto> stemMapOCDs, OtcChainDto.Builder builderOtcChainDto,
-                                          TARGET_SOURCE enumTargetOrSource, List<String> logs) {
+                                          TARGET_SOURCE enumTargetOrSource) {
         String[] otcTokens = builderOtcChainDto.getOtcTokens();
         if (otcTokens == null) {
             otcTokens = otcChain.split(OtcConstants.REGEX_OTC_ON_DOT);
@@ -497,7 +497,7 @@ final class OtcLexicalizer {
                 if (otcCommandDto.isFirstNode) {
                     stemOCD = otcCommandDto;
                 }
-                OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
+                OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcTokens, rawOtcToken);
                 if (otcCommandDto.isCollection()) {
                     builderOtcChainDto.incrementCollectionCount();
                     otcCommandDto = otcCommandDto.children.get(otcCommandDto.fieldName);
@@ -527,16 +527,14 @@ final class OtcLexicalizer {
                 continue;
             }
             boolean isLeaf = false;
-            if (idx == otcTokens.length - 1) {
-                if (!rawOtcToken.contains(OtcConstants.OPEN_BRACKET)) {
-                    isLeaf = true;
-                }
+            if (idx == otcTokens.length - 1 && !rawOtcToken.contains(OtcConstants.OPEN_BRACKET)) {
+                isLeaf = true;
             }
-            boolean isFirstNode = idx == 0 ? true : false;
+            boolean isFirstNode = idx == 0;
             otcCommandDto = OtcCommandDtoFactory.create(commandId, enumTargetOrSource, otcToken,
-                    tokenPathBuilder.toString(), idx, null, null, isFirstNode, null, null, null, isLeaf);
+                    tokenPathBuilder.toString(), idx, null, isFirstNode, null, null, null, isLeaf);
             otcCommandDto.parent = parentOCD;
-            OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
+            OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcTokens, rawOtcToken);
             if (parentOCD != null) {
                 parentOCD.addChild(otcCommandDto);
             }

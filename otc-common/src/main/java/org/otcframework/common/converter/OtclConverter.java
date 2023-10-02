@@ -27,7 +27,6 @@ import java.util.Map;
 /**
  * The Interface OtcConverter.
  */
-// TODO: Auto-generated Javadoc
 @FunctionalInterface
 public interface OtclConverter {
 

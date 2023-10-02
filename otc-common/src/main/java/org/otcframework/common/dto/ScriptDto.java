@@ -30,7 +30,6 @@ import org.otcframework.common.dto.otc.OtcFileDto.OtcsCommand;
 /**
  * The Class ScriptDto.
  */
-// TODO: Auto-generated Javadoc
 public class ScriptDto {
 
 	/** The command. */
@@ -57,7 +56,7 @@ public class ScriptDto {
 	/**
 	 * Instantiates a new script dto.
 	 */
-	private ScriptDto() {
+	public ScriptDto() {
 	}
 
 	/**
@@ -85,31 +84,7 @@ public class ScriptDto {
 		}
 	}
 
-	/**
-	 * Clone.
-	 *
-	 * @return the script dto
-	 */
-	public ScriptDto clone() {
-		ScriptDto scriptDto = new ScriptDto();
-		if (command instanceof Execute) {
-			Execute execute = (Execute) command;
-			Execute executeClone = new Execute();
-			scriptDto.command = executeClone;
-			if (execute.module != null) {
-				executeClone.module = new OtclModule();
-				executeClone.module.namespace = execute.module.namespace;
-			}
-			executeClone.converter = execute.converter;
-			executeClone.executionOrder = execute.executionOrder;
-		}
-		scriptDto.hasSetValues = hasSetValues;
-		scriptDto.hasExecuteModule = hasExecuteModule;
-		scriptDto.hasExecuteConverter = hasExecuteConverter;
-		scriptDto.targetOtcChainDto = targetOtcChainDto;
-		scriptDto.sourceOtcChainDto = sourceOtcChainDto;
-		return scriptDto;
-	}
+
 
 	/**
 	 * To string.

@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class OtcConfigException.
  */
-// TODO: Auto-generated Javadoc
 public class OtcConfigException extends OtcException {
 
 	/** The Constant serialVersionUID. */

@@ -32,10 +32,9 @@ import java.util.Set;
 /**
  * The Class ExecuteModuleTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class ExecuteModuleTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			ExecuteModuleTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new execute module template.
@@ -60,7 +59,6 @@ public final class ExecuteModuleTemplate extends AbstractTemplate {
 		String targetVarName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
 		String sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
 		String otcNamespace = targetOCC.executeModuleOtcNamespace;
-		String executeModuleCode = String.format(executeModuleTemplate, otcNamespace, sourceVarName, targetVarName);
-		return executeModuleCode;
+		return String.format(EXECUTE_MODULE_TEMPLATE, otcNamespace, sourceVarName, targetVarName);
 	}
 }

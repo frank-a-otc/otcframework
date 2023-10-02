@@ -45,42 +45,41 @@ import java.util.Map;
 /**
  * The Class OtcSemanticsChecker.
  */
-// TODO: Auto-generated Javadoc
 final class OtcSemanticsProcessor {
 
-	private static final String err_msg = "Oops... OTC-command didn't pass Semantics-Checker for Id : ";
+	private static final String ERR_MSG = "Oops... OTC-command didn't pass Semantics-Checker for Id : ";
+
+	private OtcSemanticsProcessor() {}
 	/**
 	 * Check semantics.
 	 *
 	 * @param script        the script
 	 * @param clz           the clz
-	 * @param otcChain      the otc chain
 	 * @param otcCommandDto the otc command dto
 	 * @param otcTokens     the otc tokens
 	 * @return true, if successful
 	 */
-	static boolean process(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto,
+	static boolean process(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto,
 			String[] otcTokens) {
 		try {
-			checkNotations(script, clz, otcChain, otcCommandDto);
+			checkNotations(script, clz, otcCommandDto);
 			String concreteTypeName = otcCommandDto.concreteTypeName;
-			Class<?> concreteType = null;
-			if (concreteTypeName != null && otcCommandDto.concreteTypeName == null) {
+			Class<?> concreteType;
+			//TODO verify - the below condition has changed from if (concreteTypeName != null && otcCommandDto.concreteTypeName == null) {
+			if (concreteTypeName != null) {
 				concreteType = OtcUtils.loadClass(concreteTypeName);
 				otcCommandDto.concreteType = concreteType;
 			}
 			GetterSetterOverridesProcessor.process(script, otcCommandDto);
-			OtcCommandDtoFactory.createMembers(script.command.id, otcCommandDto, otcChain, otcTokens);
+			OtcCommandDtoFactory.createMembers(script.command.id, otcCommandDto, otcTokens);
+		} catch (OtcException ex) {
+			throw ex;
 		} catch (Exception ex) {
-			if (ex instanceof OtcException) {
-				throw ex;
-			} else {
-				throw new SemanticsException("",
-						"Oops... Semantics-Checker error in OTC-command : " + script.command.id
-								+ (TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource ? " in from/source field '"
-										: " in to/target field '")
-								+ otcCommandDto.fieldName + "' not found.");
-			}
+			throw new SemanticsException("",
+				"Oops... Semantics-Checker error in OTC-command : " + script.command.id
+						+ (TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource ? " in from/source field '"
+								: " in to/target field '")
+						+ otcCommandDto.fieldName + "' not found.");
 		}
 		return true;
 	}
@@ -90,10 +89,9 @@ final class OtcSemanticsProcessor {
 	 *
 	 * @param script        the script
 	 * @param clz           the clz
-	 * @param otcChain      the otc chain
 	 * @param otcCommandDto the otc command dto
 	 */
-	private static void checkNotations(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto) {
+	private static void checkNotations(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto) {
 		if (otcCommandDto.fieldName.equals(OtcConstants.ROOT)) {
 			otcCommandDto.declaringClass = clz;
 			return;
@@ -117,10 +115,9 @@ final class OtcSemanticsProcessor {
 			Execute execute = (Execute) script.command;
 			if (execute.module != null || execute.converter != null) {
 				String typeName = otcCommandDto.fieldType.getName();
-				// TODO this seem to be right - may need correction
 				if (!PackagesFilterUtil.isFilteredPackage(typeName) && !otcCommandDto.hasCollectionNotation
 						&& !otcCommandDto.hasMapNotation) {
-					throw new SemanticsException("", err_msg + execute.id + " - Type : '" + typeName + 
+					throw new SemanticsException("", ERR_MSG + execute.id + " - Type : '" + typeName +
 							"' not included in filter found.");
 				}
 			}
@@ -136,11 +133,11 @@ final class OtcSemanticsProcessor {
 			sourceOtcChain = copy.from.objectPath;
 		}
 		if (targetOverrides != null && targetOtcChain == null) {
-			throw new SemanticsException("", err_msg + script.command.id + 
+			throw new SemanticsException("", ERR_MSG + script.command.id +
 					" 'target: overrides' may be defined only if 'target: otcChain' is defined.");
 		}
 		if (sourceOverrides != null && sourceOtcChain == null) {
-			throw new SemanticsException("", err_msg + script.command.id + 
+			throw new SemanticsException("", ERR_MSG + script.command.id +
 					" 'source: overrides' may be defined only if 'source: otcChain' is defined.");
 		}
 		if (otcCommandDto.hasCollectionNotation) {
@@ -148,14 +145,14 @@ final class OtcSemanticsProcessor {
 			if (!isCollection) {
 				boolean isArray = fieldType.isArray();
 				if (!isArray) {
-					throw new SemanticsException("",err_msg + script.command.id
+					throw new SemanticsException("", ERR_MSG + script.command.id
 									+ ". Field is not a Collection/Array, but Collection-notation is found.");
 				}
 			}
 		} else if (otcCommandDto.hasMapNotation) {
 			boolean isMap = Map.class.isAssignableFrom(fieldType);
 			if (!isMap) {
-				throw new SemanticsException("", err_msg + script.command.id + 
+				throw new SemanticsException("", ERR_MSG + script.command.id +
 						". Field is not a Map, but Map-notation is found.");
 			}
 		}
