@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class RegistryException.
  */
-// TODO: Auto-generated Javadoc
 public class RegistryException extends OtcException {
 
 	/** The Constant serialVersionUID. */

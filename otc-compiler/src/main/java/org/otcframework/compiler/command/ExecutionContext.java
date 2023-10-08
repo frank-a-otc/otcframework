@@ -25,7 +25,6 @@ package org.otcframework.compiler.command;
 /**
  * The Class ExecutionContext.
  */
-// TODO: Auto-generated Javadoc
 public class ExecutionContext {
 
 	/**
@@ -41,7 +40,7 @@ public class ExecutionContext {
 
 		/** The equal size. */
 		EQUAL_SIZE
-	};
+	}
 
 	/** The target OCC. */
 	public TargetOtcCommandContext targetOCC;

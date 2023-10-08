@@ -32,6 +32,7 @@ import org.otcframework.compiler.command.ExecutionContext;
 import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
+import org.otcframework.compiler.factory.Factory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,6 @@ import java.util.List;
 /**
  * The Class CopyValuesCommandCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/** The Constant LOGGER. */
@@ -79,7 +79,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		}
 		otcCommand.clearCache();
 		otcCommand.appendBeginClass(targetOCC, sourceOCC, targetClz, sourceClz, addLogger);
-		clonedTargetOCC = targetOCC.clone();
+		clonedTargetOCC = Factory.create(targetOCC);
 		if (!clonedTargetOCC.isLeaf()) {
 			otcCommand.appendInitUptoAnchoredOrLastCollectionOrLeaf(clonedTargetOCC, 0, false, LogLevel.WARN);
 			if (clonedTargetOCC.otcCommandDto.isCollectionOrMap()) {
@@ -89,11 +89,8 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		} else if (!targetOCD.isFirstNode) {
 			otcCommand.appendGetter(clonedTargetOCC, targetOCD, false);
 		}
-		offsetIdx = processRemainingPath(clonedTargetOCC, otcCommand, scriptDto, scriptGroupIdx, offsetIdx);
-		targetOCD = targetOCC.otcCommandDto;
-		scriptGroupIdx++;
+		processRemainingPath(clonedTargetOCC, otcCommand, scriptDto, scriptGroupIdx, offsetIdx);
 		otcCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-		return;
 	}
 
 	/**
@@ -117,7 +114,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		List<String> values = ((Copy) scriptDto.command).from.values;
 		boolean isCurrentPreAnchored = targetOCC.isPreAnchored();
 		boolean isCurrentPostAnchored = targetOCC.isPostAnchored();
-		TargetOtcCommandContext clonedTargetOCC = targetOCC.clone();
+		TargetOtcCommandContext clonedTargetOCC = Factory.create(targetOCC);
 		for (int idx = 0; idx < values.size(); idx++) {
 			String value = values.get(idx);
 			if (targetOCC.hasPreAnchor) {

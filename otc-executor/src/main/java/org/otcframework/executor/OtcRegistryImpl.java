@@ -51,11 +51,10 @@ import java.util.Map;
 /**
  * The Class OtcRegistryImpl.
  */
-// TODO: Auto-generated Javadoc
 public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The instance. */
-	instance;
+	INSTANCE;
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcRegistryImpl.class);
@@ -65,9 +64,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
-
-	/** The Constant msgPack. */
-//	private static final MessagePack msgPack = new MessagePack();
 
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -99,9 +95,9 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			if (file.isDirectory()) {
 				continue;
 			}
+			FileInputStream fis = null;
 			try {
-				FileInputStream fis = new FileInputStream(file);
-//				byte[] contents = msgPack.read(fis, byte[].class);
+				fis = new FileInputStream(file);
 				byte[] contents = new byte[fis.available()];
 				fis.read(contents);
 				RegistryDto registryDto = objectMapper.readValue(contents, RegistryDto.class);
@@ -124,6 +120,12 @@ public enum OtcRegistryImpl implements OtcRegistry {
 				hasRegistrations = true;
 			} catch (IOException e) {
 				throw new RegistryException("", e);
+			} finally {
+				try {
+					fis.close();
+				} catch (Exception e) {
+					LOGGER.error(e.getMessage());
+				}
 			}
 		}
 		long endTime = System.nanoTime();
@@ -132,7 +134,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		} else {
 			LOGGER.info("Nothing to register - no registration files found !!");
 		}
-		return;
 	}
 
 	/**
@@ -155,7 +156,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		for (int idx = 1; idx < otcChainDto.otcTokens.length; idx++) {
 			String otcToken = otcChainDto.otcTokens[idx];
 			if (otcCommandDto.isCollection() || otcCommandDto.isMap()) {
-				OtcCommandDtoFactory.createMembers(id, otcCommandDto, otcChainDto.otcChain, otcChainDto.rawOtcTokens);
+				OtcCommandDtoFactory.createMembers(id, otcCommandDto, otcChainDto.rawOtcTokens);
 				if (otcCommandDto.isCollection()) {
 					otcCommandDto = otcCommandDto.children.get(otcCommandDto.fieldName);
 				} else if (otcCommandDto.isMap()) {
@@ -172,7 +173,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			childOCD.field = field;
 			otcCommandDto = childOCD;
 		}
-		return;
 	}
 
 	/**
@@ -206,7 +206,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			throw new OtcException("", e);
 		}
 		mapPackagedOtcDtos.put(registryDto.registryId, registryDto);
-		return;
 	}
 
 	/**

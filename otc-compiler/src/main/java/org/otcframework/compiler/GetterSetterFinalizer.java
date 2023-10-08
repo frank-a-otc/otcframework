@@ -38,9 +38,9 @@ import java.util.Map;
 /**
  * The Class GetterSetterFinalizer.
  */
-// TODO: Auto-generated Javadoc
 final class GetterSetterFinalizer {
 
+	private GetterSetterFinalizer() {}
 	/**
 	 * Process.
 	 *
@@ -53,14 +53,12 @@ final class GetterSetterFinalizer {
 		if (parentOCDs == null || parentOCDs.isEmpty()) {
 			return;
 		}
-//		for (OtcCommandDto childOCD : parentOCDs.values()) {
 		parentOCDs.values().forEach(childOCD -> {
 			if (childOCD.isRootNode) {
 				return;
 			}
 			process(childOCD, factoryHelper, targetSource);
 		});
-		return;
 	}
 
 	/**
@@ -106,7 +104,6 @@ final class GetterSetterFinalizer {
 			}
 		}
 		process(otcCommandDto.children, factoryHelper, targetSource);
-		return;
 	}
 
 	/**
@@ -119,12 +116,10 @@ final class GetterSetterFinalizer {
 	 */
 	public static void resetLeafHelperTypes(Map<String, OtcFileDto.CommonCommandParams> mapOtcCommands,
 			Map<String, OtcCommandDto> sourceOCDs, Map<String, OtcCommandDto> targetOCDs, Class<?> factoryHelper) {
-//		for (OtcCommandDto childOCD : targetOCDs.values()) {
 		targetOCDs.values().forEach(childOCD -> {
 			if (childOCD.isRootNode) {
 				return;
 			}
-//			for (String commandId : childOCD.occursInCommands) {
 			childOCD.occursInCommands.forEach(commandId -> {
 				OtcFileDto.CommonCommandParams otcCommand = mapOtcCommands.get(commandId);
 				Copy copy = null;

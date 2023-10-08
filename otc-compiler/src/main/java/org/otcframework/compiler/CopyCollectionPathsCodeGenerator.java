@@ -32,12 +32,12 @@ import org.otcframework.compiler.command.ExecutionContext.CHAINS_COLLECTION_COMP
 import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
+import org.otcframework.compiler.factory.Factory;
 import org.otcframework.compiler.templates.AbstractTemplate;
 
 /**
  * The Class CopyCollectionPathsCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**
@@ -65,7 +65,7 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 			int dummy = 0;
 		}
 		targetOCC.scriptDto = scriptDto;
-		TargetOtcCommandContext clonedTargetOCC = targetOCC.clone();
+		TargetOtcCommandContext clonedTargetOCC = Factory.create(targetOCC);
 		executionContext.targetOCC = clonedTargetOCC;
 		otcCommand.clearCache();
 		otcCommand.appendBeginClass(clonedTargetOCC, sourceOCC, targetClz, sourceClz, addLogger);
@@ -77,7 +77,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 		}
 		otcCommand.createJavaFile(clonedTargetOCC, targetClz, sourceClz);
-		return;
 	}
 
 	/**
@@ -113,8 +112,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 			sourceOCC.otcCommandDto = sourceOCD;
 		}
-		sourceCollectionsCount = sourceOCC.collectionsCount;
-		sourceOCD = sourceOCC.otcCommandDto;
 		OtcCommandDto memberOCD = null;
 		while (targetCollectionsCount > 0) {
 			otcCommand.appendInitUptoNextCollectionWithContinue(targetOCC, LogLevel.WARN);
@@ -160,12 +157,10 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 				targetOCC.otcCommandDto = targetOCD;
 			}
 		}
-		if (!targetOCD.isCollectionOrMapMember()) {
-			if ((targetOCD.parent != null && !targetOCD.parent.isEnum()) && !targetOCC.isLeafParent()) {
-				otcCommand.appendGetSet(targetOCC, sourceOCC, false);
-			}
+		if (!targetOCD.isCollectionOrMapMember() && targetOCD.parent != null && !targetOCD.parent.isEnum() &&
+			!targetOCC.isLeafParent()) {
+			otcCommand.appendGetSet(targetOCC, sourceOCC, false);
 		}
-		return;
 	}
 
 	/**
@@ -193,7 +188,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
 		otcCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 		targetOCC.anchorIndex = targetOCC.currentCollectionTokenIndex;
-		return;
 	}
 
 	/**
@@ -230,7 +224,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 			}
 		}
-		return;
 	}
 
 	/**

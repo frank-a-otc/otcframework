@@ -30,11 +30,11 @@ import org.otcframework.compiler.command.ExecutionContext;
 import org.otcframework.compiler.command.OtcCommand;
 import org.otcframework.compiler.command.SourceOtcCommandContext;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
+import org.otcframework.compiler.factory.Factory;
 
 /**
  * The Class CopyFlatAndMixedPathsCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**
@@ -59,7 +59,7 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 		}
 		otcCommand.clearCache();
 		boolean addLogger = true;
-		clonedTargetOCC = targetOCC.clone();
+		clonedTargetOCC = Factory.create(targetOCC);
 		otcCommand.appendBeginClass(clonedTargetOCC, sourceOCC, targetClz, sourceClz, addLogger);
 		if (sourceOCC.hasDescendantCollectionOrMap() && !sourceOCD.isCollectionOrMap()) {
 			sourceOCD = OtcCommand.retrieveNextCollectionOrMapOCD(sourceOCC);
@@ -85,7 +85,6 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 			sourceOCC.otcCommandDto = sourceOCD;
 		}
 		// --- start code-generation for target.
-		targetOCD = clonedTargetOCC.otcCommandDto;
 		otcCommand.clearTargetCache();
 		boolean uptoLeafParent = true;
 		otcCommand.appendInitUptoAnchoredOrLastCollectionOrLeaf(clonedTargetOCC, 0, uptoLeafParent, LogLevel.WARN);
@@ -128,6 +127,5 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 			otcCommand.appendGetSet(clonedTargetOCC, sourceOCC, false);
 		}
 		otcCommand.createJavaFile(clonedTargetOCC, targetClz, sourceClz);
-		return;
 	}
 }

@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 /**
  * The Class PackagesFilterUtil.
  */
-// TODO: Auto-generated Javadoc
 public class PackagesFilterUtil {
 
 	/** The pkgs to filter. */
 	private static Set<String> pkgsToFilter;
 
+	private PackagesFilterUtil() {}
 	/**
 	 * Sets the filtered packages.
 	 *

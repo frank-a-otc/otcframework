@@ -27,7 +27,6 @@ import org.otcframework.common.dto.OtcDto;
 /**
  * The Class CompilationReport.
  */
-// TODO: Auto-generated Javadoc
 public final class CompilationReport {
 
 	/** The otc namespace. */

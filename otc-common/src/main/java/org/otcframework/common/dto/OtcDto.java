@@ -32,7 +32,6 @@ import java.util.Map;
 /**
  * The Class OtcDto.
  */
-// TODO: Auto-generated Javadoc
 public final class OtcDto {
 
 	/** The otc file dto. */
@@ -72,7 +71,6 @@ public final class OtcDto {
 		otcFileName = builder.otcFileName;
 		sourceClz = builder.sourceClz;
 		targetClz = builder.targetClz;
-//		groupedScriptDtos = builder.groupedScriptDtos;
 		targetOCDStems = builder.targetOCDStems;
 		sourceOCDStems = builder.sourceOCDStems;
 		scriptDtos = builder.scriptDtos;

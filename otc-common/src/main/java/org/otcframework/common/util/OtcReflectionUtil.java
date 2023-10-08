@@ -35,23 +35,24 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The Class OtcReflectionUtil.
  */
-// TODO: Auto-generated Javadoc
 public class OtcReflectionUtil {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcReflectionUtil.class);
 
+	private OtcReflectionUtil() {}
+
 	/**
 	 * The Enum GETTER_SETTER.
 	 */
-	public static enum GETTER_SETTER {
+	public enum GETTER_SETTER {
 
 		/** The getter. */
 		GETTER,
 
 		/** The setter. */
 		SETTER
-	};
+	}
 
 	/** The Constant ZERO_LENGTH_FIELD_ARRAY. */
 	private static final Field[] ZERO_LENGTH_FIELD_ARRAY = new Field[0];
@@ -101,9 +102,7 @@ public class OtcReflectionUtil {
 				getter = "get" + CommonUtils.initCap(fieldName);
 			}
 		}
-		Method method = findMethod(GETTER_SETTER.GETTER, getter, otcCommandDto);
-		String methodName = method.getName();
-		return methodName;
+		return findMethod(GETTER_SETTER.GETTER, getter, otcCommandDto).getName();
 	}
 
 	/**
@@ -119,9 +118,7 @@ public class OtcReflectionUtil {
 		if (setter == null) {
 			setter = "set" + CommonUtils.initCap(fieldName);
 		}
-		Method method = findMethod(GETTER_SETTER.SETTER, setter, otcCommandDto);
-		String methodName = method.getName();
-		return methodName;
+		return findMethod(GETTER_SETTER.SETTER, setter, otcCommandDto).getName();
 	}
 
 	/**
@@ -286,10 +283,9 @@ public class OtcReflectionUtil {
 		} else {
 			paramsBuilder = new StringBuilder("()");
 		}
-		String msg = "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString()
+		return "Method '" + clz.getName() + "." + methodName + paramsBuilder.toString()
 				+ " not found for tokenpath : " + otcCommandDto.tokenPath + "' - probable conflicts in command(s) "
 				+ otcCommandDto.occursInCommands;
-		return msg;
 	}
 
 	/**
@@ -338,6 +334,7 @@ public class OtcReflectionUtil {
 				result = clazz.getDeclaredFields();
 				fieldsCache.put(clazz, (result.length == 0 ? ZERO_LENGTH_FIELD_ARRAY : result));
 			} catch (Throwable ex) {
+				LOGGER.error(ex.getMessage(), ex);
 				throw new IllegalStateException("Failed to introspect Class [" + clazz.getName()
 						+ "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
 			}

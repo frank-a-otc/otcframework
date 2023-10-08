@@ -29,9 +29,9 @@ import java.util.Scanner;
 /**
  * The Class JavaCodeFormatter.
  */
-// TODO: Auto-generated Javadoc
 final class JavaCodeFormatter {
 
+	private JavaCodeFormatter() {}
 	/**
 	 * Format.
 	 *
