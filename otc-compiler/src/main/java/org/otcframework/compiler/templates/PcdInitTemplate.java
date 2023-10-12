@@ -35,7 +35,6 @@ import java.util.Set;
 /**
  * The Class PcdInitTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class PcdInitTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

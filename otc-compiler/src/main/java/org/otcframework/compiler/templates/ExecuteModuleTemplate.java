@@ -32,7 +32,6 @@ import java.util.Set;
 /**
  * The Class ExecuteModuleTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class ExecuteModuleTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

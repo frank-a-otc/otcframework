@@ -32,7 +32,6 @@ import org.otcframework.compiler.exception.OtcExtensionsException;
 /**
  * The Class OtcExtensionsValidator.
  */
-// TODO: Auto-generated Javadoc
 final class OtcExtensionsValidator {
 
 	/**

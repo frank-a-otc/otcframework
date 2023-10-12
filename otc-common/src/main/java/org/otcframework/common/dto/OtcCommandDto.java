@@ -34,7 +34,6 @@ import java.util.Map;
 /**
  * The Class OtcCommandDto.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommandDto {
 
 	/**

@@ -30,7 +30,6 @@ import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 /**
  * The Class OtcCommandContext.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommandContext {
 
 	/** The command id. */

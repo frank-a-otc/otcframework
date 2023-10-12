@@ -34,7 +34,6 @@ import java.util.Set;
 /**
  * The Class AddMapKeyTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class AddMapKeyTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

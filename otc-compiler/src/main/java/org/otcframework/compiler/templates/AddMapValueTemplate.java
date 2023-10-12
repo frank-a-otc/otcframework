@@ -36,7 +36,6 @@ import java.util.Set;
 /**
  * The Class AddMapValueTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class AddMapValueTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

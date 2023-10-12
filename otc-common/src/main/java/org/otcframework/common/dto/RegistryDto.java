@@ -29,7 +29,6 @@ import java.util.Map;
 /**
  * The Class RegistryDto.
  */
-// TODO: Auto-generated Javadoc
 public final class RegistryDto {
 
 	/** The registry id. */

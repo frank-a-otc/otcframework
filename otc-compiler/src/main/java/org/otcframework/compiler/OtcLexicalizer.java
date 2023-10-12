@@ -52,7 +52,6 @@ import java.util.regex.Pattern;
 /**
  * The Class OtcLexicalizer.
  */
-// TODO: Auto-generated Javadoc
 final class OtcLexicalizer {
 
     /** The Constant LOGGER. */

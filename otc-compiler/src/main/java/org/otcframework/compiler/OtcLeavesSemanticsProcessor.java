@@ -31,7 +31,6 @@ import org.otcframework.compiler.exception.LexicalizerException;
 /**
  * The Class OtcLeavesSemanticsChecker.
  */
-// TODO: Auto-generated Javadoc
 final class OtcLeavesSemanticsProcessor {
 
 	/**

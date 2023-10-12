@@ -27,7 +27,6 @@ import java.util.List;
 /**
  * The Class TargetDto.
  */
-// TODO: Auto-generated Javadoc
 public class TargetDto {
 
 	/** The otc chain. */

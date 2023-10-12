@@ -31,7 +31,6 @@ import org.otcframework.common.util.PropertyConverterUtil;
 /**
  * The Class OtcSytaxChecker.
  */
-// TODO: Auto-generated Javadoc
 final class OtcSytaxProcessor {
 
 	/**

@@ -28,7 +28,6 @@ import org.otcframework.common.util.CommonUtils;
 /**
  * The Class CompilerUtil.
  */
-// TODO: Auto-generated Javadoc
 public final class CompilerUtil {
 
 	/**

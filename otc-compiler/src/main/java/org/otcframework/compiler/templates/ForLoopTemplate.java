@@ -35,7 +35,6 @@ import java.util.Set;
 /**
  * The Class ForLoopTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class ForLoopTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

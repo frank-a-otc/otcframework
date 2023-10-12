@@ -43,7 +43,6 @@ import java.util.Map.Entry;
 /**
  * The Class ObjectIndexerImpl.
  */
-// TODO: Auto-generated Javadoc
 final class ObjectIndexerImpl implements ObjectIndexer {
 
 	/** The Constant LOGGER. */

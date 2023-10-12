@@ -34,7 +34,6 @@ import java.nio.file.Paths;
 /**
  * The Class JavaCodeStringObject.
  */
-// TODO: Auto-generated Javadoc
 public final class JavaCodeStringObject extends SimpleJavaFileObject {
 
 	/** The source. */

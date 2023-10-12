@@ -38,7 +38,6 @@ import java.util.*;
 /**
  * A factory for creating OtcCommandDto objects.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommandDtoFactory {
 
 	/**

@@ -34,7 +34,6 @@ import java.util.Set;
 /**
  * The Class GetterIfNullCreateSetTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

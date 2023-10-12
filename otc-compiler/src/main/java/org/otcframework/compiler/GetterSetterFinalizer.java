@@ -38,7 +38,6 @@ import java.util.Map;
 /**
  * The Class GetterSetterFinalizer.
  */
-// TODO: Auto-generated Javadoc
 final class GetterSetterFinalizer {
 
 	/**

@@ -34,7 +34,6 @@ import org.otcframework.compiler.command.TargetOtcCommandContext;
 /**
  * The Class CopyFlatAndMixedPathsCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**

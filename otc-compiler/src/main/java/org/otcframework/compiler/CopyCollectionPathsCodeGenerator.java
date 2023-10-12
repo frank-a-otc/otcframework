@@ -37,7 +37,6 @@ import org.otcframework.compiler.templates.AbstractTemplate;
 /**
  * The Class CopyCollectionPathsCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**

@@ -38,7 +38,6 @@ import java.util.List;
 /**
  * The Class GetterSetterOverridesProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class GetterSetterOverridesProcessor {
 
 	/**

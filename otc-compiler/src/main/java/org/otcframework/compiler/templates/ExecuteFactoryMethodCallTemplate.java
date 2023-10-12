@@ -27,7 +27,6 @@ import org.otcframework.common.util.CommonUtils;
 /**
  * The Class ExecuteFactoryMethodCallTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

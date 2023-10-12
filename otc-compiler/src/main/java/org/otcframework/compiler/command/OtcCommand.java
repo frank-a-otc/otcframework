@@ -44,7 +44,6 @@ import java.util.Map.Entry;
 /**
  * The Class OtcCommand.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommand {
 
 	/** The Constant LOGGER. */
@@ -101,14 +100,14 @@ public class OtcCommand {
 			file.mkdir();
 		}
 		String fileName = classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
-		String fileLocationAndName = sourceFileLocation + File.separator + fileName;
+		String fileLocationAndName = sourceFileLocation + fileName;
 		file = new File(fileLocationAndName);
 		FileOutputStream fileOutputStream = null;
 		File dir = null;
 		if (classDto.packageName == null) {
 			dir = new File(sourceFileLocation);
 		} else {
-			dir = new File(sourceFileLocation + File.separator + classDto.packageName.replace(".", File.separator));
+			dir = new File(sourceFileLocation + classDto.packageName.replace(".", File.separator));
 		}
 		try {
 			if (!dir.exists()) {

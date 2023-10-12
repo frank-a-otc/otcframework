@@ -31,7 +31,6 @@ import java.io.FileFilter;
 /**
  * The Class CommonUtils.
  */
-// TODO: Auto-generated Javadoc
 public class CommonUtils {
 
 	/** The logger. */

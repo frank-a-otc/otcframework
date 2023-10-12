@@ -27,7 +27,6 @@ import java.util.Arrays;
 /**
  * The Class OtcChainDto.
  */
-// TODO: Auto-generated Javadoc
 public final class OtcChainDto {
 
 	/** The otc chain. */

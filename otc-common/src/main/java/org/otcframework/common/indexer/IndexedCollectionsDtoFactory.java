@@ -29,7 +29,6 @@ import java.util.HashMap;
 /**
  * A factory for creating IndexedCollectionsDto objects.
  */
-// TODO: Auto-generated Javadoc
 public class IndexedCollectionsDtoFactory {
 
 	/**

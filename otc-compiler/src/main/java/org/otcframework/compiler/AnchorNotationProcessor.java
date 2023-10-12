@@ -30,7 +30,6 @@ import org.otcframework.compiler.exception.SyntaxException;
 /**
  * The Class AnchorNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class AnchorNotationProcessor {
 
 	/**

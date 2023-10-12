@@ -37,7 +37,6 @@ import java.util.Set;
 /**
  * The Class AddToCollectionTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class AddToCollectionTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

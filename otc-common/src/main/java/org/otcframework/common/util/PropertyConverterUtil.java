@@ -33,7 +33,6 @@ import java.util.Map;
 /**
  * The Class PropertyConverterUtil.
  */
-// TODO: Auto-generated Javadoc
 public class PropertyConverterUtil {
 
 	/** The Constant HEX_PREFIX. */

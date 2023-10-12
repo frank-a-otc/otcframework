@@ -38,7 +38,6 @@ import java.util.List;
 /**
  * The Class ConcreteTypeNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class ConcreteTypeNotationProcessor {
 
 	/** The Constant LOGGER. */
@@ -120,7 +119,7 @@ final class ConcreteTypeNotationProcessor {
 			if (isErr) {
 				LOGGER.warn(
 						"Oops... Error in OTC-Command-Id : {} - 'overrides.concreteType' already set earlier for : '{}"
-								+ "' in one of these earlier commands : ",
+								+ "' in one of these earlier commands : {}",
 						commandId, tokenPath, otcCommandDto.occursInCommands);
 			}
 		});

@@ -25,7 +25,6 @@ package org.otcframework.common;
 /**
  * The Interface OtcConstants.
  */
-// TODO: Auto-generated Javadoc
 public interface OtcConstants {
 
 	/**

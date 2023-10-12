@@ -25,7 +25,6 @@ package org.otcframework.compiler.templates;
 /**
  * The Class MethodEndTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class MethodEndTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

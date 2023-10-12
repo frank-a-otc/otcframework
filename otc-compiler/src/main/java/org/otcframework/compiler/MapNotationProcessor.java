@@ -29,7 +29,6 @@ import org.otcframework.compiler.exception.SyntaxException;
 /**
  * The Class MapNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class MapNotationProcessor {
 
 	/**

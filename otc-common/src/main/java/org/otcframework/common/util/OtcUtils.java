@@ -26,6 +26,7 @@ import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
+import org.otcframework.common.exception.OtcUnsupportedJdkException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,6 @@ import java.util.Map;
 /**
  * The Class OtcUtils.
  */
-// TODO: Auto-generated Javadoc
 public class OtcUtils {
 
 	/** The Constant LOGGER. */
@@ -296,8 +296,15 @@ public class OtcUtils {
 		Class<?> cls = null;
 		try {
 			cls = clzLoader.loadClass(clzName);
-		} catch (Exception e) {
-			throw new OtcException("", e);
+		} catch (Error e) {
+			LOGGER.error(e.getMessage(), e);
+			if (e instanceof UnsupportedClassVersionError) {
+				throw new OtcUnsupportedJdkException("", "JDK versions conflict between OTC-Editor and the jars.");
+			}
+			throw new OtcException("", e.getMessage(), e);
+		} catch (Throwable e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new OtcException("", e.getMessage(), e);
 		}
 		return cls;
 	}

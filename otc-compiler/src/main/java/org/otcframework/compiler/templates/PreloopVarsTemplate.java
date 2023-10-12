@@ -25,7 +25,6 @@ package org.otcframework.compiler.templates;
 /**
  * The Class PreloopVarsTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class PreloopVarsTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

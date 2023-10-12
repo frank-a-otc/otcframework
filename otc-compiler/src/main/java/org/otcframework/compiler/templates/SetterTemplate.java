@@ -34,7 +34,6 @@ import java.util.Set;
 /**
  * The Class SetterTemplate.
  */
-// TODO: Auto-generated Javadoc
 public class SetterTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

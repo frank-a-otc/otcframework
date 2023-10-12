@@ -37,7 +37,6 @@ import javax.tools.JavaFileObject;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 abstract class AbstractOtcCodeGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOtcCodeGenerator.class);
 

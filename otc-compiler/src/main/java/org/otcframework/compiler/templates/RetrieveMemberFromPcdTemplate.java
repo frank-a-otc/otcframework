@@ -32,7 +32,6 @@ import java.util.Set;
 /**
  * The Class RetrieveMemberFromPcdTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 
 	private static final String inlineComments = "\n// ---- generator - " +

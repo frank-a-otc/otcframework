@@ -51,7 +51,6 @@ import java.util.Map;
 /**
  * The Class OtcRegistryImpl.
  */
-// TODO: Auto-generated Javadoc
 public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The instance. */

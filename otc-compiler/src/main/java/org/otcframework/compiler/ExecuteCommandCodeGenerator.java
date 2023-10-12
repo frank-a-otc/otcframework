@@ -38,7 +38,6 @@ import org.otcframework.compiler.templates.AbstractTemplate;
 /**
  * The Class ExecuteCommandCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/**

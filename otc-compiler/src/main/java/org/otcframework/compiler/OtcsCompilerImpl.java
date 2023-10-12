@@ -48,7 +48,6 @@ import java.util.List;
 /**
  * The Class OtcCompilerImpl.
  */
-// TODO: Auto-generated Javadoc
 final public class OtcsCompilerImpl implements OtcsCompiler {
 
 	/** The Constant LOGGER. */

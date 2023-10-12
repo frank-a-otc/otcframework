@@ -40,7 +40,6 @@ import java.util.List;
 /**
  * The Class CopyValuesCommandCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/** The Constant LOGGER. */

@@ -45,7 +45,6 @@ import java.util.Map;
 /**
  * The Class OtcSemanticsChecker.
  */
-// TODO: Auto-generated Javadoc
 final class OtcSemanticsProcessor {
 
 	private static final String err_msg = "Oops... OTC-command didn't pass Semantics-Checker for Id : ";

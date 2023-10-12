@@ -47,7 +47,6 @@ import java.util.Map;
 /**
  * The Class OtcCodeGeneratorImpl.
  */
-// TODO: Auto-generated Javadoc
 final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements OtcCodeGenerator {
 
 	/** The Constant LOGGER. */

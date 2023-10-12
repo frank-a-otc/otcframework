@@ -37,7 +37,6 @@ import java.util.Map;
 /**
  * The Class OtcExecutorImpl.
  */
-// TODO: Auto-generated Javadoc
 public final class OtcExecutorImpl implements OtcExecutor {
 
 	/** The Constant LOGGER. */

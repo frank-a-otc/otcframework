@@ -32,7 +32,6 @@ import java.util.Map;
  * @param <S> the generic type
  * @param <T> the generic type
  */
-// TODO: Auto-generated Javadoc
 public interface CodeExecutor<S, T> {
 
 	/**

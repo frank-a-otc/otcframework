@@ -27,7 +27,6 @@ import org.otcframework.common.dto.OtcDto;
 /**
  * The Interface OtcCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 public interface OtcCodeGenerator {
 
 	/**

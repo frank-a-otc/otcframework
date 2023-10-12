@@ -25,7 +25,6 @@ package org.otcframework.common.dto.otc;
 /**
  * The Class OverrideDto.
  */
-// TODO: Auto-generated Javadoc
 public class OverrideDto {
 
 	/** The token path. */

@@ -40,7 +40,6 @@ import java.util.*;
 /**
  * The Class AbstractTemplate.
  */
-// TODO: Auto-generated Javadoc
 public abstract class AbstractTemplate {
 
 	/** The Constant fromTypes. */

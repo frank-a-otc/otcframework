@@ -35,7 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The Class OtcReflectionUtil.
  */
-// TODO: Auto-generated Javadoc
 public class OtcReflectionUtil {
 
 	/** The Constant LOGGER. */
