@@ -49,12 +49,12 @@ public enum OtcConfig {
 	private static final String OTC_HOME_ENV_VAR = "OTC_HOME";
 
 	/** The Constant OTC_UNITTEST_FOLDER. */
-	private static final String OTC_UNITTEST_FOLDER = "/otc-unittest/";
-	private static final String OTC_LIB_FOLDER = "/lib/";
-	private static final String OTC_SRC_FOLDER = "/src/";
-	private static final String OTC_TMD_FOLDER = "/tmd/";
-	private static final String OTC_TARGET_FOLDER = "/target/";
-	private static final String OTC_CONFIG_FILE = "/config/otc.yaml";
+	private static final String OTC_UNITTEST_FOLDER = "otc-unittest" + File.separator;
+	private static final String OTC_LIB_FOLDER = "lib" + File.separator;
+	private static final String OTC_SRC_FOLDER = "src" + File.separator;
+	private static final String OTC_TMD_FOLDER = "tmd" + File.separator;
+	private static final String OTC_TARGET_FOLDER = "target" + File.separator;
+	private static final String OTC_CONFIG_FILE = "config" + File.separator + "otc.yaml";
 
 	/** The compiler sourcecode failonerror. */
 	private static boolean compilerSourcecodeFailonerror = false;

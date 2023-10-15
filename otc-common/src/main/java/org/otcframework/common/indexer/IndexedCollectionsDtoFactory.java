@@ -31,6 +31,8 @@ import java.util.HashMap;
  */
 public class IndexedCollectionsDtoFactory {
 
+	private IndexedCollectionsDtoFactory() {}
+
 	/**
 	 *
 	 * @param parentICD

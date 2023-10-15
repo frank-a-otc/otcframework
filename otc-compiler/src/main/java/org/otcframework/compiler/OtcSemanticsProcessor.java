@@ -69,7 +69,7 @@ final class OtcSemanticsProcessor {
 				otcCommandDto.concreteType = concreteType;
 			}
 			GetterSetterOverridesProcessor.process(script, otcCommandDto);
-			OtcCommandDtoFactory.createMembers(script.command.id, otcCommandDto, otcChain, otcTokens);
+			OtcCommandDtoFactory.createMembers(script.command.id, otcCommandDto, otcTokens);
 		} catch (Exception ex) {
 			if (ex instanceof OtcException) {
 				throw ex;

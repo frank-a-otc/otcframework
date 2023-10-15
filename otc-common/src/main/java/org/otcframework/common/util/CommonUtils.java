@@ -22,10 +22,6 @@
 */
 package org.otcframework.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
 import java.io.FileFilter;
 
 /**
@@ -33,8 +29,7 @@ import java.io.FileFilter;
  */
 public class CommonUtils {
 
-	/** The logger. */
-	private static Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
+	private CommonUtils() {}
 
 	/**
 	 * Inits the cap.
@@ -96,15 +91,6 @@ public class CommonUtils {
 	 * @return the file filter
 	 */
 	public static FileFilter createFilenameFilter(final String ext) {
-		FileFilter fileFilter = new FileFilter() {
-			public boolean accept(File file) {
-				if (file.getName().endsWith(ext) || file.isDirectory()) {
-					return true;
-				}
-				return false;
-			}
-		};
-		return fileFilter;
+		return file -> (file.getName().endsWith(ext) || file.isDirectory());
 	}
-
 }

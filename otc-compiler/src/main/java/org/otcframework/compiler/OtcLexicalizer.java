@@ -533,9 +533,9 @@ final class OtcLexicalizer {
                     isLeaf = true;
                 }
             }
-            boolean isFirstNode = idx == 0 ? true : false;
+            boolean isFirstNode = idx == 0;
             otcCommandDto = OtcCommandDtoFactory.create(commandId, enumTargetOrSource, otcToken,
-                    tokenPathBuilder.toString(), idx, null, null, isFirstNode, null, null, null, isLeaf);
+                    tokenPathBuilder.toString(), idx, null, isFirstNode, null, null, null, isLeaf);
             otcCommandDto.parent = parentOCD;
             OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
             if (parentOCD != null) {

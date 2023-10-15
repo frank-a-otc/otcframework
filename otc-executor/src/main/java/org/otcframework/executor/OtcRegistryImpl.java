@@ -154,7 +154,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		for (int idx = 1; idx < otcChainDto.otcTokens.length; idx++) {
 			String otcToken = otcChainDto.otcTokens[idx];
 			if (otcCommandDto.isCollection() || otcCommandDto.isMap()) {
-				OtcCommandDtoFactory.createMembers(id, otcCommandDto, otcChainDto.otcChain, otcChainDto.rawOtcTokens);
+				OtcCommandDtoFactory.createMembers(id, otcCommandDto, otcChainDto.rawOtcTokens);
 				if (otcCommandDto.isCollection()) {
 					otcCommandDto = otcCommandDto.children.get(otcCommandDto.fieldName);
 				} else if (otcCommandDto.isMap()) {

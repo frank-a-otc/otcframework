@@ -30,7 +30,7 @@ public interface OtcConstants {
 	/**
 	 * The Enum LogLevel.
 	 */
-	static enum LogLevel {
+	enum LogLevel {
 
 		/** The error. */
 		ERROR("error"),
@@ -60,10 +60,11 @@ public interface OtcConstants {
 		 *
 		 * @return the string
 		 */
+		@Override
 		public String toString() {
 			return logLevel;
 		}
-	};
+	}
 
 	/**
 	 * The Enum ALGORITHM_ID.
@@ -80,7 +81,7 @@ public interface OtcConstants {
 		FLAT,
 		/** The collections. */
 		COLLECTIONS
-	};
+	}
 
 	/**
 	 * The Enum TARGET_SOURCE.
@@ -91,7 +92,7 @@ public interface OtcConstants {
 		TARGET,
 		/** The source. */
 		SOURCE
-	};
+	}
 
 	/** The execute otc converter. */
 	String EXECUTE_OTC_CONVERTER = "converter";
@@ -100,7 +101,7 @@ public interface OtcConstants {
 	String EXECUTE_OTC_MODULE = "module";
 
 	/** The regex otc on dot. */
-	String REGEX_OTC_ON_DOT = new String("[.](?![^<]*>)(?![^\\[]*\\])(?![^\\(]*\\))");
+	String REGEX_OTC_ON_DOT = "[.](?![^<]*>)(?![^\\[]*\\])(?![^\\(]*\\))";
 
 	/** The regex check otcchain. */
 	String REGEX_CHECK_OTCCHAIN = "(?s)from:\\sobjectPath:";

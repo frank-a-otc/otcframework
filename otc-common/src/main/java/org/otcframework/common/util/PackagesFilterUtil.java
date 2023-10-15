@@ -33,6 +33,7 @@ public class PackagesFilterUtil {
 	/** The pkgs to filter. */
 	private static Set<String> pkgsToFilter;
 
+	private PackagesFilterUtil() {}
 	/**
 	 * Sets the filtered packages.
 	 *
