@@ -122,20 +122,20 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			String mapValueTokenPath = targetOCC.otcChain.substring(0, endIdx);
 			String logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
 			if (targetOCC.loopsCounter > 0) {
-				getMapKeyValueICDCode = String.format(ifNullMapKeyIcdContinueTemplate, keyPcdId, logLevel, logMsg,
+				getMapKeyValueICDCode = String.format(IF_NULL_MAP_KEY_ICD_CONTINUE_TEMPLATE, keyPcdId, logLevel, logMsg,
 						valuePcdId);
 			} else {
-				getMapKeyValueICDCode = String.format(ifNullMapKeyIcdReturnTemplate, keyPcdId, logLevel, logMsg,
+				getMapKeyValueICDCode = String.format(IF_NULL_MAP_KEY_ICD_RETURN_TEMPLATE, keyPcdId, logLevel, logMsg,
 						valuePcdId);
 			}
 			if (targetOCC.hasDescendantCollectionOrMap()) {
-				getMapKeyValueICDCode += assignValueToMemberIcdTemplate;
+				getMapKeyValueICDCode += ASSIGN_VALUE_TO_MEMBER_ICD_TEMPLATE;
 			}
 		} else {
-			getMapKeyValueICDCode = String.format(retrieveLastMapKeyTemplate, keyPcdId, valuePcdId);
+			getMapKeyValueICDCode = String.format(RETRIEVE_LAST_MAP_KEY_TEMPLATE, keyPcdId, valuePcdId);
 		}
 		codeSectionBuilder.append(getMapKeyValueICDCode);
-		String retrieveMapKeyFromICDCode = String.format(retrieveMapKeyFromIcdTemplate, keyFieldType, keyVarName,
+		String retrieveMapKeyFromICDCode = String.format(RETRIEVE_MAP_KEY_FROM_ICD_TEMPLATE, keyFieldType, keyVarName,
 				keyFieldTypecastType);
 		codeSectionBuilder.append(retrieveMapKeyFromICDCode);
 		String valueFieldType = fetchFieldTypeName(targetOCC, null, valueOCD, false, varNamesMap);
@@ -148,22 +148,22 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 		String valueVarName = createVarName(valueOCD, false, varNamesSet, varNamesMap);
 		String mapValueCode = null;
 		if (targetOCC.isLeaf()) {
-			String createInstanceTemplateCopy = createInstanceTemplate.replace("new %s()", valOrVar);
+			String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace("new %s()", valOrVar);
 			mapValueCode = String.format(createInstanceTemplateCopy, valueFieldType, valueVarName);
 			codeSectionBuilder.append(mapValueCode);
 			String getterCode = GetterIfNullReturnTemplate.generateCode(targetOCC, valueOCD.parent, createNewVarName,
 					varNamesSet, varNamesMap);
 			codeSectionBuilder.append(getterCode);
 			String mapVarName = createVarName(valueOCD.parent, createNewVarName, varNamesSet, varNamesMap);
-			String addMapEntryUpdatePcdCode = String.format(addMapEntryUpdateIcdTemplate, mapVarName, keyVarName,
+			String addMapEntryUpdatePcdCode = String.format(ADD_MAP_ENTRY_UPDATE_ICD_TEMPLATE, mapVarName, keyVarName,
 					valueVarName, valueVarName);
 			codeSectionBuilder.append(addMapEntryUpdatePcdCode);
 		} else if (PackagesFilterUtil.isFilteredPackage(valueOCD.fieldType)) {
 			if (valueOCD.isEnum()) {
-				String createInstanceTemplateCopy = createInstanceTemplate.replace("new %s()", valOrVar);
+				String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace("new %s()", valOrVar);
 				mapValueCode = String.format(createInstanceTemplateCopy, valueFieldType, valueVarName);
 			} else {
-				mapValueCode = String.format(retrieveMapValueFromIcdTemplate, valueFieldType, valueVarName,
+				mapValueCode = String.format(RETRIEVE_MAP_VALUE_FROM_ICD_TEMPLATE, valueFieldType, valueVarName,
 						valueFieldCastType);
 			}
 			codeSectionBuilder.append(mapValueCode);
@@ -209,7 +209,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			icd = "parentTargetICD";
 		}
 		String pdcId = createIcdKey(valueOCD, idxVar, null);
-		String postTargetLoopMapValueCode = String.format(postTargetLoopMapValueTemplate, idx, icd, pdcId, idx,
+		String postTargetLoopMapValueCode = String.format(POST_TARGET_LOOP_MAP_VALUE_TEMPLATE, idx, icd, pdcId, idx,
 				logLevel, logMsg, valueType, valueVarName, valueConcreteType, idx);
 		return addInlineComments(inlineComments, postTargetLoopMapValueCode);
 	}

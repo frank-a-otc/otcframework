@@ -33,14 +33,6 @@ public class IndexedCollectionsDtoFactory {
 
 	private IndexedCollectionsDtoFactory() {}
 
-	/**
-	 *
-	 * @param parentICD
-	 * @param value
-	 * @param idxStr
-	 * @param hasChildren
-	 * @return IndexedCollectionsDto
-	 */
 	public static IndexedCollectionsDto create(IndexedCollectionsDto parentICD, Object value, String idxStr, boolean hasChildren) {
 		IndexedCollectionsDto childICD = new IndexedCollectionsDto();
 		if (parentICD != null && idxStr != null) {

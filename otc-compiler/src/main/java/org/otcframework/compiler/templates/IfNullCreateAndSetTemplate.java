@@ -81,15 +81,15 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 		if (PackagesFilterUtil.isFilteredPackage(targetOCD.fieldType) || targetOCD.isCollectionOrMap()) {
 			if (targetOCD.enableSetterHelper) {
 				String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-				ifNullSetterCode = String.format(ifNullCreateAndHelperSetTemplate, varName, varName, concreteType,
+				ifNullSetterCode = String.format(IF_NULL_CREATE_AND_HELPER_SET_TEMPLATE, varName, varName, concreteType,
 						helper, setter, parentVarName, varName);
 			} else {
 				if (targetOCD.isEnum()) {
 					value = createConvertExpression(targetOCD, value);
-					ifNullSetterCode = String.format(ifNullEnumCreateAndSetTemplate, varName, varName, concreteType,
+					ifNullSetterCode = String.format(IF_NULL_ENUM_CREATE_AND_SET_TEMPLATE, varName, varName, concreteType,
 							value, parentVarName, setter, varName);
 				} else {
-					ifNullSetterCode = String.format(ifNullCreateAndSetTemplate, varName, varName, concreteType,
+					ifNullSetterCode = String.format(IF_NULL_CREATE_AND_SET_TEMPLATE, varName, varName, concreteType,
 							parentVarName, setter, varName);
 				}
 			}

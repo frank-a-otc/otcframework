@@ -94,7 +94,7 @@ abstract class AbstractOtcCodeGenerator {
 		String pkgName = targetOCC.factoryClassDto.packageName;
 		String factoryClzName = scriptDto.command.factoryClassName;
 		targetOCC.factoryClassDto.fullyQualifiedClassName = factoryClzName;
-		if (!CommonUtils.isEmpty(pkgName)) {
+		if (!CommonUtils.isTrimmedAndEmpty(pkgName)) {
 			if (!factoryClzName.startsWith(pkgName)) {
 				targetOCC.factoryClassDto.fullyQualifiedClassName = pkgName + "." + factoryClzName;
 			}

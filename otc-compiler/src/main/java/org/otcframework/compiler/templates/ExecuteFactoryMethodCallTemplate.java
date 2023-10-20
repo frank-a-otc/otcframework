@@ -53,7 +53,7 @@ public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 			sourceVar = CommonUtils.initLower(sourceClz.getSimpleName());
 			sourceICD = "sourceICD";
 		}
-		String executeMethodCallCode = String.format(executeFactoryMethodCallTemplate, factoryClzName, sourceVar,
+		String executeMethodCallCode = String.format(EXECUTE_FACTORY_METHOD_CALL_TEMPLATE, factoryClzName, sourceVar,
 				sourceICD, targetVar);
 		return executeMethodCallCode;
 	}

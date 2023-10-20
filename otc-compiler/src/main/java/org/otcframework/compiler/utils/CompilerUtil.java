@@ -43,10 +43,10 @@ public final class CompilerUtil {
 //			otcFileName = otcFileName.replace(otcFileName.substring(otcFileName.lastIndexOf(".otc")), "");
 //		}
 		String factoryClzName = sanitizeJavaIdentifier(otcFileName);
-		if (!CommonUtils.isEmpty(otcNamespace)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			factoryClzName = otcNamespace + "." + factoryClzName;
 		}
-		if (!CommonUtils.isEmpty(otcChain)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcChain)) {
 			String newOtcChain = null;
 			if (otcChain.contains(OtcConstants.MAP_KEY_REF) || otcChain.contains(OtcConstants.MAP_VALUE_REF)) {
 				if (otcChain.contains(OtcConstants.MAP_KEY_REF)) {

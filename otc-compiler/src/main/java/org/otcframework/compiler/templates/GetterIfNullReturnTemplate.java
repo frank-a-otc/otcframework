@@ -71,9 +71,9 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		String getterCode = null;
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			getterCode = String.format(helperGetterTemplate, fieldType, varName, helper, getterName, parentVarName);
+			getterCode = String.format(HELPER_GETTER_TEMPLATE, fieldType, varName, helper, getterName, parentVarName);
 		} else {
-			getterCode = String.format(getterTemplate, fieldType, varName, parentVarName, getterName);
+			getterCode = String.format(GETTER_TEMPLATE, fieldType, varName, parentVarName, getterName);
 		}
 		return addInlineComments(inlineComments, getterCode);
 	}
@@ -137,10 +137,10 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		}
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			ifNotNullParentChildGetterCode = String.format(helperGetIfNullReturnTemplate, fieldType, varName, helper,
+			ifNotNullParentChildGetterCode = String.format(HELPER_GET_IF_NULL_RETURN_TEMPLATE, fieldType, varName, helper,
 					getter, parentVarName, varName, logLevel, logMsg);
 		} else {
-			ifNotNullParentChildGetterCode = String.format(getterIfNullReturnTemplate, fieldType, varName,
+			ifNotNullParentChildGetterCode = String.format(GETTER_IF_NULL_RETURN_TEMPLATE, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
 		return addInlineComments(inlineComments, ifNotNullParentChildGetterCode);

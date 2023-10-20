@@ -184,7 +184,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				}
 				int idx = compilationReport.otcFileName.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN);
 				String depFileName = compilationReport.otcFileName.substring(0, idx) + OtcConstants.OTC_TMD_EXTN;
-				if (!CommonUtils.isEmpty(compilationReport.otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(compilationReport.otcNamespace)) {
 					depFileName = compilationReport.otcNamespace + "." + depFileName;
 				}
 				File binDir = new File(OTC_TMD_LOCATION);
@@ -245,7 +245,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		registryDto.otcFileName = otcDto.otcFileName;
 		String registryId = otcDto.otcFileName;
 		registryId = registryId.substring(0, registryId.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
-		if (!CommonUtils.isEmpty(otcNamespace)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			registryId = otcNamespace + "." + registryId;
 		}
 		registryDto.registryId = registryId;
@@ -320,7 +320,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			if (otcDto.otcFileDto != null && otcDto.otcFileDto.metadata != null
 					&& otcDto.otcFileDto.metadata.entryClassName != null) {
 				mainClassDto.className = otcDto.otcFileDto.metadata.entryClassName;
-				if (!CommonUtils.isEmpty(otcDto.otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(otcDto.otcNamespace)) {
 					mainClassDto.packageName = otcDto.otcNamespace;
 					mainClassDto.fullyQualifiedClassName = mainClassDto.packageName + "." + mainClassDto.className;
 				} else {
@@ -329,7 +329,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			} else {
 				String mainClassName = CompilerUtil.buildJavaClassName(otcNamespace, otcFileName);
 				mainClassDto.fullyQualifiedClassName = mainClassName;
-				if (!CommonUtils.isEmpty(otcDto.otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(otcDto.otcNamespace)) {
 					mainClassDto.packageName = otcNamespace;
 					mainClassDto.className = mainClassName.substring(mainClassName.lastIndexOf(".") + 1);
 				}
@@ -429,7 +429,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			for (CompiledInfo compiledInfo : registryDto.compiledInfos.values()) {
 				String factoryClassName = compiledInfo.factoryClassName;
 				String otcNamespace = registryDto.otcNamespace;
-				if (!CommonUtils.isEmpty(otcNamespace) && !factoryClassName.startsWith(otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(otcNamespace) && !factoryClassName.startsWith(otcNamespace)) {
 					factoryClassName = otcNamespace + "." + factoryClassName;
 				}
 				absoluteFileName = SOURCE_CODE_LOCATION + File.separator + factoryClassName.replace(".", File.separator)

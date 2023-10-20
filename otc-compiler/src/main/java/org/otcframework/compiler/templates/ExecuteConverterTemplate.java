@@ -61,7 +61,7 @@ public final class ExecuteConverterTemplate extends AbstractTemplate {
 		String otcConverter = targetOCC.executeOtcConverter;
 		otcConverter = targetOCC.factoryClassDto.addImport(otcConverter);
 		String otcConverterVarName = createVarName(otcConverter, varNamesSet, false);
-		String executeConverterCode = String.format(executeConverterTemplate, otcConverterVarName, sourceVarName,
+		String executeConverterCode = String.format(EXECUTE_CONVERTER_TEMPLATE, otcConverterVarName, sourceVarName,
 				targetVarName);
 		return addInlineComments(inlineComments, executeConverterCode);
 	}

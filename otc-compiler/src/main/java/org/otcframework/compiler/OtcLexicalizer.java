@@ -220,7 +220,7 @@ final class OtcLexicalizer {
             if (targetOtcChain.endsWith(".")) {
                 targetOtcChain = targetOtcChain.substring(0, targetOtcChain.length() - 1);
             }
-            if (!CommonUtils.isEmpty(sourceOtcChain) && sourceOtcChain.endsWith(".")) {
+            if (!CommonUtils.isTrimmedAndEmpty(sourceOtcChain) && sourceOtcChain.endsWith(".")) {
                 sourceOtcChain = sourceOtcChain.substring(0, sourceOtcChain.length() - 1);
             }
             OtcChainDto.Builder builderTargetOtcChainDto = OtcChainDto.newBuilder();
@@ -241,7 +241,7 @@ final class OtcLexicalizer {
                 int targetCollectionsCount = targetOtcChainDto.collectionCount + targetOtcChainDto.dictionaryCount;
                 int sourceCollectionsCount = 0;
                 OtcChainDto sourceOtcChainDto = null;
-                if (!CommonUtils.isEmpty(sourceOtcChain)) {
+                if (!CommonUtils.isTrimmedAndEmpty(sourceOtcChain)) {
                     OtcCommandDto sourceStemOCD = tokenizeSourceChain(builderSourceOtcChainDto, sourceOtcChain,
                             scriptDto, sourceClz, mapSourceOCDs, builderRegistryDto);
                     sourceOtcChainDto = scriptDto.sourceOtcChainDto;

@@ -42,7 +42,7 @@ public final class MethodEndTemplate extends AbstractTemplate {
 	 * @return the string
 	 */
 	public static String generateCode(String varName) {
-		String endExecuteMethod = String.format(methodEndTemplate, varName);
+		String endExecuteMethod = String.format(METHOD_END_TEMPLATE, varName);
 		return endExecuteMethod;
 	}
 }

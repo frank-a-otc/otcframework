@@ -41,7 +41,7 @@ public final class PreloopVarsTemplate extends AbstractTemplate {
 	 * @return the string
 	 */
 	public static String generateCode() {
-		String offsetIdxCode = String.format(preloopVarsTemplate);
+		String offsetIdxCode = String.format(PRELOOP_VARS_TEMPLATE);
 		return offsetIdxCode;
 	}
 }

@@ -42,40 +42,28 @@ import java.util.*;
  */
 public abstract class AbstractTemplate {
 
-	/** The Constant fromTypes. */
-	private static final Set<Class<?>> fromTypes = new HashSet<>(8);
-
 	/** The Constant convertFromStringExpressions. */
 	private static final Map<Class<?>, String> convertFromStringExpressions = new IdentityHashMap<>(10);
 
-	public static Map<Class<?>, String> concreteTypes = OtcConfig.getConcreteTypes();
-	
-	/** The Constant toTypeConvertExpressions. */
-	private static final Map<Class<?>, String> toTypeConvertExpressions = new IdentityHashMap<>(8);
-	
+	protected static Map<Class<?>, String> concreteTypes = OtcConfig.getConcreteTypes();
+
 	static {
 		if (concreteTypes == null) {
-			concreteTypes = new IdentityHashMap(4);
+			concreteTypes = new IdentityHashMap<>(4);
+		}
+		if (!concreteTypes.containsKey(List.class)) {
 			concreteTypes.put(List.class, ArrayList.class.getName());
+		}
+		if (!concreteTypes.containsKey(Set.class)) {
 			concreteTypes.put(Set.class, HashSet.class.getName());
+		}
+		if (!concreteTypes.containsKey(Map.class)) {
 			concreteTypes.put(Map.class, HashMap.class.getName());
+		}
+		if (!concreteTypes.containsKey(Queue.class)) {
 			concreteTypes.put(Queue.class, LinkedList.class.getName());
 		}		
-		fromTypes.add(Byte.class);
-		fromTypes.add(Double.class);
-		fromTypes.add(Float.class);
-		fromTypes.add(Integer.class);
-		fromTypes.add(Long.class);
-		fromTypes.add(Short.class);
-		fromTypes.add(BigInteger.class);
-		fromTypes.add(BigDecimal.class);
-		toTypeConvertExpressions.put(String.class, "%s.toString()");
-		toTypeConvertExpressions.put(Byte.class, "%s.byteValue()");
-		toTypeConvertExpressions.put(Double.class, "%s.doubleValue()");
-		toTypeConvertExpressions.put(Float.class, "%s.floatValue()");
-		toTypeConvertExpressions.put(Integer.class, "%s.intValue()");
-		toTypeConvertExpressions.put(Long.class, "%s.longValue()");
-		toTypeConvertExpressions.put(Short.class, "%s.shortValue()");
+
 		convertFromStringExpressions.put(Boolean.class, "Boolean.valueOf(%s)");
 		convertFromStringExpressions.put(Byte.class, "Byte.valueOf(%s)");
 		convertFromStringExpressions.put(Double.class, "Double.valueOf(%s)");
@@ -88,7 +76,8 @@ public abstract class AbstractTemplate {
 		convertFromStringExpressions.put(URL.class, "new URL(%s)");
 	}
 
-	
+	AbstractTemplate() {}
+
 	/** The Constant CODE_TO_REPLACE. */
 	public static final String CODE_TO_REPLACE = "CODE_TO_REPLACE";
 
@@ -104,17 +93,11 @@ public abstract class AbstractTemplate {
 	/** The Constant CODE_TO_CREATE_MAPVALUE. */
 	public static final String CODE_TO_CREATE_MAPVALUE = "CODE_TO_CREATE_MAPVALUE";
 
-	/** The Constant SOURCE_ICD. */
-	public static final String SOURCE_ICD = "sourceICD";
-
 	/** The Constant PARENT_SOURCE_ICD. */
 	public static final String PARENT_SOURCE_ICD = "parentSourceICD";
 
 	/** The Constant MEMBER_SOURCE_ICD. */
 	public static final String MEMBER_SOURCE_ICD = "memberSourceICD";
-
-	/** The Constant TARGET_ICD. */
-	public static final String TARGET_ICD = "targetICD";
 
 	/** The Constant PARENT_TARGET_ICD. */
 	public static final String PARENT_TARGET_ICD = "parentTargetICD";
@@ -137,356 +120,304 @@ public abstract class AbstractTemplate {
 	/** The Constant OFFSET_IDX. */
 	public static final String OFFSET_IDX = "offsetIdx";
 
+	private static final String CR_LF = "\r\n";
+
+	private static final String APP_DATA_VAR = "\nMap<String, Object> data) {";
+	private static final String ELSE = "\n} else {";
+	private static final String PACKAGE = "\npackage %s;\n";
+	private static final String LEN = "\nlen = %s.length;";
+	private static final String ARRAYS_COPY = "\n%s = Arrays.copyOf(%s, len + 1);";
+	private static final String IMPORT_ICD = "\nimport org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;";
+	private static final String IF_MEMBER_ICD = "\nif (memberICD%s == null) {";
+	private static final String LOGGER = "\nLOGGER.%s(\"%s\");";
+	private static final String RETURN = "\nreturn;";
+	private static final String CONTINUE = "\ncontinue;";
+	private static final String CHILDREN_GET = "\n%s = %s.children.get(%s);";
+	private static final String PUT = "\n%s.put(%s, %s);";
+	private static final String IF_KEY_TARGET_ICD = "\nif (keyTargetICD == null) {";
+	private static final String IF_S_NULL = "\nif (%s == null) {";
+	private static final String KEY_TARGET_ICD = "\nkeyTargetICD = parentTargetICD.children.get(%s);";
+
+	protected static final String NEW = "new %s()";
+	protected static final String SIZE = ".size();";
+	protected static final String SIZE_DIVIDED_BY_2 = ".size() / 2;";
+	protected static final String MEMBER_ICD_VAR = "memberICD";
+	public static final String INVALID_CALL_TO_TEMPLATE = "Invalid call to method in OTC-command : ";
+	public static final String TOKEN_SHOULD_NOT_BE = "! Token should not be of a member for this operation.";
+
 	/** The Constant mainClassBeginCodeTemplate. */
-	protected static final String mainClassBeginCodeTemplate = "// This file was generated by the OTC Framework's Engine. \r\n"
-			+ "// For details on the framework, visit <a href=\"https://otcframework.org\">https://otcframework.org</a>\r\n"
-			+ "// Any modifications to this file will be lost upon recompilation of the respective OTCL file. \r\n"
-			+ "//\r\n" + "\npackage %s;\n" + "\nimport org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;"
+	protected static final String MAIN_CLASS_BEGIN_CODE_TEMPLATE = "// This file was generated by the OTC Framework's Compiler."
+			+ CR_LF
+			+ "// For details on the framework, visit <a href=\"https://otcframework.org\">https://otcframework.org</a>"
+			+ CR_LF
+			+ "// Any modifications to this file will be lost upon recompilation of the respective OTCS file."
+			+ CR_LF + CR_LF
+			+ PACKAGE + IMPORT_ICD
 			+ "\nimport org.otcframework.common.executor.CodeExecutor;" + "\nimport java.util.Map;"
 			+ "\nimport java.util.HashMap;" + OtcCommand.CODE_TO_IMPORT + "\npublic class %s"
 			+ "\nimplements CodeExecutor<%s, %s> {" + "\n\n@Override"
-			+ "\npublic %s execute(%s %s, IndexedCollectionsDto sourceICD, " + "\nMap<String, Object> data) {"
+			+ "\npublic %s execute(%s %s, IndexedCollectionsDto sourceICD, " + APP_DATA_VAR
 			+ "\n\n%s %s = new %s();" + "\nIndexedCollectionsDto targetICD = new IndexedCollectionsDto();"
 			+ "\ntargetICD.children = new HashMap<>();";
 
 	/** The Constant loggerInitTemplate. */
-	protected static final String loggerInitTemplate = "\n\nprivate static final Logger LOGGER = "
+	protected static final String LOGGER_INIT_TEMPLATE = "\n\nprivate static final Logger LOGGER = "
 			+ "LoggerFactory.getLogger(%s.class); ";
 
 	/** The Constant factoryClassBeginCodeTemplate. */
-	protected static final String factoryClassBeginCodeTemplate = "// This file was generated by the OTC Engine. \r\n"
+	protected static final String FACTORY_CLASS_BEGIN_CODE_TEMPLATE = "// This file was generated by the OTC Compiler. \r\n"
 			+ "// See <a href=\"https://otcframework.org\">https://otcframework.org</a> \r\n"
 			+ "// Any modifications to this file will be lost upon recompilation of the respective OTC file. \r\n"
-			+ "//\r\n" + "\npackage %s;\n" + "\nimport org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;" + "\n"
-			+ OtcCommand.CODE_TO_IMPORT + "\n\npublic class %s {" + loggerInitTemplate
+			+ "//\r\n" + PACKAGE+ IMPORT_ICD + "\n"
+			+ OtcCommand.CODE_TO_IMPORT + "\n\npublic class %s {" + LOGGER_INIT_TEMPLATE
 			+ "\n\npublic static void execute(%s %s, IndexedCollectionsDto sourceICD, "
-			+ "\n%s %s, IndexedCollectionsDto targetICD, " + "\nMap<String, Object> data) {";
+			+ "\n%s %s, IndexedCollectionsDto targetICD, " + APP_DATA_VAR;
 
 	/** The Constant executeFactoryMethodCallTemplate. */
-	protected static final String executeFactoryMethodCallTemplate = "\n%s.execute(%s, %s, %s, targetICD, data);";
+	protected static final String EXECUTE_FACTORY_METHOD_CALL_TEMPLATE = "\n%s.execute(%s, %s, %s, targetICD, data);";
 
 	/** The Constant factoryModuleClassBeginCodeTemplate. */
-	protected static final String factoryModuleClassBeginCodeTemplate = 
-			"// This file was generated by the OTC Framework's Engine. \r\n"
+	protected static final String FACTORY_MODULE_CLASS_BEGIN_CODE_TEMPLATE =
+			"// This file was generated by the OTC Framework's Compiler. \r\n"
 			+ "// For details of the framework, pls visit <a href=\"https://otcframework.org\">https://otcframework.org</a> \r\n"
 			+ "// Any modifications to this file will be lost upon recompilation of the respective OTC file. \r\n"
-			+ "//\r\n" + "\npackage %s;\n" + "\nimport org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;"
+			+ "//\r\n" + PACKAGE + IMPORT_ICD
 			+ "\nimport org.otcframework.executor.module.AbstractOtcModuleExecutor;" + "\n" + OtcCommand.CODE_TO_IMPORT
-			+ "\n\npublic class %s extends AbstractOtcModuleExecutor {" + loggerInitTemplate
+			+ "\n\npublic class %s extends AbstractOtcModuleExecutor {" + LOGGER_INIT_TEMPLATE
 			+ "\n\npublic static void execute(%s %s, IndexedCollectionsDto sourceICD, "
-			+ "\n%s %s, IndexedCollectionsDto targetICD," + "\nMap<String, Object> data) {";
+			+ "\n%s %s, IndexedCollectionsDto targetICD," + APP_DATA_VAR;
 
 	/** The Constant executeModuleTemplate. */
-	protected static final String executeModuleTemplate = "\nString otcNamespace = \"%s\";"
+	protected static final String EXECUTE_MODULE_TEMPLATE = "\nString otcNamespace = \"%s\";"
 			+ "\nexecuteModule(otcNamespace, %s, %s, data);";
 
 	/** The Constant executeConverterTemplate. */
-	protected static final String executeConverterTemplate = "\n%s.convert(%s, %s, data);";
+	protected static final String EXECUTE_CONVERTER_TEMPLATE = "\n%s.convert(%s, %s, data);";
 
 	/** The Constant parentSourceIcdTemplate. */
-	protected static final String parentSourceIcdTemplate = "\nIndexedCollectionsDto parentSourceICD = null;";
+	protected static final String PARENT_SOURCE_ICD_TEMPLATE = "\nIndexedCollectionsDto parentSourceICD = null;";
 
 	/** The Constant memberSourceIcdTemplate. */
-	protected static final String memberSourceIcdTemplate = "\nIndexedCollectionsDto memberSourceICD = null;";
+	protected static final String MEMBER_SOURCE_ICD_TEMPLATE = "\nIndexedCollectionsDto memberSourceICD = null;";
 
 	/** The Constant parentTargetIcdTemplate. */
-	protected static final String parentTargetIcdTemplate = "\nIndexedCollectionsDto parentTargetICD = null;";
+	protected static final String PARENT_TARGET_ICD_TEMPLATE = "\nIndexedCollectionsDto parentTargetICD = null;";
 
 	/** The Constant memberTargetIcdTemplate. */
-	protected static final String memberTargetIcdTemplate = "\nIndexedCollectionsDto memberTargetICD = null;";
+	protected static final String MEMBER_TARGET_ICD_TEMPLATE = "\nIndexedCollectionsDto memberTargetICD = null;";
 
 	/** The Constant keyTargetIcdTemplate. */
-	protected static final String keyTargetIcdTemplate = "\nIndexedCollectionsDto keyTargetICD = null;";
+	protected static final String KEY_TARGET_ICD_TEMPLATE = "\nIndexedCollectionsDto keyTargetICD = null;";
 
 	/** The Constant valueTargetIcdTemplate. */
-	protected static final String valueTargetIcdTemplate = "\nIndexedCollectionsDto valueTargetICD = null;";
+	protected static final String VALUE_TARGET_ICD_TEMPLATE = "\nIndexedCollectionsDto valueTargetICD = null;";
 
 	/** The Constant keySourceIcdTemplate. */
-	protected static final String keySourceIcdTemplate = "\nIndexedCollectionsDto keySourceICD = null;";
+	protected static final String KEY_SOURCE_ICD_TEMPLATE = "\nIndexedCollectionsDto keySourceICD = null;";
 
 	/** The Constant valueSourceIcdTemplate. */
-	protected static final String valueSourceIcdTemplate = "\nIndexedCollectionsDto valueSourceICD = null;";
+	protected static final String VALUE_SOURCE_ICD_TEMPLATE = "\nIndexedCollectionsDto valueSourceICD = null;";
 
 	/** The Constant anchoredIcdTemplate. */
-	protected static final String anchoredIcdTemplate = "\nIndexedCollectionsDto anchoredICD = null;";
+	protected static final String ANCHORED_ICD_TEMPLATE = "\nIndexedCollectionsDto anchoredICD = null;";
 
 	/** The Constant assignKeyToMemberIcdTemplate. */
-	protected static final String assignKeyToMemberIcdTemplate = "\nmemberTargetICD = keyTargetICD;";
+	protected static final String ASSIGN_KEY_TO_MEMBER_ICD_TEMPLATE = "\nmemberTargetICD = keyTargetICD;";
 
 	/** The Constant assignValueToMemberIcdTemplate. */
-	protected static final String assignValueToMemberIcdTemplate = "\nmemberTargetICD = valueTargetICD;";
-
-	/** The Constant assignMemberIcdToParentIcdTemplate. */
-	protected static final String assignMemberIcdToParentIcdTemplate = "\nparentTargetICD = memberTargetICD;";
+	protected static final String ASSIGN_VALUE_TO_MEMBER_ICD_TEMPLATE = "\nmemberTargetICD = valueTargetICD;";
 
 	/** The Constant assignParentIcdToAnchoredIcdTemplate. */
-	protected static final String assignParentIcdToAnchoredIcdTemplate = "\nanchoredICD = parentTargetICD;";
+	protected static final String ASSIGN_PARENT_ICD_TO_ANCHORED_ICD_TEMPLATE = "\nanchoredICD = parentTargetICD;";
 
 	/** The Constant assignAnchoredIcdToParentIcdTemplate. */
-	protected static final String assignAnchoredIcdToParentIcdTemplate = "\nparentTargetICD = anchoredICD;";
+	protected static final String ASSIGN_ANCHORED_ICD_TO_PARENT_ICD_TEMPLATE = "\nparentTargetICD = anchoredICD;";
 
-	/** The Constant idxAndLenTemplate. */
-	protected static final String idxAndLenTemplate = "\nint idx = 0;" + "\nint len = 0;\n";
-
-	/** The Constant preloopVarsTemplate. */
-	protected static final String preloopVarsTemplate = "\nint offsetIdx = 0;";
-
-	/** The Constant incrementOffsetIdx. */
-	public static final String incrementOffsetIdx = "\noffsetIdx++;";
-
-	/** The Constant initOffsetIdx. */
-	public static final String initOffsetIdx = "\noffsetIdx = 0;";
-
-	/** The Constant createInitVarTemplate. */
-	protected static final String createInitVarTemplate = "\n%s %s = %s;";
-
-	/** The Constant createInstanceTemplate. */
-	protected static final String createInstanceTemplate = "\n%s %s = new %s();";
-
-	/** The Constant getterTemplate. */
-	protected static final String getterTemplate = "\n%s %s = %s.%s();";
-
-	/** The Constant helperGetterTemplate. */
-	protected static final String helperGetterTemplate = "\n%s %s = %s.%s(%s);";
-
-	/** The Constant getSetTemplate. */
-	protected static final String getSetTemplate = "\n%s.%s(%s.%s());";
-
-	/** The Constant getHelperTemplate. */
-	protected static final String getHelperTemplate = "\n%s.%s(%s.%s(%s));";
-
-	/** The Constant setHelperTemplate. */
-	protected static final String setHelperTemplate = "\n%s.%s(%s, %s.%s());";
-
-	/** The Constant setHelperGetHelperTemplate. */
-	protected static final String setHelperGetHelperTemplate = "\n%s.%s(%s, %s.%s(%s));";
-
-	/** The Constant getSetTargetEnumTemplate. */
-	protected static final String getSetTargetEnumTemplate = "\n%s.%s(%s.valueOf(%s.%s()));";
-
-	/** The Constant getSetSourceEnumTemplate. */
-	protected static final String getSetSourceEnumTemplate = "\n%s.%s(%s.%s().toString());";
-
-	/** The Constant getSetBothEnumTemplate. */
-	protected static final String getSetBothEnumTemplate = "\n%s.%s(%s.valueOf(%s.%s().toString()));";
-
-	/** The Constant setterTemplate. */
-	protected static final String setterTemplate = "\n%s.%s(%s);";
-
-	/** The Constant setterTargetEnumTemplate. */
-	protected static final String setterTargetEnumTemplate = "\n%s.%s(%s.valueOf(%s));";
-
-	/** The Constant setterTargetEnumWithAssignTemplate. */
-	protected static final String setterTargetEnumWithAssignTemplate = "\n%s = %s.%s(%s.valueOf(%s));";
-
-	/** The Constant setterSourceEnumTemplate. */
-	protected static final String setterSourceEnumTemplate = "\n%s.%s(%s.toString());";
-
-	/** The Constant setterBothEnumTemplate. */
-	protected static final String setterBothEnumTemplate = "\n%s.%s(%s.valueOf(%s.toString()));";
-
-	/** The Constant ifNullEnumCreateAndSetTemplate. */
-	protected static final String ifNullEnumCreateAndSetTemplate = "\nif (%s == null) {" + "\n%s = %s.valueOf(%s);"
-			+ "\n%s.%s(%s);" + "\n}";
-
-	/** The Constant helperSetterTemplate. */
-	protected static final String helperSetterTemplate = "\n%s.%s(%s, %s);";
-
-	/** The Constant dateConverterTemplate. */
-	protected static final String dateConverterTemplate = "\n%s.%s(DateConverterFacade.convert(%s, %s.class));";
-
-	/** The Constant dateToStringConverterTemplate. */
-	protected static final String dateToStringConverterTemplate = "\n%s.%s(%s.toString());";
-
-	/** The Constant ifNullCreateAndSetTemplate. */
-	protected static final String ifNullCreateAndSetTemplate = "\nif (%s == null) {" + "\n%s = new %s();"
-			+ "\n%s.%s(%s);" + "\n}";
-
-	/** The Constant ifNullCreateAndHelperSetTemplate. */
-	protected static final String ifNullCreateAndHelperSetTemplate = "\nif (%s == null) {" + "\n%s = new %s();"
-			+ "\n%s.%s(%s, %s);" + "\n}";
-
-	/** The Constant getterIfNullReturnTemplate. */
-	protected static final String getterIfNullReturnTemplate = getterTemplate + "\nif (%s == null) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\nreturn;" + "\n}";
-
-	/** The Constant getterIfNullContinueTemplate. */
-	protected static final String getterIfNullContinueTemplate = getterTemplate + "\nif (%s == null) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\ncontinue;" + "\n}";
-
-	/** The Constant helperGetIfNullReturnTemplate. */
-	protected static final String helperGetIfNullReturnTemplate = helperGetterTemplate + "\nif (%s == null) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\nreturn;" + "\n}";
-
-	/** The Constant helperGetIfNullContinueTemplate. */
-	protected static final String helperGetIfNullContinueTemplate = helperGetterTemplate + "\nif (%s == null) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\ncontinue;" + "\n}";
-
-	/** The Constant methodEndTemplate. */
-	protected static final String methodEndTemplate = "\nreturn %s;" + "\n}";
-
-	/** The Constant ifNullTargetRootIcdCreateTemplate. */
-	protected static final String ifNullTargetRootIcdCreateTemplate = "\nparentTargetICD = targetICD.children.get(\"%s\");"
+	protected static final String IDX_AND_LEN_TEMPLATE = "\nint idx = 0;" + "\nint len = 0;\n";
+	protected static final String PRELOOP_VARS_TEMPLATE = "\nint offsetIdx = 0;";
+	public static final String INCREMENT_OFFSET_IDX = "\noffsetIdx++;";
+	public static final String INIT_OFFSET_IDX = "\noffsetIdx = 0;";
+	protected static final String CREATE_INIT_VAR_TEMPLATE = "\n%s %s = %s;";
+	protected static final String CREATE_INSTANCE_TEMPLATE = "\n%s %s = new %s();";
+	protected static final String GETTER_TEMPLATE = "\n%s %s = %s.%s();";
+	protected static final String HELPER_GETTER_TEMPLATE = "\n%s %s = %s.%s(%s);";
+	protected static final String GET_HELPER_TEMPLATE = "\n%s.%s(%s.%s(%s));";
+	protected static final String SET_HELPER_TEMPLATE = "\n%s.%s(%s, %s.%s());";
+	protected static final String SET_HELPER_GET_HELPER_TEMPLATE = "\n%s.%s(%s, %s.%s(%s));";
+	protected static final String SETTER_TEMPLATE = "\n%s.%s(%s);";
+	protected static final String SETTER_TARGET_ENUM_TEMPLATE = "\n%s.%s(%s.valueOf(%s));";
+	protected static final String SETTER_SOURCE_ENUM_TEMPLATE = "\n%s.%s(%s.toString());";
+	protected static final String SETTER_BOTH_ENUM_TEMPLATE = "\n%s.%s(%s.valueOf(%s.toString()));";
+	protected static final String IF_NULL_ENUM_CREATE_AND_SET_TEMPLATE = IF_S_NULL + "\n%s = %s.valueOf(%s);"
+			+ SETTER_TEMPLATE + "\n}";
+	protected static final String HELPER_SETTER_TEMPLATE = "\n%s.%s(%s, %s);";
+	protected static final String DATE_CONVERTER_TEMPLATE = "\n%s.%s(DateConverterFacade.convert(%s, %s.class));";
+	protected static final String DATE_TO_STRING_CONVERTER_TEMPLATE = "\n%s.%s(%s.toString());";
+	protected static final String IF_NULL_CREATE_AND_SET_TEMPLATE = IF_S_NULL + "\n%s = new %s();"
+			+ SETTER_TEMPLATE + "\n}";
+	protected static final String IF_NULL_CREATE_AND_HELPER_SET_TEMPLATE = IF_S_NULL + "\n%s = new %s();"
+			+ HELPER_SETTER_TEMPLATE + "\n}";
+	protected static final String GETTER_IF_NULL_RETURN_TEMPLATE = GETTER_TEMPLATE + IF_S_NULL
+			+ LOGGER + RETURN + "\n}";
+	protected static final String GETTER_IF_NULL_CONTINUE_TEMPLATE = GETTER_TEMPLATE + IF_S_NULL
+			+ LOGGER + CONTINUE + "\n}";
+	protected static final String HELPER_GET_IF_NULL_RETURN_TEMPLATE = HELPER_GETTER_TEMPLATE + IF_S_NULL
+			+ LOGGER + RETURN + "\n}";
+	protected static final String HELPER_GET_IF_NULL_CONTINUE_TEMPLATE = HELPER_GETTER_TEMPLATE + IF_S_NULL
+			+ LOGGER + CONTINUE + "\n}";
+	protected static final String METHOD_END_TEMPLATE = "\nreturn %s;" + "\n}";
+	protected static final String IF_NULL_TARGET_ROOT_ICD_CREATE_TEMPLATE = "\nparentTargetICD = targetICD.children.get(\"%s\");"
 			+ "\nif (parentTargetICD == null) {"
 			+ "\nparentTargetICD = IndexedCollectionsDtoFactory.create(targetICD, %s, \"%s\", true);" + "\n}";
-
-	/** The Constant ifNullTargetRootIcdReturnTemplate. */
-	protected static final String ifNullTargetRootIcdReturnTemplate = "\nparentTargetICD = targetICD.children.get(\"%s\");"
+	protected static final String IF_NULL_TARGET_ROOT_ICD_RETURN_TEMPLATE = "\nparentTargetICD = targetICD.children.get(\"%s\");"
 			+ "\nif (parentTargetICD == null || parentTargetICD.children == null || parentTargetICD.children.size() == 0) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\nreturn;" + "\n}";
-
-	/** The Constant ifNullSourceIcdReturnTemplate. */
-	protected static final String ifNullSourceIcdReturnTemplate = "\nif (sourceICD == null) {"
-			+ "\nLOGGER.warn(\"Cannot continue! No collections present in source-object.\");" + "\nreturn;" + "\n}";
-
-	/** The Constant ifNullSourceRootIcdReturnTemplate. */
-	protected static final String ifNullSourceRootIcdReturnTemplate = ifNullSourceIcdReturnTemplate
+			+ LOGGER + RETURN + "\n}";
+	protected static final String IF_NULL_SOURCE_ICD_RETURN_TEMPLATE = "\nif (sourceICD == null) {"
+			+ "\nLOGGER.warn(\"Cannot continue! No collections present in source-object.\");" + RETURN + "\n}";
+	protected static final String IF_NULL_SOURCE_ROOT_ICD_RETURN_TEMPLATE = IF_NULL_SOURCE_ICD_RETURN_TEMPLATE
 			+ "\nparentSourceICD = sourceICD.children.get(\"%s\");"
 			+ "\nif (parentSourceICD == null || parentSourceICD.children == null || parentSourceICD.children.size() == 0) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\nreturn;" + "\n}";
-
-	/** The Constant ifNullIcdReturnTemplate. */
-	protected static final String ifNullIcdReturnTemplate = "\n%s = %s.children.get(%s);"
-			+ "\nif (%s == null || %s.children == null || %s.children.size() == 0) {" + "\nLOGGER.%s(\"%s\");"
-			+ "\nreturn;" + "\n}";
-
-	/** The Constant ifNullLastIcdReturnTemplate. */
-	protected static final String ifNullLastIcdReturnTemplate = "\n%s = %s.children.get(%s);" + "\nif (%s == null) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\nreturn;" + "\n}";
-
-	/** The Constant ifNullTargetIcdCreateTemplate. */
-	protected static final String ifNullTargetIcdCreateTemplate = "\n%s = %s.children.get(%s);" + "\nif (%s == null) {"
+			+ LOGGER + RETURN + "\n}";
+	protected static final String IF_NULL_ICD_RETURN_TEMPLATE = CHILDREN_GET
+			+ "\nif (%s == null || %s.children == null || %s.children.size() == 0) {" + LOGGER
+			+ RETURN + "\n}";
+	protected static final String IF_NULL_LAST_ICD_RETURN_TEMPLATE = CHILDREN_GET + IF_S_NULL
+			+ LOGGER + RETURN + "\n}";
+	protected static final String IF_NULL_TARGET_ICD_CREATE_TEMPLATE = CHILDREN_GET + IF_S_NULL
 			+ "\n%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);" + "\n}";
 
-	/** The Constant ifNullTargetIcdCreateOrInitTemplate. */
-	protected static final String ifNullTargetIcdCreateOrInitTemplate = "\n%s = %s.children.get(%s);"
-			+ "\nif (%s == null) {" + "\n%s = IndexedCollectionsDtoFactory.create(%s, null, %s, true);" + "\n} else {"
-			+ "\n%s = %s;" + "\n}";
+//	protected static final String ifNullTargetIcdCreateOrInitTemplate = "\n%s = %s.children.get(%s);"
+//			+ "\nif (%s == null) {" + "\n%s = IndexedCollectionsDtoFactory.create(%s, null, %s, true);" + ELSE
+//			+ "\n%s = %s;" + "\n}";
+//	protected static final String getIcdChildrenSizeTemplate = "\nint size%s = %s.children.size();";
+//	protected static final String getSetTemplate = "\n%s.%s(%s.%s());";
+//	protected static final String getSetTargetEnumTemplate = "\n%s.%s(%s.valueOf(%s.%s()));";
+//	protected static final String getSetSourceEnumTemplate = "\n%s.%s(%s.%s().toString());";
+//	protected static final String getSetBothEnumTemplate = "\n%s.%s(%s.valueOf(%s.%s().toString()));";
+//	protected static final String setterTargetEnumWithAssignTemplate = "\n%s = %s.%s(%s.valueOf(%s));";
+//	protected static final String assignMemberIcdToParentIcdTemplate = "\nparentTargetICD = memberTargetICD;";
+//	public static final String SOURCE_ICD = "sourceICD";
+//	public static final String TARGET_ICD = "targetICD";
+//	protected static final String toplevelTargetPreLoopTemplate = "\nint size%s = 0;"
+//			+ "\nif (%s.children.size() == 0) {" + "\nsize%s = 1;" + ELSE + "\nsize%s = %s.children.size();"
+//			+ "\n}";
 
 	/** The Constant retrieveMemberFromIcdTemplate. */
-	protected static final String retrieveMemberFromIcdTemplate = "\n%s %s = (%s) %s.indexedObject;";
+	protected static final String RETRIEVE_MEMBER_FROM_ICD_TEMPLATE = "\n%s %s = (%s) %s.indexedObject;";
 
 	/** The Constant addToArrayTemplate. */
-	protected static final String addToArrayTemplate = "\nlen = %s.length;" + "\nif (len < %s + 1) {"
-			+ "\n%s = Arrays.copyOf(%s, len + 1);" + "\n%s.%s(%s);" + "\n}" + createInstanceTemplate + "\n%s[%s] = %s;";
+	protected static final String ADD_TO_ARRAY_TEMPLATE = LEN + "\nif (len < %s + 1) {"
+			+ ARRAYS_COPY + SETTER_TEMPLATE + "\n}" + CREATE_INSTANCE_TEMPLATE + "\n%s[%s] = %s;";
 
 	/** The Constant helperAddToArrayTemplate. */
-	protected static final String helperAddToArrayTemplate = "\nlen = %s.length;" + "\nif (len < %s + 1) {"
-			+ "\n%s = Arrays.copyOf(%s, len + 1);" + "\n%s.%s(%s, %s);" + "\n}" + createInstanceTemplate
+	protected static final String HELPER_ADD_TO_ARRAY_TEMPLATE = LEN + "\nif (len < %s + 1) {"
+			+ ARRAYS_COPY + HELPER_SETTER_TEMPLATE + CREATE_INSTANCE_TEMPLATE
 			+ "\n%s[%s] = %s;";
 
 	/** The Constant resizeArrayAndAddAtEndTemplate. */
-	protected static final String resizeArrayAndAddAtEndTemplate = "\nlen = %s.length;"
-			+ "\n%s = Arrays.copyOf(%s, len + 1);" + CODE_TO_REPLACE + "\n%s[len] = %s;";
+	protected static final String RESIZE_ARRAY_AND_ADD_AT_END_TEMPLATE = LEN
+			+ ARRAYS_COPY + CODE_TO_REPLACE + "\n%s[len] = %s;";
 
 	/** The Constant addToCollectionTemplate. */
-	protected static final String addToCollectionTemplate = "\n%s.add(%s);";
+	protected static final String ADD_TO_COLLECTION_TEMPLATE = "\n%s.add(%s);";
 
 	/** The Constant addCollectionMemberTemplate. */
-	protected static final String addCollectionMemberTemplate = createInitVarTemplate
+	protected static final String ADD_COLLECTION_MEMBER_TEMPLATE = CREATE_INIT_VAR_TEMPLATE
 			+ "\nmemberTargetICD = parentTargetICD.children.get(%s);" + "\nif (memberTargetICD != null) {"
-			+ "\n%s = (%s) memberTargetICD.indexedObject;" + "\n}" + "\nif (%s == null) {" + CODE_TO_REPLACE
+			+ "\n%s = (%s) memberTargetICD.indexedObject;" + "\n}" + IF_S_NULL + CODE_TO_REPLACE
 			+ "\nmemberTargetICD = IndexedCollectionsDtoFactory.create(parentTargetICD, %s, %s, true);" + "\n}";
 
 	/** The Constant addCollectionMemberAtEndTemplate. */
-	protected static final String addCollectionMemberAtEndTemplate = "\nidx = 0;"
+	protected static final String ADD_COLLECTION_MEMBER_AT_END_TEMPLATE = "\nidx = 0;"
 			+ "\nif (parentTargetICD.children.size() > 0) {" + "\nidx = parentTargetICD.children.size();" + "\n}"
 			+ CODE_TO_REPLACE
 			+ "\nmemberTargetICD = IndexedCollectionsDtoFactory.create(parentTargetICD, %s, \"\" + idx, true);";
 
-	/** The Constant getIcdChildrenSizeTemplate. */
-	protected static final String getIcdChildrenSizeTemplate = "\nint size%s = %s.children.size();";
-
 	/** The Constant retrieveParentIcd. */
-	protected static final String retrieveParentIcd = "\nIndexedCollectionsDto parentICD%s = %s.children.get(%s);";
+	protected static final String RETRIEVE_PARENT_ICD = "\nIndexedCollectionsDto parentICD%s = %s.children.get(%s);";
 
 	/** The Constant preLoopTemplate. */
-	protected static final String preLoopTemplate = retrieveParentIcd
+	protected static final String PRE_LOOP_TEMPLATE = RETRIEVE_PARENT_ICD
 			+ "\nif (parentICD%s == null || parentICD%s.children == null || parentICD%s.children.size() == 0) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\ncontinue;" + "\n}" + "\nint size%s = parentICD%s.children.size();";
+			+ LOGGER + CONTINUE + "\n}" + "\nint size%s = parentICD%s.children.size();";
 
 	/** The Constant postLoopTemplate. */
-	protected static final String postLoopTemplate = "\nif (memberICD%s == null || memberICD%s.children == null || memberICD%s.children.size() == 0) {"
-			+ "\nLOGGER.%s(\"%s\");" + "\ncontinue;" + "\n}";
+	protected static final String POST_LOOP_TEMPLATE = "\nif (memberICD%s == null || memberICD%s.children == null || memberICD%s.children.size() == 0) {"
+			+ LOGGER + CONTINUE + "\n}";
 
 	/** The Constant lastPostSourceLoopTemplate. */
-	protected static final String lastPostSourceLoopTemplate = "\nif (memberICD%s == null) {" + "\nLOGGER.%s(\"%s\");"
-			+ "\ncontinue;" + "\n}" + retrieveMemberFromIcdTemplate;
+	protected static final String LAST_POST_SOURCE_LOOP_TEMPLATE = IF_MEMBER_ICD + LOGGER
+			+ CONTINUE + "\n}" + RETRIEVE_MEMBER_FROM_ICD_TEMPLATE;
 
 	/** The Constant retrieveMemberIcd. */
-	protected static final String retrieveMemberIcd = "\nIndexedCollectionsDto memberICD%s = %s.children.get(%s);";
-
-	/** The Constant toplevelTargetPreLoopTemplate. */
-	protected static final String toplevelTargetPreLoopTemplate = "\nint size%s = 0;"
-			+ "\nif (%s.children.size() == 0) {" + "\nsize%s = 1;" + "\n} else {" + "\nsize%s = %s.children.size();"
-			+ "\n}";
+	protected static final String RETRIEVE_MEMBER_ICD = "\nIndexedCollectionsDto memberICD%s = %s.children.get(%s);";
 
 	/** The Constant preTargetLoopTemplate. */
-	protected static final String preTargetLoopTemplate = "\nint size%s = 0;"
-			+ "\nIndexedCollectionsDto parentICD%s = %s.children.get(%s);" + "\nif (parentICD%s == null) {"
-			+ "\nparentICD%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);" + "\nsize%s = 1;" + "\n} else {"
+	protected static final String PRE_TARGET_LOOP_TEMPLATE = "\nint size%s = 0;"
+			+ RETRIEVE_PARENT_ICD + "\nif (parentICD%s == null) {"
+			+ "\nparentICD%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);" + "\nsize%s = 1;" + ELSE
 			+ "\nsize%s = parentICD%s.children.size();" + "\n}";
 
 	/** The Constant forLoopTemplate. */
-	protected static final String forLoopTemplate = "\nfor (int %s = 0; %s < size%s; %s++) {";
+	protected static final String FOR_LOOP_TEMPLATE = "\nfor (int %s = 0; %s < size%s; %s++) {";
 
 	/** The Constant postTargetLoopTemplate. */
-	protected static final String postTargetLoopTemplate = "\nIndexedCollectionsDto memberICD%s = %s.children.get(%s);"
+	protected static final String POST_TARGET_LOOP_TEMPLATE = RETRIEVE_MEMBER_ICD
 			+ "\n%s %s = null;" + "\nif (memberICD%s != null) {" + "\n%s = (%s) memberICD%s.indexedObject;"
-			+ "\n} else {" + CODE_TO_REPLACE + "\nmemberICD%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);"
+			+ ELSE + CODE_TO_REPLACE + "\nmemberICD%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);"
 			+ "\n}";
 
 	/** The Constant postTargetLoopMapKeyTemplate. */
-	protected static final String postTargetLoopMapKeyTemplate = "\nIndexedCollectionsDto memberICD%s = %s.children.get(%s);"
-			+ "\n%s %s = null;" + "\nif (memberICD%s == null) {" + CODE_TO_CREATE_MAPKEY + " " + CODE_TO_CREATE_MAPVALUE
-			+ " " + "\n%s.put(%s, %s);" + "\nmemberICD%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);"
-			+ "\nvalueTargetICD = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);" + "\n} else {"
+	protected static final String POST_TARGET_LOOP_MAP_KEY_TEMPLATE = RETRIEVE_MEMBER_ICD
+			+ "\n%s %s = null;" + IF_MEMBER_ICD + CODE_TO_CREATE_MAPKEY + " " + CODE_TO_CREATE_MAPVALUE
+			+ " " + PUT + "\nmemberICD%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);"
+			+ "\nvalueTargetICD = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);" + ELSE
 			+ "\n%s = (%s) memberICD%s.indexedObject;" + "\n}";
 
 	/** The Constant postTargetLoopMapValueTemplate. */
-	protected static final String postTargetLoopMapValueTemplate = "\nIndexedCollectionsDto memberICD%s = %s.children.get(%s);"
-			+ "\nif (memberICD%s == null) {" + "\nLOGGER.%s(\"%s\");" + "\ncontinue;" + "\n}"
+	protected static final String POST_TARGET_LOOP_MAP_VALUE_TEMPLATE = RETRIEVE_MEMBER_ICD
+			+ IF_MEMBER_ICD + LOGGER + CONTINUE + "\n}"
 			+ "\n%s %s = (%s) memberICD%s.indexedObject;";
 
 	/** The Constant ifNotContainsMapKeyTemplate. */
-	protected static final String ifNotContainsMapKeyTemplate = "\nif (!%s.containsKey(%s)) {" + CODE_TO_ADD_MAPENTRY
+	protected static final String IF_NOT_CONTAINS_MAP_KEY_TEMPLATE = "\nif (!%s.containsKey(%s)) {" + CODE_TO_ADD_MAPENTRY
 			+ "\n}";
 
 	/** The Constant ifNullMapKeyICDTemplate. */
-	protected static final String ifNullMapKeyICDTemplate = "\nif (parentTargetICD.children != null) {"
-			+ "\nkeyTargetICD = parentTargetICD.children.get(%s);" + "\n}" + "\nif (keyTargetICD == null) {"
-			+ CODE_TO_ADD_MAPENTRY + "\n} else {" + CODE_TO_ADD_ELSE_MAPENTRY + "\n}";
+	protected static final String IF_NULL_MAP_KEY_ICD_TEMPLATE = "\nif (parentTargetICD.children != null) {"
+			+ KEY_TARGET_ICD + "\n}" + IF_KEY_TARGET_ICD
+			+ CODE_TO_ADD_MAPENTRY + ELSE + CODE_TO_ADD_ELSE_MAPENTRY + "\n}";
 
 	/** The Constant addMapEntryTemplate. */
-	protected static final String addMapEntryTemplate = CODE_TO_CREATE_MAPKEY + " " + CODE_TO_CREATE_MAPVALUE + " "
-			+ "\n%s.put(%s, %s);"
+	protected static final String ADD_MAP_ENTRY_TEMPLATE = CODE_TO_CREATE_MAPKEY + " " + CODE_TO_CREATE_MAPVALUE + " "
+			+ PUT
 			+ "\nkeyTargetICD = IndexedCollectionsDtoFactory.create(parentTargetICD, %s, %s + \"<K>\", true);"
 			+ "\nvalueTargetICD = IndexedCollectionsDtoFactory.create(parentTargetICD, %s, %s + \"<V>\", true);";
 
 	/** The Constant retrieveLastMapKeyTemplate. */
-	protected static final String retrieveLastMapKeyTemplate = "\nidx = parentTargetICD.children.size() / 2 - 1;"
+	protected static final String RETRIEVE_LAST_MAP_KEY_TEMPLATE = "\nidx = parentTargetICD.children.size() / 2 - 1;"
 			+ "\nkeyTargetICD = parentTargetICD.children.get(idx + \"<K>\");"
 			+ "\nvalueTargetICD = parentTargetICD.children.get(idx + \"<V>\");";
 
 	/** The Constant ifNullMapKeyIcdReturnTemplate. */
-	protected static final String ifNullMapKeyIcdReturnTemplate = "\nkeyTargetICD = parentTargetICD.children.get(%s);"
-			+ "\nif (keyTargetICD == null) {" + "\nLOGGER.%s(\"%s\");" + "\nreturn;" + "\n}"
+	protected static final String IF_NULL_MAP_KEY_ICD_RETURN_TEMPLATE = KEY_TARGET_ICD
+			+ IF_KEY_TARGET_ICD + LOGGER + RETURN + "\n}"
 			+ "\nvalueTargetICD = parentTargetICD.children.get(%s);";
 
 	/** The Constant ifNullMapKeyIcdContinueTemplate. */
-	protected static final String ifNullMapKeyIcdContinueTemplate = "\nkeyTargetICD = parentTargetICD.children.get(%s);"
-			+ "\nif (keyTargetICD == null) {" + "\nLOGGER.%s(\"%s\");" + "\ncontinue;" + "\n}"
+	protected static final String IF_NULL_MAP_KEY_ICD_CONTINUE_TEMPLATE = KEY_TARGET_ICD
+			+ IF_KEY_TARGET_ICD + LOGGER + CONTINUE + "\n}"
 			+ "\nvalueTargetICD = parentTargetICD.children.get(%s);";
 
 	/** The Constant addMapEntryUpdateIcdTemplate. */
-	protected static final String addMapEntryUpdateIcdTemplate = "\n%s.put(%s, %s);"
+	protected static final String ADD_MAP_ENTRY_UPDATE_ICD_TEMPLATE = PUT
 			+ "\nvalueTargetICD.indexedObject = %s;";
 
 	/** The Constant retrieveMapKeyFromIcdTemplate. */
-	protected static final String retrieveMapKeyFromIcdTemplate = "\n%s %s = (%s) keyTargetICD.indexedObject;";
+	protected static final String RETRIEVE_MAP_KEY_FROM_ICD_TEMPLATE = "\n%s %s = (%s) keyTargetICD.indexedObject;";
 
 	/** The Constant retrieveMapValueFromIcdTemplate. */
-	protected static final String retrieveMapValueFromIcdTemplate = "\n%s %s = (%s) valueTargetICD.indexedObject;";
+	protected static final String RETRIEVE_MAP_VALUE_FROM_ICD_TEMPLATE = "\n%s %s = (%s) valueTargetICD.indexedObject;";
 
 	/**
 	 * Fetch field type name.
@@ -500,12 +431,8 @@ public abstract class AbstractTemplate {
 	 */
 	protected static String fetchFieldTypeName(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
 			OtcCommandDto otcCommandDto, boolean createNewVarName, Map<String, String> varNamesMap) {
-		boolean isVarAlreadyCreated = false;
-		if (!createNewVarName) {
-			if (varNamesMap.containsKey(otcCommandDto.enumTargetSource + otcCommandDto.tokenPath)) {
-				isVarAlreadyCreated = true;
-			}
-		}
+		boolean isVarAlreadyCreated = (!createNewVarName &&
+				varNamesMap.containsKey(otcCommandDto.enumTargetSource + otcCommandDto.tokenPath));
 		String fqTypeName = "";
 		if (!isVarAlreadyCreated) {
 			if (otcCommandDto.fieldType.isArray()) {
@@ -577,14 +504,6 @@ public abstract class AbstractTemplate {
 			clzName = fieldType.getTypeName();
 		} else if (!fieldType.isInterface()) {
 			clzName = fieldType.getName();
-//		} else if (fieldType.equals(List.class)) {
-//			clzName = ArrayList.class.getName();
-//		} else if (fieldType.equals(Set.class)) {
-//			clzName = HashSet.class.getName();
-//		} else if (fieldType.equals(Queue.class)) {
-//			clzName = LinkedList.class.getName();
-//		} else if (fieldType.equals(Map.class)) {
-//			clzName = HashMap.class.getName();
 		} else if (concreteTypes.containsKey(fieldType)) {
 			clzName = concreteTypes.get(fieldType);
 		}
@@ -737,7 +656,7 @@ public abstract class AbstractTemplate {
 					"Invalid call to the method! " + "Either one of idx or idxPrefix only is required.");
 		}
 		if (!memberOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to the method! " + "Not a Colleciton / Map member.");
+			throw new CodeGeneratorException("", "Invalid call to the method! " + "Not a Collection / Map member.");
 		}
 		String mapKeyValueRef = null;
 		if (memberOCD.isMapMember()) {
@@ -747,7 +666,7 @@ public abstract class AbstractTemplate {
 				mapKeyValueRef = OtcConstants.MAP_VALUE_REF;
 			}
 		}
-		String icdKey = null;
+		String icdKey;
 		if (idxPrefix != null) {
 			if (memberOCD.isMapMember()) {
 				icdKey = idxPrefix + " + " + "\"" + mapKeyValueRef + "\"";
@@ -782,7 +701,7 @@ public abstract class AbstractTemplate {
 		if (targetOCC.isLeaf()) {
 			if (value == null) {
 				if (sourceOCD == null) {
-					throw new CodeGeneratorException("", "Invalid call to method in OTC-command : "
+					throw new CodeGeneratorException("", INVALID_CALL_TO_TEMPLATE
 							+ targetOCC.commandId + "! Both value and SourceOCD cannot be null for a leaf-token.");
 				}
 				valOrVar = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
@@ -821,7 +740,7 @@ public abstract class AbstractTemplate {
 	}
 
 	protected static String addInlineComments(String inlineComments, String generatedCode) {
-		if (CommonUtils.isEmpty(generatedCode)) {
+		if (CommonUtils.isTrimmedAndEmpty(generatedCode)) {
 			return null;
 		}
 		return inlineComments + generatedCode;

@@ -74,15 +74,15 @@ public class SetterTemplate extends AbstractTemplate {
 		value = createConvertExpression(otcCommandDto, value);
 		if (otcCommandDto.enableSetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			setterCode = String.format(helperSetterTemplate, helper, otcCommandDto.setter, parentVarName, value);
+			setterCode = String.format(HELPER_SETTER_TEMPLATE, helper, otcCommandDto.setter, parentVarName, value);
 		} else {
 			if (DateConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				String clz = fetchSanitizedTypeName(targetOCC, otcCommandDto);
-				setterCode = String.format(dateConverterTemplate, parentVarName, otcCommandDto.setter, value,
+				setterCode = String.format(DATE_CONVERTER_TEMPLATE, parentVarName, otcCommandDto.setter, value,
 						clz);
 			} else {
-				setterCode = String.format(setterTemplate, parentVarName, otcCommandDto.setter, value);
+				setterCode = String.format(SETTER_TEMPLATE, parentVarName, otcCommandDto.setter, value);
 			}
 		}
 		return addInlineComments(inlineComments, setterCode);

@@ -94,7 +94,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				otcChainDto = compiledInfo.targetOtcChainDto;
 				otcCommandDto = compiledInfo.targetOCDStem;
 			}
-			if (otcChainDto == null || CommonUtils.isEmpty(otcChainDto.otcChain)) {
+			if (otcChainDto == null || CommonUtils.isTrimmedAndEmpty(otcChainDto.otcChain)) {
 				continue;
 			}
 			String otcChain = otcChainDto.otcChain;

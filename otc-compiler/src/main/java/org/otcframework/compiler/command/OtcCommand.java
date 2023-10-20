@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -53,13 +54,13 @@ public class OtcCommand {
 	public static final String CODE_TO_IMPORT = "CODE_TO_IMPORT";
 
 	/** The Constant otcBinDir. */
-	private static final String otcBinDir = OtcConfig.getCompiledCodeLocation();
+	private static final String OTC_BIN_DIR = OtcConfig.getCompiledCodeLocation();
 
 	/** The Constant otcSourceDir. */
-	private static final String otcSourceDir = OtcConfig.getOtcSourceLocation();
+	private static final String OTC_SOURCE_DIR = OtcConfig.getOtcSourceLocation();
 
 	/** The Constant sourceFileLocation. */
-	private static final String sourceFileLocation = OtcConfig.getSourceCodeLocation();
+	private static final String SOURCE_FILE_LOCATION = OtcConfig.getSourceCodeLocation();
 
 	/** The var names set. */
 	private Set<String> varNamesSet = new HashSet<>();
@@ -95,19 +96,19 @@ public class OtcCommand {
 	 * @return the string
 	 */
 	public String createJavaFile(ClassDto classDto) {
-		File file = new File(sourceFileLocation);
+		File file = new File(SOURCE_FILE_LOCATION);
 		if (!file.exists()) {
 			file.mkdir();
 		}
 		String fileName = classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
-		String fileLocationAndName = sourceFileLocation + fileName;
+		String fileLocationAndName = SOURCE_FILE_LOCATION + fileName;
 		file = new File(fileLocationAndName);
 		FileOutputStream fileOutputStream = null;
 		File dir = null;
 		if (classDto.packageName == null) {
-			dir = new File(sourceFileLocation);
+			dir = new File(SOURCE_FILE_LOCATION);
 		} else {
-			dir = new File(sourceFileLocation + classDto.packageName.replace(".", File.separator));
+			dir = new File(SOURCE_FILE_LOCATION + classDto.packageName.replace(".", File.separator));
 		}
 		try {
 			if (!dir.exists()) {
@@ -121,13 +122,13 @@ public class OtcCommand {
 				fileOutputStream.flush();
 			}
 		} catch (IOException e) {
-			LOGGER.warn("", e);
+			LOGGER.warn(e.getMessage(), e);
 		} finally {
 			if (fileOutputStream != null) {
 				try {
 					fileOutputStream.close();
 				} catch (IOException e) {
-					LOGGER.warn("", e);
+					LOGGER.warn(e.getMessage(), e);
 				}
 			}
 		}
@@ -148,20 +149,16 @@ public class OtcCommand {
 		targetOCC.appendCode(methodEndCode);
 		targetOCC.appendCode("\n}");
 		StringBuilder importsBuilder = new StringBuilder();
-//		for (String fqTypeName : targetOCC.factoryClassDto.retrieveImportFqNames()) {
-//			importsBuilder.append("\nimport ").append(fqTypeName).append(";");
-//		}
-		targetOCC.factoryClassDto.retrieveImportFqNames().forEach(fqTypeName -> {
-			importsBuilder.append("\nimport ").append(fqTypeName).append(";");
-		});
+		targetOCC.factoryClassDto.retrieveImportFqNames().forEach(fqTypeName ->
+			importsBuilder.append("\nimport ").append(fqTypeName).append(";")
+		);
 		StringBuilder codeBuilder = targetOCC.factoryClassDto.codeBuilder;
 		int idx = codeBuilder.indexOf(CODE_TO_IMPORT);
 		codeBuilder.replace(idx, idx + CODE_TO_IMPORT.length(), importsBuilder.toString());
 		createJavaFile(targetOCC.factoryClassDto);
 		String fqClzName = targetOCC.factoryClassDto.className;
 		String factoryClass = codeBuilder.toString();
-		JavaCodeStringObject javaStringObject = new JavaCodeStringObject(fqClzName, factoryClass);
-		return javaStringObject;
+		return new JavaCodeStringObject(fqClzName, factoryClass);
 	}
 
 	/**
@@ -321,13 +318,17 @@ public class OtcCommand {
 	private void appendBeginClass(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger, boolean isModule) {
 		String fileName = targetOCC.factoryClassDto.fullyQualifiedClassName.replace(".", File.separator);
-		File file = new File(otcBinDir + fileName + ".class");
-		if (file.exists()) {
-			file.delete();
+		File file = new File(OTC_BIN_DIR + fileName + ".class");
+		try {
+			Files.delete(file.toPath());
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
 		}
-		file = new File(otcSourceDir + fileName + ".java");
-		if (file.exists()) {
-			file.delete();
+		file = new File(OTC_SOURCE_DIR + fileName + ".java");
+		try {
+			Files.delete(file.toPath());
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
 		}
 		targetOCC.factoryClassDto.codeBuilder = new StringBuilder();
 		targetOCC.factoryClassDto.clearImports();
@@ -348,7 +349,6 @@ public class OtcCommand {
 		factoryClassBegin += PcdInitTemplate.generateMemberPcdCode(targetOCC, sourceOCC, varNamesSet);
 		appendMethodCall(targetOCC, targetClz, sourceClz);
 		targetOCC.appendCode(factoryClassBegin);
-		return;
 	}
 
 	/**
@@ -358,7 +358,6 @@ public class OtcCommand {
 	 */
 	public void appendPreloopVars(TargetOtcCommandContext targetOCC) {
 		targetOCC.appendCode(PreloopVarsTemplate.generateCode());
-		return;
 	}
 
 	/**
@@ -369,7 +368,6 @@ public class OtcCommand {
 	public void appendAssignAnchoredPcdToParentPcd(TargetOtcCommandContext targetOCC) {
 		String assignAnchoredPcdToMemberPcdCode = PcdInitTemplate.generateAssignAnchoredPcdToParentPcdTemplateCode();
 		targetOCC.appendCode(assignAnchoredPcdToMemberPcdCode);
-		return;
 	}
 
 	/**
@@ -380,7 +378,6 @@ public class OtcCommand {
 	public void appendAssignParentPcdToAnchoredPcd(TargetOtcCommandContext targetOCC) {
 		String assignAnchoredPcdToMemberPcdCode = PcdInitTemplate.generateAssignParentPcdToAnchoredPcdTemplateCode();
 		targetOCC.appendCode(assignAnchoredPcdToMemberPcdCode);
-		return;
 	}
 
 	/**
@@ -420,7 +417,6 @@ public class OtcCommand {
 			icdCodeBuilder.append(retrieveMemberCode);
 		}
 		targetOCC.appendCode(icdCodeBuilder);
-		return;
 	}
 
 	/**
@@ -435,13 +431,12 @@ public class OtcCommand {
 			Integer idx, LogLevel logLevel) {
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
 		if (sourceOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
-					+ "! Token should not be of a member for this operation.");
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE + targetOCC.commandId
+					+ AbstractTemplate.TOKEN_SHOULD_NOT_BE);
 		}
 		String ifNullReturnCode = GetterIfNullReturnTemplate.generateGetterIfNullReturnCode(targetOCC, sourceOCC, false,
 				logLevel, varNamesSet, varNamesMap);
 		targetOCC.appendCode(ifNullReturnCode);
-		return;
 	}
 
 	/**
@@ -455,7 +450,8 @@ public class OtcCommand {
 			LogLevel logLevel) {
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
 		if (sourceOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE
+					+ targetOCC.commandId
 					+ "! Token should not be of a Collection/Map member for this operation.");
 		}
 		StringBuilder ifNullReturnCodeBuilder = new StringBuilder();
@@ -467,7 +463,6 @@ public class OtcCommand {
 			sourceOCC.otcCommandDto = memberOCD;
 		}
 		targetOCC.appendCode(ifNullReturnCodeBuilder);
-		return;
 	}
 
 	/**
@@ -501,8 +496,7 @@ public class OtcCommand {
 			otcCommandDto = targetOCC.otcCommandDto;
 		}
 		if (!otcCommandDto.isCollectionOrMap()) {
-			throw new CodeGeneratorException("",
-					"Invalid call to method in OTC-command : " + targetOCC.commandId
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE + targetOCC.commandId
 							+ "! Token should be a collection/map for this operation for target:otcChain : "
 							+ otcCommandDto.tokenPath);
 		}
@@ -518,7 +512,6 @@ public class OtcCommand {
 		}
 		targetOCC.loopsCounter++;
 		targetOCC.appendCode(forLoopCode);
-		return;
 	}
 
 	/**
@@ -566,7 +559,6 @@ public class OtcCommand {
 			}
 		}
 		targetOCC.appendCode(ifNullReturnCodeBuilder);
-		return;
 	}
 
 	/**
@@ -578,7 +570,7 @@ public class OtcCommand {
 	public void appendInitIfNullTargetReturn(TargetOtcCommandContext targetOCC, LogLevel logLevel) {
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
 		if (targetOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE + targetOCC.commandId
 					+ "! Token should not be of a member for this operation.");
 		}
 		StringBuilder ifNullReturnCodeBuilder = new StringBuilder();
@@ -599,7 +591,6 @@ public class OtcCommand {
 			}
 		}
 		targetOCC.appendCode(ifNullReturnCodeBuilder);
-		return;
 	}
 
 	/**
@@ -611,7 +602,7 @@ public class OtcCommand {
 	public void appendInitIfNullTargetContinue(TargetOtcCommandContext targetOCC, LogLevel logLevel) {
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
 		if (targetOCD.isCollectionOrMapMember()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE + targetOCC.commandId
 					+ "! Token should not be of a member for this operation.");
 		}
 		StringBuilder ifNullContinueCodeBuilder = new StringBuilder();
@@ -619,7 +610,6 @@ public class OtcCommand {
 				varNamesMap);
 		ifNullContinueCodeBuilder.append(ifNullContinueCode);
 		targetOCC.appendCode(ifNullContinueCodeBuilder);
-		return;
 	}
 
 	/**
@@ -654,7 +644,6 @@ public class OtcCommand {
 					createNewVarName, varNamesSet, varNamesMap);
 		}
 		targetOCC.appendCode(addToCollectionCode);
-		return;
 	}
 
 	/**
@@ -686,7 +675,6 @@ public class OtcCommand {
 					varNamesSet, varNamesMap);
 		}
 		targetOCC.appendCode(addToCollectionCode);
-		return;
 	}
 
 	/**
@@ -701,7 +689,6 @@ public class OtcCommand {
 		String getSetCode = GetSetTemplate.generateCode(targetOCC, sourceOCC, createNewVarName, varNamesSet,
 				varNamesMap);
 		targetOCC.appendCode(getSetCode);
-		return;
 	}
 
 	/**
@@ -716,7 +703,6 @@ public class OtcCommand {
 		String addMapKeysCode = AddMapKeyTemplate.generateCode(targetOCC, sourceOCD, false, value, idx, varNamesSet,
 				varNamesMap);
 		targetOCC.appendCode(addMapKeysCode);
-		return;
 	}
 
 	/**
@@ -733,7 +719,6 @@ public class OtcCommand {
 		String addMapValueCode = AddMapValueTemplate.generateCode(targetOCC, sourceOCC, false, value, idx, logLevel,
 				varNamesSet, varNamesMap);
 		targetOCC.appendCode(addMapValueCode);
-		return;
 	}
 
 	/**
@@ -973,7 +958,7 @@ public class OtcCommand {
 	 * @param targetOCC the target OCC
 	 */
 	public void appendIncrementOffsetIdx(TargetOtcCommandContext targetOCC) {
-		targetOCC.appendCode(AbstractTemplate.incrementOffsetIdx);
+		targetOCC.appendCode(AbstractTemplate.INCREMENT_OFFSET_IDX);
 	}
 
 	/**
@@ -982,6 +967,6 @@ public class OtcCommand {
 	 * @param targetOCC the target OCC
 	 */
 	public void appendInitOffsetIdx(TargetOtcCommandContext targetOCC) {
-		targetOCC.appendCode(AbstractTemplate.initOffsetIdx);
+		targetOCC.appendCode(AbstractTemplate.INIT_OFFSET_IDX);
 	}
 }

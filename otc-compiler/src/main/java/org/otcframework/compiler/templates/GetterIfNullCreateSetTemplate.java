@@ -141,9 +141,9 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		String getterCode = null;
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			getterCode = String.format(helperGetterTemplate, fieldType, varName, helper, getter, parentVarName);
+			getterCode = String.format(HELPER_GETTER_TEMPLATE, fieldType, varName, helper, getter, parentVarName);
 		} else {
-			getterCode = String.format(getterTemplate, fieldType, varName, parentVarName, getter);
+			getterCode = String.format(GETTER_TEMPLATE, fieldType, varName, parentVarName, getter);
 		}
 		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize,
 				createNewVarName, varNamesSet, varNamesMap);

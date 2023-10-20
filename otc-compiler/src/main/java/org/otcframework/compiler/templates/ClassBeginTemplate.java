@@ -70,9 +70,9 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 			sourceType = "Object";
 			rootSourceVariable = "arg1";
 		}
-		String classBeginBody = String.format(mainClassBeginCodeTemplate, packageName, mainClassName, sourceType,
+		String classBeginBody = String.format(MAIN_CLASS_BEGIN_CODE_TEMPLATE, packageName, mainClassName, sourceType,
 				targetType, targetType, sourceType, rootSourceVariable, targetType, rootTargetVariable, targetType);
-		if (CommonUtils.isEmpty(packageName)) {
+		if (CommonUtils.isTrimmedAndEmpty(packageName)) {
 			classBeginBody = classBeginBody.replace("package ;\n", "");
 		}
 		return classBeginBody;
@@ -90,7 +90,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 */
 	public static String generateFactoryClassCode(ClassDto classDto, String sourceType, String targetType,
 			boolean addLogger, Set<String> varNamesSet) {
-		return generateClassCode(classDto, sourceType, targetType, addLogger, factoryClassBeginCodeTemplate,
+		return generateClassCode(classDto, sourceType, targetType, addLogger, FACTORY_CLASS_BEGIN_CODE_TEMPLATE,
 				varNamesSet);
 	}
 
@@ -106,7 +106,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 */
 	public static String generateModuleClassCode(ClassDto classDto, String sourceType, String targetType,
 			boolean addLogger, Set<String> varNamesSet) {
-		return generateClassCode(classDto, sourceType, targetType, addLogger, factoryModuleClassBeginCodeTemplate,
+		return generateClassCode(classDto, sourceType, targetType, addLogger, FACTORY_CLASS_BEGIN_CODE_TEMPLATE,
 				varNamesSet);
 	}
 
@@ -140,7 +140,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 			sourceVar = "arg1";
 		}
 		if (!addLogger) {
-			String supportClassBeginTemplateCopy = template.replace(loggerInitTemplate, "");
+			String supportClassBeginTemplateCopy = template.replace(LOGGER_INIT_TEMPLATE, "");
 			classBeginBody = String.format(supportClassBeginTemplateCopy, packageName, classDto.className, sourceType,
 					sourceVar, targetType, targetVar);
 		} else {
@@ -149,7 +149,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 			classBeginBody = String.format(template, packageName, classDto.className, classDto.className, sourceType,
 					sourceVar, targetType, targetVar);
 		}
-		if (CommonUtils.isEmpty(packageName)) {
+		if (CommonUtils.isTrimmedAndEmpty(packageName)) {
 			classBeginBody = classBeginBody.replace("package ;\n", "");
 		}
 		return classBeginBody;
