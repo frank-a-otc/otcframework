@@ -42,5 +42,5 @@ public interface CodeExecutor<S, T> {
 	 * @param config    the config
 	 * @return the t
 	 */
-	public T execute(S srcObject, IndexedCollectionsDto sourcePCD, Map<String, Object> config);
+	public T execute(S srcObject, IndexedCollectionsDto sourcePCD, Map<String, Object> appData);
 }
