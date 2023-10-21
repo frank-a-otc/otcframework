@@ -110,8 +110,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 			sourceOCC.otcCommandDto = sourceOCD;
 		}
-		sourceCollectionsCount = sourceOCC.collectionsCount;
-		sourceOCD = sourceOCC.otcCommandDto;
 		OtcCommandDto memberOCD = null;
 		while (targetCollectionsCount > 0) {
 			otcCommand.appendInitUptoNextCollectionWithContinue(targetOCC, LogLevel.WARN);

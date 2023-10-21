@@ -22,7 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.TargetOtcCommandContext;

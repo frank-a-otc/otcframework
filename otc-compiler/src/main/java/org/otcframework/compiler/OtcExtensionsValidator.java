@@ -41,15 +41,10 @@ final class OtcExtensionsValidator {
 	 * Validate extensions.
 	 *
 	 * @param script                   the script
-	 * @param targetClz                the target clz
 	 * @param builderTargetOtcChainDto the builder target otc chain dto
-	 * @param sourceClz                the source clz
-	 * @param builderSourceOtcChainDto the builder source otc chain dto
 	 * @return true, if successful
 	 */
-	static boolean validateExtensions(ScriptDto script, Class<?> targetClz,
-			OtcChainDto.Builder builderTargetOtcChainDto, Class<?> sourceClz,
-			OtcChainDto.Builder builderSourceOtcChainDto) {
+	static boolean validateExtensions(ScriptDto script, OtcChainDto.Builder builderTargetOtcChainDto) {
 		String targetOtcChain = null;
 		if (script.command instanceof Copy) {
 			targetOtcChain = ((Copy) script.command).to.objectPath;

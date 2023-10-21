@@ -231,8 +231,7 @@ final class OtcLexicalizer {
             ScriptDto scriptDto = new ScriptDto(otcCommand);
             Execute execute = scriptDto.command instanceof Execute ? (Execute) scriptDto.command : null;
             if (isValues || (execute != null && (execute.converter != null || execute.module != null))) {
-                OtcExtensionsValidator.validateExtensions(scriptDto, targetClz, builderTargetOtcChainDto, sourceClz,
-                        builderSourceOtcChainDto);
+                OtcExtensionsValidator.validateExtensions(scriptDto, builderTargetOtcChainDto);
                 if (isValues) {
                     scriptDto.hasSetValues = true;
                 }

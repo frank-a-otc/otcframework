@@ -62,7 +62,6 @@ final class OtcSytaxProcessor {
 		if (rawOtcToken.contains(OtcConstants.MAP_BEGIN_REF) || rawOtcToken.contains(OtcConstants.MAP_PRE_ANCHOR)) {
 			// then chain has a map
 			// retrieve key-value notation - <K> / <V>
-			idxMapNotation = rawOtcToken.indexOf(OtcConstants.CLOSE_BRACKET);
 			MapNotationProcessor.process(script.command.id, otcCommandDto, rawOtcToken);
 			isMapNotation = true;
 		} else if (rawOtcToken.contains(OtcConstants.OPEN_BRACKET)) {
