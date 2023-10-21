@@ -164,10 +164,8 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 			if (((Collection) indexedObject).isEmpty()) {
 				return null;
 			}
-		} else if (indexedObject instanceof Map) {
-			if (((Map) indexedObject).isEmpty()) {
-				return null;
-			}
+		} else if (indexedObject instanceof Map && ((Map) indexedObject).isEmpty()) {
+			return null;
 		}
 		String key;
 		if (otcCommandContext.hasAncestralCollectionOrMap()) {

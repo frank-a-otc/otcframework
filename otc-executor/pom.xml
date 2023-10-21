@@ -82,13 +82,7 @@
 		<dependency>
 			<groupId>org.otcframework</groupId>
 			<artifactId>dateconverters</artifactId>
-		</dependency> 
-<!-- 		
-		<dependency>
-			<groupId>org.msgpack</groupId>
-			<artifactId>msgpack</artifactId>
 		</dependency>
- -->
 	</dependencies>
 
 </project>
