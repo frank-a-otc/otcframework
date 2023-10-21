@@ -119,18 +119,9 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	 */
 	private static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto, String value,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-		String concreteType = fetchConcreteTypeName(targetOCC, otcCommandDto);
+		fetchConcreteTypeName(targetOCC, otcCommandDto);
 		String fieldType = fetchFieldTypeName(targetOCC, null, otcCommandDto, createNewVarName, varNamesMap);
 		String varName = createVarName(otcCommandDto, createNewVarName, varNamesSet, varNamesMap);
-		if (otcCommandDto.isArray()) {
-			if (TARGET_SOURCE.TARGET == otcCommandDto.enumTargetSource) {
-				if (arraySize != null) {
-					concreteType = concreteType.replace("[]", "[" + arraySize + "]");
-				} else {
-					concreteType = concreteType.replace("[]", "[" + 1 + "]");
-				}
-			}
-		}
 		String parentVarName = null;
 		if (otcCommandDto.isFirstNode) {
 			parentVarName = CommonUtils.initLower(otcCommandDto.field.getDeclaringClass().getSimpleName());

@@ -44,7 +44,7 @@ final class OtcSytaxProcessor {
 	 * @param rawOtcToken   the raw otc token
 	 * @return true, if successful
 	 */
-	static boolean process(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto, String otcChain,
+	static boolean process(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto,
 			String[] otcTokens, String rawOtcToken) {
 		boolean isAnchored = rawOtcToken.contains(OtcConstants.ANCHOR);
 		if (isAnchored) {
@@ -89,7 +89,7 @@ final class OtcSytaxProcessor {
 		}
 		otcCommandDto.fieldName = fldName;
 		// --- process semantics
-		OtcSemanticsProcessor.process(script, clz, otcChain, otcCommandDto, otcTokens);
+		OtcSemanticsProcessor.process(script, clz, otcCommandDto, otcTokens);
 		String otcToken;
 		if (isCollectionNotation) {
 			otcToken = fldName + OtcConstants.ARR_REF;

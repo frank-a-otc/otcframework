@@ -497,7 +497,7 @@ final class OtcLexicalizer {
                 if (otcCommandDto.isFirstNode) {
                     stemOCD = otcCommandDto;
                 }
-                OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
+                OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcTokens, rawOtcToken);
                 if (otcCommandDto.isCollection()) {
                     builderOtcChainDto.incrementCollectionCount();
                     otcCommandDto = otcCommandDto.children.get(otcCommandDto.fieldName);
@@ -531,7 +531,7 @@ final class OtcLexicalizer {
             otcCommandDto = OtcCommandDtoFactory.create(commandId, enumTargetOrSource, otcToken,
                     tokenPathBuilder.toString(), idx, null, isFirstNode, null, null, null, isLeaf);
             otcCommandDto.parent = parentOCD;
-            OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcChain, otcTokens, rawOtcToken);
+            OtcSytaxProcessor.process(script, parentClz, otcCommandDto, otcTokens, rawOtcToken);
             if (parentOCD != null) {
                 parentOCD.addChild(otcCommandDto);
             }

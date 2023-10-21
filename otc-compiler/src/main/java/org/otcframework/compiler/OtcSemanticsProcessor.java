@@ -59,10 +59,10 @@ final class OtcSemanticsProcessor {
 	 * @param otcTokens     the otc tokens
 	 * @return true, if successful
 	 */
-	static boolean process(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto,
+	static boolean process(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto,
 			String[] otcTokens) {
 		try {
-			checkNotations(script, clz, otcChain, otcCommandDto);
+			checkNotations(script, clz, otcCommandDto);
 			String concreteTypeName = otcCommandDto.concreteTypeName;
 			Class<?> concreteType;
 			if (concreteTypeName != null) {
@@ -90,7 +90,7 @@ final class OtcSemanticsProcessor {
 	 * @param clz           the clz
 	 * @param otcCommandDto the otc command dto
 	 */
-	private static void checkNotations(ScriptDto script, Class<?> clz, String otcChain, OtcCommandDto otcCommandDto) {
+	private static void checkNotations(ScriptDto script, Class<?> clz, OtcCommandDto otcCommandDto) {
 		if (otcCommandDto.fieldName.equals(OtcConstants.ROOT)) {
 			otcCommandDto.declaringClass = clz;
 			return;
