@@ -38,7 +38,7 @@ import java.util.Set;
  */
 public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			GetterIfNullReturnTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -75,7 +75,7 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 		} else {
 			getterCode = String.format(GETTER_TEMPLATE, fieldType, varName, parentVarName, getterName);
 		}
-		return addInlineComments(inlineComments, getterCode);
+		return addInlineComments(INLINE_COMMENTS, getterCode);
 	}
 
 	/**
@@ -143,6 +143,6 @@ public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 			ifNotNullParentChildGetterCode = String.format(GETTER_IF_NULL_RETURN_TEMPLATE, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
-		return addInlineComments(inlineComments, ifNotNullParentChildGetterCode);
+		return addInlineComments(INLINE_COMMENTS, ifNotNullParentChildGetterCode);
 	}
 }

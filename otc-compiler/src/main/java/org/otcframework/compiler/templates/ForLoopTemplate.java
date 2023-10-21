@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public final class ForLoopTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			ForLoopTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -79,7 +79,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		StringBuilder forLoopCodeBuilder = new StringBuilder();
 		String preSourceLoopTemplateCopy = PRE_LOOP_TEMPLATE;
 		if (sourceOCD.isMap()) {
-			preSourceLoopTemplateCopy = preSourceLoopTemplateCopy.replace(".size();", ".size() / 2;");
+			preSourceLoopTemplateCopy = preSourceLoopTemplateCopy.replace(SIZE, SIZE_DIVIDED_BY_2);
 		}
 		if (!sourceOCC.hasAncestralCollectionOrMap()) {
 			memberPcd = "sourceICD";
@@ -88,7 +88,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			forLoopCodeBuilder.append(String.format(preSourceLoopTemplateCopy, idx, memberPcd, icdId, idx, idx, idx,
 					logLevel, logMsg, idx, idx));
 		} else {
-			memberPcd = "memberICD" + (idx - 1);
+			memberPcd = MEMBER_ICD_VAR + (idx - 1);
 			forLoopCodeBuilder.append(String.format(preSourceLoopTemplateCopy, idx, memberPcd, icdId, idx, idx, idx,
 					logLevel, logMsg, idx, idx, idx));
 		}
@@ -100,7 +100,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		String concreteType = fetchConcreteTypeName(targetOCC, memberOCD);
 		icdId = createIcdKey(memberOCD, idxVar, null);
 		forLoopCodeBuilder.append(String.format(RETRIEVE_MEMBER_ICD, idx, parentPcd, icdId));
-		memberPcd = "memberICD" + idx;
+		memberPcd = MEMBER_ICD_VAR + idx;
 		if (!sourceOCC.hasDescendantCollectionOrMap()) {
 			forLoopCodeBuilder.append(String.format(LAST_POST_SOURCE_LOOP_TEMPLATE, idx, logLevel, logMsg, fieldType,
 					varName, concreteType, memberPcd));
@@ -111,7 +111,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 						String.format(RETRIEVE_MEMBER_FROM_ICD_TEMPLATE, fieldType, varName, concreteType, memberPcd));
 			}
 		}
-		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, forLoopCodeBuilder.toString());
 	}
 
 	/**
@@ -142,7 +142,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			memberPcd = "targetICD";
 			icdId = targetOCD.tokenPath;
 		} else {
-			memberPcd = "memberICD" + (idx - 1);
+			memberPcd = MEMBER_ICD_VAR + (idx - 1);
 		}
 		icdId = createIcdKey(icdId);
 		StringBuilder forLoopCodeBuilder = new StringBuilder();
@@ -154,7 +154,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
 			String preLoopTemplateCopy = null;
 			if (targetOCD.isMap()) {
-				preLoopTemplateCopy = PRE_LOOP_TEMPLATE.replace(".size();", ".size() / 2;");
+				preLoopTemplateCopy = PRE_LOOP_TEMPLATE.replace(SIZE, SIZE_DIVIDED_BY_2);
 			} else {
 				preLoopTemplateCopy = PRE_LOOP_TEMPLATE;
 			}
@@ -166,7 +166,7 @@ public final class ForLoopTemplate extends AbstractTemplate {
 		} else {
 			String varName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
 			if (targetOCD.isMap()) {
-				forLoopCodeBuilder.append(String.format(PRE_TARGET_LOOP_TEMPLATE.replace(".size();", ".size() / 2;"), idx,
+				forLoopCodeBuilder.append(String.format(PRE_TARGET_LOOP_TEMPLATE.replace(SIZE, SIZE_DIVIDED_BY_2), idx,
 						idx, memberPcd, icdId, idx, idx, memberPcd, varName, icdId, idx, idx, idx));
 			} else {
 				forLoopCodeBuilder.append(String.format(PRE_TARGET_LOOP_TEMPLATE, idx, idx, memberPcd, icdId, idx, idx,
@@ -191,6 +191,6 @@ public final class ForLoopTemplate extends AbstractTemplate {
 			forLoopCodeBuilder.append(postLoopCode);
 			targetOCC.otcCommandDto = memberOCD;
 		}
-		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, forLoopCodeBuilder.toString());
 	}
 }

@@ -38,7 +38,7 @@ import java.util.Set;
  */
 public class IfNullContinueTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			IfNullContinueTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new if null continue template.
@@ -93,6 +93,6 @@ public class IfNullContinueTemplate extends AbstractTemplate {
 			ifNotNullParentChildGetterCode = String.format(GETTER_IF_NULL_CONTINUE_TEMPLATE, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
-		return addInlineComments(inlineComments, ifNotNullParentChildGetterCode);
+		return addInlineComments(INLINE_COMMENTS, ifNotNullParentChildGetterCode);
 	}
 }

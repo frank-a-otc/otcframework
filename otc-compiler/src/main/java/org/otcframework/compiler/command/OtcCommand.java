@@ -767,7 +767,7 @@ public class OtcCommand {
 	 * @param value     the value
 	 */
 	public void appendSetter(TargetOtcCommandContext targetOCC, String value) {
-		String setterCode = SetterTemplate.generateCode(targetOCC, false, value, varNamesSet, varNamesMap);
+		String setterCode = SetterTemplate.generateCode(targetOCC, value, varNamesSet, varNamesMap);
 		targetOCC.appendCode(setterCode);
 	}
 

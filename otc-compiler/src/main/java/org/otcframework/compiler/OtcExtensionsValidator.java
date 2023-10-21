@@ -34,6 +34,9 @@ import org.otcframework.compiler.exception.OtcExtensionsException;
  */
 final class OtcExtensionsValidator {
 
+	private OtcExtensionsValidator() {}
+
+	private static final String LEXICALIZATION_FAILURE = "Otc Lexicalization-phase failure in OTC-command : ";
 	/**
 	 * Validate extensions.
 	 *
@@ -53,46 +56,39 @@ final class OtcExtensionsValidator {
 		} else {
 			targetOtcChain = ((Execute) script.command).target.objectPath;
 		}
-//		if (script.command instanceof Execute) {
-//			if (targetOtcChain.contains(OtcConstants.ANCHOR)) {
-//				throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
-//						+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
-//			}
-//		}
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
 			if (copy.from != null && copy.from.values != null && copy.from.objectPath != null) {
 				throw new OtcExtensionsException("",
-						"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+						LEXICALIZATION_FAILURE + script.command.id
 								+ ". Both 'source: from: otcChain' and 'source: from: values' cannot co-exist.");
 			}
-		} else if (script.command instanceof Execute) {
+		} else {
 			if (targetOtcChain.contains(OtcConstants.ANCHOR)) {
-				throw new OtcExtensionsException("", "Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+				throw new OtcExtensionsException("", LEXICALIZATION_FAILURE + script.command.id
 						+ ". Invalid applciation of ElasticTree nature on 'execute' commands - remove the anchors.");
 			}
 			Execute execute = (Execute) script.command;
-			if (execute != null && execute.module != null) {
+			if (execute.module != null) {
 				String sourceOtcChain = execute.source.objectPath;
 				if (targetOtcChain.contains(OtcConstants.OPEN_BRACKET)
 						&& sourceOtcChain.contains(OtcConstants.OPEN_BRACKET)) {
 					throw new OtcExtensionsException("",
-							"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+							LEXICALIZATION_FAILURE + script.command.id
 									+ ". Execute commmand cannot have Collection/Map notations on both target and source at "
 									+ "the same time in 'executeOtcConverter' extension.");
 				}
 				if (execute.executionOrder != null) {
-//					for (String exeOrd : execute.executionOrder) {
 					execute.executionOrder.forEach(exeOrd -> {
 						if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(exeOrd) && execute.converter == null) {
 							throw new OtcExtensionsException("",
-									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+									LEXICALIZATION_FAILURE + script.command.id
 											+ ". 'executeOtcConverter' defined in 'extensions: executionOrder' "
 											+ "but 'extensions: executeOtcConverter' is undefined.");
 						}
 						if (OtcConstants.EXECUTE_OTC_MODULE.equals(exeOrd) && execute.module == null) {
 							throw new OtcExtensionsException("",
-									"Otc Lexicalizer-phase failure in OTC-command : " + script.command.id
+									LEXICALIZATION_FAILURE + script.command.id
 											+ ". 'executeOtcModule' defined in 'extensions: executionOrder' "
 											+ "but 'extensions: executeOtcModule' is undefined.");
 						}

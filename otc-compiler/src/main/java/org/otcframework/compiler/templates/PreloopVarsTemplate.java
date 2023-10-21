@@ -27,7 +27,7 @@ package org.otcframework.compiler.templates;
  */
 public final class PreloopVarsTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			PreloopVarsTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new preloop vars template.
@@ -41,7 +41,6 @@ public final class PreloopVarsTemplate extends AbstractTemplate {
 	 * @return the string
 	 */
 	public static String generateCode() {
-		String offsetIdxCode = String.format(PRELOOP_VARS_TEMPLATE);
-		return offsetIdxCode;
+		return PRELOOP_VARS_TEMPLATE;
 	}
 }

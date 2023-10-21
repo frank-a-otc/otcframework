@@ -58,12 +58,11 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
 		targetOCC.algorithmId = ALGORITHM_ID.COLLECTIONS;
 		boolean addLogger = true;
-		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
+		ScriptDto scriptDto = targetOCC.scriptDto;
 		if (scriptDto.command.debug) {
 			@SuppressWarnings("unused")
 			int dummy = 0;
 		}
-		targetOCC.scriptDto = scriptDto;
 		TargetOtcCommandContext clonedTargetOCC = targetOCC.clone();
 		executionContext.targetOCC = clonedTargetOCC;
 		otcCommand.clearCache();
@@ -76,7 +75,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 		}
 		otcCommand.createJavaFile(clonedTargetOCC, targetClz, sourceClz);
-		return;
 	}
 
 	/**
@@ -159,12 +157,10 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 				targetOCC.otcCommandDto = targetOCD;
 			}
 		}
-		if (!targetOCD.isCollectionOrMapMember()) {
-			if ((targetOCD.parent != null && !targetOCD.parent.isEnum()) && !targetOCC.isLeafParent()) {
-				otcCommand.appendGetSet(targetOCC, sourceOCC, false);
-			}
+		if (!targetOCD.isCollectionOrMapMember() && targetOCD.parent != null && !targetOCD.parent.isEnum() &&
+			!targetOCC.isLeafParent()) {
+			otcCommand.appendGetSet(targetOCC, sourceOCC, false);
 		}
-		return;
 	}
 
 	/**
@@ -192,7 +188,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
 		otcCommand.appendInitMember(targetOCC, sourceOCC, idxVar, false, LogLevel.WARN);
 		targetOCC.anchorIndex = targetOCC.currentCollectionTokenIndex;
-		return;
 	}
 
 	/**
@@ -229,7 +224,6 @@ final class CopyCollectionPathsCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 			}
 		}
-		return;
 	}
 
 	/**

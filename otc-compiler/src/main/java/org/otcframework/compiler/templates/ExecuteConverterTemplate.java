@@ -34,7 +34,7 @@ import java.util.Set;
  */
 public final class ExecuteConverterTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			ExecuteConverterTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new execute converter template.
@@ -63,6 +63,6 @@ public final class ExecuteConverterTemplate extends AbstractTemplate {
 		String otcConverterVarName = createVarName(otcConverter, varNamesSet, false);
 		String executeConverterCode = String.format(EXECUTE_CONVERTER_TEMPLATE, otcConverterVarName, sourceVarName,
 				targetVarName);
-		return addInlineComments(inlineComments, executeConverterCode);
+		return addInlineComments(INLINE_COMMENTS, executeConverterCode);
 	}
 }

@@ -36,13 +36,14 @@ import java.util.Set;
  */
 public final class AddMapKeyTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			AddMapKeyTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new adds the map key template.
 	 */
 	private AddMapKeyTemplate() {
+		super();
 	}
 
 	/**
@@ -137,13 +138,13 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		String createInstanceCode = null;
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
 			if (keyOCD.isEnum()) {
-				String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace("new %s()", keyOrVar);
+				String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace(NEW, keyOrVar);
 				createInstanceCode = String.format(createInstanceTemplateCopy, "", keyVarName);
 			} else {
 				createInstanceCode = String.format(CREATE_INSTANCE_TEMPLATE, keyType, keyVarName, keyConcreteType);
 			}
 		} else {
-			String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace("new %s()", keyOrVar);
+			String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace(NEW, keyOrVar);
 			createInstanceCode = String.format(createInstanceTemplateCopy, "", keyVarName);
 		}
 		addMapEntryCode = addMapEntryCode.replace(CODE_TO_CREATE_MAPKEY, createInstanceCode);
@@ -165,7 +166,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (targetOCC.hasDescendantCollectionOrMap()) {
 			codeSectionBuilder.append(ASSIGN_KEY_TO_MEMBER_ICD_TEMPLATE);
 		}
-		return addInlineComments(inlineComments, codeSectionBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, codeSectionBuilder.toString());
 	}
 
 	/**
@@ -208,8 +209,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
 			mapKeyCode = String.format(CREATE_INSTANCE_TEMPLATE, "", keyVarName, keyConcreteType);
 		} else {
-			// TODO - seems there is a mistake in this below line.
-			mapKeyCode = String.format(CREATE_INSTANCE_TEMPLATE.replace("new %s()", keyVarName), "", keyVarName,
+			mapKeyCode = String.format(CREATE_INSTANCE_TEMPLATE.replace(NEW, keyVarName), "", keyVarName,
 					keyConcreteType);
 		}
 		postTargetLoopMapKeyCode = postTargetLoopMapKeyCode.replace(CODE_TO_CREATE_MAPKEY, mapKeyCode);
@@ -217,9 +217,9 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
 			mapValueCode = String.format(CREATE_INSTANCE_TEMPLATE, valueType, valueVarName, valueConcreteType);
 		} else {
-			mapValueCode = String.format(CREATE_INSTANCE_TEMPLATE.replace("new %s()", "null"), valueType, valueVarName);
+			mapValueCode = String.format(CREATE_INSTANCE_TEMPLATE.replace(NEW, "null"), valueType, valueVarName);
 		}
 		postTargetLoopMapKeyCode = postTargetLoopMapKeyCode.replace(CODE_TO_CREATE_MAPVALUE, mapValueCode);
-		return addInlineComments(inlineComments, postTargetLoopMapKeyCode);
+		return addInlineComments(INLINE_COMMENTS, postTargetLoopMapKeyCode);
 	}
 }

@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public class SetterTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			SetterTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -49,13 +49,12 @@ public class SetterTemplate extends AbstractTemplate {
 	 * Generate code.
 	 *
 	 * @param targetOCC        the target OCC
-	 * @param createNewVarName the create new var name
 	 * @param value            the value
 	 * @param varNamesSet      the var names set
 	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtcCommandContext targetOCC, boolean createNewVarName, String value,
+	public static String generateCode(TargetOtcCommandContext targetOCC, String value,
 			Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtcCommandDto otcCommandDto = targetOCC.otcCommandDto;
 		String parentVarName = null;
@@ -68,9 +67,7 @@ public class SetterTemplate extends AbstractTemplate {
 			parentVarName = createVarName(otcCommandDto.parent, false, varNamesSet, varNamesMap);
 		}
 		String setterCode = null;
-//		if (PackagesFilterUtil.isFilteredPackage(otcCommandDto.fieldType)) {
-			targetOCC.factoryClassDto.addImport(otcCommandDto.fieldType.getName());
-//		}
+		targetOCC.factoryClassDto.addImport(otcCommandDto.fieldType.getName());
 		value = createConvertExpression(otcCommandDto, value);
 		if (otcCommandDto.enableSetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
@@ -85,6 +82,6 @@ public class SetterTemplate extends AbstractTemplate {
 				setterCode = String.format(SETTER_TEMPLATE, parentVarName, otcCommandDto.setter, value);
 			}
 		}
-		return addInlineComments(inlineComments, setterCode);
+		return addInlineComments(INLINE_COMMENTS, setterCode);
 	}
 }

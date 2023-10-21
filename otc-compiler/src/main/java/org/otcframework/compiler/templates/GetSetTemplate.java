@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public final class GetSetTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			GetSetTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -70,7 +70,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 		} else {
 			getSetCode = generateCodeForGetterSetter(targetOCC, sourceOCC, createNewVarName, varNamesSet, varNamesMap);
 		}
-		return addInlineComments(inlineComments, getSetCode);
+		return addInlineComments(INLINE_COMMENTS, getSetCode);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 			getSetCode = String.format(GET_HELPER_TEMPLATE, targetVarName, targetOCD.setter, targetParentVarName, helper,
 					sourceOCD.getter, sourceParentVarName);
 		}
-		return addInlineComments(inlineComments, getSetCode);
+		return addInlineComments(INLINE_COMMENTS, getSetCode);
 	}
 
 	/**
@@ -197,6 +197,6 @@ public final class GetSetTemplate extends AbstractTemplate {
 				getSetCode = String.format(SETTER_TEMPLATE, targetParentVarName, targetOCD.setter, sourceVarName);
 			}
 		}
-		return addInlineComments(inlineComments, getSetCode);
+		return addInlineComments(INLINE_COMMENTS, getSetCode);
 	}
 }

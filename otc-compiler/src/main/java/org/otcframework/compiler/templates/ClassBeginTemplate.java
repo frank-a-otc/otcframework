@@ -34,7 +34,7 @@ import java.util.Set;
  */
 public final class ClassBeginTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			ClassBeginTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new class begin template.
@@ -48,12 +48,11 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 * @param mainClassDto the main class dto
 	 * @param targetType   the target type
 	 * @param sourceType   the source type
-	 * @param otcChain     the otc chain
 	 * @param varNamesSet  the var names set
 	 * @return the string
 	 */
 	public static String generateMainClassCode(ClassDto mainClassDto, String targetType, String sourceType,
-			String otcChain, Set<String> varNamesSet) {
+			Set<String> varNamesSet) {
 		String rootTargetVariable = CommonUtils.initLower(targetType);
 		rootTargetVariable = sanitizeVarName(rootTargetVariable, varNamesSet);
 		String rootSourceVariable = null;
@@ -106,7 +105,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 */
 	public static String generateModuleClassCode(ClassDto classDto, String sourceType, String targetType,
 			boolean addLogger, Set<String> varNamesSet) {
-		return generateClassCode(classDto, sourceType, targetType, addLogger, FACTORY_CLASS_BEGIN_CODE_TEMPLATE,
+		return generateClassCode(classDto, sourceType, targetType, addLogger, FACTORY_MODULE_CLASS_BEGIN_CODE_TEMPLATE,
 				varNamesSet);
 	}
 

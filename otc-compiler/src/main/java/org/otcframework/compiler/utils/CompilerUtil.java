@@ -30,6 +30,7 @@ import org.otcframework.common.util.CommonUtils;
  */
 public final class CompilerUtil {
 
+	private CompilerUtil() {}
 	/**
 	 * Builds the java class name.
 	 *
@@ -39,9 +40,6 @@ public final class CompilerUtil {
 	 * @return the string
 	 */
 	public static String buildJavaClassName(String otcNamespace, String otcFileName, String otcChain) {
-//		if (otcFileName.endsWith(".otc")) {
-//			otcFileName = otcFileName.replace(otcFileName.substring(otcFileName.lastIndexOf(".otc")), "");
-//		}
 		String factoryClzName = sanitizeJavaIdentifier(otcFileName);
 		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			factoryClzName = otcNamespace + "." + factoryClzName;

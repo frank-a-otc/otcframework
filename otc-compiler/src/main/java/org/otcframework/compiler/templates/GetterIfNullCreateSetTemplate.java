@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			GetterIfNullCreateSetTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new getter if null create set template.
@@ -57,7 +57,7 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (otcCommandDto.isArray()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE + targetOCC.commandId
 					+ ". Type should not be an array.");
 		}
 		return generateCode(targetOCC, otcCommandDto, null, null, createNewVarName, varNamesSet, varNamesMap);
@@ -148,6 +148,6 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize,
 				createNewVarName, varNamesSet, varNamesMap);
 		String getterWithIfNullCreateSet = getterCode + (ifNullCreateAndSetCode == null ? "" : ifNullCreateAndSetCode);
-		return addInlineComments(inlineComments, getterWithIfNullCreateSet);
+		return addInlineComments(INLINE_COMMENTS, getterWithIfNullCreateSet);
 	}
 }

@@ -39,7 +39,7 @@ import java.util.Set;
  */
 public final class AddToCollectionTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			AddToCollectionTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -117,7 +117,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 					fieldTypecastType, varName, varName, icdId);
 		}
 		initMembers = initMembers.replace(CODE_TO_REPLACE, codeToReplace);
-		return addInlineComments(inlineComments, initMembers);
+		return addInlineComments(INLINE_COMMENTS, initMembers);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			if (idx == null) {
 				codeToReplace += String.format(RESIZE_ARRAY_AND_ADD_AT_END_TEMPLATE, parentVarName, parentVarName,
 						parentVarName, parentVarName, valOrVar);
-				String setterCode = SetterTemplate.generateCode(targetOCC, createNewVarName, collectionsParentVarName,
+				String setterCode = SetterTemplate.generateCode(targetOCC, collectionsParentVarName,
 						varNamesSet, varNamesMap);
 				codeToReplace = codeToReplace.replace(CODE_TO_REPLACE, setterCode);
 			} else {
@@ -187,7 +187,7 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			}
 			codeToReplace += String.format(ADD_TO_COLLECTION_TEMPLATE, parentVarName, varName);
 		}
-		return addInlineComments(inlineComments, codeToReplace);
+		return addInlineComments(INLINE_COMMENTS, codeToReplace);
 	}
 
 	/**
@@ -212,19 +212,17 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			parentPcd = parentPcd + idx;
 			memberPcd = memberPcd + idx;
 		}
-		OtcCommandDto memberOCD = targetOCC.otcCommandDto; // OtcCommand.retrieveMemberOCD(targetOCC);
+		OtcCommandDto memberOCD = targetOCC.otcCommandDto;
 		OtcCommandDto targetOCD = memberOCD.parent;
-		String icdId = targetOCD.otcToken;
 		boolean hasAncestor = targetOCC.hasAncestralCollectionOrMap();
 		if (!hasAncestor) {
 			memberPcd = "targetICD";
-			icdId = targetOCD.tokenPath;
 		} else {
 			if (idx != null) {
 				memberPcd = memberPcd + idx;
 			}
 		}
-		icdId = createIcdKey(memberOCD, idxVar, null);
+		String icdId = createIcdKey(memberOCD, idxVar, null);
 		boolean hasMapValueInPath = memberOCD.isMapValue() || targetOCC.hasMapValueDescendant();
 		if (hasMapValueInPath) {
 			int endIdx = targetOCC.otcChain.lastIndexOf(OtcConstants.MAP_VALUE_REF) + 3;
@@ -246,6 +244,6 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			int startIdx = forLoopCodeBuilder.indexOf(CODE_TO_REPLACE);
 			forLoopCodeBuilder.replace(startIdx, startIdx + CODE_TO_REPLACE.length(), createMemberCode);
 		}
-		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, forLoopCodeBuilder.toString());
 	}
 }

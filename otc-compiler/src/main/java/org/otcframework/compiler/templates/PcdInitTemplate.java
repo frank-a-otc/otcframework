@@ -37,8 +37,11 @@ import java.util.Set;
  */
 public final class PcdInitTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			PcdInitTemplate.class.getSimpleName() + "\n";
+
+	private static final String IS_NULL = "' is null!";
+
 	/**
 	 * Instantiates a new pcd init template.
 	 */
@@ -146,9 +149,8 @@ public final class PcdInitTemplate extends AbstractTemplate {
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
 		String varName = createVarName(targetOCD, false, varNamesSet, varNamesMap);
 		String icdId = createIcdKey(targetOCD.otcToken);
-		String retrieveICDCode = String.format(IF_NULL_TARGET_ICD_CREATE_TEMPLATE, PARENT_TARGET_ICD, MEMBER_TARGET_ICD,
+		return String.format(IF_NULL_TARGET_ICD_CREATE_TEMPLATE, PARENT_TARGET_ICD, MEMBER_TARGET_ICD,
 				icdId, PARENT_TARGET_ICD, PARENT_TARGET_ICD, MEMBER_TARGET_ICD, varName, icdId);
-		return retrieveICDCode;
 	}
 
 	/**
@@ -175,7 +177,7 @@ public final class PcdInitTemplate extends AbstractTemplate {
 	public static String generateIfNullTargetParentPcdReturnCode(TargetOtcCommandContext targetOCC, LogLevel logLevel) {
 		// -- this method is required when map-value is in the otc-chain.
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
-		String logMsg = "'" + targetOCD.tokenPath + "' is null!";
+		String logMsg = "'" + targetOCD.tokenPath + IS_NULL;
 		String ifNullParentPcdReturnCode = null;
 		ifNullParentPcdReturnCode = String.format(IF_NULL_ICD_RETURN_TEMPLATE, PARENT_TARGET_ICD, MEMBER_TARGET_ICD,
 				createIcdKey(targetOCD.otcToken), PARENT_TARGET_ICD, PARENT_TARGET_ICD, PARENT_TARGET_ICD, logLevel,
@@ -202,7 +204,7 @@ public final class PcdInitTemplate extends AbstractTemplate {
 			String mapValueTokenPath = targetOCC.otcChain.substring(0, endIdx);
 			logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
 		} else {
-			logMsg = "'" + targetOCD.tokenPath + "' is null!";
+			logMsg = "'" + targetOCD.tokenPath + IS_NULL;
 		}
 		String ifNullParentPcdReturnCode = null;
 		String icdId = createIcdKey(targetOCD, null, idx);
@@ -239,11 +241,10 @@ public final class PcdInitTemplate extends AbstractTemplate {
 	 */
 	public static String generateIfNullSourceParentPcdReturnCode(SourceOtcCommandContext sourceOCC, LogLevel logLevel) {
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
-		String logMsg = "'" + sourceOCD.tokenPath + "' is null!";
-		String ifNullParentPcdReturnCode = String.format(IF_NULL_ICD_RETURN_TEMPLATE, PARENT_SOURCE_ICD, MEMBER_SOURCE_ICD,
+		String logMsg = "'" + sourceOCD.tokenPath + IS_NULL;
+		return String.format(IF_NULL_ICD_RETURN_TEMPLATE, PARENT_SOURCE_ICD, MEMBER_SOURCE_ICD,
 				createIcdKey(sourceOCD.otcToken), PARENT_SOURCE_ICD, PARENT_SOURCE_ICD, PARENT_SOURCE_ICD, logLevel,
 				logMsg);
-		return ifNullParentPcdReturnCode;
 	}
 
 	/**
@@ -257,7 +258,7 @@ public final class PcdInitTemplate extends AbstractTemplate {
 	public static String generateIfNullSourceMemberPcdReturnCode(SourceOtcCommandContext sourceOCC, Integer idx,
 			LogLevel logLevel) {
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
-		String logMsg = "'" + sourceOCD.tokenPath + "' is null!";
+		String logMsg = "'" + sourceOCD.tokenPath + IS_NULL;
 		String ifNullPcdReturnCode = null;
 		if (sourceOCC.hasDescendantCollectionOrMap()) {
 			ifNullPcdReturnCode = String.format(IF_NULL_ICD_RETURN_TEMPLATE, MEMBER_SOURCE_ICD, PARENT_SOURCE_ICD,

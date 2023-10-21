@@ -38,7 +38,7 @@ import java.util.Set;
  */
 public final class AddMapValueTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			AddMapValueTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -168,7 +168,7 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 			}
 			codeSectionBuilder.append(mapValueCode);
 		}
-		return addInlineComments(inlineComments, codeSectionBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, codeSectionBuilder.toString());
 	}
 
 	/**
@@ -211,6 +211,6 @@ public final class AddMapValueTemplate extends AbstractTemplate {
 		String pdcId = createIcdKey(valueOCD, idxVar, null);
 		String postTargetLoopMapValueCode = String.format(POST_TARGET_LOOP_MAP_VALUE_TEMPLATE, idx, icd, pdcId, idx,
 				logLevel, logMsg, valueType, valueVarName, valueConcreteType, idx);
-		return addInlineComments(inlineComments, postTargetLoopMapValueCode);
+		return addInlineComments(INLINE_COMMENTS, postTargetLoopMapValueCode);
 	}
 }
