@@ -80,7 +80,7 @@ public class CommonUtils {
 	 * @param str the str
 	 * @return true, if is empty
 	 */
-	public static boolean isEmpty(String str) {
+	public static boolean isTrimmedAndEmpty(String str) {
 		return str == null || str.trim().length() == 0;
 	}
 

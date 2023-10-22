@@ -22,7 +22,6 @@
 */
 package org.otcframework.compiler.templates;
 
-import org.otcframework.common.OtcConstants.TARGET_SOURCE;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.TargetOtcCommandContext;
@@ -36,7 +35,7 @@ import java.util.Set;
  */
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			GetterIfNullCreateSetTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new getter if null create set template.
@@ -57,7 +56,7 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	public static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto,
 			boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		if (otcCommandDto.isArray()) {
-			throw new CodeGeneratorException("", "Invalid call to method in OTC-command : " + targetOCC.commandId
+			throw new CodeGeneratorException("", AbstractTemplate.INVALID_CALL_TO_TEMPLATE + targetOCC.commandId
 					+ ". Type should not be an array.");
 		}
 		return generateCode(targetOCC, otcCommandDto, null, null, createNewVarName, varNamesSet, varNamesMap);
@@ -119,18 +118,9 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 	 */
 	private static String generateCode(TargetOtcCommandContext targetOCC, OtcCommandDto otcCommandDto, String value,
 			Integer arraySize, boolean createNewVarName, Set<String> varNamesSet, Map<String, String> varNamesMap) {
-		String concreteType = fetchConcreteTypeName(targetOCC, otcCommandDto);
+		fetchConcreteTypeName(targetOCC, otcCommandDto);
 		String fieldType = fetchFieldTypeName(targetOCC, null, otcCommandDto, createNewVarName, varNamesMap);
 		String varName = createVarName(otcCommandDto, createNewVarName, varNamesSet, varNamesMap);
-		if (otcCommandDto.isArray()) {
-			if (TARGET_SOURCE.TARGET == otcCommandDto.enumTargetSource) {
-				if (arraySize != null) {
-					concreteType = concreteType.replace("[]", "[" + arraySize + "]");
-				} else {
-					concreteType = concreteType.replace("[]", "[" + 1 + "]");
-				}
-			}
-		}
 		String parentVarName = null;
 		if (otcCommandDto.isFirstNode) {
 			parentVarName = CommonUtils.initLower(otcCommandDto.field.getDeclaringClass().getSimpleName());
@@ -141,13 +131,13 @@ public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 		String getterCode = null;
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			getterCode = String.format(helperGetterTemplate, fieldType, varName, helper, getter, parentVarName);
+			getterCode = String.format(HELPER_GETTER_TEMPLATE, fieldType, varName, helper, getter, parentVarName);
 		} else {
-			getterCode = String.format(getterTemplate, fieldType, varName, parentVarName, getter);
+			getterCode = String.format(GETTER_TEMPLATE, fieldType, varName, parentVarName, getter);
 		}
 		String ifNullCreateAndSetCode = IfNullCreateAndSetTemplate.generateCode(targetOCC, value, arraySize,
 				createNewVarName, varNamesSet, varNamesMap);
 		String getterWithIfNullCreateSet = getterCode + (ifNullCreateAndSetCode == null ? "" : ifNullCreateAndSetCode);
-		return addInlineComments(inlineComments, getterWithIfNullCreateSet);
+		return addInlineComments(INLINE_COMMENTS, getterWithIfNullCreateSet);
 	}
 }

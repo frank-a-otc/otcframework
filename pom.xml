@@ -22,7 +22,7 @@
 
 	<developers>
 		<developer>
-			<name>Franklin Abel</name>
+			<name>Franklin Joshua</name>
 			<email>frank.a.otc@gmail.com</email>
 			<organization>OTC Framework</organization>
 			<organizationUrl>http://www.otcframework.org</organizationUrl>
@@ -156,20 +156,6 @@
 			    <artifactId>dateconverters</artifactId>
 			    <version>${dateconverters.version}</version>
 			</dependency>
-<!-- 
-			<dependency>
-			    <groupId>org.msgpack</groupId>
-			    <artifactId>msgpack</artifactId>
-			    <version>${msgpack.version}</version>
-			</dependency>
- -->
-<!-- 
-			<dependency>
-			    <groupId>org.sonarsource.scanner.maven</groupId>
-			    <artifactId>sonar-maven-plugin</artifactId>
-			    <version>${sonarqube.version}</version>
-			</dependency>
- -->
 		</dependencies>
 	</dependencyManagement>
 

@@ -31,6 +31,7 @@ import java.util.Scanner;
  */
 final class JavaCodeFormatter {
 
+	private JavaCodeFormatter() {}
 	/**
 	 * Format.
 	 *
@@ -52,7 +53,7 @@ final class JavaCodeFormatter {
 			if (bracesCounter > 0) {
 				line = doIndent(line, bracesCounter);
 				String unWhitespacedLine = line.replace("\n", "").replace("\t", "");
-				if (bracesCounter == 1 && !decrementPhase && !CommonUtils.isEmpty(line) && !line.endsWith(";")
+				if (bracesCounter == 1 && !decrementPhase && !CommonUtils.isTrimmedAndEmpty(line) && !line.endsWith(";")
 						&& !unWhitespacedLine.startsWith("public ") && !unWhitespacedLine.startsWith("@Override")) {
 					line = line.replace("\n\t", "\n\t\t\t");
 				}

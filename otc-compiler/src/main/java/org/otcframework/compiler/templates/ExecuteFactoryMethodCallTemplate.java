@@ -29,7 +29,7 @@ import org.otcframework.common.util.CommonUtils;
  */
 public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			ExecuteFactoryMethodCallTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new execute factory method call template.
@@ -53,8 +53,7 @@ public final class ExecuteFactoryMethodCallTemplate extends AbstractTemplate {
 			sourceVar = CommonUtils.initLower(sourceClz.getSimpleName());
 			sourceICD = "sourceICD";
 		}
-		String executeMethodCallCode = String.format(executeFactoryMethodCallTemplate, factoryClzName, sourceVar,
+		return String.format(EXECUTE_FACTORY_METHOD_CALL_TEMPLATE, factoryClzName, sourceVar,
 				sourceICD, targetVar);
-		return executeMethodCallCode;
 	}
 }

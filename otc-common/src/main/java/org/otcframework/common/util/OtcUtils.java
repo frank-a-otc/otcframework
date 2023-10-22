@@ -63,7 +63,7 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String createOtcFileName(String sourceClz, String targetClz) {
-		if (CommonUtils.isEmpty(targetClz)) {
+		if (CommonUtils.isTrimmedAndEmpty(targetClz)) {
 			throw new OtcException("", "Target-class cannot be null.");
 		}
 		return createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
@@ -127,7 +127,7 @@ public class OtcUtils {
 		} else {
 			registryId = sourceClz + "_" + targetClz;
 		}
-		if (!CommonUtils.isEmpty(otcNamespace)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			registryId = otcNamespace + "." + registryId;
 		}
 		return registryId;
@@ -242,11 +242,6 @@ public class OtcUtils {
 				ClassLoader.getSystemClassLoader());
 	}
 
-	/**
-	 *
-	 * @param path
-	 * @return
-	 */
 	public static URLClassLoader getClassLoader(String path) {
 		if (clzLoader == null) {
 			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);

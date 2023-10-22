@@ -40,6 +40,7 @@ public abstract class AbstractOtcModuleExecutor {
 	/** The otc engine. */
 	private static OtcExecutor otcExecutor = OtcExecutorImpl.getInstance();
 
+	private AbstractOtcModuleExecutor() {}
 	/**
 	 * Execute module.
 	 *
@@ -52,7 +53,7 @@ public abstract class AbstractOtcModuleExecutor {
 	 * @return the t
 	 */
 	protected static <S, T> T executeModule(String otcNamespace, S source, T target, Map<String, Object> config) {
-		LOGGER.debug(AbstractOtcModuleExecutor.class.getName() + " called!");
+		LOGGER.debug("{} called!", AbstractOtcModuleExecutor.class.getName());
 		T newTarget = null;
 		try {
 			newTarget = (T) otcExecutor.execute(otcNamespace, source, target.getClass(), config);

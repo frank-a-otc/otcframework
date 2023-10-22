@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			IfNullCreateAndSetTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -61,13 +61,11 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 		OtcCommandDto targetOCD = targetOCC.otcCommandDto;
 		String concreteType = fetchConcreteTypeName(targetOCC, targetOCD);
 		String varName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
-		if (targetOCD.isArray()) {
-			if (TARGET_SOURCE.TARGET == targetOCD.enumTargetSource) {
-				if (arraySize != null) {
-					concreteType = concreteType.replace("[]", "[" + arraySize + "]");
-				} else {
-					concreteType = concreteType.replace("[]", "[" + 1 + "]");
-				}
+		if (targetOCD.isArray() && TARGET_SOURCE.TARGET == targetOCD.enumTargetSource) {
+			if (arraySize != null) {
+				concreteType = concreteType.replace("[]", "[" + arraySize + "]");
+			} else {
+				concreteType = concreteType.replace("[]", "[" + 1 + "]");
 			}
 		}
 		String parentVarName = null;
@@ -81,15 +79,15 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 		if (PackagesFilterUtil.isFilteredPackage(targetOCD.fieldType) || targetOCD.isCollectionOrMap()) {
 			if (targetOCD.enableSetterHelper) {
 				String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-				ifNullSetterCode = String.format(ifNullCreateAndHelperSetTemplate, varName, varName, concreteType,
+				ifNullSetterCode = String.format(IF_NULL_CREATE_AND_HELPER_SET_TEMPLATE, varName, varName, concreteType,
 						helper, setter, parentVarName, varName);
 			} else {
 				if (targetOCD.isEnum()) {
 					value = createConvertExpression(targetOCD, value);
-					ifNullSetterCode = String.format(ifNullEnumCreateAndSetTemplate, varName, varName, concreteType,
+					ifNullSetterCode = String.format(IF_NULL_ENUM_CREATE_AND_SET_TEMPLATE, varName, varName, concreteType,
 							value, parentVarName, setter, varName);
 				} else {
-					ifNullSetterCode = String.format(ifNullCreateAndSetTemplate, varName, varName, concreteType,
+					ifNullSetterCode = String.format(IF_NULL_CREATE_AND_SET_TEMPLATE, varName, varName, concreteType,
 							parentVarName, setter, varName);
 				}
 			}
@@ -97,6 +95,6 @@ public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 				ifNullSetterCode = ifNullSetterCode.replace("]()", "]");
 			}
 		}
-		return addInlineComments(inlineComments, ifNullSetterCode);
+		return addInlineComments(INLINE_COMMENTS, ifNullSetterCode);
 	}
 }

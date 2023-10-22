@@ -87,7 +87,7 @@ public enum OtcConfig {
 							OTC_HOME_ENV_VAR + "' environment variable.");
 		}
 		OTC_HOME = sysEnv.get(OTC_HOME_ENV_VAR);
-		if (CommonUtils.isEmpty(OTC_HOME)) {
+		if (CommonUtils.isTrimmedAndEmpty(OTC_HOME)) {
 			throw new OtcException("", "Oops... Environment variable '" + OTC_HOME_ENV_VAR + "' not set! ");
 		}
 		if (!OTC_HOME.endsWith(File.separator)) {
@@ -119,7 +119,7 @@ public enum OtcConfig {
 		if (yamlConfig.compiler != null) {
 			sourceCodeLocation = yamlConfig.compiler.sourceCodeLocation;
 		}
-		if (CommonUtils.isEmpty(sourceCodeLocation)) {
+		if (CommonUtils.isTrimmedAndEmpty(sourceCodeLocation)) {
 			sourceCodeLocation = OTC_HOME + OTC_SRC_FOLDER;
 		} else if (!sourceCodeLocation.endsWith(File.separator)) {
 			sourceCodeLocation += File.separator;

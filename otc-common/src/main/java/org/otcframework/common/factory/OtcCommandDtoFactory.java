@@ -209,7 +209,7 @@ public class OtcCommandDtoFactory {
 			memberOtcToken = OtcConstants.MAP_VALUE_REF + otcCommandDto.fieldName;
 			memberConcreteType = otcCommandDto.mapValueConcreteType;
 		}
-		if (!CommonUtils.isEmpty(memberConcreteType)) {
+		if (!CommonUtils.isTrimmedAndEmpty(memberConcreteType)) {
 			memberOtcGenericTypeClz = OtcUtils.loadClass(memberConcreteType);
 		}
 		OtcCommandDto memberOCD = otcCommandDto.children.get(memberOtcToken);

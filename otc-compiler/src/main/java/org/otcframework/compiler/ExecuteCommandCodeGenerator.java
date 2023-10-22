@@ -83,7 +83,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 				while (true) {
 					otcCommand.appendForLoop(targetOCC, sourceOCC, AbstractTemplate.SOURCE_IDX, false, LogLevel.WARN);
-					sourceOCD = sourceOCC.otcCommandDto;
 					if (!sourceOCC.hasDescendantCollectionOrMap()) {
 						sourceOCD = OtcCommand.retrieveNextOCD(sourceOCC);
 						sourceOCC.otcCommandDto = sourceOCD;
@@ -120,7 +119,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 					if (targetOCC.hasDescendantCollectionOrMap() || targetOCD.isCollectionOrMap()) {
 						otcCommand.appendInitUptoNextCollectionWithReturnOrContinue(targetOCC, LogLevel.WARN);
 						targetOCD = targetOCC.otcCommandDto;
-						continue;
 					} else {
 						targetOCD = OtcCommand.retrieveNextOCD(targetOCC);
 						break;
@@ -140,7 +138,6 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		}
 		// innermost loop - if null continue code.
 		if (scriptDto.hasExecutionOrder) {
-//			for (String execOrd : ((Execute) scriptDto.command).executionOrder) {
 			(((Execute) scriptDto.command).executionOrder).forEach(execOrd -> {
 				if (OtcConstants.EXECUTE_OTC_CONVERTER.equals(execOrd)) {
 					otcCommand.appendExecuteConverter(targetOCC, sourceOCC, false);
@@ -168,6 +165,5 @@ final class ExecuteCommandCodeGenerator extends AbstractOtcCodeGenerator {
 			}
 		}
 		otcCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-		return;
 	}
 }

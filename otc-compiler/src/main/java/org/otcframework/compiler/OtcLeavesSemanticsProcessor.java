@@ -33,6 +33,7 @@ import org.otcframework.compiler.exception.LexicalizerException;
  */
 final class OtcLeavesSemanticsProcessor {
 
+	private OtcLeavesSemanticsProcessor() {}
 	/**
 	 * Check leaves semantics.
 	 *

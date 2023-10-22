@@ -40,6 +40,8 @@ import java.util.List;
  */
 final class GetterSetterOverridesProcessor {
 
+	private GetterSetterOverridesProcessor() {}
+
 	/**
 	 * Process.
 	 *
@@ -78,7 +80,6 @@ final class GetterSetterOverridesProcessor {
 				&& toOverrides != null) {
 			initToSetterGetter(otcCommandDto, targetOtcChain, commandId, toOverrides);
 		}
-		return;
 	}
 
 	/**
@@ -95,10 +96,6 @@ final class GetterSetterOverridesProcessor {
 				|| (otcCommandDto.getter != null && otcCommandDto.setter != null)) {
 			return;
 		}
-		if (TARGET_SOURCE.TARGET != otcCommandDto.enumTargetSource) {
-			return;
-		}
-//		for (TargetDto.Override override : overrides) {
 		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
@@ -149,7 +146,6 @@ final class GetterSetterOverridesProcessor {
 		if (overrides == null || otcCommandDto.getter != null) {
 			return;
 		}
-//		for (OverrideDto override : overrides) {
 		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {

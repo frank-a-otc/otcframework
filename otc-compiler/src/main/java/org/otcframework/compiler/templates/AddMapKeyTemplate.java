@@ -36,13 +36,14 @@ import java.util.Set;
  */
 public final class AddMapKeyTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			AddMapKeyTemplate.class.getSimpleName() + "\n";
 
 	/**
 	 * Instantiates a new adds the map key template.
 	 */
 	private AddMapKeyTemplate() {
+		super();
 	}
 
 	/**
@@ -106,22 +107,22 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		String mapVarName = createVarName(parentOCD, createNewVarName, varNamesSet, varNamesMap);
 		String keyConcreteType = fetchConcreteTypeName(targetOCC, keyOCD);
 		String keyVarName = createVarName(keyOCD, createNewVarName, varNamesSet, varNamesMap);
-		String createNullVarCode = String.format(createInitVarTemplate, keyType, keyVarName, null);
+		String createNullVarCode = String.format(CREATE_INIT_VAR_TEMPLATE, keyType, keyVarName, null);
 		keyType = "";
 		StringBuilder codeSectionBuilder = new StringBuilder(createNullVarCode);
 		OtcCommandDto valueOCD = parentOCD.children.get(OtcConstants.MAP_VALUE_REF + parentOCD.fieldName);
 		String valueType = fetchFieldTypeName(targetOCC, null, valueOCD, createNewVarName, varNamesMap);
 		String valueVarName = createVarName(valueOCD, createNewVarName, varNamesSet, varNamesMap);
-		createNullVarCode = String.format(createInitVarTemplate, valueType, valueVarName, null);
+		createNullVarCode = String.format(CREATE_INIT_VAR_TEMPLATE, valueType, valueVarName, null);
 		codeSectionBuilder.append(createNullVarCode);
 		String ifMapContainsKeyCode = null;
 		if (targetOCC.isLeaf()) {
-			ifMapContainsKeyCode = String.format(ifNotContainsMapKeyTemplate, mapVarName, keyOrVar);
+			ifMapContainsKeyCode = String.format(IF_NOT_CONTAINS_MAP_KEY_TEMPLATE, mapVarName, keyOrVar);
 		} else {
 			if (idxVar != null || idx != null) {
 				String icdId = createIcdKey(keyOCD, idxVar, idx);
-				ifMapContainsKeyCode = String.format(ifNullMapKeyICDTemplate, icdId);
-				String retrieveMapKeyFromICDCode = String.format(retrieveMapKeyFromIcdTemplate, "", keyVarName,
+				ifMapContainsKeyCode = String.format(IF_NULL_MAP_KEY_ICD_TEMPLATE, icdId);
+				String retrieveMapKeyFromICDCode = String.format(RETRIEVE_MAP_KEY_FROM_ICD_TEMPLATE, "", keyVarName,
 						keyConcreteType);
 				ifMapContainsKeyCode = ifMapContainsKeyCode.replace(CODE_TO_ADD_ELSE_MAPENTRY,
 						retrieveMapKeyFromICDCode);
@@ -132,18 +133,18 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		if (idxVar == null && idx != null) {
 			idxVar = String.valueOf(idx);
 		}
-		String addMapEntryCode = String.format(addMapEntryTemplate, mapVarName, keyVarName, valueVarName, keyVarName,
+		String addMapEntryCode = String.format(ADD_MAP_ENTRY_TEMPLATE, mapVarName, keyVarName, valueVarName, keyVarName,
 				idxVar, valueVarName, idxVar);
 		String createInstanceCode = null;
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
 			if (keyOCD.isEnum()) {
-				String createInstanceTemplateCopy = createInstanceTemplate.replace("new %s()", keyOrVar);
+				String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace(NEW, keyOrVar);
 				createInstanceCode = String.format(createInstanceTemplateCopy, "", keyVarName);
 			} else {
-				createInstanceCode = String.format(createInstanceTemplate, keyType, keyVarName, keyConcreteType);
+				createInstanceCode = String.format(CREATE_INSTANCE_TEMPLATE, keyType, keyVarName, keyConcreteType);
 			}
 		} else {
-			String createInstanceTemplateCopy = createInstanceTemplate.replace("new %s()", keyOrVar);
+			String createInstanceTemplateCopy = CREATE_INSTANCE_TEMPLATE.replace(NEW, keyOrVar);
 			createInstanceCode = String.format(createInstanceTemplateCopy, "", keyVarName);
 		}
 		addMapEntryCode = addMapEntryCode.replace(CODE_TO_CREATE_MAPKEY, createInstanceCode);
@@ -152,7 +153,7 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 				addMapEntryCode = addMapEntryCode.replace(CODE_TO_CREATE_MAPVALUE, "");
 			} else {
 				String valueConcreteType = fetchConcreteTypeName(targetOCC, valueOCD);
-				createInstanceCode = String.format(createInstanceTemplate, "", valueVarName, valueConcreteType);
+				createInstanceCode = String.format(CREATE_INSTANCE_TEMPLATE, "", valueVarName, valueConcreteType);
 				addMapEntryCode = addMapEntryCode.replace(CODE_TO_CREATE_MAPVALUE, createInstanceCode);
 			}
 		} else {
@@ -163,9 +164,9 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		}
 		codeSectionBuilder.append(addMapEntryCode);
 		if (targetOCC.hasDescendantCollectionOrMap()) {
-			codeSectionBuilder.append(assignKeyToMemberIcdTemplate);
+			codeSectionBuilder.append(ASSIGN_KEY_TO_MEMBER_ICD_TEMPLATE);
 		}
-		return addInlineComments(inlineComments, codeSectionBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, codeSectionBuilder.toString());
 	}
 
 	/**
@@ -201,25 +202,24 @@ public final class AddMapKeyTemplate extends AbstractTemplate {
 		}
 		String keyPcdId = createIcdKey(keyOCD, idxVar, null);
 		String valuePcdId = createIcdKey(valueOCD, idxVar, null);
-		String postTargetLoopMapKeyCode = String.format(postTargetLoopMapKeyTemplate, idx, icd, keyPcdId, keyType,
+		String postTargetLoopMapKeyCode = String.format(POST_TARGET_LOOP_MAP_KEY_TEMPLATE, idx, icd, keyPcdId, keyType,
 				keyVarName, idx, mapVarName, keyVarName, valueVarName, idx, icd, keyVarName, keyPcdId, icd,
 				valueVarName, valuePcdId, keyVarName, keyConcreteType, idx);
 		String mapKeyCode = null;
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
-			mapKeyCode = String.format(createInstanceTemplate, "", keyVarName, keyConcreteType);
+			mapKeyCode = String.format(CREATE_INSTANCE_TEMPLATE, "", keyVarName, keyConcreteType);
 		} else {
-			// TODO - seems there is a mistake in this below line.
-			mapKeyCode = String.format(createInstanceTemplate.replace("new %s()", keyVarName), "", keyVarName,
+			mapKeyCode = String.format(CREATE_INSTANCE_TEMPLATE.replace(NEW, keyVarName), "", keyVarName,
 					keyConcreteType);
 		}
 		postTargetLoopMapKeyCode = postTargetLoopMapKeyCode.replace(CODE_TO_CREATE_MAPKEY, mapKeyCode);
 		String mapValueCode = null;
 		if (PackagesFilterUtil.isFilteredPackage(keyOCD.fieldType)) {
-			mapValueCode = String.format(createInstanceTemplate, valueType, valueVarName, valueConcreteType);
+			mapValueCode = String.format(CREATE_INSTANCE_TEMPLATE, valueType, valueVarName, valueConcreteType);
 		} else {
-			mapValueCode = String.format(createInstanceTemplate.replace("new %s()", "null"), valueType, valueVarName);
+			mapValueCode = String.format(CREATE_INSTANCE_TEMPLATE.replace(NEW, "null"), valueType, valueVarName);
 		}
 		postTargetLoopMapKeyCode = postTargetLoopMapKeyCode.replace(CODE_TO_CREATE_MAPVALUE, mapValueCode);
-		return addInlineComments(inlineComments, postTargetLoopMapKeyCode);
+		return addInlineComments(INLINE_COMMENTS, postTargetLoopMapKeyCode);
 	}
 }

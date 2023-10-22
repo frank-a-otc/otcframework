@@ -40,7 +40,7 @@ public class ExecutionContext {
 
 		/** The equal size. */
 		EQUAL_SIZE
-	};
+	}
 
 	/** The target OCC. */
 	public TargetOtcCommandContext targetOCC;

@@ -39,7 +39,7 @@ import java.util.Set;
  */
 public final class AddToCollectionTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			AddToCollectionTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -110,14 +110,14 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 		String fieldTypecastType = fetchSanitizedTypeName(targetOCC, memberOCD);
 		if (idxVar == null && idx == null) {
 			String valOrVar = fetchValueOrVar(targetOCC, sourceOCD, value, createNewVarName, varNamesSet, varNamesMap);
-			initMembers = String.format(addCollectionMemberAtEndTemplate, valOrVar);
+			initMembers = String.format(ADD_COLLECTION_MEMBER_AT_END_TEMPLATE, valOrVar);
 		} else {
 			String icdId = createIcdKey(memberOCD, idxVar, idx);
-			initMembers = String.format(addCollectionMemberTemplate, memberType, varName, null, icdId, varName,
+			initMembers = String.format(ADD_COLLECTION_MEMBER_TEMPLATE, memberType, varName, null, icdId, varName,
 					fieldTypecastType, varName, varName, icdId);
 		}
 		initMembers = initMembers.replace(CODE_TO_REPLACE, codeToReplace);
-		return addInlineComments(inlineComments, initMembers);
+		return addInlineComments(INLINE_COMMENTS, initMembers);
 	}
 
 	/**
@@ -156,20 +156,20 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			}
 			targetOCC.factoryClassDto.addImport(Arrays.class.getName());
 			if (idx == null) {
-				codeToReplace += String.format(resizeArrayAndAddAtEndTemplate, parentVarName, parentVarName,
+				codeToReplace += String.format(RESIZE_ARRAY_AND_ADD_AT_END_TEMPLATE, parentVarName, parentVarName,
 						parentVarName, parentVarName, valOrVar);
-				String setterCode = SetterTemplate.generateCode(targetOCC, createNewVarName, collectionsParentVarName,
+				String setterCode = SetterTemplate.generateCode(targetOCC, collectionsParentVarName,
 						varNamesSet, varNamesMap);
 				codeToReplace = codeToReplace.replace(CODE_TO_REPLACE, setterCode);
 			} else {
 				String setter = parentOCD.setter;
 				if (parentOCD.enableSetterHelper) {
 					String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-					codeToReplace += String.format(helperAddToArrayTemplate, parentVarName, idx, parentVarName,
+					codeToReplace += String.format(HELPER_ADD_TO_ARRAY_TEMPLATE, parentVarName, idx, parentVarName,
 							parentVarName, helper, setter, collectionsParentVarName, parentVarName, "", varName,
 							concreteType, parentVarName, idx, valOrVar);
 				} else {
-					codeToReplace += String.format(addToArrayTemplate, parentVarName, idx, parentVarName, parentVarName,
+					codeToReplace += String.format(ADD_TO_ARRAY_TEMPLATE, parentVarName, idx, parentVarName, parentVarName,
 							collectionsParentVarName, setter, parentVarName, "", varName, concreteType, parentVarName,
 							idx, valOrVar);
 				}
@@ -178,16 +178,16 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			String memberType = fetchFieldTypeName(targetOCC, null, memberOCD, createNewVarName, varNamesMap);
 			if (PackagesFilterUtil.isFilteredPackage(memberOCD.fieldType)) {
 				if (memberOCD.isEnum()) {
-					codeToReplace = String.format(createInitVarTemplate, memberType, varName, concreteType);
+					codeToReplace = String.format(CREATE_INIT_VAR_TEMPLATE, memberType, varName, concreteType);
 				} else {
-					codeToReplace = String.format(createInstanceTemplate, memberType, varName, concreteType);
+					codeToReplace = String.format(CREATE_INSTANCE_TEMPLATE, memberType, varName, concreteType);
 				}
 			} else {
-				codeToReplace = String.format(createInitVarTemplate, memberType, varName, valOrVar);
+				codeToReplace = String.format(CREATE_INIT_VAR_TEMPLATE, memberType, varName, valOrVar);
 			}
-			codeToReplace += String.format(addToCollectionTemplate, parentVarName, varName);
+			codeToReplace += String.format(ADD_TO_COLLECTION_TEMPLATE, parentVarName, varName);
 		}
-		return addInlineComments(inlineComments, codeToReplace);
+		return addInlineComments(INLINE_COMMENTS, codeToReplace);
 	}
 
 	/**
@@ -212,40 +212,38 @@ public final class AddToCollectionTemplate extends AbstractTemplate {
 			parentPcd = parentPcd + idx;
 			memberPcd = memberPcd + idx;
 		}
-		OtcCommandDto memberOCD = targetOCC.otcCommandDto; // OtcCommand.retrieveMemberOCD(targetOCC);
+		OtcCommandDto memberOCD = targetOCC.otcCommandDto;
 		OtcCommandDto targetOCD = memberOCD.parent;
-		String icdId = targetOCD.otcToken;
 		boolean hasAncestor = targetOCC.hasAncestralCollectionOrMap();
 		if (!hasAncestor) {
 			memberPcd = "targetICD";
-			icdId = targetOCD.tokenPath;
 		} else {
 			if (idx != null) {
 				memberPcd = memberPcd + idx;
 			}
 		}
-		icdId = createIcdKey(memberOCD, idxVar, null);
+		String icdId = createIcdKey(memberOCD, idxVar, null);
 		boolean hasMapValueInPath = memberOCD.isMapValue() || targetOCC.hasMapValueDescendant();
 		if (hasMapValueInPath) {
 			int endIdx = targetOCC.otcChain.lastIndexOf(OtcConstants.MAP_VALUE_REF) + 3;
 			String mapValueTokenPath = targetOCC.otcChain.substring(0, endIdx);
 			String logMsg = "Corresponding Map-key missing for path: '" + mapValueTokenPath + "'!";
-			forLoopCodeBuilder.append(String.format(retrieveMemberIcd, idx, parentPcd, icdId));
-			forLoopCodeBuilder.append(String.format(postLoopTemplate, idx, idx, idx, logLevel, logMsg));
+			forLoopCodeBuilder.append(String.format(RETRIEVE_MEMBER_ICD, idx, parentPcd, icdId));
+			forLoopCodeBuilder.append(String.format(POST_LOOP_TEMPLATE, idx, idx, idx, logLevel, logMsg));
 			forLoopCodeBuilder.append(RetrieveMemberFromPcdTemplate.generateCode(targetOCC, createNewVarName, memberPcd,
 					varNamesSet, varNamesMap));
 		} else {
 			String fieldType = fetchFieldTypeName(targetOCC, null, memberOCD, createNewVarName, varNamesMap);
 			String varName = createVarName(memberOCD, createNewVarName, varNamesSet, varNamesMap);
 			String concreteType = fetchConcreteTypeName(targetOCC, memberOCD);
-			forLoopCodeBuilder.append(String.format(postTargetLoopTemplate, idx, parentPcd, icdId, fieldType, varName,
+			forLoopCodeBuilder.append(String.format(POST_TARGET_LOOP_TEMPLATE, idx, parentPcd, icdId, fieldType, varName,
 					idx, varName, concreteType, idx, idx, parentPcd, varName, icdId));
-			String createMemberCode = String.format(createInstanceTemplate, "", varName, concreteType);
+			String createMemberCode = String.format(CREATE_INSTANCE_TEMPLATE, "", varName, concreteType);
 			String parentVarName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
-			createMemberCode += String.format(addToCollectionTemplate, parentVarName, varName);
+			createMemberCode += String.format(ADD_TO_COLLECTION_TEMPLATE, parentVarName, varName);
 			int startIdx = forLoopCodeBuilder.indexOf(CODE_TO_REPLACE);
 			forLoopCodeBuilder.replace(startIdx, startIdx + CODE_TO_REPLACE.length(), createMemberCode);
 		}
-		return addInlineComments(inlineComments, forLoopCodeBuilder.toString());
+		return addInlineComments(INLINE_COMMENTS, forLoopCodeBuilder.toString());
 	}
 }
