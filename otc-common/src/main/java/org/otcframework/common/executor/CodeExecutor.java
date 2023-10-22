@@ -32,7 +32,6 @@ import java.util.Map;
  * @param <S> the generic type
  * @param <T> the generic type
  */
-// TODO: Auto-generated Javadoc
 public interface CodeExecutor<S, T> {
 
 	/**
@@ -40,8 +39,8 @@ public interface CodeExecutor<S, T> {
 	 *
 	 * @param srcObject the src object
 	 * @param sourcePCD the source PCD
-	 * @param config    the config
+	 * @param appData    the appData
 	 * @return the t
 	 */
-	public T execute(S srcObject, IndexedCollectionsDto sourcePCD, Map<String, Object> config);
+	public T execute(S srcObject, IndexedCollectionsDto sourcePCD, Map<String, Object> appData);
 }

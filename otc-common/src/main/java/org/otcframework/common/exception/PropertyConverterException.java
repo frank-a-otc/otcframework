@@ -25,7 +25,6 @@ package org.otcframework.common.exception;
 /**
  * The Class PropertyConverterException.
  */
-// TODO: Auto-generated Javadoc
 public class PropertyConverterException extends OtcException {
 
 	/** The Constant serialVersionUID. */

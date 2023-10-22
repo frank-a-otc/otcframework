@@ -27,7 +27,6 @@ import java.util.Arrays;
 /**
  * The Class OtcChainDto.
  */
-// TODO: Auto-generated Javadoc
 public final class OtcChainDto {
 
 	/** The otc chain. */
@@ -127,9 +126,7 @@ public final class OtcChainDto {
 			return false;
 		if (!Arrays.equals(otcTokens, other.otcTokens))
 			return false;
-		if (!Arrays.equals(rawOtcTokens, other.rawOtcTokens))
-			return false;
-		return true;
+		return Arrays.equals(rawOtcTokens, other.rawOtcTokens);
 	}
 
 	/**

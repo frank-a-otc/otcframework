@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class LexicalizerException.
  */
-// TODO: Auto-generated Javadoc
 public class LexicalizerException extends OtcException {
 
 	/** The Constant serialVersionUID. */

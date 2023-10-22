@@ -34,10 +34,9 @@ import java.util.Set;
 /**
  * The Class SetterTemplate.
  */
-// TODO: Auto-generated Javadoc
 public class SetterTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
 			SetterTemplate.class.getSimpleName() + "\n";
 
 	/**
@@ -50,13 +49,12 @@ public class SetterTemplate extends AbstractTemplate {
 	 * Generate code.
 	 *
 	 * @param targetOCC        the target OCC
-	 * @param createNewVarName the create new var name
 	 * @param value            the value
 	 * @param varNamesSet      the var names set
 	 * @param varNamesMap      the var names map
 	 * @return the string
 	 */
-	public static String generateCode(TargetOtcCommandContext targetOCC, boolean createNewVarName, String value,
+	public static String generateCode(TargetOtcCommandContext targetOCC, String value,
 			Set<String> varNamesSet, Map<String, String> varNamesMap) {
 		OtcCommandDto otcCommandDto = targetOCC.otcCommandDto;
 		String parentVarName = null;
@@ -69,23 +67,21 @@ public class SetterTemplate extends AbstractTemplate {
 			parentVarName = createVarName(otcCommandDto.parent, false, varNamesSet, varNamesMap);
 		}
 		String setterCode = null;
-//		if (PackagesFilterUtil.isFilteredPackage(otcCommandDto.fieldType)) {
-			targetOCC.factoryClassDto.addImport(otcCommandDto.fieldType.getName());
-//		}
+		targetOCC.factoryClassDto.addImport(otcCommandDto.fieldType.getName());
 		value = createConvertExpression(otcCommandDto, value);
 		if (otcCommandDto.enableSetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			setterCode = String.format(helperSetterTemplate, helper, otcCommandDto.setter, parentVarName, value);
+			setterCode = String.format(HELPER_SETTER_TEMPLATE, helper, otcCommandDto.setter, parentVarName, value);
 		} else {
 			if (DateConverterFacade.isOfAnyDateType(otcCommandDto.fieldType)) {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				String clz = fetchSanitizedTypeName(targetOCC, otcCommandDto);
-				setterCode = String.format(dateConverterTemplate, parentVarName, otcCommandDto.setter, value,
+				setterCode = String.format(DATE_CONVERTER_TEMPLATE, parentVarName, otcCommandDto.setter, value,
 						clz);
 			} else {
-				setterCode = String.format(setterTemplate, parentVarName, otcCommandDto.setter, value);
+				setterCode = String.format(SETTER_TEMPLATE, parentVarName, otcCommandDto.setter, value);
 			}
 		}
-		return addInlineComments(inlineComments, setterCode);
+		return addInlineComments(INLINE_COMMENTS, setterCode);
 	}
 }

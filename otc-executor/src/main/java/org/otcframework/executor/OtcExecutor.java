@@ -27,7 +27,6 @@ import java.util.Map;
 /**
  * The Interface OtcExecutor.
  */
-// TODO: Auto-generated Javadoc
 public interface OtcExecutor {
 
 	/**

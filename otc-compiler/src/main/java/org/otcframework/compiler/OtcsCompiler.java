@@ -29,7 +29,6 @@ import java.util.List;
 /**
  * The Interface OtcCompiler.
  */
-// TODO: Auto-generated Javadoc
 public interface OtcsCompiler {
 
 	/**

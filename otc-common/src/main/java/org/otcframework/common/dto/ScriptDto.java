@@ -30,7 +30,6 @@ import org.otcframework.common.dto.otc.OtcFileDto.OtcsCommand;
 /**
  * The Class ScriptDto.
  */
-// TODO: Auto-generated Javadoc
 public class ScriptDto {
 
 	/** The command. */

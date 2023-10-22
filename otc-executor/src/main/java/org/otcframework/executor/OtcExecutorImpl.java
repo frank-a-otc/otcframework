@@ -37,20 +37,19 @@ import java.util.Map;
 /**
  * The Class OtcExecutorImpl.
  */
-// TODO: Auto-generated Javadoc
 public final class OtcExecutorImpl implements OtcExecutor {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcExecutorImpl.class);
 
 	/** The Constant otcRegistry. */
-	private static final OtcRegistry otcRegistry = (OtcRegistryImpl) OtcRegistryImpl.instance;
+	private static final OtcRegistry otcRegistry = OtcRegistryImpl.INSTANCE;
 
 	/** The Constant objectIndexer. */
 	private static final ObjectIndexer objectIndexer = ObjectIndexerImpl.getInstance();
 
 	/** The otc executor. */
-	private static OtcExecutor otcExecutor = new OtcExecutorImpl();;
+	private static final OtcExecutor otcExecutor = new OtcExecutorImpl();
 
 	/**
 	 * Instantiates a new otc executor impl.
@@ -79,8 +78,7 @@ public final class OtcExecutorImpl implements OtcExecutor {
 	 */
 	@Override
 	public <T> T execute(String otcNamespace, Class<T> targetClz, Map<String, Object> data) {
-		T target = execute(otcNamespace, null, targetClz, data);
-		return target;
+		return execute(otcNamespace, null, targetClz, data);
 	}
 
 	/**

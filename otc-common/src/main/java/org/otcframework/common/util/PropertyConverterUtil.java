@@ -33,20 +33,7 @@ import java.util.Map;
 /**
  * The Class PropertyConverterUtil.
  */
-// TODO: Auto-generated Javadoc
 public class PropertyConverterUtil {
-
-	/** The Constant HEX_PREFIX. */
-	private static final String HEX_PREFIX = "0x";
-
-	/** The Constant HEX_RADIX. */
-	private static final int HEX_RADIX = 16;
-
-	/** The Constant BIN_PREFIX. */
-	private static final String BIN_PREFIX = "0b";
-
-	/** The Constant BIN_RADIX. */
-	private static final int BIN_RADIX = 2;
 
 	/** The Constant CONSTR_ARGS. */
 	private static final Class<?>[] CONSTR_ARGS = { String.class };
@@ -71,6 +58,7 @@ public class PropertyConverterUtil {
 		allTypes.put(BigDecimal.class, BigDecimal.class);
 	}
 
+	private PropertyConverterUtil() {}
 	/**
 	 * To integer.
 	 *
@@ -105,7 +93,7 @@ public class PropertyConverterUtil {
 		Number num;
 		try {
 			Constructor<?> constr = clz.getConstructor(CONSTR_ARGS);
-			num = (Number) constr.newInstance(new Object[] { strValue });
+			num = (Number) constr.newInstance((Object[]) new String[] { strValue });
 		} catch (Exception ex) {
 			throw new PropertyConverterException(
 					"Number Conversion error! Error converting '" + strValue + "' to " + clz.getName(), ex);

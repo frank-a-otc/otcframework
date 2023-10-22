@@ -32,7 +32,6 @@ import java.util.Map;
 /**
  * The Class OtcDto.
  */
-// TODO: Auto-generated Javadoc
 public final class OtcDto {
 
 	/** The otc file dto. */

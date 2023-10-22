@@ -27,7 +27,6 @@ import org.otcframework.common.dto.RegistryDto;
 /**
  * The Interface OtcRegistry.
  */
-// TODO: Auto-generated Javadoc
 public interface OtcRegistry {
 
 	/**

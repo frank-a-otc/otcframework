@@ -24,7 +24,6 @@ package org.otcframework.common.dto.otc;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OtcFileDto.
  */
