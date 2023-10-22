@@ -38,12 +38,12 @@ import java.util.List;
 /**
  * The Class ConcreteTypeNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class ConcreteTypeNotationProcessor {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConcreteTypeNotationProcessor.class);
 
+	private ConcreteTypeNotationProcessor() {}
 	/**
 	 * Process.
 	 *
@@ -61,13 +61,13 @@ final class ConcreteTypeNotationProcessor {
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
 			otcChain = copy.to.objectPath;
-			if (copy != null && copy.to != null && copy.to.overrides != null) {
+			if (copy.to.overrides != null) {
 				overrides = copy.to.overrides;
 			}
 		} else {
 			Execute execute = (Execute) script.command;
 			otcChain = execute.target.objectPath;
-			if (execute != null && execute.target != null && execute.target.overrides != null) {
+			if (execute.target != null && execute.target.overrides != null) {
 				overrides = execute.target.overrides;
 			}
 		}
@@ -75,7 +75,6 @@ final class ConcreteTypeNotationProcessor {
 			return true;
 		}
 		otcCommandDto.concreteTypeName = null;
-//		for (TargetDto.Override override : overrides) {
 		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
@@ -120,7 +119,7 @@ final class ConcreteTypeNotationProcessor {
 			if (isErr) {
 				LOGGER.warn(
 						"Oops... Error in OTC-Command-Id : {} - 'overrides.concreteType' already set earlier for : '{}"
-								+ "' in one of these earlier commands : ",
+								+ "' in one of these earlier commands : {}",
 						commandId, tokenPath, otcCommandDto.occursInCommands);
 			}
 		});

@@ -26,6 +26,7 @@ import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
+import org.otcframework.common.exception.OtcUnsupportedJdkException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +42,9 @@ import java.util.Map;
 /**
  * The Class OtcUtils.
  */
-// TODO: Auto-generated Javadoc
 public class OtcUtils {
+
+	private OtcUtils() {}
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcUtils.class);
@@ -51,7 +53,7 @@ public class OtcUtils {
 	private static URLClassLoader clzLoader;
 
 	/** The Constant otcLibLocation. */
-	private static final String otcLibLocation = OtcConfig.getOtcLibLocation();
+	private static final String OTC_LIB_LOCATION = OtcConfig.getOtcLibLocation();
 	
 	/**
 	 * Creates the otc file name.
@@ -61,11 +63,10 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String createOtcFileName(String sourceClz, String targetClz) {
-		if (CommonUtils.isEmpty(targetClz)) {
+		if (CommonUtils.isTrimmedAndEmpty(targetClz)) {
 			throw new OtcException("", "Target-class cannot be null.");
 		}
-		String fileName = createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
-		return fileName;
+		return createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class OtcUtils {
 		} else {
 			registryId = sourceClz + "_" + targetClz;
 		}
-		if (!CommonUtils.isEmpty(otcNamespace)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			registryId = otcNamespace + "." + registryId;
 		}
 		return registryId;
@@ -210,8 +211,7 @@ public class OtcUtils {
 		} else if (ocdKey.contains(OtcConstants.MAP_VALUE_REF)) {
 			ocdKey = ocdKey.replace(OtcConstants.MAP_VALUE_REF, "");
 		}
-		OtcCommandDto otcCommandDto = mapOCDs.get(ocdKey);
-		return otcCommandDto;
+		return mapOCDs.get(ocdKey);
 	}
 
 	/**
@@ -223,8 +223,7 @@ public class OtcUtils {
 	public static String retrieveIndexCharacter(String otcToken) {
 		int idxCollectionNotation = otcToken.indexOf(OtcConstants.OPEN_BRACKET) + 1;
 		int idxEndCollectionNotation = otcToken.indexOf(OtcConstants.CLOSE_BRACKET);
-		String idxCharacter = otcToken.substring(idxCollectionNotation, idxEndCollectionNotation);
-		return idxCharacter;
+		return otcToken.substring(idxCollectionNotation, idxEndCollectionNotation);
 	}
 
 	/**
@@ -239,8 +238,14 @@ public class OtcUtils {
 		if (urls == null || urls.isEmpty()) {
 			return null;
 		}
-		URLClassLoader clzLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
+		return new URLClassLoader(urls.toArray(new URL[urls.size()]),
 				ClassLoader.getSystemClassLoader());
+	}
+
+	public static URLClassLoader getClassLoader(String path) {
+		if (clzLoader == null) {
+			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
+		}
 		return clzLoader;
 	}
 
@@ -288,7 +293,7 @@ public class OtcUtils {
 	 */
 	public static Class<?> loadClass(String clzName) {
 		if (clzLoader == null) {
-			clzLoader = loadURLClassLoader(otcLibLocation);
+			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
 		}
 		if (clzLoader == null || clzName == null) {
 			throw new OtcException("", "Invalid value : null!");
@@ -296,8 +301,15 @@ public class OtcUtils {
 		Class<?> cls = null;
 		try {
 			cls = clzLoader.loadClass(clzName);
-		} catch (Exception e) {
-			throw new OtcException("", e);
+		} catch (Error e) {
+			LOGGER.error(e.getMessage(), e);
+			if (e instanceof UnsupportedClassVersionError) {
+				throw new OtcUnsupportedJdkException("", "JDK versions conflict between OTC-Editor and the jars.");
+			}
+			throw new OtcException("", e.getMessage(), e);
+		} catch (Throwable e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new OtcException("", e.getMessage(), e);
 		}
 		return cls;
 	}

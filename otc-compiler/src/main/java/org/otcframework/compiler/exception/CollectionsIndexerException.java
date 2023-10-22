@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class CollectionsIndexerException.
  */
-// TODO: Auto-generated Javadoc
 public class CollectionsIndexerException extends OtcException {
 
 	/** The Constant serialVersionUID. */

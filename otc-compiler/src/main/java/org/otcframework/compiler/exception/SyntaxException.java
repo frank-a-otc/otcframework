@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class SyntaxException.
  */
-// TODO: Auto-generated Javadoc
 public class SyntaxException extends OtcException {
 
 	/** The Constant serialVersionUID. */

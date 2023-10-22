@@ -29,7 +29,6 @@ import java.util.Map;
 /**
  * The Class ClassDto.
  */
-// TODO: Auto-generated Javadoc
 public class ClassDto {
 
 	/** The imports. */

@@ -30,20 +30,19 @@ import org.otcframework.compiler.exception.SyntaxException;
 /**
  * The Class AnchorNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class AnchorNotationProcessor {
 
+	private AnchorNotationProcessor() {}
 	/**
 	 * Process.
 	 *
 	 * @param scriptId      the script id
 	 * @param otcCommandDto the otc command dto
 	 * @param otcToken      the otc token
-	 * @param otcChain      the otc chain
 	 * @param otcTokens     the otc tokens
 	 * @return true, if successful
 	 */
-	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken, String otcChain,
+	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken,
 			String[] otcTokens) {
 		int idxAnchor = otcToken.indexOf(OtcConstants.ANCHOR);
 		boolean isAnchored = false;

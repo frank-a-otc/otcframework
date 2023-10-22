@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class CodeGeneratorException.
  */
-// TODO: Auto-generated Javadoc
 public class CodeGeneratorException extends OtcException {
 
 	/** The Constant serialVersionUID. */

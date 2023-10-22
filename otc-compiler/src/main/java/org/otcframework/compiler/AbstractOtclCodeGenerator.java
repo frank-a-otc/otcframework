@@ -37,7 +37,6 @@ import javax.tools.JavaFileObject;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 abstract class AbstractOtcCodeGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOtcCodeGenerator.class);
 
@@ -95,15 +94,12 @@ abstract class AbstractOtcCodeGenerator {
 		String pkgName = targetOCC.factoryClassDto.packageName;
 		String factoryClzName = scriptDto.command.factoryClassName;
 		targetOCC.factoryClassDto.fullyQualifiedClassName = factoryClzName;
-		if (!CommonUtils.isEmpty(pkgName)) {
-			if (!factoryClzName.startsWith(pkgName)) {
-				targetOCC.factoryClassDto.fullyQualifiedClassName = pkgName + "." + factoryClzName;
-			}
+		if (!CommonUtils.isTrimmedAndEmpty(pkgName) && !factoryClzName.startsWith(pkgName)) {
+			targetOCC.factoryClassDto.fullyQualifiedClassName = pkgName + "." + factoryClzName;
 		}
 		targetOCC.factoryClassDto.className = factoryClzName;
 		if (factoryClzName.contains(".")) {
-			LOGGER.warn(
-					"Stripping illegal presence of Namespace/Package name in 'factoryClassName' property in command-id : {}",
+			LOGGER.warn("Stripping illegal presence of Namespace/Package name in 'factoryClassName' property in command-id : {}",
 					commandId);
 			int idx = factoryClzName.lastIndexOf(".");
 			String pkg = factoryClzName.substring(0, idx);

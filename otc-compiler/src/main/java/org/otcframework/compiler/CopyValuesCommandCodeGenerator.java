@@ -40,7 +40,6 @@ import java.util.List;
 /**
  * The Class CopyValuesCommandCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/** The Constant LOGGER. */
@@ -89,11 +88,8 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		} else if (!targetOCD.isFirstNode) {
 			otcCommand.appendGetter(clonedTargetOCC, targetOCD, false);
 		}
-		offsetIdx = processRemainingPath(clonedTargetOCC, otcCommand, scriptDto, scriptGroupIdx, offsetIdx);
-		targetOCD = targetOCC.otcCommandDto;
-		scriptGroupIdx++;
+		processRemainingPath(clonedTargetOCC, otcCommand, scriptDto, scriptGroupIdx, offsetIdx);
 		otcCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-		return;
 	}
 
 	/**
