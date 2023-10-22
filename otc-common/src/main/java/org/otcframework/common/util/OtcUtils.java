@@ -53,7 +53,7 @@ public class OtcUtils {
 	private static URLClassLoader clzLoader;
 
 	/** The Constant otcLibLocation. */
-	private static final String OTC_LIB_LOCATION = OtcConfig.getOtcLibLocation();
+	private static final String otcLibLocation = OtcConfig.getOtcLibLocation();
 	
 	/**
 	 * Creates the otc file name.
@@ -298,7 +298,7 @@ public class OtcUtils {
 	 */
 	public static Class<?> loadClass(String clzName) {
 		if (clzLoader == null) {
-			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
+			clzLoader = loadURLClassLoader(otcLibLocation);
 		}
 		if (clzLoader == null || clzName == null) {
 			throw new OtcException("", "Invalid value : null!");
