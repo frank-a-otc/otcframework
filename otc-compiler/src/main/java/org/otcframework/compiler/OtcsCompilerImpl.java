@@ -125,7 +125,7 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 	 * @return the list
 	 */
 	@Override
-	public List<CompilationReport> compile() {
+	public List<CompilationReport> compileOtcsFiles() {
 		long startTime = System.nanoTime();
 		LOGGER.info("Initiating OTCS file compilations in {}", OTCS_SOURCE_LOCATION);
 		File otcSourceDirectory = new File(OTCS_SOURCE_LOCATION);
@@ -189,7 +189,7 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 					binDir.mkdirs();
 				}
 				depFileName = OTC_TMD_LOCATION + depFileName;
-				RegistryDto registryDto = createregistryDto(compilationReport);
+				RegistryDto registryDto = createRegistryDto(compilationReport);
 				registryDto.registryFileName = depFileName;
 				createRegistrationFile(registryDto);
 				compilationReports.add(compilationReport);
@@ -230,7 +230,7 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 	 * @param compilationReport the compilation report
 	 * @return the registry dto
 	 */
-	private RegistryDto createregistryDto(CompilationReport compilationReport) {
+	private RegistryDto createRegistryDto(CompilationReport compilationReport) {
 		RegistryDto registryDto = new RegistryDto();
 		OtcDto otcDto = compilationReport.otcDto;
 		registryDto.mainClass = otcDto.mainClassDto.fullyQualifiedClassName;
@@ -239,12 +239,8 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 		registryDto.otcNamespace = otcDto.otcNamespace;
 		String otcNamespace = otcDto.otcNamespace;
 		registryDto.otcFileName = otcDto.otcFileName;
-		String registryId = otcDto.otcFileName;
-		registryId = registryId.substring(0, registryId.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
-		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
-			registryId = otcNamespace + "." + registryId;
-		}
-		registryDto.registryId = registryId;
+		registryDto.registryId =
+				OtcUtils.createRegistryId(otcNamespace, registryDto.sourceClz, registryDto.targetClz);
 		List<ScriptDto> scriptDtos = otcDto.scriptDtos;
 		// loop through scriptDtos and register in registry
 		scriptDtos.forEach(scriptDto -> {
@@ -381,7 +377,6 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 				}
 			}
 		}
-
 		try {
 			createCompilationUnitsAndCompile(registryDtos, null);
 		} catch (OtcCompilerException e) {

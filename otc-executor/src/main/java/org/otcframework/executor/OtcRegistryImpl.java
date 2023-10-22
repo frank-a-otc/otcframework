@@ -30,6 +30,7 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.RegistryDto;
 import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.exception.OtcException;
+import org.otcframework.common.exception.OtcUnsupportedJdkException;
 import org.otcframework.common.executor.CodeExecutor;
 import org.otcframework.common.factory.OtcCommandDtoFactory;
 import org.otcframework.common.util.CommonUtils;
@@ -70,6 +71,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader = OtcConfig.getTargetClassLoader();
+	private static final String OTC_TARGET_FOLDER = OtcConfig.getCompiledCodeLocation();
 
 	/**
 	 * Instantiates a new otc registry impl.
@@ -191,10 +193,14 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		Class<?> mainClz = null;
 		try {
 			mainClz = OtcUtils.loadClass(mainClass);
+		} catch (OtcUnsupportedJdkException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			try {
 				mainClz = clzLoader.loadClass(mainClass);
+				LOGGER.info("Found entry file {} in {} ", mainClass, OTC_TARGET_FOLDER);
 			} catch (Exception e) {
+				LOGGER.error("Could not load entry file {} ", mainClass);
 				throw new OtcException("", e);
 			}
 		}

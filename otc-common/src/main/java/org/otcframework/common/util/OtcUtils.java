@@ -81,7 +81,7 @@ public class OtcUtils {
 		if (source == null) {
 			return createRegistryId(otcNamespace, null, targetClz.getName());
 		} else {
-			return createRegistryId(otcNamespace, source.getClass().getName(), targetClz.getName());
+			return createRegistryId(otcNamespace, source.getClass(), targetClz);
 		}
 	}
 
@@ -302,13 +302,13 @@ public class OtcUtils {
 		try {
 			cls = clzLoader.loadClass(clzName);
 		} catch (Error e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage());
 			if (e instanceof UnsupportedClassVersionError) {
 				throw new OtcUnsupportedJdkException("", "JDK versions conflict.");
 			}
 			throw new OtcException("", e.getMessage(), e);
 		} catch (Throwable e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage());
 			throw new OtcException("", e.getMessage(), e);
 		}
 		return cls;

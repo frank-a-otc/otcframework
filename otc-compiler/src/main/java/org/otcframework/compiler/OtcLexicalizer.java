@@ -275,7 +275,7 @@ final class OtcLexicalizer {
                 if (ex instanceof OtcException) {
                     throw ex;
                 }
-                throw new LexicalizerException("", "Otc Lexicalization-phase failure compiling Command-Id : " +
+                throw new LexicalizerException("", "OTC Lexicalization-phase failure compiling command-Id : " +
                         commandId, ex);
             }
         });

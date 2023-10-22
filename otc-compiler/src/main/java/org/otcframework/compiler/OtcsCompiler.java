@@ -36,7 +36,7 @@ public interface OtcsCompiler {
 	 *
 	 * @return the list
 	 */
-	List<CompilationReport> compile();
+	List<CompilationReport> compileOtcsFiles();
 
 	/**
 	 * Compile source code.
