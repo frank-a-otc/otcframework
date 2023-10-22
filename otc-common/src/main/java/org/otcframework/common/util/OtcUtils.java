@@ -304,7 +304,7 @@ public class OtcUtils {
 		} catch (Error e) {
 			LOGGER.error(e.getMessage(), e);
 			if (e instanceof UnsupportedClassVersionError) {
-				throw new OtcUnsupportedJdkException("", "JDK versions conflict between OTC-Editor and the jars.");
+				throw new OtcUnsupportedJdkException("", "JDK versions conflict.");
 			}
 			throw new OtcException("", e.getMessage(), e);
 		} catch (Throwable e) {
