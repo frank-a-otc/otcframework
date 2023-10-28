@@ -307,8 +307,9 @@ public class OtcUtils {
 				throw new OtcUnsupportedJdkException("", "JDK versions conflict.");
 			}
 			throw new OtcException("", e.getMessage(), e);
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Throwable e) {
-			LOGGER.error(e.getMessage());
 			throw new OtcException("", e.getMessage(), e);
 		}
 		return cls;
