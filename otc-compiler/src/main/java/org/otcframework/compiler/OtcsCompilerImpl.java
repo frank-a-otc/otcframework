@@ -66,7 +66,7 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 	private static final String SOURCE_CODE_LOCATION = OtcConfig.getSourceCodeLocation();
 
 	/** The Constant otcTargetDir. */
-	private static final String OTC_TARGET_LOCATION = OtcConfig.getCompiledCodeLocation();
+	private static final String OTC_TARGET_LOCATION = OtcConfig.getTargetLocation();
 
 	/** The Constant otcTmdDir. */
 	private static final String OTC_TMD_LOCATION = OtcConfig.getOtcTmdLocation();
@@ -180,17 +180,13 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 					compilationReports = new ArrayList<>();
 				}
 				int idx = compilationReport.otcFileName.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN);
-				String depFileName = compilationReport.otcFileName.substring(0, idx) + OtcConstants.OTC_TMD_EXTN;
+				String tmdFileName = compilationReport.otcFileName.substring(0, idx) + OtcConstants.OTC_TMD_EXTN;
 				if (!CommonUtils.isTrimmedAndEmpty(compilationReport.otcNamespace)) {
-					depFileName = compilationReport.otcNamespace + "." + depFileName;
+					tmdFileName = compilationReport.otcNamespace + "." + tmdFileName;
 				}
-				File binDir = new File(OTC_TMD_LOCATION);
-				if (!binDir.exists()) {
-					binDir.mkdirs();
-				}
-				depFileName = OTC_TMD_LOCATION + depFileName;
+				tmdFileName = OTC_TMD_LOCATION + tmdFileName;
 				RegistryDto registryDto = createRegistryDto(compilationReport);
-				registryDto.registryFileName = depFileName;
+				registryDto.registryFileName = tmdFileName;
 				createRegistrationFile(registryDto);
 				compilationReports.add(compilationReport);
 			}
@@ -402,7 +398,7 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 		}
 		for (RegistryDto registryDto : registryDtos) {
 			String mainClz = registryDto.mainClass;
-			String absoluteFileName = SOURCE_CODE_LOCATION + File.separator + mainClz.replace(".", File.separator)
+			String absoluteFileName = SOURCE_CODE_LOCATION + mainClz.replace(".", File.separator)
 					+ OtcConstants.OTC_GENERATEDCODE_EXTN;
 			File file = new File(absoluteFileName);
 			if (!file.exists()) {

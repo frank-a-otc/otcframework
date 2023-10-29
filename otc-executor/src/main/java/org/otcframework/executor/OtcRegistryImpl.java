@@ -45,6 +45,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +73,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader = OtcConfig.getTargetClassLoader();
-	private static final String OTC_TARGET_FOLDER = OtcConfig.getCompiledCodeLocation();
+	private static final String OTC_TARGET_FOLDER = OtcConfig.getTargetLocation();
 
 	/**
 	 * Instantiates a new otc registry impl.
@@ -84,13 +86,22 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	 */
 	@Override
 	public void register() {
-		String binDir = OtcConfig.getOtcTmdLocation();
-		File directory = new File(binDir);
+		File directory;
+		if (OtcConfig.isDefaultLocations()) {
+			directory = new File(OtcConfig.getOtcTmdLocation());
+		} else {
+			URL tmdUrl = this.getClass().getClassLoader().getResource(OtcConfig.OTC_TMD_FOLDER);
+			try {
+				directory = new File(tmdUrl.toURI());
+			} catch (URISyntaxException e) {
+				throw new RegistryException("", "Unable to load '.tmd' files...", e);
+			}
+		}
 		File[] files = directory.listFiles(depFileFilter);
 		if (files == null) {
 			return;
 		}
-		LOGGER.info("Begining OTC registrations from {}", binDir);
+		LOGGER.info("Beginning OTC registrations...");
 		long startTime = System.nanoTime();
 		boolean hasRegistrations = false;
 		for (File file : files) {
@@ -105,8 +116,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 				RegistryDto registryDto = objectMapper.readValue(contents, RegistryDto.class);
 				if (registryDto.hasError) {
 					LOGGER.error(
-							"Ignoring registry of {}. "
-									+ "Probable cause: full compilation did not succeed on previous attempt.",
+							"Ignoring registry of {}. Probable cause: full compilation did not succeed on previous attempt.",
 							file.getAbsolutePath());
 					continue;
 				}
@@ -245,7 +255,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	/**
 	 * Retrieve registry dto.
 	 *
-	 * @param regisgryId the registry id
+	 * @param registryId the registry id
 	 * @return the registry dto
 	 */
 	private RegistryDto retrieveRegistryDto(String registryId) {

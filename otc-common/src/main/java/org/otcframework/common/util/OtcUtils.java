@@ -234,15 +234,20 @@ public class OtcUtils {
 	 */
 	public static URLClassLoader loadURLClassLoader(String path) {
 		File otcBinDirectory = new File(path);
-		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"), null);
-		if (urls == null || urls.isEmpty()) {
+		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class"));
+		if (urls.isEmpty()) {
+			urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"));
+		} else {
+			urls.addAll(createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar")));
+		}
+		if (urls.isEmpty()) {
 			return null;
 		}
-		return new URLClassLoader(urls.toArray(new URL[urls.size()]),
+		return new URLClassLoader(urls.toArray(new URL[0]),
 				ClassLoader.getSystemClassLoader());
 	}
 
-	public static URLClassLoader getClassLoader(String path) {
+	public static URLClassLoader getClassLoader() {
 		if (clzLoader == null) {
 			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
 		}
@@ -254,27 +259,23 @@ public class OtcUtils {
 	 *
 	 * @param directory  the directory
 	 * @param fileFilter the file filter
-	 * @param urls       the urls
 	 * @return the list
 	 */
-	public static List<URL> createURLs(File directory, FileFilter fileFilter, List<URL> urls) {
+	public static List<URL> createURLs(File directory, FileFilter fileFilter) {
+		List<URL> urls = new ArrayList<>();
+		if (directory.listFiles(fileFilter) == null) {
+			return urls;
+		}
 		for (File file : directory.listFiles(fileFilter)) {
 			if (file.isDirectory()) {
-				if (urls == null) {
-					urls = createURLs(file, fileFilter, urls);
-				} else {
-					urls.addAll(createURLs(file, fileFilter, urls));
-				}
+				urls.addAll(createURLs(file, fileFilter));
 			} else {
 				try {
-					URL url = null;
+					URL url;
 					if (file.getName().endsWith(".jar")) {
 						url = new URL("jar:file:" + file.getAbsolutePath() + "!/");
 					} else {
 						url = new URL("file:" + file.getAbsolutePath());
-					}
-					if (urls == null) {
-						urls = new ArrayList<>();
 					}
 					urls.add(url);
 				} catch (MalformedURLException e) {
@@ -323,4 +324,12 @@ public class OtcUtils {
 	public static URLClassLoader fetchCurrentURLClassLoader() {
 		return clzLoader;
 	}
+
+	public static void creteDirectory(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+	}
+
 }

@@ -30,6 +30,8 @@ import org.otcframework.common.compiler.OtcCommandContext;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.ClassDto;
 import org.otcframework.common.dto.OtcCommandDto;
+import org.otcframework.common.util.CommonUtils;
+import org.otcframework.common.util.OtcUtils;
 import org.otcframework.compiler.exception.CodeGeneratorException;
 import org.otcframework.compiler.templates.*;
 import org.slf4j.Logger;
@@ -54,7 +56,7 @@ public class OtcCommand {
 	public static final String CODE_TO_IMPORT = "CODE_TO_IMPORT";
 
 	/** The Constant otcBinDir. */
-	private static final String OTC_BIN_DIR = OtcConfig.getCompiledCodeLocation();
+	private static final String TARGET_LOCATION = OtcConfig.getTargetLocation();
 
 	/** The Constant otcSourceDir. */
 	private static final String OTC_SOURCE_DIR = OtcConfig.getOtcSourceLocation();
@@ -96,24 +98,27 @@ public class OtcCommand {
 	 * @return the string
 	 */
 	public String createJavaFile(ClassDto classDto) {
-		File file = new File(SOURCE_FILE_LOCATION);
-		if (!file.exists()) {
-			file.mkdir();
+//		String fileName = classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
+//		String fileLocationAndName = SOURCE_FILE_LOCATION + fileName;
+//		File file = new File(fileLocationAndName);
+//		File dir = null;
+//		if (classDto.packageName == null) {
+//			dir = new File(SOURCE_FILE_LOCATION);
+//		} else {
+//			dir = new File(SOURCE_FILE_LOCATION + classDto.packageName.replace(".", File.separator));
+//		}
+		String path = SOURCE_FILE_LOCATION;
+		if (!CommonUtils.isTrimmedAndEmpty(classDto.packageName)) {
+			path += classDto.packageName.replace(".", File.separator) + File.separator;
 		}
-		String fileName = classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
-		String fileLocationAndName = SOURCE_FILE_LOCATION + fileName;
-		file = new File(fileLocationAndName);
 		FileOutputStream fileOutputStream = null;
-		File dir = null;
-		if (classDto.packageName == null) {
-			dir = new File(SOURCE_FILE_LOCATION);
-		} else {
-			dir = new File(SOURCE_FILE_LOCATION + classDto.packageName.replace(".", File.separator));
-		}
 		try {
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
+//			if (!dir.exists()) {
+//				dir.mkdirs();
+//			}
+			OtcUtils.creteDirectory(path);
+			String fileLocationAndName = path + classDto.className + OtcConstants.OTC_GENERATEDCODE_EXTN;
+			File file = new File(fileLocationAndName);
 			if (file.createNewFile()) {
 				fileOutputStream = new FileOutputStream(file);
 				String javaCode = classDto.codeBuilder.toString();
@@ -132,7 +137,7 @@ public class OtcCommand {
 				}
 			}
 		}
-		return fileName;
+		return classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
 	}
 
 	/**
@@ -318,7 +323,7 @@ public class OtcCommand {
 	private void appendBeginClass(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger, boolean isModule) {
 		String fileName = targetOCC.factoryClassDto.fullyQualifiedClassName.replace(".", File.separator);
-		File file = new File(OTC_BIN_DIR + fileName + ".class");
+		File file = new File(TARGET_LOCATION + fileName + ".class");
 		try {
 			Files.delete(file.toPath());
 		} catch (IOException e) {

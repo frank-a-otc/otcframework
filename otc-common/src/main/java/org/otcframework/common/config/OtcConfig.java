@@ -22,14 +22,15 @@
 */
 package org.otcframework.common.config;
 
+import org.apache.commons.io.FileUtils;
 import org.otcframework.common.config.exception.OtcConfigException;
 import org.otcframework.common.exception.OtcException;
-import org.otcframework.common.util.CommonUtils;
-import org.otcframework.common.util.OtcUtils;
-import org.otcframework.common.util.PackagesFilterUtil;
-import org.otcframework.common.util.YamlSerializationHelper;
+import org.otcframework.common.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -45,33 +46,25 @@ public enum OtcConfig {
 	/** The instance. */
 	INSTANCE;
 
-	/** The Constant OTC_HOME_ENV_VAR. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(OtcConfig.class);
+
 	private static final String OTC_HOME_ENV_VAR = "OTC_HOME";
 
-	/** The Constant OTC_UNITTEST_FOLDER. */
 	private static final String OTC_UNITTEST_FOLDER = "otc-unittest" + File.separator;
 	private static final String OTC_LIB_FOLDER = "lib" + File.separator;
 	private static final String OTC_SRC_FOLDER = "src" + File.separator;
-	private static final String OTC_TMD_FOLDER = "tmd" + File.separator;
+	public static final String OTC_TMD_FOLDER = "tmd" + File.separator;
 	private static final String OTC_TARGET_FOLDER = "target" + File.separator;
 	private static final String OTC_CONFIG_FILE = "config" + File.separator + "otc.yaml";
+	private static boolean isDefaultLocations = true;
+	private static String otcHome;
 
-	/** The compiler sourcecode failonerror. */
-	private static boolean compilerSourcecodeFailonerror = false;
-
-	/** The Constant otcHome. */
-	private static String OTC_HOME;
-
-	/** The Constant yamlConfig. */
-	private static final YamlConfig yamlConfig;
-
-	/** The Constant clzLoader. */
-	private static final URLClassLoader clzLoader;
-	
-	/** The Constant sourceCodeLocation. */
+	private static final YamlConfig YAML_CONFIG;
+	private static final URLClassLoader CLZ_LOADER;
 	private static String sourceCodeLocation;
-
-	private static final Integer DEFAULT_CYCLIC_DEPENDENCY_DEPTH = 2;
+	private static String tmdLocation;
+	private static String targetLocation;
+	private static final Integer DEFAULT_CYCLIC_REFERENCE_DEPTH = 2;
 
 	/**
 	 * Instantiates a new otc config.
@@ -86,44 +79,79 @@ public enum OtcConfig {
 					"Oops... Cannot proceed - '" + OTC_HOME_ENV_VAR + "' not set! Please set '" +
 							OTC_HOME_ENV_VAR + "' environment variable.");
 		}
-		OTC_HOME = sysEnv.get(OTC_HOME_ENV_VAR);
-		if (CommonUtils.isTrimmedAndEmpty(OTC_HOME)) {
+		otcHome = sysEnv.get(OTC_HOME_ENV_VAR);
+		if (CommonUtils.isTrimmedAndEmpty(otcHome)) {
 			throw new OtcException("", "Oops... Environment variable '" + OTC_HOME_ENV_VAR + "' not set! ");
 		}
-		if (!OTC_HOME.endsWith(File.separator)) {
-			OTC_HOME += File.separator;
+		if (!otcHome.endsWith(File.separator)) {
+			otcHome += File.separator;
 		}
 		try {
-			yamlConfig = YamlSerializationHelper.deserialize(OTC_HOME + OTC_CONFIG_FILE, YamlConfig.class);
+			YAML_CONFIG = YamlSerializationHelper.deserialize(otcHome + OTC_CONFIG_FILE, YamlConfig.class);
 		} catch (Exception ex) {
 			throw new OtcConfigException(ex);
 		}
-		try {
-			String targetDir = getCompiledCodeLocation();
-			File targetFolder = new File(targetDir);
-			if (!targetFolder.exists()) {
-				targetFolder.mkdir();
+		// -- load sourceCodeLocation and tmdLocation properties
+		if (YAML_CONFIG.compiler != null) {
+			sourceCodeLocation = YAML_CONFIG.compiler.sourceCodeLocation;
+			tmdLocation = YAML_CONFIG.compiler.tmdLocation;
+			targetLocation =  YAML_CONFIG.compiler.targetLocation;
+			boolean isSourceCodeLocationDefined = !CommonUtils.isTrimmedAndEmpty(sourceCodeLocation);
+			boolean isTmdLocationDefined = !CommonUtils.isTrimmedAndEmpty(tmdLocation);
+			boolean isTargetLocationDefined = !CommonUtils.isTrimmedAndEmpty(targetLocation);
+			if (!(isSourceCodeLocationDefined == isTmdLocationDefined &&
+					isSourceCodeLocationDefined == isTargetLocationDefined)) {
+				throw new OtcConfigException("", String.format("Either ALL or NONE of this set of 3 properties " +
+						"('compiler.sourceCodeLocation:', 'compiler.tmdLocation:', 'compiler.targetLocation:') " +
+						"should be defined in the '%s%s' file.", otcHome, OTC_CONFIG_FILE));
 			}
-			URL url = new File(targetDir).toURI().toURL();
+			if (isSourceCodeLocationDefined) {
+				isDefaultLocations = false;
+			}
+			if (getCleanupBeforeCompile()) {
+				LOGGER.warn("You have set 'compiler.cleanupBeforeCompile' property to true. Updated " +
+						"source-code if any will be lost during clean-up.");
+			}
+			sourceCodeLocation = initFolder(sourceCodeLocation, OTC_SRC_FOLDER);
+			targetLocation = initFolder(targetLocation, OTC_TARGET_FOLDER);
+
+			if (!CommonUtils.isTrimmedAndEmpty(tmdLocation)) {
+				if (!tmdLocation.endsWith(File.separator)) {
+					tmdLocation += File.separator;
+				}
+				tmdLocation += OTC_TMD_FOLDER;
+			} else {
+				tmdLocation = otcHome + OTC_TMD_FOLDER;
+			}
+			deleteRecursive(tmdLocation);
+			OtcUtils.creteDirectory(tmdLocation);
+		}
+
+		try {
+			URL url = new File(targetLocation).toURI().toURL();
 			URL[] urls = new URL[] { url };
-			clzLoader = URLClassLoader.newInstance(urls);
+			CLZ_LOADER = URLClassLoader.newInstance(urls);
 		} catch (MalformedURLException e) {
 			throw new OtcConfigException(e);
 		}
-		if (yamlConfig.compiler != null) {
-			OtcConfig.compilerSourcecodeFailonerror = yamlConfig.compiler.failOnError;
-		}
-		Set<String> filteredPackages = yamlConfig.filterPackages;
+		Set<String> filteredPackages = YAML_CONFIG.filterPackages;
 		PackagesFilterUtil.setFilteredPackages(filteredPackages);
+	}
 
-		if (yamlConfig.compiler != null) {
-			sourceCodeLocation = yamlConfig.compiler.sourceCodeLocation;
+	private static String initFolder(String configuredPath, String defaultPath) {
+		String path = configuredPath;
+		if (!CommonUtils.isTrimmedAndEmpty(configuredPath)) {
+			if (!configuredPath.endsWith(File.separator)) {
+				path += File.separator;
+			}
+		} else {
+			path = otcHome + defaultPath;
 		}
-		if (CommonUtils.isTrimmedAndEmpty(sourceCodeLocation)) {
-			sourceCodeLocation = OTC_HOME + OTC_SRC_FOLDER;
-		} else if (!sourceCodeLocation.endsWith(File.separator)) {
-			sourceCodeLocation += File.separator;
+		if (getCleanupBeforeCompile()) {
+			deleteRecursive(path);
 		}
+		OtcUtils.creteDirectory(path);
+		return path;
 	}
 
 	/**
@@ -132,16 +160,29 @@ public enum OtcConfig {
 	 * @return the otc home location
 	 */
 	public static String getOtcHomeLocation() {
-		return OTC_HOME;
+		return otcHome;
 	}
 
+	public static Boolean isDefaultLocations() {
+		return isDefaultLocations;
+	}
 	/**
 	 * Gets the otc lib location.
 	 *
 	 * @return the otc lib location
 	 */
 	public static String getOtcLibLocation() {
-		return OTC_HOME + OTC_LIB_FOLDER;
+		if (YAML_CONFIG.compiler.libLocation != null) {
+			return YAML_CONFIG.compiler.libLocation;
+		}
+		return otcHome + OTC_LIB_FOLDER;
+	}
+
+	public static boolean getCleanupBeforeCompile() {
+		if (YAML_CONFIG.compiler.cleanupBeforeCompile != null) {
+			return YAML_CONFIG.compiler.cleanupBeforeCompile;
+		}
+		return false;
 	}
 
 	/**
@@ -150,7 +191,7 @@ public enum OtcConfig {
 	 * @return the otc source location
 	 */
 	public static String getOtcSourceLocation() {
-		return OTC_HOME + OTC_UNITTEST_FOLDER;
+		return otcHome + OTC_UNITTEST_FOLDER;
 	}
 
 	/**
@@ -159,14 +200,17 @@ public enum OtcConfig {
 	 * @return the source code location
 	 */
 	public static String getSourceCodeLocation() {
-		return sourceCodeLocation;
+		if (!CommonUtils.isTrimmedAndEmpty(sourceCodeLocation)) {
+			return sourceCodeLocation;
+		}
+		return otcHome + OTC_SRC_FOLDER;
 	}
 
-	public static Integer getCyclicDependencyDepth() {
-		if (yamlConfig.compiler.cyclicDependencyDepth != null && yamlConfig.compiler.cyclicDependencyDepth > 0) {
-			return yamlConfig.compiler.cyclicDependencyDepth;
+	public static Integer getCyclicReferenceDepth() {
+		if (YAML_CONFIG.compiler.cyclicReferenceDepth != null && YAML_CONFIG.compiler.cyclicReferenceDepth > 0) {
+			return YAML_CONFIG.compiler.cyclicReferenceDepth;
 		}
-		return DEFAULT_CYCLIC_DEPENDENCY_DEPTH;
+		return DEFAULT_CYCLIC_REFERENCE_DEPTH;
 	}
 
 	/**
@@ -175,7 +219,10 @@ public enum OtcConfig {
 	 * @return the otc tmd location
 	 */
 	public static String getOtcTmdLocation() {
-		return OTC_HOME + OTC_TMD_FOLDER;
+		if (!CommonUtils.isTrimmedAndEmpty(tmdLocation)) {
+			return tmdLocation;
+		}
+		return otcHome + OTC_TMD_FOLDER;
 	}
 
 	/**
@@ -183,8 +230,11 @@ public enum OtcConfig {
 	 *
 	 * @return the compiled code location
 	 */
-	public static String getCompiledCodeLocation() {
-		return OTC_HOME + OTC_TARGET_FOLDER;
+	public static String getTargetLocation() {
+		if (!CommonUtils.isTrimmedAndEmpty(targetLocation)) {
+			return targetLocation;
+		}
+		return otcHome + OTC_TARGET_FOLDER;
 	}
 
 	/**
@@ -193,11 +243,8 @@ public enum OtcConfig {
 	 * @return the test case expected result location
 	 */
 	public static String getTestCaseExpectedResultLocation() {
-		String expectedLocation = OTC_HOME + File.separator + "result_expected" + File.separator;
-		File file = new File(expectedLocation);
-		if (!file.exists()) {
-			file.mkdir();
-		}
+		String expectedLocation = otcHome + File.separator + "result_expected" + File.separator;
+		OtcUtils.creteDirectory(expectedLocation);
 		return expectedLocation;
 	}
 
@@ -207,7 +254,10 @@ public enum OtcConfig {
 	 * @return the compiler sourcecode failonerror
 	 */
 	public static boolean getCompilerSourcecodeFailonerror() {
-		return compilerSourcecodeFailonerror;
+		if (YAML_CONFIG.compiler.failFast != null) {
+			return YAML_CONFIG.compiler.failFast;
+		}
+		return false;
 	}
 
 	/**
@@ -216,7 +266,7 @@ public enum OtcConfig {
 	 * @return the target class loader
 	 */
 	public static URLClassLoader getTargetClassLoader() {
-		return clzLoader;
+		return CLZ_LOADER;
 	}
 
 	/**
@@ -225,7 +275,7 @@ public enum OtcConfig {
 	 * @return the concrete types
 	 */
 	public static Map<Class<?>, String> getConcreteTypes() {
-		Map<String, String> yamlConcreteTypes = yamlConfig.concreteTypes;
+		Map<String, String> yamlConcreteTypes = YAML_CONFIG.concreteTypes;
 		if (yamlConcreteTypes != null) {
 			IdentityHashMap<Class<?>, String> concreteTypes = new IdentityHashMap<>(yamlConcreteTypes.size());
 			yamlConcreteTypes.forEach((key, value) -> {
@@ -237,15 +287,34 @@ public enum OtcConfig {
 		return null;
 	}
 
+	private static void deleteRecursive(String path) {
+		if (!isDefaultLocations || !OtcConfig.getCleanupBeforeCompile()) {
+			return;
+		}
+        File folder = new File(path);
+		if (!folder.isDirectory() || !folder.exists()) {
+			return;
+		}
+		try {
+			FileUtils.deleteDirectory(folder);
+		} catch (IOException e) {
+			throw new OtcConfigException("", "Could not clean up generated folders.", e);
+		}
+	}
+
 	public static final class YamlConfig {
 		public CompilerProps compiler;
 		public Map<String, String> concreteTypes;
 		public Set<String> filterPackages;
 		
 		public static final class CompilerProps {
-			public Boolean failOnError;
+			public Boolean failFast;
+			public String libLocation;
+			public Boolean cleanupBeforeCompile;
 			public String sourceCodeLocation;
-			public Integer cyclicDependencyDepth;
+			public String tmdLocation;
+			public String targetLocation;
+			public Integer cyclicReferenceDepth;
 		}
 
 	}

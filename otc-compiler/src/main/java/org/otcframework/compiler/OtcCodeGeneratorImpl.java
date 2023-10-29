@@ -56,7 +56,7 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 	private static final OtcCodeGenerator otcCodeGenerator = new OtcCodeGeneratorImpl();
 
 	/** The Constant otcBinDir. */
-	private static final String OTC_BIN_DIR = OtcConfig.getCompiledCodeLocation();
+	private static final String TARGET_LOCATION = OtcConfig.getTargetLocation();
 
 	/**
 	 * Instantiates a new otc code generator impl.
@@ -85,16 +85,16 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 		OtcFileDto otcFileDto = otcDto.otcFileDto;
 		ClassDto mainClassDto = otcDto.mainClassDto;
 		try {
-			File file = null;
-			String clzPackage = OTC_BIN_DIR.replace("/", File.separator);
-			if (otcDto.otcNamespace != null) {
-				clzPackage += otcDto.otcNamespace.replace(".", File.separator) + File.separator;
-				file = new File(clzPackage);
-				file.mkdirs();
-			} else {
-				new File(clzPackage); // only to check if it is creatable
-			}
-			generateSourceCode(otcDto, otcFileDto, mainClassDto);
+//			File file = null;
+//			String clzPackage = TARGET_LOCATION.replace("/", File.separator);
+//			if (otcDto.otcNamespace != null) {
+//				clzPackage += otcDto.otcNamespace.replace(".", File.separator) + File.separator;
+//				file = new File(clzPackage);
+//				file.mkdirs();
+//			} else {
+//				new File(clzPackage); // only to check if it is creatable
+//			}
+			generateSourceCodeFile(otcDto, otcFileDto, mainClassDto);
 		} catch (Exception e) {
 			if (!(e instanceof OtcException)) {
 				throw new CodeGeneratorException(e);
@@ -113,7 +113,7 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 	 * @param otcFileDto   the otc file dto
 	 * @param mainClassDto the main class dto
 	 */
-	private static void generateSourceCode(OtcDto otcDto, OtcFileDto otcFileDto, ClassDto mainClassDto) {
+	private static void generateSourceCodeFile(OtcDto otcDto, OtcFileDto otcFileDto, ClassDto mainClassDto) {
 		Map<String, OtcCommandDto> sourceOCDStems = otcDto.sourceOCDStems;
 		Map<String, OtcCommandDto> targetOCDStems = otcDto.targetOCDStems;
 		Class<?> sourceClz = otcDto.sourceClz;
