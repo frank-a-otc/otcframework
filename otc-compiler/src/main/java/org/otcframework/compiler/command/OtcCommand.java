@@ -59,7 +59,7 @@ public class OtcCommand {
 	private static final String TARGET_LOCATION = OtcConfig.getTargetLocation();
 
 	/** The Constant otcSourceDir. */
-	private static final String OTC_SOURCE_DIR = OtcConfig.getOtcSourceLocation();
+	private static final String UNIT_TEST_LOCATION = OtcConfig.getUnitTestLocation();
 
 	/** The Constant sourceFileLocation. */
 	private static final String SOURCE_FILE_LOCATION = OtcConfig.getSourceCodeLocation();
@@ -329,7 +329,7 @@ public class OtcCommand {
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
 		}
-		file = new File(OTC_SOURCE_DIR + fileName + ".java");
+		file = new File(UNIT_TEST_LOCATION + fileName + ".java");
 		try {
 			Files.delete(file.toPath());
 		} catch (IOException e) {

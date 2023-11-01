@@ -22,7 +22,6 @@
 */
 package org.otcframework.common.config;
 
-import org.apache.commons.io.FileUtils;
 import org.otcframework.common.config.exception.OtcConfigException;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.util.*;
@@ -30,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -52,10 +50,10 @@ public enum OtcConfig {
 
 	private static final String OTC_UNITTEST_FOLDER = "otc-unittest" + File.separator;
 	private static final String OTC_LIB_FOLDER = "lib" + File.separator;
-	private static final String OTC_SRC_FOLDER = "src" + File.separator;
+	public static final String OTC_SRC_FOLDER = "src" + File.separator;
 	public static final String OTC_TMD_FOLDER = "tmd" + File.separator;
-	private static final String OTC_TARGET_FOLDER = "target" + File.separator;
-	private static final String OTC_CONFIG_FILE = "config" + File.separator + "otc.yaml";
+	public static final String OTC_TARGET_FOLDER = "target" + File.separator;
+	public static final String OTC_CONFIG_FILE = "config" + File.separator + "otc.yaml";
 	private static boolean isDefaultLocations = true;
 	private static String otcHome;
 
@@ -92,18 +90,18 @@ public enum OtcConfig {
 			throw new OtcConfigException(ex);
 		}
 		// -- load sourceCodeLocation and tmdLocation properties
-		if (YAML_CONFIG.compiler != null) {
-			sourceCodeLocation = YAML_CONFIG.compiler.sourceCodeLocation;
-			tmdLocation = YAML_CONFIG.compiler.tmdLocation;
-			targetLocation =  YAML_CONFIG.compiler.targetLocation;
+		if (YAML_CONFIG.compiler != null && YAML_CONFIG.compiler.locations != null) {
+			sourceCodeLocation = YAML_CONFIG.compiler.locations.sourceCodeLocation;
+			tmdLocation = YAML_CONFIG.compiler.locations.tmdLocation;
+			targetLocation = YAML_CONFIG.compiler.locations.targetLocation;
 			boolean isSourceCodeLocationDefined = !CommonUtils.isTrimmedAndEmpty(sourceCodeLocation);
 			boolean isTmdLocationDefined = !CommonUtils.isTrimmedAndEmpty(tmdLocation);
 			boolean isTargetLocationDefined = !CommonUtils.isTrimmedAndEmpty(targetLocation);
 			if (!(isSourceCodeLocationDefined == isTmdLocationDefined &&
 					isSourceCodeLocationDefined == isTargetLocationDefined)) {
 				throw new OtcConfigException("", String.format("Either ALL or NONE of this set of 3 properties " +
-						"('compiler.sourceCodeLocation:', 'compiler.tmdLocation:', 'compiler.targetLocation:') " +
-						"should be defined in the '%s%s' file.", otcHome, OTC_CONFIG_FILE));
+						"('compiler.locations.sourceCodeLocation:', 'compiler.locations.tmdLocation:', " +
+						"'compiler.locations.targetLocation:') should be defined in the '%s%s' file.", otcHome, OTC_CONFIG_FILE));
 			}
 			if (isSourceCodeLocationDefined) {
 				isDefaultLocations = false;
@@ -112,20 +110,19 @@ public enum OtcConfig {
 				LOGGER.warn("You have set 'compiler.cleanupBeforeCompile' property to true. Updated " +
 						"source-code if any will be lost during clean-up.");
 			}
-			sourceCodeLocation = initFolder(sourceCodeLocation, OTC_SRC_FOLDER);
-			targetLocation = initFolder(targetLocation, OTC_TARGET_FOLDER);
-
-			if (!CommonUtils.isTrimmedAndEmpty(tmdLocation)) {
-				if (!tmdLocation.endsWith(File.separator)) {
-					tmdLocation += File.separator;
-				}
-				tmdLocation += OTC_TMD_FOLDER;
-			} else {
-				tmdLocation = otcHome + OTC_TMD_FOLDER;
-			}
-			deleteRecursive(tmdLocation);
-			OtcUtils.creteDirectory(tmdLocation);
 		}
+		sourceCodeLocation = initFolder(sourceCodeLocation, OTC_SRC_FOLDER);
+		targetLocation = initFolder(targetLocation, OTC_TARGET_FOLDER);
+		if (!CommonUtils.isTrimmedAndEmpty(tmdLocation)) {
+			if (!tmdLocation.endsWith(File.separator)) {
+				tmdLocation += File.separator;
+			}
+			tmdLocation += OTC_TMD_FOLDER;
+		} else {
+			tmdLocation = otcHome + OTC_TMD_FOLDER;
+		}
+		OtcUtils.deleteRecursive(tmdLocation);
+		OtcUtils.creteDirectory(tmdLocation);
 
 		try {
 			URL url = new File(targetLocation).toURI().toURL();
@@ -147,9 +144,7 @@ public enum OtcConfig {
 		} else {
 			path = otcHome + defaultPath;
 		}
-		if (getCleanupBeforeCompile()) {
-			deleteRecursive(path);
-		}
+		OtcUtils.deleteRecursive(path);
 		OtcUtils.creteDirectory(path);
 		return path;
 	}
@@ -163,7 +158,7 @@ public enum OtcConfig {
 		return otcHome;
 	}
 
-	public static Boolean isDefaultLocations() {
+	public static boolean isDefaultLocations() {
 		return isDefaultLocations;
 	}
 	/**
@@ -172,8 +167,8 @@ public enum OtcConfig {
 	 * @return the otc lib location
 	 */
 	public static String getOtcLibLocation() {
-		if (YAML_CONFIG.compiler.libLocation != null) {
-			return YAML_CONFIG.compiler.libLocation;
+		if (YAML_CONFIG.compiler.locations != null && YAML_CONFIG.compiler.locations.libLocation != null) {
+			return YAML_CONFIG.compiler.locations.libLocation;
 		}
 		return otcHome + OTC_LIB_FOLDER;
 	}
@@ -190,7 +185,7 @@ public enum OtcConfig {
 	 *
 	 * @return the otc source location
 	 */
-	public static String getOtcSourceLocation() {
+	public static String getUnitTestLocation() {
 		return otcHome + OTC_UNITTEST_FOLDER;
 	}
 
@@ -287,21 +282,6 @@ public enum OtcConfig {
 		return null;
 	}
 
-	private static void deleteRecursive(String path) {
-		if (!isDefaultLocations || !OtcConfig.getCleanupBeforeCompile()) {
-			return;
-		}
-        File folder = new File(path);
-		if (!folder.isDirectory() || !folder.exists()) {
-			return;
-		}
-		try {
-			FileUtils.deleteDirectory(folder);
-		} catch (IOException e) {
-			throw new OtcConfigException("", "Could not clean up generated folders.", e);
-		}
-	}
-
 	public static final class YamlConfig {
 		public CompilerProps compiler;
 		public Map<String, String> concreteTypes;
@@ -309,13 +289,16 @@ public enum OtcConfig {
 		
 		public static final class CompilerProps {
 			public Boolean failFast;
-			public String libLocation;
 			public Boolean cleanupBeforeCompile;
-			public String sourceCodeLocation;
-			public String tmdLocation;
-			public String targetLocation;
 			public Integer cyclicReferenceDepth;
-		}
+			public Locations locations;
 
+			public static final class Locations {
+				public String libLocation;
+				public String sourceCodeLocation;
+				public String tmdLocation;
+				public String targetLocation;
+			}
+		}
 	}
 }

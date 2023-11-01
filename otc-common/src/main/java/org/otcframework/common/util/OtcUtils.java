@@ -22,8 +22,10 @@
 */
 package org.otcframework.common.util;
 
+import org.apache.commons.io.FileUtils;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
+import org.otcframework.common.config.exception.OtcConfigException;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.exception.OtcUnsupportedJdkException;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -329,6 +332,21 @@ public class OtcUtils {
 		File file = new File(path);
 		if (!file.exists()) {
 			file.mkdirs();
+		}
+	}
+
+	public static void deleteRecursive(String path) {
+		if (!OtcConfig.isDefaultLocations() || !OtcConfig.getCleanupBeforeCompile()) {
+			return;
+		}
+		File folder = new File(path);
+		if (!folder.isDirectory() || !folder.exists()) {
+			return;
+		}
+		try {
+			FileUtils.deleteDirectory(folder);
+		} catch (IOException e) {
+			throw new OtcConfigException("", "Could not clean up generated folders.", e);
 		}
 	}
 

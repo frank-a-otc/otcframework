@@ -60,7 +60,7 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 	private static final OtcCodeGenerator otcCodeGenerator = OtcCodeGeneratorImpl.getInstance();
 
 	/** The Constant otcSrcDir. */
-	private static final String OTCS_SOURCE_LOCATION = OtcConfig.getOtcSourceLocation();
+	private static final String UNIT_TEST_LOCATION = OtcConfig.getUnitTestLocation();
 
 	/** The Constant srcDir. */
 	private static final String SOURCE_CODE_LOCATION = OtcConfig.getSourceCodeLocation();
@@ -127,11 +127,14 @@ public final class OtcsCompilerImpl implements OtcsCompiler {
 	@Override
 	public List<CompilationReport> compileOtcsFiles() {
 		long startTime = System.nanoTime();
-		LOGGER.info("Initiating OTCS file compilations in {}", OTCS_SOURCE_LOCATION);
-		File otcSourceDirectory = new File(OTCS_SOURCE_LOCATION);
+		LOGGER.info("Initiating OTCS file compilations in {}", UNIT_TEST_LOCATION);
+		File otcSourceDirectory = new File(UNIT_TEST_LOCATION);
+		if (!otcSourceDirectory.exists()) {
+			throw new OtcCompilerException("", String.format("Missing '%s' folder.", UNIT_TEST_LOCATION));
+		}
 		List<CompilationReport> compilationReports = compileOtc(otcSourceDirectory, null);
 		if (compilationReports == null) {
-			LOGGER.info("No OTCS files to compile in '{}'", OTCS_SOURCE_LOCATION);
+			LOGGER.info("No OTCS files to compile in '{}'", UNIT_TEST_LOCATION);
 			return null;
 		}
 		int successful = 0;
