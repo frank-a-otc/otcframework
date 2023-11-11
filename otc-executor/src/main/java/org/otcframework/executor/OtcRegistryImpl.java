@@ -73,7 +73,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader = OtcConfig.getTargetClassLoader();
-	private static final String OTC_TARGET_FOLDER = OtcConfig.getTargetLocation();
+	private static final String OTC_TARGET_FOLDER = OtcConfig.getTargetDirectoryPath();
 
 	/**
 	 * Instantiates a new otc registry impl.
@@ -88,7 +88,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	public void register() {
 		File directory;
 		if (OtcConfig.isDefaultLocations()) {
-			directory = new File(OtcConfig.getOtcTmdLocation());
+			directory = new File(OtcConfig.getOtcTmdDirectoryPath());
 		} else {
 			URL tmdUrl = this.getClass().getClassLoader().getResource(OtcConfig.OTC_TMD_FOLDER);
 			try {
@@ -108,9 +108,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			if (file.isDirectory()) {
 				continue;
 			}
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(file);
+			try (FileInputStream fis = new FileInputStream(file)) {
 				byte[] contents = new byte[fis.available()];
 				fis.read(contents);
 				RegistryDto registryDto = objectMapper.readValue(contents, RegistryDto.class);
@@ -132,12 +130,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 				hasRegistrations = true;
 			} catch (IOException e) {
 				throw new RegistryException("", e);
-			} finally {
-				try {
-					fis.close();
-				} catch (Exception e) {
-					LOGGER.error(e.getMessage());
-				}
 			}
 		}
 		long endTime = System.nanoTime();

@@ -286,22 +286,6 @@ public abstract class AbstractTemplate {
 	protected static final String IF_NULL_TARGET_ICD_CREATE_TEMPLATE = CHILDREN_GET + IF_S_NULL
 			+ "\n%s = IndexedCollectionsDtoFactory.create(%s, %s, %s, true);" + "\n}";
 
-//	protected static final String ifNullTargetIcdCreateOrInitTemplate = "\n%s = %s.children.get(%s);"
-//			+ "\nif (%s == null) {" + "\n%s = IndexedCollectionsDtoFactory.create(%s, null, %s, true);" + ELSE
-//			+ "\n%s = %s;" + "\n}";
-//	protected static final String getIcdChildrenSizeTemplate = "\nint size%s = %s.children.size();";
-//	protected static final String getSetTemplate = "\n%s.%s(%s.%s());";
-//	protected static final String getSetTargetEnumTemplate = "\n%s.%s(%s.valueOf(%s.%s()));";
-//	protected static final String getSetSourceEnumTemplate = "\n%s.%s(%s.%s().toString());";
-//	protected static final String getSetBothEnumTemplate = "\n%s.%s(%s.valueOf(%s.%s().toString()));";
-//	protected static final String setterTargetEnumWithAssignTemplate = "\n%s = %s.%s(%s.valueOf(%s));";
-//	protected static final String assignMemberIcdToParentIcdTemplate = "\nparentTargetICD = memberTargetICD;";
-//	public static final String SOURCE_ICD = "sourceICD";
-//	public static final String TARGET_ICD = "targetICD";
-//	protected static final String toplevelTargetPreLoopTemplate = "\nint size%s = 0;"
-//			+ "\nif (%s.children.size() == 0) {" + "\nsize%s = 1;" + ELSE + "\nsize%s = %s.children.size();"
-//			+ "\n}";
-
 	/** The Constant retrieveMemberFromIcdTemplate. */
 	protected static final String RETRIEVE_MEMBER_FROM_ICD_TEMPLATE = "\n%s %s = (%s) %s.indexedObject;";
 
@@ -445,8 +429,8 @@ public abstract class AbstractTemplate {
 			}
 			fqTypeName = targetOCC.factoryClassDto.addImport(fqTypeName);
 			if ((otcCommandDto.isCollectionOrMap() && !otcCommandDto.isArray())) {
-				String generics = null;
-				OtcCommandDto memberOCD = null;
+				String generics;
+				OtcCommandDto memberOCD;
 				if (TARGET_SOURCE.SOURCE == otcCommandDto.enumTargetSource) {
 					memberOCD = OtcCommand.retrieveMemberOCD(sourceOCC);
 				} else {
@@ -458,8 +442,8 @@ public abstract class AbstractTemplate {
 				}
 				generics = targetOCC.factoryClassDto.addImport(generics);
 				if (otcCommandDto.isMap()) {
-					String genericKey = null;
-					String genericVal = null;
+					String genericKey;
+					String genericVal;
 					if (memberOCD.isMapKey()) {
 						genericKey = generics;
 						OtcCommandDto valueOCD = otcCommandDto.children
@@ -618,13 +602,15 @@ public abstract class AbstractTemplate {
 			return varName;
 		}
 		int idx = 0;
+		StringBuilder varNameBuilder = new StringBuilder(varName);
 		while (true) {
 			if (!varNamesSet.contains(varName + idx)) {
-				varName = varName + idx;
+				varNameBuilder.append(idx);
 				break;
 			}
 			idx++;
 		}
+		varName = varNameBuilder.toString();
 		varNamesSet.add(varName);
 		return varName;
 	}

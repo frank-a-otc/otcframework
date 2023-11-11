@@ -10,7 +10,7 @@
 	<artifactId>otc-compiler</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC Compiler module</description>
+	<description>OTC Compiler module (JDK 11)</description>
 
 	<build>
 		<plugins>
@@ -84,7 +84,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.otcframework</groupId>
-			<artifactId>otc-executor</artifactId>
+			<artifactId>dateconverters</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -36,7 +36,7 @@ import java.util.Set;
 public final class GetterIfNullCreateSetTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			GetterIfNullCreateSetTemplate.class.getSimpleName() + "\n";
+			GetterIfNullCreateSetTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new getter if null create set template.
 	 */

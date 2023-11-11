@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -56,13 +55,10 @@ public class OtcCommand {
 	public static final String CODE_TO_IMPORT = "CODE_TO_IMPORT";
 
 	/** The Constant otcBinDir. */
-	private static final String TARGET_LOCATION = OtcConfig.getTargetLocation();
-
-	/** The Constant otcSourceDir. */
-	private static final String UNIT_TEST_LOCATION = OtcConfig.getUnitTestLocation();
+	private static final String TARGET_LOCATION = OtcConfig.getTargetDirectoryPath();
 
 	/** The Constant sourceFileLocation. */
-	private static final String SOURCE_FILE_LOCATION = OtcConfig.getSourceCodeLocation();
+	private static final String SOURCE_CODE_FOLDER = OtcConfig.getSourceCodeDirectoryPath();
 
 	/** The var names set. */
 	private Set<String> varNamesSet = new HashSet<>();
@@ -98,44 +94,19 @@ public class OtcCommand {
 	 * @return the string
 	 */
 	public String createJavaFile(ClassDto classDto) {
-//		String fileName = classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
-//		String fileLocationAndName = SOURCE_FILE_LOCATION + fileName;
-//		File file = new File(fileLocationAndName);
-//		File dir = null;
-//		if (classDto.packageName == null) {
-//			dir = new File(SOURCE_FILE_LOCATION);
-//		} else {
-//			dir = new File(SOURCE_FILE_LOCATION + classDto.packageName.replace(".", File.separator));
-//		}
-		String path = SOURCE_FILE_LOCATION;
+		String path = SOURCE_CODE_FOLDER;
 		if (!CommonUtils.isTrimmedAndEmpty(classDto.packageName)) {
 			path += classDto.packageName.replace(".", File.separator) + File.separator;
 		}
-		FileOutputStream fileOutputStream = null;
-		try {
-//			if (!dir.exists()) {
-//				dir.mkdirs();
-//			}
-			OtcUtils.creteDirectory(path);
-			String fileLocationAndName = path + classDto.className + OtcConstants.OTC_GENERATEDCODE_EXTN;
-			File file = new File(fileLocationAndName);
-			if (file.createNewFile()) {
-				fileOutputStream = new FileOutputStream(file);
-				String javaCode = classDto.codeBuilder.toString();
-				javaCode = JavaCodeFormatter.format(javaCode);
-				fileOutputStream.write(javaCode.getBytes());
-				fileOutputStream.flush();
-			}
+		OtcUtils.creteDirectory(path);
+		String fileLocationAndName = path + classDto.className + OtcConstants.SOURCE_CODE_EXTN;
+		try (FileOutputStream fileOutputStream = new FileOutputStream(fileLocationAndName)) {
+			String javaCode = classDto.codeBuilder.toString();
+			javaCode = JavaCodeFormatter.format(javaCode);
+			fileOutputStream.write(javaCode.getBytes());
+			fileOutputStream.flush();
 		} catch (IOException e) {
 			LOGGER.warn(e.getMessage(), e);
-		} finally {
-			if (fileOutputStream != null) {
-				try {
-					fileOutputStream.close();
-				} catch (IOException e) {
-					LOGGER.warn(e.getMessage(), e);
-				}
-			}
 		}
 		return classDto.fullyQualifiedClassName.replace(".", File.separator) + ".java";
 	}
@@ -275,9 +246,8 @@ public class OtcCommand {
 	 */
 	private void appendMethodCall(TargetOtcCommandContext targetOCC, Class<?> targetClz, Class<?> sourceClz) {
 		StringBuilder executeMethodCallCodeBuilder = new StringBuilder("\n");
-		String factoryMethodCallCode = null;
 		String factoryClzName = targetOCC.factoryClassDto.fullyQualifiedClassName;
-		factoryMethodCallCode = ExecuteFactoryMethodCallTemplate.generateCode(factoryClzName, targetClz, sourceClz);
+		String factoryMethodCallCode = ExecuteFactoryMethodCallTemplate.generateCode(factoryClzName, targetClz, sourceClz);
 		executeMethodCallCodeBuilder.append(factoryMethodCallCode);
 		targetOCC.mainClassDto.codeBuilder.append(executeMethodCallCodeBuilder);
 	}
@@ -323,16 +293,14 @@ public class OtcCommand {
 	private void appendBeginClass(TargetOtcCommandContext targetOCC, SourceOtcCommandContext sourceOCC,
 			Class<?> targetClz, Class<?> sourceClz, boolean addLogger, boolean isModule) {
 		String fileName = targetOCC.factoryClassDto.fullyQualifiedClassName.replace(".", File.separator);
-		File file = new File(TARGET_LOCATION + fileName + ".class");
 		try {
-			Files.delete(file.toPath());
-		} catch (IOException e) {
+			OtcUtils.deleteFileOrFolder(TARGET_LOCATION + fileName + OtcConstants.CLASS_EXTN);
+		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-		file = new File(UNIT_TEST_LOCATION + fileName + ".java");
 		try {
-			Files.delete(file.toPath());
-		} catch (IOException e) {
+			OtcUtils.deleteFileOrFolder(SOURCE_CODE_FOLDER + fileName + OtcConstants.SOURCE_CODE_EXTN);
+		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		targetOCC.factoryClassDto.codeBuilder = new StringBuilder();

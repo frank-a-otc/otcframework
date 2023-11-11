@@ -25,7 +25,7 @@ package org.otcframework.common.util;
 import org.apache.commons.io.FileUtils;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
-import org.otcframework.common.config.exception.OtcConfigException;
+import org.otcframework.common.config.exception.FileDeleteException;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.exception.OtcUnsupportedJdkException;
@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class OtcUtils {
 	private static URLClassLoader clzLoader;
 
 	/** The Constant otcLibLocation. */
-	private static final String OTC_LIB_LOCATION = OtcConfig.getOtcLibLocation();
+	private static final String OTC_LIB_LOCATION = OtcConfig.getOtcLibDirectoryPath();
 	
 	/**
 	 * Creates the otc file name.
@@ -237,11 +238,11 @@ public class OtcUtils {
 	 */
 	public static URLClassLoader loadURLClassLoader(String path) {
 		File otcBinDirectory = new File(path);
-		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class"));
+		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"));
 		if (urls.isEmpty()) {
-			urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"));
+			urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class"));
 		} else {
-			urls.addAll(createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar")));
+			urls.addAll(createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class")));
 		}
 		if (urls.isEmpty()) {
 			return null;
@@ -296,11 +297,14 @@ public class OtcUtils {
 	 * @return the class
 	 */
 	public static Class<?> loadClass(String clzName) {
+		if (clzName == null) {
+			throw new OtcException("", "Cannot load class - Class-name is null");
+		}
 		if (clzLoader == null) {
 			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
-		}
-		if (clzLoader == null || clzName == null) {
-			throw new OtcException("", "Invalid value : null!");
+			if (clzLoader == null) {
+				throw new OtcException("", "Cannot load class - class-loader is null");
+			}
 		}
 		Class<?> cls = null;
 		try {
@@ -313,7 +317,7 @@ public class OtcUtils {
 			throw new OtcException("", e.getMessage(), e);
 		} catch (RuntimeException e) {
 			throw e;
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new OtcException("", e.getMessage(), e);
 		}
 		return cls;
@@ -335,18 +339,22 @@ public class OtcUtils {
 		}
 	}
 
-	public static void deleteRecursive(String path) {
+	public static void deleteFileOrFolder(String path) {
 		if (!OtcConfig.isDefaultLocations() || !OtcConfig.getCleanupBeforeCompile()) {
 			return;
 		}
-		File folder = new File(path);
-		if (!folder.isDirectory() || !folder.exists()) {
+		File file = new File(path);
+		if (!file.exists()) {
 			return;
 		}
 		try {
-			FileUtils.deleteDirectory(folder);
+			if (file.isDirectory()) {
+				FileUtils.deleteDirectory(file);
+			} else {
+				Files.delete(file.toPath());
+			}
 		} catch (IOException e) {
-			throw new OtcConfigException("", "Could not clean up generated folders.", e);
+			throw new FileDeleteException("", "Could not clean up generated folders.", e);
 		}
 	}
 

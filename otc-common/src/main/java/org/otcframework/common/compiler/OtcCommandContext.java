@@ -59,10 +59,10 @@ public class OtcCommandContext {
 	/** The current collection token index. */
 	public int currentCollectionTokenIndex = 0;
 
+	public OtcCommandContext() {}
 	/**
 	 * Clone.
 	 *
-	 * @return the otc command context
 	 */
 	@Override
 	public OtcCommandContext clone() {
@@ -87,11 +87,18 @@ public class OtcCommandContext {
 			}
 			String otcToken = otcTokens[otcCommandDto.otcTokenIndex + 1];
 			OtcCommandDto childOCD = otcCommandDto.children.get(otcToken);
-			return childOCD.collectionDescriptor.isNormal();
+			if (childOCD.collectionDescriptor.isNormal()) {
+				return true;
+			}
+			return false;
+//			return childOCD.collectionDescriptor.isNormal();
 		} else if (otcCommandDto.otcTokenIndex == otcTokens.length - 1 &&
 				otcCommandDto.collectionDescriptor.isCollection() || otcCommandDto.collectionDescriptor.isMap()) {
 			return true;
 		}
+//		if (otcCommandDto.otcTokenIndex == otcTokens.length - 1) {
+//			return otcCommandDto.collectionDescriptor.isCollection() || otcCommandDto.collectionDescriptor.isMap();
+//		}
 		return false;
 	}
 
@@ -101,10 +108,18 @@ public class OtcCommandContext {
 	 * @return true, if is leaf
 	 */
 	public boolean isLeaf() {
-		return (otcCommandDto.otcTokenIndex >= otcTokens.length - 1 &&
-			otcCommandDto.collectionDescriptor.isNormal() || otcCommandDto.collectionDescriptor.isMapKey()
-				|| otcCommandDto.collectionDescriptor.isMapValue()
-				|| otcCommandDto.collectionDescriptor.isCollectionMember());
+		if (otcCommandDto.otcTokenIndex >= otcTokens.length - 1) {
+			if (otcCommandDto.collectionDescriptor.isNormal() || otcCommandDto.collectionDescriptor.isMapKey()
+					|| otcCommandDto.collectionDescriptor.isMapValue()
+					|| otcCommandDto.collectionDescriptor.isCollectionMember()) {
+				return true;
+			}
+		}
+		return false;
+//		return (otcCommandDto.otcTokenIndex >= otcTokens.length - 1 &&
+//			otcCommandDto.collectionDescriptor.isNormal() || otcCommandDto.collectionDescriptor.isMapKey()
+//				|| otcCommandDto.collectionDescriptor.isMapValue()
+//				|| otcCommandDto.collectionDescriptor.isCollectionMember());
 	}
 
 	/**
@@ -182,7 +197,11 @@ public class OtcCommandContext {
 	 * @return true, if successful
 	 */
 	public boolean hasMapValueMember() {
-		return rawOtcTokens[otcCommandDto.otcTokenIndex].contains(OtcConstants.MAP_VALUE_REF);
+		if (rawOtcTokens[otcCommandDto.otcTokenIndex].contains(OtcConstants.MAP_VALUE_REF)) {
+			return true;
+		}
+		return false;
+//		return rawOtcTokens[otcCommandDto.otcTokenIndex].contains(OtcConstants.MAP_VALUE_REF);
 	}
 
 	/**
@@ -211,7 +230,12 @@ public class OtcCommandContext {
 	 */
 	public boolean isCurrentTokenAnchored() {
 		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
-		return otcToken.contains(OtcConstants.ANCHOR);
+		if (otcToken.contains(OtcConstants.ANCHOR)) {
+			return true;
+		}
+		return false;
+//		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
+//		return otcToken.contains(OtcConstants.ANCHOR);
 	}
 
 	/**
@@ -221,7 +245,12 @@ public class OtcCommandContext {
 	 */
 	public boolean isPreAnchored() {
 		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
-		return (otcToken.contains(OtcConstants.PRE_ANCHOR) || otcToken.contains(OtcConstants.MAP_PRE_ANCHOR));
+		if (otcToken.contains(OtcConstants.PRE_ANCHOR) || otcToken.contains(OtcConstants.MAP_PRE_ANCHOR)) {
+			return true;
+		}
+		return false;
+//		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
+//		return (otcToken.contains(OtcConstants.PRE_ANCHOR) || otcToken.contains(OtcConstants.MAP_PRE_ANCHOR));
 	}
 
 	/**
@@ -231,7 +260,12 @@ public class OtcCommandContext {
 	 */
 	public boolean isPostAnchored() {
 		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
-		return (otcToken.contains(OtcConstants.POST_ANCHOR) || otcToken.contains(OtcConstants.MAP_POST_ANCHOR));
+		if (otcToken.contains(OtcConstants.POST_ANCHOR) || otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
+			return true;
+		}
+		return false;
+//		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
+//		return (otcToken.contains(OtcConstants.POST_ANCHOR) || otcToken.contains(OtcConstants.MAP_POST_ANCHOR));
 	}
 
 	/**

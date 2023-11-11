@@ -40,7 +40,7 @@ import java.util.Set;
 public final class AddToCollectionTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			AddToCollectionTemplate.class.getSimpleName() + "\n";
+			AddToCollectionTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new adds the to collection template.

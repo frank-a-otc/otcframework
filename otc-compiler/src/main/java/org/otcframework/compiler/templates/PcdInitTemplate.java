@@ -38,7 +38,7 @@ import java.util.Set;
 public final class PcdInitTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			PcdInitTemplate.class.getSimpleName() + "\n";
+			PcdInitTemplate.class.getSimpleName();
 
 	private static final String IS_NULL = "' is null!";
 
@@ -117,7 +117,7 @@ public final class PcdInitTemplate extends AbstractTemplate {
 			String varName = createVarName(otcConverter, varNamesSet, false);
 			memberPcdsCode.append(String.format(CREATE_INSTANCE_TEMPLATE, otcConverter, varName, otcConverter));
 		}
-		return memberPcdsCode.toString();
+		return addInlineComments(INLINE_COMMENTS, memberPcdsCode.toString());
 	}
 
 	/**

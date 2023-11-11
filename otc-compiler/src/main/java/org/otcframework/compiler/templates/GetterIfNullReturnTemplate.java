@@ -39,7 +39,7 @@ import java.util.Set;
 public final class GetterIfNullReturnTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			GetterIfNullReturnTemplate.class.getSimpleName() + "\n";
+			GetterIfNullReturnTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new getter if null return template.

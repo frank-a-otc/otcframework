@@ -35,7 +35,7 @@ import java.util.Set;
 public final class ExecuteModuleTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			ExecuteModuleTemplate.class.getSimpleName() + "\n";
+			ExecuteModuleTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new execute module template.
 	 */
@@ -59,6 +59,7 @@ public final class ExecuteModuleTemplate extends AbstractTemplate {
 		String targetVarName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
 		String sourceVarName = createVarName(sourceOCD, createNewVarName, varNamesSet, varNamesMap);
 		String otcNamespace = targetOCC.executeModuleOtcNamespace;
-		return String.format(EXECUTE_MODULE_TEMPLATE, otcNamespace, sourceVarName, targetVarName);
+		return addInlineComments(INLINE_COMMENTS, String.format(EXECUTE_MODULE_TEMPLATE, otcNamespace,
+				sourceVarName, targetVarName));
 	}
 }

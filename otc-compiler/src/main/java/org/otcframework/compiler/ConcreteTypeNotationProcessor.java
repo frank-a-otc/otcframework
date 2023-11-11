@@ -49,30 +49,26 @@ final class ConcreteTypeNotationProcessor {
 	 *
 	 * @param script        the script
 	 * @param otcCommandDto the otc command dto
-	 * @return true, if successful
 	 */
-	public static boolean process(ScriptDto script, OtcCommandDto otcCommandDto) {
-		if (!(script.command instanceof Copy)) {
-			return true;
-		}
+	public static void process(ScriptDto script, OtcCommandDto otcCommandDto) {
 		String commandId = script.command.id;
 		List<TargetDto.Override> overrides = null;
-		String otcChain;
+		String objectPath;
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
-			otcChain = copy.to.objectPath;
+			objectPath = copy.to.objectPath;
 			if (copy.to.overrides != null) {
 				overrides = copy.to.overrides;
 			}
 		} else {
 			Execute execute = (Execute) script.command;
-			otcChain = execute.target.objectPath;
-			if (execute.target != null && execute.target.overrides != null) {
+			objectPath = execute.target.objectPath;
+			if (execute.target.overrides != null) {
 				overrides = execute.target.overrides;
 			}
 		}
 		if (overrides == null) {
-			return true;
+			return;
 		}
 		otcCommandDto.concreteTypeName = null;
 		overrides.forEach(override -> {
@@ -85,7 +81,7 @@ final class ConcreteTypeNotationProcessor {
 				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
 						+ ".  Anchor not allowed in 'overrides.tokenPath: '" + tokenPath + "'");
 			}
-			if (!otcChain.startsWith(tokenPath)) {
+			if (!objectPath.startsWith(tokenPath)) {
 				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath
 						+ "' in target's overrides section in command : " + commandId);
 			}
@@ -123,6 +119,5 @@ final class ConcreteTypeNotationProcessor {
 						commandId, tokenPath, otcCommandDto.occursInCommands);
 			}
 		});
-		return true;
 	}
 }

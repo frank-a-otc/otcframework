@@ -37,7 +37,7 @@ import java.util.Set;
 public final class IfNullCreateAndSetTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			IfNullCreateAndSetTemplate.class.getSimpleName() + "\n";
+			IfNullCreateAndSetTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new if null create and set template.

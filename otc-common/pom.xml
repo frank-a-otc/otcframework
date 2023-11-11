@@ -11,7 +11,7 @@
 	<artifactId>otc-common</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC Commons module</description>
+	<description>OTC Commons module (JDK 11)</description>
 
 	<build>
 		<plugins>
@@ -83,7 +83,20 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.yaml</groupId>
+					<artifactId>snakeyaml</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>${snakeyaml.version}</version>
+		</dependency>
+
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>

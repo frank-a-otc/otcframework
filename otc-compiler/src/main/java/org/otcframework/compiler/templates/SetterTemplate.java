@@ -37,7 +37,7 @@ import java.util.Set;
 public class SetterTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			SetterTemplate.class.getSimpleName() + "\n";
+			SetterTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new setter template.

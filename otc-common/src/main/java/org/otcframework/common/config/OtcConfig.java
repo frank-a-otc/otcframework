@@ -34,6 +34,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -90,7 +91,7 @@ public enum OtcConfig {
 			throw new OtcConfigException(ex);
 		}
 		// -- load sourceCodeLocation and tmdLocation properties
-		if (YAML_CONFIG.compiler != null && YAML_CONFIG.compiler.locations != null) {
+		if (Objects.nonNull(YAML_CONFIG.compiler) && Objects.nonNull(YAML_CONFIG.compiler.locations)) {
 			sourceCodeLocation = YAML_CONFIG.compiler.locations.sourceCodeLocation;
 			tmdLocation = YAML_CONFIG.compiler.locations.tmdLocation;
 			targetLocation = YAML_CONFIG.compiler.locations.targetLocation;
@@ -121,7 +122,7 @@ public enum OtcConfig {
 		} else {
 			tmdLocation = otcHome + OTC_TMD_FOLDER;
 		}
-		OtcUtils.deleteRecursive(tmdLocation);
+		OtcUtils.deleteFileOrFolder(tmdLocation);
 		OtcUtils.creteDirectory(tmdLocation);
 
 		try {
@@ -144,7 +145,7 @@ public enum OtcConfig {
 		} else {
 			path = otcHome + defaultPath;
 		}
-		OtcUtils.deleteRecursive(path);
+		OtcUtils.deleteFileOrFolder(path);
 		OtcUtils.creteDirectory(path);
 		return path;
 	}
@@ -154,7 +155,7 @@ public enum OtcConfig {
 	 *
 	 * @return the otc home location
 	 */
-	public static String getOtcHomeLocation() {
+	public static String getOtcHomeDirectory() {
 		return otcHome;
 	}
 
@@ -166,15 +167,16 @@ public enum OtcConfig {
 	 *
 	 * @return the otc lib location
 	 */
-	public static String getOtcLibLocation() {
-		if (YAML_CONFIG.compiler.locations != null && YAML_CONFIG.compiler.locations.libLocation != null) {
+	public static String getOtcLibDirectoryPath() {
+		if (Objects.nonNull(YAML_CONFIG.compiler) && Objects.nonNull(YAML_CONFIG.compiler.locations) &&
+			Objects.nonNull(YAML_CONFIG.compiler.locations.libLocation)) {
 			return YAML_CONFIG.compiler.locations.libLocation;
 		}
 		return otcHome + OTC_LIB_FOLDER;
 	}
 
 	public static boolean getCleanupBeforeCompile() {
-		if (YAML_CONFIG.compiler.cleanupBeforeCompile != null) {
+		if (Objects.nonNull(YAML_CONFIG.compiler) && Objects.nonNull(YAML_CONFIG.compiler.cleanupBeforeCompile)) {
 			return YAML_CONFIG.compiler.cleanupBeforeCompile;
 		}
 		return false;
@@ -185,7 +187,7 @@ public enum OtcConfig {
 	 *
 	 * @return the otc source location
 	 */
-	public static String getUnitTestLocation() {
+	public static String getUnitTestDirectoryPath() {
 		return otcHome + OTC_UNITTEST_FOLDER;
 	}
 
@@ -194,7 +196,7 @@ public enum OtcConfig {
 	 *
 	 * @return the source code location
 	 */
-	public static String getSourceCodeLocation() {
+	public static String getSourceCodeDirectoryPath() {
 		if (!CommonUtils.isTrimmedAndEmpty(sourceCodeLocation)) {
 			return sourceCodeLocation;
 		}
@@ -202,8 +204,9 @@ public enum OtcConfig {
 	}
 
 	public static Integer getCyclicReferenceDepth() {
-		if (YAML_CONFIG.compiler.cyclicReferenceDepth != null && YAML_CONFIG.compiler.cyclicReferenceDepth > 0) {
-			return YAML_CONFIG.compiler.cyclicReferenceDepth;
+		if (Objects.nonNull(YAML_CONFIG.compiler) && Objects.nonNull(YAML_CONFIG.compiler.cyclicReferenceDepthLimit)
+				&& YAML_CONFIG.compiler.cyclicReferenceDepthLimit > 0) {
+			return YAML_CONFIG.compiler.cyclicReferenceDepthLimit;
 		}
 		return DEFAULT_CYCLIC_REFERENCE_DEPTH;
 	}
@@ -213,7 +216,7 @@ public enum OtcConfig {
 	 *
 	 * @return the otc tmd location
 	 */
-	public static String getOtcTmdLocation() {
+	public static String getOtcTmdDirectoryPath() {
 		if (!CommonUtils.isTrimmedAndEmpty(tmdLocation)) {
 			return tmdLocation;
 		}
@@ -225,7 +228,7 @@ public enum OtcConfig {
 	 *
 	 * @return the compiled code location
 	 */
-	public static String getTargetLocation() {
+	public static String getTargetDirectoryPath() {
 		if (!CommonUtils.isTrimmedAndEmpty(targetLocation)) {
 			return targetLocation;
 		}
@@ -237,22 +240,10 @@ public enum OtcConfig {
 	 *
 	 * @return the test case expected result location
 	 */
-	public static String getTestCaseExpectedResultLocation() {
+	public static String getTestCaseExpectedResultDirectoryPath() {
 		String expectedLocation = otcHome + File.separator + "result_expected" + File.separator;
 		OtcUtils.creteDirectory(expectedLocation);
 		return expectedLocation;
-	}
-
-	/**
-	 * Gets the compiler sourcecode failonerror.
-	 *
-	 * @return the compiler sourcecode failonerror
-	 */
-	public static boolean getCompilerSourcecodeFailonerror() {
-		if (YAML_CONFIG.compiler.failFast != null) {
-			return YAML_CONFIG.compiler.failFast;
-		}
-		return false;
 	}
 
 	/**
@@ -288,9 +279,8 @@ public enum OtcConfig {
 		public Set<String> filterPackages;
 		
 		public static final class CompilerProps {
-			public Boolean failFast;
 			public Boolean cleanupBeforeCompile;
-			public Integer cyclicReferenceDepth;
+			public Integer cyclicReferenceDepthLimit;
 			public Locations locations;
 
 			public static final class Locations {
@@ -301,4 +291,5 @@ public enum OtcConfig {
 			}
 		}
 	}
+
 }

@@ -22,13 +22,11 @@
 */
 package org.otcframework.compiler;
 
-import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.ClassDto;
 import org.otcframework.common.dto.OtcChainDto;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.OtcDto;
 import org.otcframework.common.dto.otc.OtcFileDto;
-import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.compiler.command.*;
 import org.otcframework.compiler.exception.CodeGeneratorException;
@@ -38,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.tools.JavaFileObject;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -54,9 +51,6 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 
 	/** The otc code generator. */
 	private static final OtcCodeGenerator otcCodeGenerator = new OtcCodeGeneratorImpl();
-
-	/** The Constant otcBinDir. */
-	private static final String TARGET_LOCATION = OtcConfig.getTargetLocation();
 
 	/**
 	 * Instantiates a new otc code generator impl.
@@ -85,22 +79,11 @@ final class OtcCodeGeneratorImpl extends AbstractOtcCodeGenerator implements Otc
 		OtcFileDto otcFileDto = otcDto.otcFileDto;
 		ClassDto mainClassDto = otcDto.mainClassDto;
 		try {
-//			File file = null;
-//			String clzPackage = TARGET_LOCATION.replace("/", File.separator);
-//			if (otcDto.otcNamespace != null) {
-//				clzPackage += otcDto.otcNamespace.replace(".", File.separator) + File.separator;
-//				file = new File(clzPackage);
-//				file.mkdirs();
-//			} else {
-//				new File(clzPackage); // only to check if it is creatable
-//			}
 			generateSourceCodeFile(otcDto, otcFileDto, mainClassDto);
+		} catch (CodeGeneratorException e) {
+			throw e;
 		} catch (Exception e) {
-			if (!(e instanceof OtcException)) {
-				throw new CodeGeneratorException(e);
-			} else {
-				throw (OtcException) e;
-			}
+			throw new CodeGeneratorException(e);
 		}
 		long endTime = System.nanoTime();
 		LOGGER.info("Source-Code generation completed in {} millis.", ((endTime - startTime) / 1000000.0));

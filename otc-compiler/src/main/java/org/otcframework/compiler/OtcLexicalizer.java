@@ -571,7 +571,7 @@ final class OtcLexicalizer {
         try {
             clzFactoryHelper = OtcUtils.loadClass(factoryHelper);
         } catch (OtcException otcException) {
-            String msg = "Discarding 'metadata: helper'! Could not load class : " + factoryHelper;
+            String msg = "Discarding 'metadata.helper' property value - could not load class : " + factoryHelper;
             throw new OtcException("", msg, otcException);
         }
         return clzFactoryHelper;

@@ -35,7 +35,7 @@ import java.util.Set;
 public final class ClassBeginTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			ClassBeginTemplate.class.getSimpleName() + "\n";
+			ClassBeginTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new class begin template.
 	 */
@@ -74,7 +74,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 		if (CommonUtils.isTrimmedAndEmpty(packageName)) {
 			classBeginBody = classBeginBody.replace("package ;\n", "");
 		}
-		return classBeginBody;
+		return addInlineComments(INLINE_COMMENTS, classBeginBody);
 	}
 
 	/**

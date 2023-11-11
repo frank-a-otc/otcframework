@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Class CopyValuesCommandCodeGenerator.
@@ -134,7 +135,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 			}
 			while (true) {
-				if (childOCD.isCollectionOrMapMember()) {
+				if (Objects.nonNull(childOCD) && childOCD.isCollectionOrMapMember()) {
 					Integer memberIdx = getIndex(targetOCC, idx, scriptGroupIdx, offsetIdx);
 					if (childOCD.isMapKey()) {
 						if (targetOCC.hasDescendantCollectionOrMap()) {

@@ -24,7 +24,6 @@ package org.otcframework.common.dto;
 
 import org.otcframework.common.dto.otc.OtcFileDto.CommonCommandParams;
 import org.otcframework.common.dto.otc.OtcFileDto.Execute;
-import org.otcframework.common.dto.otc.OtcFileDto.Execute.OtclModule;
 import org.otcframework.common.dto.otc.OtcFileDto.OtcsCommand;
 
 /**
@@ -82,32 +81,6 @@ public class ScriptDto {
 				hasExecuteModule = true;
 			}
 		}
-	}
-
-	/**
-	 * Clone.
-	 *
-	 * @return the script dto
-	 */
-	public ScriptDto clone() {
-		ScriptDto scriptDto = new ScriptDto();
-		if (command instanceof Execute) {
-			Execute execute = (Execute) command;
-			Execute executeClone = new Execute();
-			scriptDto.command = executeClone;
-			if (execute.module != null) {
-				executeClone.module = new OtclModule();
-				executeClone.module.namespace = execute.module.namespace;
-			}
-			executeClone.converter = execute.converter;
-			executeClone.executionOrder = execute.executionOrder;
-		}
-		scriptDto.hasSetValues = hasSetValues;
-		scriptDto.hasExecuteModule = hasExecuteModule;
-		scriptDto.hasExecuteConverter = hasExecuteConverter;
-		scriptDto.targetOtcChainDto = targetOtcChainDto;
-		scriptDto.sourceOtcChainDto = sourceOtcChainDto;
-		return scriptDto;
 	}
 
 	/**

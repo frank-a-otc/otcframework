@@ -38,12 +38,11 @@ final class MapNotationProcessor {
 	 * @param scriptId       the script id
 	 * @param otcCommandDto  the otc command dto
 	 * @param otcToken       the otc token
-	 * @return true, if successful
 	 */
-	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken) {
+	public static void process(String scriptId, OtcCommandDto otcCommandDto, String otcToken) {
 		if (!otcToken.contains(OtcConstants.MAP_BEGIN_REF) && !otcToken.contains(OtcConstants.MAP_PRE_ANCHOR)
 				&& !otcToken.contains(OtcConstants.MAP_END_REF) && !otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
-			return true;
+			return;
 		}
 		int firstIdx = otcToken.indexOf(OtcConstants.MAP_BEGIN_REF);
 		if (firstIdx < 0) {
@@ -69,6 +68,5 @@ final class MapNotationProcessor {
 			}
 		}
 		otcCommandDto.hasMapNotation = true;
-		return true;
 	}
 }

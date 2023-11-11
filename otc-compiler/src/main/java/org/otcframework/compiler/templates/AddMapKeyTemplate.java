@@ -37,7 +37,7 @@ import java.util.Set;
 public final class AddMapKeyTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			AddMapKeyTemplate.class.getSimpleName() + "\n";
+			AddMapKeyTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new adds the map key template.

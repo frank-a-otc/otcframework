@@ -10,7 +10,7 @@
 	<artifactId>otc-executor</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC Executor module</description>
+	<description>OTC Executor module (JDK 11)</description>
 
 	<build>
 		<plugins>

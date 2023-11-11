@@ -38,7 +38,7 @@ import java.util.Set;
 public final class ForLoopTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			ForLoopTemplate.class.getSimpleName() + "\n";
+			ForLoopTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new for loop template.

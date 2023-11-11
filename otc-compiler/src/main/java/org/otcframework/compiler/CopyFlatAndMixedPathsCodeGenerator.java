@@ -48,7 +48,6 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 		Class<?> sourceClz = executionContext.sourceClz;
 		SourceOtcCommandContext sourceOCC = executionContext.sourceOCC;
 		ScriptDto scriptDto = executionContext.targetOCC.scriptDto;
-		TargetOtcCommandContext clonedTargetOCC = null;
 		targetOCC.algorithmId = ALGORITHM_ID.FLAT;
 		OtcCommandDto sourceOCD = sourceOCC.otcCommandDto;
 		if (scriptDto.command.debug) {
@@ -57,7 +56,7 @@ final class CopyFlatAndMixedPathsCodeGenerator extends AbstractOtcCodeGenerator 
 		}
 		otcCommand.clearCache();
 		boolean addLogger = true;
-		clonedTargetOCC = targetOCC.clone();
+		TargetOtcCommandContext clonedTargetOCC = targetOCC.clone();
 		otcCommand.appendBeginClass(clonedTargetOCC, sourceOCC, targetClz, sourceClz, addLogger);
 		if (sourceOCC.hasDescendantCollectionOrMap() && !sourceOCD.isCollectionOrMap()) {
 			sourceOCD = OtcCommand.retrieveNextCollectionOrMapOCD(sourceOCC);

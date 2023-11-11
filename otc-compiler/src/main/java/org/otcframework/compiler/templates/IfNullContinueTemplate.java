@@ -39,7 +39,7 @@ import java.util.Set;
 public class IfNullContinueTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			IfNullContinueTemplate.class.getSimpleName() + "\n";
+			IfNullContinueTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new if null continue template.
 	 */

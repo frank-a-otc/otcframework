@@ -27,8 +27,6 @@ package org.otcframework.compiler.templates;
  */
 public final class MethodEndTemplate extends AbstractTemplate {
 
-	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			MethodEndTemplate.class.getSimpleName() + "\n";
 	/**
 	 * Instantiates a new method end template.
 	 */

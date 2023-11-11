@@ -107,6 +107,6 @@ public final class OtcExecutorImpl implements OtcExecutor {
 			indexedCollectionsDto = objectIndexer.indexObject(registryDto, TARGET_SOURCE.SOURCE, source);
 		}
 		CodeExecutor<S, T> codeExecutor = registryDto.codeExecutor;
-		return (T) codeExecutor.execute(source, indexedCollectionsDto, data);
+		return codeExecutor.execute(source, indexedCollectionsDto, data);
 	}
 }

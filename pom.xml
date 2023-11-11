@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>OTC framework's parent project</description>
+	<description>OTC framework's parent project (JDK 11)</description>
 	<url>http://www.otcframework.org</url>
 
 	<licenses>
@@ -58,15 +58,12 @@
 		
 		<commons-configuration.version>1.8</commons-configuration.version>
 		<commons-io.version>2.8.0</commons-io.version>
-		<logback.version>1.2.11</logback.version>
-		<slf4j.version>1.7.30</slf4j.version>
-		<dateconverters.version>1.4</dateconverters.version>
-		
-		<jackson.annotations.version>2.13.4</jackson.annotations.version>
-		<jackson.dataformat.version>2.13.4</jackson.dataformat.version>
-		<jackson.databind.version>2.13.4.1</jackson.databind.version>
-		
-		<snakeyaml.version>1.30</snakeyaml.version>
+		<logback.version>1.3.11</logback.version>
+		<slf4j.version>2.0.9</slf4j.version>
+		<dateconverters.version>1.4.0</dateconverters.version>
+
+		<jackson.version>2.15.0</jackson.version>
+		<snakeyaml.version>2.2</snakeyaml.version>
 		<msgpack.version>0.6.12</msgpack.version>
 		<lombok.version>1.18.24</lombok.version>
 		<javax.annotation.version>1.3.2</javax.annotation.version>
@@ -120,23 +117,30 @@
 			<dependency>
 			    <groupId>com.fasterxml.jackson.core</groupId>
 			    <artifactId>jackson-databind</artifactId>
-				<version>${jackson.databind.version}</version>
+				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
 			    <groupId>com.fasterxml.jackson.core</groupId>
 			    <artifactId>jackson-annotations</artifactId>
-				<version>${jackson.annotations.version}</version>
+				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
 			    <groupId>com.fasterxml.jackson.dataformat</groupId>
 			    <artifactId>jackson-dataformat-yaml</artifactId>
-				<version>${jackson.dataformat.version}</version>
+				<version>${jackson.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.yaml</groupId>
+						<artifactId>snakeyaml</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
-			    <groupId>org.yaml</groupId>
-    			<artifactId>snakeyaml</artifactId>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
 				<version>${snakeyaml.version}</version>
 			</dependency>
+
 			<!-- lombok required in otc-compiler by java-dynamic-compiler in Java 16+ -->
 			<dependency>
 			    <groupId>org.projectlombok</groupId>

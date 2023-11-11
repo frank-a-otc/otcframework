@@ -1,0 +1,4 @@
+Check for the below before deploying to Maven Central
+------------------------------------------------------
+1. All 4 POMs -> <description> : check for correct JDK version
+2. All 4 POMs : check version numbers  across all poms

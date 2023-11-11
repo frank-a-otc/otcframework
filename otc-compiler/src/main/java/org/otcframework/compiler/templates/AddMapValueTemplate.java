@@ -39,7 +39,7 @@ import java.util.Set;
 public final class AddMapValueTemplate extends AbstractTemplate {
 
 	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
-			AddMapValueTemplate.class.getSimpleName() + "\n";
+			AddMapValueTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new adds the map value template.
