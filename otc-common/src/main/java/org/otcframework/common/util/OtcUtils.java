@@ -239,10 +239,10 @@ public class OtcUtils {
 	public static URLClassLoader loadURLClassLoader(String path) {
 		File otcBinDirectory = new File(path);
 		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"));
-		if (urls.isEmpty()) {
-			urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class"));
-		} else {
-			urls.addAll(createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class")));
+		try {
+			urls.add(otcBinDirectory.toURI().toURL());
+		} catch (MalformedURLException e) {
+			LOGGER.error(e.getMessage());
 		}
 		if (urls.isEmpty()) {
 			return null;
@@ -275,13 +275,11 @@ public class OtcUtils {
 				urls.addAll(createURLs(file, fileFilter));
 			} else {
 				try {
-					URL url;
 					if (file.getName().endsWith(".jar")) {
+						URL url = file.toURI().toURL();
 						url = new URL("jar:file:" + file.getAbsolutePath() + "!/");
-					} else {
-						url = new URL("file:" + file.getAbsolutePath());
+						urls.add(url);
 					}
-					urls.add(url);
 				} catch (MalformedURLException e) {
 					LOGGER.warn(e.getMessage());
 				}

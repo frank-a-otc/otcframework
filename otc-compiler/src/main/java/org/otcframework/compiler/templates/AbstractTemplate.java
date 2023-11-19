@@ -727,7 +727,7 @@ public abstract class AbstractTemplate {
 
 	protected static String addInlineComments(String inlineComments, String generatedCode) {
 		if (CommonUtils.isTrimmedAndEmpty(generatedCode)) {
-			return null;
+			return "";
 		}
 		return inlineComments + generatedCode;
 	}
