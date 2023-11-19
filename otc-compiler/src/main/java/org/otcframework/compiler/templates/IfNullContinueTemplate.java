@@ -36,11 +36,10 @@ import java.util.Set;
 /**
  * The Class IfNullContinueTemplate.
  */
-// TODO: Auto-generated Javadoc
 public class IfNullContinueTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
-			IfNullContinueTemplate.class.getSimpleName() + "\n";
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
+			IfNullContinueTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new if null continue template.
 	 */
@@ -88,12 +87,12 @@ public class IfNullContinueTemplate extends AbstractTemplate {
 		}
 		if (otcCommandDto.enableGetterHelper) {
 			String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
-			ifNotNullParentChildGetterCode = String.format(helperGetIfNullContinueTemplate, fieldType, varName, helper,
+			ifNotNullParentChildGetterCode = String.format(HELPER_GET_IF_NULL_CONTINUE_TEMPLATE, fieldType, varName, helper,
 					getter, parentVarName, varName, logLevel, logMsg);
 		} else {
-			ifNotNullParentChildGetterCode = String.format(getterIfNullContinueTemplate, fieldType, varName,
+			ifNotNullParentChildGetterCode = String.format(GETTER_IF_NULL_CONTINUE_TEMPLATE, fieldType, varName,
 					parentVarName, getter, varName, logLevel, logMsg);
 		}
-		return addInlineComments(inlineComments, ifNotNullParentChildGetterCode);
+		return addInlineComments(INLINE_COMMENTS, ifNotNullParentChildGetterCode);
 	}
 }

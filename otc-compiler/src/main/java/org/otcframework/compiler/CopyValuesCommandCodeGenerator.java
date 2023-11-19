@@ -36,11 +36,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Class CopyValuesCommandCodeGenerator.
  */
-// TODO: Auto-generated Javadoc
 final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 
 	/** The Constant LOGGER. */
@@ -89,11 +89,8 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 		} else if (!targetOCD.isFirstNode) {
 			otcCommand.appendGetter(clonedTargetOCC, targetOCD, false);
 		}
-		offsetIdx = processRemainingPath(clonedTargetOCC, otcCommand, scriptDto, scriptGroupIdx, offsetIdx);
-		targetOCD = targetOCC.otcCommandDto;
-		scriptGroupIdx++;
+		processRemainingPath(clonedTargetOCC, otcCommand, scriptDto, scriptGroupIdx, offsetIdx);
 		otcCommand.createJavaFile(targetOCC, targetClz, sourceClz);
-		return;
 	}
 
 	/**
@@ -138,7 +135,7 @@ final class CopyValuesCommandCodeGenerator extends AbstractOtcCodeGenerator {
 				}
 			}
 			while (true) {
-				if (childOCD.isCollectionOrMapMember()) {
+				if (Objects.nonNull(childOCD) && childOCD.isCollectionOrMapMember()) {
 					Integer memberIdx = getIndex(targetOCC, idx, scriptGroupIdx, offsetIdx);
 					if (childOCD.isMapKey()) {
 						if (targetOCC.hasDescendantCollectionOrMap()) {

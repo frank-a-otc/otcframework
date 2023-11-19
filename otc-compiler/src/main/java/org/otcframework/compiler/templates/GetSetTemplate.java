@@ -35,11 +35,10 @@ import java.util.Set;
 /**
  * The Class GetSetTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class GetSetTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
-			GetSetTemplate.class.getSimpleName() + "\n";
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
+			GetSetTemplate.class.getSimpleName();
 
 	/**
 	 * Instantiates a new gets the set template.
@@ -71,7 +70,7 @@ public final class GetSetTemplate extends AbstractTemplate {
 		} else {
 			getSetCode = generateCodeForGetterSetter(targetOCC, sourceOCC, createNewVarName, varNamesSet, varNamesMap);
 		}
-		return addInlineComments(inlineComments, getSetCode);
+		return addInlineComments(INLINE_COMMENTS, getSetCode);
 	}
 
 	/**
@@ -108,18 +107,18 @@ public final class GetSetTemplate extends AbstractTemplate {
 		String helper = targetOCC.factoryClassDto.addImport(targetOCC.helper);
 		if (targetOCD.enableSetterHelper && sourceOCD.enableGetterHelper) {
 			if (sourceOCD.isCollectionOrMapMember()) {
-				getSetCode = String.format(helperSetterTemplate, helper, targetOCD.setter, targetParentVarName,
+				getSetCode = String.format(HELPER_SETTER_TEMPLATE, helper, targetOCD.setter, targetParentVarName,
 						sourceParentVarName);
 			} else {
-				getSetCode = String.format(setHelperGetHelperTemplate, helper, targetOCD.setter, targetParentVarName,
+				getSetCode = String.format(SET_HELPER_GET_HELPER_TEMPLATE, helper, targetOCD.setter, targetParentVarName,
 						helper, sourceOCD.getter, sourceParentVarName);
 			}
 		} else if (targetOCD.enableSetterHelper) {
 			if (sourceOCD.isCollectionOrMapMember()) {
-				getSetCode = String.format(helperSetterTemplate, helper, targetOCD.setter, targetParentVarName,
+				getSetCode = String.format(HELPER_SETTER_TEMPLATE, helper, targetOCD.setter, targetParentVarName,
 						sourceParentVarName);
 			} else {
-				getSetCode = String.format(setHelperTemplate, helper, targetOCD.setter, targetParentVarName,
+				getSetCode = String.format(SET_HELPER_TEMPLATE, helper, targetOCD.setter, targetParentVarName,
 						sourceParentVarName, sourceOCD.getter);
 			}
 		} else {
@@ -129,10 +128,10 @@ public final class GetSetTemplate extends AbstractTemplate {
 			} else {
 				targetVarName = createVarName(targetOCD, createNewVarName, varNamesSet, varNamesMap);
 			}
-			getSetCode = String.format(getHelperTemplate, targetVarName, targetOCD.setter, targetParentVarName, helper,
+			getSetCode = String.format(GET_HELPER_TEMPLATE, targetVarName, targetOCD.setter, targetParentVarName, helper,
 					sourceOCD.getter, sourceParentVarName);
 		}
-		return addInlineComments(inlineComments, getSetCode);
+		return addInlineComments(INLINE_COMMENTS, getSetCode);
 	}
 
 	/**
@@ -164,26 +163,26 @@ public final class GetSetTemplate extends AbstractTemplate {
 		String getSetCode = null;
 		if (targetOCD.isEnum() && sourceOCD.isEnum()) {
 			String targetEnumType = fetchSanitizedTypeName(targetOCC, targetOCD);
-			getSetCode = String.format(setterBothEnumTemplate, targetParentVarName, targetOCD.setter, targetEnumType,
+			getSetCode = String.format(SETTER_BOTH_ENUM_TEMPLATE, targetParentVarName, targetOCD.setter, targetEnumType,
 					sourceVarName);
 		} else if (sourceOCD.isEnum()) {
-			getSetCode = String.format(setterSourceEnumTemplate, targetParentVarName, targetOCD.setter, sourceVarName);
+			getSetCode = String.format(SETTER_SOURCE_ENUM_TEMPLATE, targetParentVarName, targetOCD.setter, sourceVarName);
 		} else if (targetOCD.isEnum()) {
 			String targetEnumType = fetchSanitizedTypeName(targetOCC, targetOCD);
-			getSetCode = String.format(setterTargetEnumTemplate, targetParentVarName, targetOCD.setter, targetEnumType,
+			getSetCode = String.format(SETTER_TARGET_ENUM_TEMPLATE, targetParentVarName, targetOCD.setter, targetEnumType,
 					sourceVarName);
 		} else {
 			if (DateConverterFacade.isOfAnyDateType(targetOCD.fieldType)) {
 				targetOCC.factoryClassDto.addImport(DateConverterFacade.class.getName());
 				if (DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
-					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
+					getSetCode = String.format(DATE_CONVERTER_TEMPLATE, targetParentVarName, targetOCD.setter,
 							sourceVarName, targetOCD.fieldType.getName());
 				} else {
 					if (String.class != sourceOCD.fieldType) {
 						throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to "
 								+ targetOCD.fieldType.getName() + " in " + targetOCC.commandId);
 					}
-					getSetCode = String.format(dateConverterTemplate, targetParentVarName, targetOCD.setter,
+					getSetCode = String.format(DATE_CONVERTER_TEMPLATE, targetParentVarName, targetOCD.setter,
 							sourceVarName, sourceOCD.fieldType.getName());
 				}
 			} else if (DateConverterFacade.isOfAnyDateType(sourceOCD.fieldType)) {
@@ -192,12 +191,12 @@ public final class GetSetTemplate extends AbstractTemplate {
 					throw new CodeGeneratorException("", sourceOCD.fieldType + " in from: cannot be converted to "
 							+ targetOCD.fieldType.getName() + " in " + targetOCC.commandId);
 				}
-				getSetCode = String.format(dateToStringConverterTemplate, targetParentVarName, targetOCD.setter,
+				getSetCode = String.format(DATE_TO_STRING_CONVERTER_TEMPLATE, targetParentVarName, targetOCD.setter,
 						sourceVarName);
 			} else {
-				getSetCode = String.format(setterTemplate, targetParentVarName, targetOCD.setter, sourceVarName);
+				getSetCode = String.format(SETTER_TEMPLATE, targetParentVarName, targetOCD.setter, sourceVarName);
 			}
 		}
-		return addInlineComments(inlineComments, getSetCode);
+		return addInlineComments(INLINE_COMMENTS, getSetCode);
 	}
 }

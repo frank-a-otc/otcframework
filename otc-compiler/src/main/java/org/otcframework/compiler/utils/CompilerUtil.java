@@ -28,9 +28,9 @@ import org.otcframework.common.util.CommonUtils;
 /**
  * The Class CompilerUtil.
  */
-// TODO: Auto-generated Javadoc
 public final class CompilerUtil {
 
+	private CompilerUtil() {}
 	/**
 	 * Builds the java class name.
 	 *
@@ -40,14 +40,11 @@ public final class CompilerUtil {
 	 * @return the string
 	 */
 	public static String buildJavaClassName(String otcNamespace, String otcFileName, String otcChain) {
-//		if (otcFileName.endsWith(".otc")) {
-//			otcFileName = otcFileName.replace(otcFileName.substring(otcFileName.lastIndexOf(".otc")), "");
-//		}
 		String factoryClzName = sanitizeJavaIdentifier(otcFileName);
-		if (!CommonUtils.isEmpty(otcNamespace)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			factoryClzName = otcNamespace + "." + factoryClzName;
 		}
-		if (!CommonUtils.isEmpty(otcChain)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcChain)) {
 			String newOtcChain = null;
 			if (otcChain.contains(OtcConstants.MAP_KEY_REF) || otcChain.contains(OtcConstants.MAP_VALUE_REF)) {
 				if (otcChain.contains(OtcConstants.MAP_KEY_REF)) {

@@ -30,6 +30,7 @@ import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.dto.RegistryDto;
 import org.otcframework.common.dto.RegistryDto.CompiledInfo;
 import org.otcframework.common.exception.OtcException;
+import org.otcframework.common.exception.OtcUnsupportedJdkException;
 import org.otcframework.common.executor.CodeExecutor;
 import org.otcframework.common.factory.OtcCommandDtoFactory;
 import org.otcframework.common.util.CommonUtils;
@@ -44,6 +45,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,11 +54,10 @@ import java.util.Map;
 /**
  * The Class OtcRegistryImpl.
  */
-// TODO: Auto-generated Javadoc
 public enum OtcRegistryImpl implements OtcRegistry {
 
 	/** The instance. */
-	instance;
+	INSTANCE;
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcRegistryImpl.class);
@@ -66,14 +68,12 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	/** The Constant depFileFilter. */
 	private static final FileFilter depFileFilter = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
 
-	/** The Constant msgPack. */
-//	private static final MessagePack msgPack = new MessagePack();
-
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	/** The Constant clzLoader. */
 	private static final URLClassLoader clzLoader = OtcConfig.getTargetClassLoader();
+	private static final String OTC_TARGET_FOLDER = OtcConfig.getTargetDirectoryPath();
 
 	/**
 	 * Instantiates a new otc registry impl.
@@ -86,29 +86,35 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	 */
 	@Override
 	public void register() {
-		String binDir = OtcConfig.getOtcTmdLocation();
-		File directory = new File(binDir);
+		File directory;
+		if (OtcConfig.isDefaultLocations()) {
+			directory = new File(OtcConfig.getOtcTmdDirectoryPath());
+		} else {
+			URL tmdUrl = this.getClass().getClassLoader().getResource(OtcConfig.OTC_TMD_FOLDER);
+			try {
+				directory = new File(tmdUrl.toURI());
+			} catch (URISyntaxException e) {
+				throw new RegistryException("", "Unable to load '.tmd' files...", e);
+			}
+		}
 		File[] files = directory.listFiles(depFileFilter);
 		if (files == null) {
 			return;
 		}
-		LOGGER.info("Begining OTC registrations from {}", binDir);
+		LOGGER.info("Beginning OTC registrations...");
 		long startTime = System.nanoTime();
 		boolean hasRegistrations = false;
 		for (File file : files) {
 			if (file.isDirectory()) {
 				continue;
 			}
-			try {
-				FileInputStream fis = new FileInputStream(file);
-//				byte[] contents = msgPack.read(fis, byte[].class);
+			try (FileInputStream fis = new FileInputStream(file)) {
 				byte[] contents = new byte[fis.available()];
 				fis.read(contents);
 				RegistryDto registryDto = objectMapper.readValue(contents, RegistryDto.class);
 				if (registryDto.hasError) {
 					LOGGER.error(
-							"Ignoring registry of {}. "
-									+ "Probable cause: full compilation did not succeed on previous attempt.",
+							"Ignoring registry of {}. Probable cause: full compilation did not succeed on previous attempt.",
 							file.getAbsolutePath());
 					continue;
 				}
@@ -132,7 +138,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		} else {
 			LOGGER.info("Nothing to register - no registration files found !!");
 		}
-		return;
 	}
 
 	/**
@@ -155,7 +160,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		for (int idx = 1; idx < otcChainDto.otcTokens.length; idx++) {
 			String otcToken = otcChainDto.otcTokens[idx];
 			if (otcCommandDto.isCollection() || otcCommandDto.isMap()) {
-				OtcCommandDtoFactory.createMembers(id, otcCommandDto, otcChainDto.otcChain, otcChainDto.rawOtcTokens);
+				OtcCommandDtoFactory.createMembers(id, otcCommandDto, otcChainDto.rawOtcTokens);
 				if (otcCommandDto.isCollection()) {
 					otcCommandDto = otcCommandDto.children.get(otcCommandDto.fieldName);
 				} else if (otcCommandDto.isMap()) {
@@ -172,7 +177,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			childOCD.field = field;
 			otcCommandDto = childOCD;
 		}
-		return;
 	}
 
 	/**
@@ -191,10 +195,14 @@ public enum OtcRegistryImpl implements OtcRegistry {
 		Class<?> mainClz = null;
 		try {
 			mainClz = OtcUtils.loadClass(mainClass);
+		} catch (OtcUnsupportedJdkException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			try {
 				mainClz = clzLoader.loadClass(mainClass);
+				LOGGER.info("Found entry file {} in {} ", mainClass, OTC_TARGET_FOLDER);
 			} catch (Exception e) {
+				LOGGER.error("Could not load entry file {} ", mainClass);
 				throw new OtcException("", e);
 			}
 		}
@@ -206,7 +214,6 @@ public enum OtcRegistryImpl implements OtcRegistry {
 			throw new OtcException("", e);
 		}
 		mapPackagedOtcDtos.put(registryDto.registryId, registryDto);
-		return;
 	}
 
 	/**
@@ -240,7 +247,7 @@ public enum OtcRegistryImpl implements OtcRegistry {
 	/**
 	 * Retrieve registry dto.
 	 *
-	 * @param regisgryId the registry id
+	 * @param registryId the registry id
 	 * @return the registry dto
 	 */
 	private RegistryDto retrieveRegistryDto(String registryId) {

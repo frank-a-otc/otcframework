@@ -29,6 +29,7 @@ import org.otcframework.common.compiler.CompilationReport;
 import org.otcframework.common.config.OtcConfig;
 import org.otcframework.common.dto.*;
 import org.otcframework.common.dto.RegistryDto.CompiledInfo;
+import org.otcframework.common.exception.OtcException;
 import org.otcframework.common.util.CommonUtils;
 import org.otcframework.common.util.OtcUtils;
 import org.otcframework.compiler.command.JavaCodeStringObject;
@@ -48,8 +49,7 @@ import java.util.List;
 /**
  * The Class OtcCompilerImpl.
  */
-// TODO: Auto-generated Javadoc
-final public class OtcsCompilerImpl implements OtcsCompiler {
+public final class OtcsCompilerImpl implements OtcsCompiler {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcsCompilerImpl.class);
@@ -61,19 +61,16 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	private static final OtcCodeGenerator otcCodeGenerator = OtcCodeGeneratorImpl.getInstance();
 
 	/** The Constant otcSrcDir. */
-	private static final String OTCS_SOURCE_LOCATION = OtcConfig.getOtcSourceLocation();
+	private static final String UNIT_TEST_LOCATION = OtcConfig.getUnitTestDirectoryPath();
 
 	/** The Constant srcDir. */
-	private static final String SOURCE_CODE_LOCATION = OtcConfig.getSourceCodeLocation();
+	private static final String SOURCE_CODE_LOCATION = OtcConfig.getSourceCodeDirectoryPath();
 
 	/** The Constant otcTargetDir. */
-	private static final String OTC_TARGET_LOCATION = OtcConfig.getCompiledCodeLocation();
+	private static final String OTC_TARGET_LOCATION = OtcConfig.getTargetDirectoryPath();
 
 	/** The Constant otcTmdDir. */
-	private static final String OTC_TMD_LOCATION = OtcConfig.getOtcTmdLocation();
-
-	/** The Constant compilerSourcecodeFailonerror. */
-	private static final boolean compilerSourcecodeFailonerror = OtcConfig.getCompilerSourcecodeFailonerror();
+	private static final String OTC_TMD_LOCATION = OtcConfig.getOtcTmdDirectoryPath();
 
 	/** The Constant otcFileFilter. */
 	private static final FileFilter OTC_FILE_FILTER = CommonUtils.createFilenameFilter(OtcConstants.OTC_SCRIPT_EXTN);
@@ -81,20 +78,17 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	/** The Constant depFileFilter. */
 	private static final FileFilter TMD_FILE_FILTER = CommonUtils.createFilenameFilter(OtcConstants.OTC_TMD_EXTN);
 
-	/** The Constant msgPack. */
-//	private static final MessagePack msgPack = new MessagePack();
-
 	/** The Constant objectMapper. */
 	private static final ObjectMapper objectMapper;
 
 	/** The Constant optionList. */
-	private static final List<String> optionList = new ArrayList<String>();
+	private static final List<String> optionList = new ArrayList<>();
 	
 	static {
 		objectMapper = new ObjectMapper();
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
 		optionList.add("-classpath");
-		String otcLibLocation = OtcConfig.getOtcLibLocation();
+		String otcLibLocation = OtcConfig.getOtcLibDirectoryPath();
 		File directory = new File(otcLibLocation);
 		FileFilter fileFilter = CommonUtils.createFilenameFilter(".jar");
 		StringBuilder otcLibClassPath = null;
@@ -129,13 +123,16 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	 * @return the list
 	 */
 	@Override
-	public List<CompilationReport> compile() {
+	public List<CompilationReport> compileOtcsFiles() {
 		long startTime = System.nanoTime();
-		LOGGER.info("Initiating OTCS file compilations in {}", OTCS_SOURCE_LOCATION);
-		File otcSourceDirectory = new File(OTCS_SOURCE_LOCATION);
-		List<CompilationReport> compilationReports = compileOtc(otcSourceDirectory, null);
+		LOGGER.info("Initiating OTCS file compilations in {}", UNIT_TEST_LOCATION);
+		File unitTestDirectory = new File(UNIT_TEST_LOCATION);
+		if (!unitTestDirectory.exists()) {
+			throw new OtcCompilerException("", String.format("Missing '%s' folder.", UNIT_TEST_LOCATION));
+		}
+		List<CompilationReport> compilationReports = compileAll(unitTestDirectory, null);
 		if (compilationReports == null) {
-			LOGGER.info("No OTCS files to compile in '{}'", OTCS_SOURCE_LOCATION);
+			LOGGER.info("No OTCS files to compile in '{}'", UNIT_TEST_LOCATION);
 			return null;
 		}
 		int successful = 0;
@@ -164,16 +161,16 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	 * @param otcNamespace the otc namespace
 	 * @return the list
 	 */
-	private List<CompilationReport> compileOtc(File directory, String otcNamespace) {
+	private List<CompilationReport> compileAll(File directory, String otcNamespace) {
 		List<CompilationReport> compilationReports = null;
 		for (File file : directory.listFiles(OTC_FILE_FILTER)) {
 			if (file.isDirectory()) {
 				String newOtcNamespacePackage = otcNamespace == null ? file.getName()
 						: otcNamespace + "." + file.getName();
 				if (compilationReports == null) {
-					compilationReports = compileOtc(file, newOtcNamespacePackage);
+					compilationReports = compileAll(file, newOtcNamespacePackage);
 				} else {
-					List<CompilationReport> childCompilationReports = compileOtc(file, newOtcNamespacePackage);
+					List<CompilationReport> childCompilationReports = compileAll(file, newOtcNamespacePackage);
 					if (childCompilationReports != null) {
 						compilationReports.addAll(childCompilationReports);
 					}
@@ -184,18 +181,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 					compilationReports = new ArrayList<>();
 				}
 				int idx = compilationReport.otcFileName.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN);
-				String depFileName = compilationReport.otcFileName.substring(0, idx) + OtcConstants.OTC_TMD_EXTN;
-				if (!CommonUtils.isEmpty(compilationReport.otcNamespace)) {
-					depFileName = compilationReport.otcNamespace + "." + depFileName;
+				String tmdFileName = compilationReport.otcFileName.substring(0, idx) + OtcConstants.OTC_TMD_EXTN;
+				if (!CommonUtils.isTrimmedAndEmpty(compilationReport.otcNamespace)) {
+					tmdFileName = compilationReport.otcNamespace + "." + tmdFileName;
 				}
-				File binDir = new File(OTC_TMD_LOCATION);
-				if (!binDir.exists()) {
-					binDir.mkdirs();
-					binDir = null;
-				}
-				depFileName = OTC_TMD_LOCATION + depFileName;
-				RegistryDto registryDto = createregistryDto(compilationReport);
-				registryDto.registryFileName = depFileName;
+				tmdFileName = OTC_TMD_LOCATION + tmdFileName;
+				RegistryDto registryDto = createRegistryDto(compilationReport);
+				registryDto.registryFileName = tmdFileName;
 				createRegistrationFile(registryDto);
 				compilationReports.add(compilationReport);
 			}
@@ -209,23 +201,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	 * @param registryDto the registry dto
 	 */
 	private void createRegistrationFile(RegistryDto registryDto) {
-		FileOutputStream fos = null;
-		try {
+		OtcUtils.creteDirectory(OTC_TMD_LOCATION);
+		try (FileOutputStream fos = new FileOutputStream(registryDto.registryFileName)) {
 			String str = objectMapper.writeValueAsString(registryDto);
-			fos = new FileOutputStream(registryDto.registryFileName);
-//			msgPack.write(fos, str.getBytes());
 			fos.write(str.getBytes());
 			fos.flush();
 		} catch (IOException e) {
 			throw new OtcCompilerException(e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					throw new OtcCompilerException(e);
-				}
-			}
 		}
 	}
 
@@ -235,7 +217,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 	 * @param compilationReport the compilation report
 	 * @return the registry dto
 	 */
-	private RegistryDto createregistryDto(CompilationReport compilationReport) {
+	private RegistryDto createRegistryDto(CompilationReport compilationReport) {
 		RegistryDto registryDto = new RegistryDto();
 		OtcDto otcDto = compilationReport.otcDto;
 		registryDto.mainClass = otcDto.mainClassDto.fullyQualifiedClassName;
@@ -244,12 +226,8 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		registryDto.otcNamespace = otcDto.otcNamespace;
 		String otcNamespace = otcDto.otcNamespace;
 		registryDto.otcFileName = otcDto.otcFileName;
-		String registryId = otcDto.otcFileName;
-		registryId = registryId.substring(0, registryId.lastIndexOf(OtcConstants.OTC_SCRIPT_EXTN));
-		if (!CommonUtils.isEmpty(otcNamespace)) {
-			registryId = otcNamespace + "." + registryId;
-		}
-		registryDto.registryId = registryId;
+		registryDto.registryId =
+				OtcUtils.createRegistryId(otcNamespace, registryDto.sourceClz, registryDto.targetClz);
 		List<ScriptDto> scriptDtos = otcDto.scriptDtos;
 		// loop through scriptDtos and register in registry
 		scriptDtos.forEach(scriptDto -> {
@@ -287,10 +265,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		otcCommandDto.field = null;
 		otcCommandDto.parent = null;
 		if (otcCommandDto.children != null) {
-//			for (OtcCommandDto childOCD : otcCommandDto.children.values()) {
-			otcCommandDto.children.values().forEach(childOCD -> {
-				nullifyFields(childOCD);
-			});
+			otcCommandDto.children.values().forEach(this::nullifyFields);
 		}
 	}
 
@@ -312,7 +287,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			LOGGER.info("Compiling OTCS file : {}->{}", otcNamespace, otcFileName);
 			long startTime = System.nanoTime();
 			otcDto = OtcLexicalizer.lexicalize(file, otcNamespace);
-			if (otcDto.scriptDtos == null || otcDto.scriptDtos.size() == 0) {
+			if (otcDto.scriptDtos == null || otcDto.scriptDtos.isEmpty()) {
 				throw new CodeGeneratorException("",
 						"No OTC commmands to execute! " + "OTC-Scripts are missing or none are enabled.");
 			}
@@ -321,7 +296,7 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			if (otcDto.otcFileDto != null && otcDto.otcFileDto.metadata != null
 					&& otcDto.otcFileDto.metadata.entryClassName != null) {
 				mainClassDto.className = otcDto.otcFileDto.metadata.entryClassName;
-				if (!CommonUtils.isEmpty(otcDto.otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(otcDto.otcNamespace)) {
 					mainClassDto.packageName = otcDto.otcNamespace;
 					mainClassDto.fullyQualifiedClassName = mainClassDto.packageName + "." + mainClassDto.className;
 				} else {
@@ -330,25 +305,27 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			} else {
 				String mainClassName = CompilerUtil.buildJavaClassName(otcNamespace, otcFileName);
 				mainClassDto.fullyQualifiedClassName = mainClassName;
-				if (!CommonUtils.isEmpty(otcDto.otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(otcDto.otcNamespace)) {
 					mainClassDto.packageName = otcNamespace;
 					mainClassDto.className = mainClassName.substring(mainClassName.lastIndexOf(".") + 1);
 				}
 			}
 			long endTime = System.nanoTime();
-			message = "Successfully compiled OTCS file in " + ((endTime - startTime) / 1000000.0)
-					+ " millis - OTC-Filename: " + otcNamespace + "->" + otcFileName;
+			message = String.format("Successfully compiled OTCS file in %s millis - OTC-Filename: %s -> %s",
+					((endTime - startTime) / 1000000.0), otcNamespace, otcFileName);
 			LOGGER.info(message);
 			otcCodeGenerator.generateSourcecode(otcDto);
 			compilationReportBuilder.addDidSucceed(true).addOtcDto(otcDto).addMessage(message);
+		} catch (OtcException ex) {
+			LOGGER.error(ex.getMessage(), ex);
+			throw ex;
 		} catch (Exception ex) {
-			message = "Error while compiling OTCS file : " + otcNamespace + "->" + otcFileName;
-			compilationReportBuilder.addDidSucceed(false).addMessage(message).addCause(ex);
+			message = String.format("Error while compiling OTCS file : %s -> %s! %s", otcNamespace, otcFileName, ex.getMessage());
 			LOGGER.error(message, ex);
+			throw new OtcCompilerException(message, ex);
 		}
 		compilationReportBuilder.addMessage(message);
-		CompilationReport compilationReport = compilationReportBuilder.build();
-		return compilationReport;
+		return compilationReportBuilder.build();
 	}
 
 	/**
@@ -367,11 +344,8 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		List<RegistryDto> registryDtos = null;
 		Thread.currentThread().setContextClassLoader(OtcUtils.fetchCurrentURLClassLoader());
 		for (File depFile : files) {
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(depFile);
-//				String str = msgPack.read(fis, String.class);
-				byte bytes[] = new byte[fis.available()];
+			try (FileInputStream fis = new FileInputStream(depFile)) {
+				byte[] bytes = new byte[fis.available()];
 				fis.read(bytes);
 				String str = new String(bytes);
 				RegistryDto registryDto = objectMapper.readValue(str, RegistryDto.class);
@@ -380,22 +354,13 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 				}
 				registryDtos.add(registryDto);
 			} catch (IOException e) {
-				LOGGER.error("", e);
-			} finally {
-				if (fis != null) {
-					try {
-						fis.close();
-					} catch (IOException e) {
-						LOGGER.error("", e);
-					}
-				}
+				LOGGER.error(e.getMessage(), e);
 			}
 		}
-
 		try {
 			createCompilationUnitsAndCompile(registryDtos, null);
 		} catch (OtcCompilerException e) {
-			LOGGER.error("", e);
+			LOGGER.error(e.getMessage(), e);
 			throw e;
 		}
 		long endTime = System.nanoTime();
@@ -417,8 +382,8 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		}
 		for (RegistryDto registryDto : registryDtos) {
 			String mainClz = registryDto.mainClass;
-			String absoluteFileName = SOURCE_CODE_LOCATION + File.separator + mainClz.replace(".", File.separator)
-					+ OtcConstants.OTC_GENERATEDCODE_EXTN;
+			String absoluteFileName = SOURCE_CODE_LOCATION + mainClz.replace(".", File.separator)
+					+ OtcConstants.SOURCE_CODE_EXTN;
 			File file = new File(absoluteFileName);
 			if (!file.exists()) {
 				throw new OtcCompilerException("", "Main-class " + mainClz + " is missing!.");
@@ -430,11 +395,11 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 			for (CompiledInfo compiledInfo : registryDto.compiledInfos.values()) {
 				String factoryClassName = compiledInfo.factoryClassName;
 				String otcNamespace = registryDto.otcNamespace;
-				if (!CommonUtils.isEmpty(otcNamespace) && !factoryClassName.startsWith(otcNamespace)) {
+				if (!CommonUtils.isTrimmedAndEmpty(otcNamespace) && !factoryClassName.startsWith(otcNamespace)) {
 					factoryClassName = otcNamespace + "." + factoryClassName;
 				}
 				absoluteFileName = SOURCE_CODE_LOCATION + File.separator + factoryClassName.replace(".", File.separator)
-						+ OtcConstants.OTC_GENERATEDCODE_EXTN;
+						+ OtcConstants.SOURCE_CODE_EXTN;
 				file = new File(absoluteFileName);
 				if (!file.exists()) {
 					throw new OtcCompilerException("", "Factory-class " + factoryClassName + " is missing!.");
@@ -467,25 +432,20 @@ final public class OtcsCompilerImpl implements OtcsCompiler {
 		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 		JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, optionList, null,
 				javaFileObjects);
-		if (!task.call()) {
-			diagnostics.getDiagnostics().forEach((diagnostic) -> {
+		if (Boolean.FALSE.equals(task.call())) {
+			diagnostics.getDiagnostics().forEach(diagnostic -> {
 				if (!registryDto.hasError && diagnostic.getCode().contains("compiler.err")) {
 					registryDto.hasError = true;
 				}
-				System.out.println(diagnostic);
+				LOGGER.debug(diagnostic.toString());
 			});
 			if (registryDto.hasError) {
-//				createRegistrationFile(registryDto);
-				if (compilerSourcecodeFailonerror) {
-					throw new OtcCompilerException("", "Source code compilation failed.");
-				}
+				throw new OtcCompilerException("", "Source code compilation failed.");
 			}
 			createRegistrationFile(registryDto);
 		} else {
-			javaFileObjects.forEach((javaFile) -> {
-				LOGGER.debug("Compiled source code : {}", javaFile.getName());
-			});
+			javaFileObjects.forEach(javaFile ->
+				LOGGER.debug("Compiled source code : {}", javaFile.getName()));
 		}
-		return;
 	}
 }

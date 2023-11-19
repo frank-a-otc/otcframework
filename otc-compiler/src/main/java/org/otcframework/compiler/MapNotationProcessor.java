@@ -29,24 +29,20 @@ import org.otcframework.compiler.exception.SyntaxException;
 /**
  * The Class MapNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class MapNotationProcessor {
 
+	private MapNotationProcessor() {}
 	/**
 	 * Process.
 	 *
 	 * @param scriptId       the script id
 	 * @param otcCommandDto  the otc command dto
 	 * @param otcToken       the otc token
-	 * @param otcChain       the otc chain
-	 * @param idxMapNotation the idx map notation
-	 * @return true, if successful
 	 */
-	public static boolean process(String scriptId, OtcCommandDto otcCommandDto, String otcToken, String otcChain,
-			int idxMapNotation) {
+	public static void process(String scriptId, OtcCommandDto otcCommandDto, String otcToken) {
 		if (!otcToken.contains(OtcConstants.MAP_BEGIN_REF) && !otcToken.contains(OtcConstants.MAP_PRE_ANCHOR)
 				&& !otcToken.contains(OtcConstants.MAP_END_REF) && !otcToken.contains(OtcConstants.MAP_POST_ANCHOR)) {
-			return true;
+			return;
 		}
 		int firstIdx = otcToken.indexOf(OtcConstants.MAP_BEGIN_REF);
 		if (firstIdx < 0) {
@@ -72,6 +68,5 @@ final class MapNotationProcessor {
 			}
 		}
 		otcCommandDto.hasMapNotation = true;
-		return true;
 	}
 }

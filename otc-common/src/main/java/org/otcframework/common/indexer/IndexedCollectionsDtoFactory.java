@@ -29,17 +29,10 @@ import java.util.HashMap;
 /**
  * A factory for creating IndexedCollectionsDto objects.
  */
-// TODO: Auto-generated Javadoc
 public class IndexedCollectionsDtoFactory {
 
-	/**
-	 *
-	 * @param parentICD
-	 * @param value
-	 * @param idxStr
-	 * @param hasChildren
-	 * @return IndexedCollectionsDto
-	 */
+	private IndexedCollectionsDtoFactory() {}
+
 	public static IndexedCollectionsDto create(IndexedCollectionsDto parentICD, Object value, String idxStr, boolean hasChildren) {
 		IndexedCollectionsDto childICD = new IndexedCollectionsDto();
 		if (parentICD != null && idxStr != null) {

@@ -30,7 +30,6 @@ import org.otcframework.common.engine.indexer.dto.IndexedCollectionsDto;
 /**
  * The Class OtcCommandContext.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommandContext {
 
 	/** The command id. */
@@ -60,10 +59,10 @@ public class OtcCommandContext {
 	/** The current collection token index. */
 	public int currentCollectionTokenIndex = 0;
 
+	public OtcCommandContext() {}
 	/**
 	 * Clone.
 	 *
-	 * @return the otc command context
 	 */
 	@Override
 	public OtcCommandContext clone() {
@@ -92,11 +91,14 @@ public class OtcCommandContext {
 				return true;
 			}
 			return false;
-		} else if (otcCommandDto.otcTokenIndex == otcTokens.length - 1) {
-			if (otcCommandDto.collectionDescriptor.isCollection() || otcCommandDto.collectionDescriptor.isMap()) {
-				return true;
-			}
+//			return childOCD.collectionDescriptor.isNormal();
+		} else if (otcCommandDto.otcTokenIndex == otcTokens.length - 1 &&
+				otcCommandDto.collectionDescriptor.isCollection() || otcCommandDto.collectionDescriptor.isMap()) {
+			return true;
 		}
+//		if (otcCommandDto.otcTokenIndex == otcTokens.length - 1) {
+//			return otcCommandDto.collectionDescriptor.isCollection() || otcCommandDto.collectionDescriptor.isMap();
+//		}
 		return false;
 	}
 
@@ -114,6 +116,10 @@ public class OtcCommandContext {
 			}
 		}
 		return false;
+//		return (otcCommandDto.otcTokenIndex >= otcTokens.length - 1 &&
+//			otcCommandDto.collectionDescriptor.isNormal() || otcCommandDto.collectionDescriptor.isMapKey()
+//				|| otcCommandDto.collectionDescriptor.isMapValue()
+//				|| otcCommandDto.collectionDescriptor.isCollectionMember());
 	}
 
 	/**
@@ -195,6 +201,7 @@ public class OtcCommandContext {
 			return true;
 		}
 		return false;
+//		return rawOtcTokens[otcCommandDto.otcTokenIndex].contains(OtcConstants.MAP_VALUE_REF);
 	}
 
 	/**
@@ -227,6 +234,8 @@ public class OtcCommandContext {
 			return true;
 		}
 		return false;
+//		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
+//		return otcToken.contains(OtcConstants.ANCHOR);
 	}
 
 	/**
@@ -240,6 +249,8 @@ public class OtcCommandContext {
 			return true;
 		}
 		return false;
+//		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
+//		return (otcToken.contains(OtcConstants.PRE_ANCHOR) || otcToken.contains(OtcConstants.MAP_PRE_ANCHOR));
 	}
 
 	/**
@@ -253,6 +264,8 @@ public class OtcCommandContext {
 			return true;
 		}
 		return false;
+//		String otcToken = rawOtcTokens[otcCommandDto.otcTokenIndex];
+//		return (otcToken.contains(OtcConstants.POST_ANCHOR) || otcToken.contains(OtcConstants.MAP_POST_ANCHOR));
 	}
 
 	/**

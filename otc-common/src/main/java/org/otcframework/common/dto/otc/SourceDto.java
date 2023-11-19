@@ -27,7 +27,6 @@ import java.util.List;
 /**
  * The Class SourceDto.
  */
-// TODO: Auto-generated Javadoc
 public class SourceDto {
 
 	/** The otc chain. */
