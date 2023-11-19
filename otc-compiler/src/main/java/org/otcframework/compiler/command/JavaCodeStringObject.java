@@ -34,7 +34,6 @@ import java.nio.file.Paths;
 /**
  * The Class JavaCodeStringObject.
  */
-// TODO: Auto-generated Javadoc
 public final class JavaCodeStringObject extends SimpleJavaFileObject {
 
 	/** The source. */
@@ -58,13 +57,11 @@ public final class JavaCodeStringObject extends SimpleJavaFileObject {
 	 */
 	public JavaCodeStringObject(File file) {
 		super(URI.create("file:///" + file.getAbsolutePath().replace("\\", "/")), Kind.SOURCE);
-		String source;
 		try {
-			source = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+			this.source = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 		} catch (IOException e) {
 			throw new OtcCompilerException(e);
 		}
-		this.source = source;
 	}
 
 	/**

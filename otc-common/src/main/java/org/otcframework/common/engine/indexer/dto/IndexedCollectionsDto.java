@@ -28,7 +28,6 @@ import java.util.Objects;
 /**
  * The Class IndexedCollectionsDto.
  */
-// TODO: Auto-generated Javadoc
 public class IndexedCollectionsDto {
 
 	/** The id. */

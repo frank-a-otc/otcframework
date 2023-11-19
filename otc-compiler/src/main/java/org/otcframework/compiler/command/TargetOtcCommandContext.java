@@ -29,7 +29,6 @@ import org.otcframework.common.dto.ClassDto;
 /**
  * The Class TargetOtcCommandContext.
  */
-// TODO: Auto-generated Javadoc
 public final class TargetOtcCommandContext extends OtcCommandContext {
 
 	/** The helper. */

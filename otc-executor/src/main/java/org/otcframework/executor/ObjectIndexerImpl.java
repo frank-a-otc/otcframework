@@ -43,7 +43,6 @@ import java.util.Map.Entry;
 /**
  * The Class ObjectIndexerImpl.
  */
-// TODO: Auto-generated Javadoc
 final class ObjectIndexerImpl implements ObjectIndexer {
 
 	/** The Constant LOGGER. */
@@ -95,7 +94,7 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 				otcChainDto = compiledInfo.targetOtcChainDto;
 				otcCommandDto = compiledInfo.targetOCDStem;
 			}
-			if (otcChainDto == null || CommonUtils.isEmpty(otcChainDto.otcChain)) {
+			if (otcChainDto == null || CommonUtils.isTrimmedAndEmpty(otcChainDto.otcChain)) {
 				continue;
 			}
 			String otcChain = otcChainDto.otcChain;
@@ -165,10 +164,8 @@ final class ObjectIndexerImpl implements ObjectIndexer {
 			if (((Collection) indexedObject).isEmpty()) {
 				return null;
 			}
-		} else if (indexedObject instanceof Map) {
-			if (((Map) indexedObject).isEmpty()) {
-				return null;
-			}
+		} else if (indexedObject instanceof Map && ((Map) indexedObject).isEmpty()) {
+			return null;
 		}
 		String key;
 		if (otcCommandContext.hasAncestralCollectionOrMap()) {

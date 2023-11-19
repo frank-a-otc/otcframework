@@ -38,9 +38,9 @@ import java.util.*;
 /**
  * A factory for creating OtcCommandDto objects.
  */
-// TODO: Auto-generated Javadoc
 public class OtcCommandDtoFactory {
 
+	private OtcCommandDtoFactory() {}
 	/**
 	 * Creates the.
 	 *
@@ -50,7 +50,6 @@ public class OtcCommandDtoFactory {
 	 * @param tokenPath          the token path
 	 * @param idx                the idx
 	 * @param fldName            the fld name
-	 * @param concreteType       the concrete type
 	 * @param isFirstNode        the is first node
 	 * @param field              the field
 	 * @param fldType            the fld type
@@ -59,7 +58,7 @@ public class OtcCommandDtoFactory {
 	 * @return the otc command dto
 	 */
 	public static OtcCommandDto create(String commandId, TARGET_SOURCE enumTargetOrSource, String otcToken,
-			String tokenPath, int idx, String fldName, String concreteType, boolean isFirstNode, Field field,
+			String tokenPath, int idx, String fldName, boolean isFirstNode, Field field,
 			Class<?> fldType, Class<?> genericType, boolean isLeaf) {
 		OtcCommandDto.Builder builder = OtcCommandDto.newBuilder().addCommandId(commandId)
 				.addTargetOrSource(enumTargetOrSource).addOtcToken(otcToken).addTokenPath(tokenPath)
@@ -77,25 +76,22 @@ public class OtcCommandDtoFactory {
 	 *
 	 * @param commandId     the command id
 	 * @param otcCommandDto the otc command dto
-	 * @param otcChain      the otc chain
 	 * @param otcTokens     the otc tokens
 	 */
-	public static void createMembers(String commandId, OtcCommandDto otcCommandDto, String otcChain,
+	public static void createMembers(String commandId, OtcCommandDto otcCommandDto,
 			String[] otcTokens) {
 		if (!otcCommandDto.hasCollectionNotation && !otcCommandDto.hasMapNotation) {
 			return;
 		}
 		int idx = otcCommandDto.otcTokenIndex;
-		boolean isLeaf = (idx == otcTokens.length - 1 ? true : false);
+		boolean isLeaf = idx == otcTokens.length - 1;
 		if (otcCommandDto.hasCollectionNotation) {
 			createCollectionMember(commandId, otcCommandDto, isLeaf);
-		} else if (otcCommandDto.hasMapNotation) {
-			createMapMember(commandId, otcCommandDto, otcChain, otcTokens, isLeaf);
+		} else {
+			createMapMember(commandId, otcCommandDto, otcTokens, isLeaf);
 		}
-		if (isLeaf && otcCommandDto.isCollectionOrMap()) {
-			if (otcCommandDto.children == null) {
-				otcCommandDto.children = new LinkedHashMap<>();
-			}
+		if (isLeaf && otcCommandDto.isCollectionOrMap() && otcCommandDto.children == null) {
+			otcCommandDto.children = new LinkedHashMap<>();
 		}
 	}
 
@@ -134,7 +130,7 @@ public class OtcCommandDtoFactory {
 		String memberOtcToken = otcCommandDto.fieldName;
 		memberOCD = OtcCommandDtoFactory.create(commandId, otcCommandDto.enumTargetSource, memberOtcToken,
 				otcCommandDto.tokenPath, otcCommandDto.otcTokenIndex, otcCommandDto.fieldName,
-				otcCommandDto.concreteTypeName, false, null, memberFieldType, null, isLeaf);
+				false, null, memberFieldType, null, isLeaf);
 		memberOCD.tokenPath = CommonUtils.replaceLast(memberOCD.tokenPath, OtcConstants.ARR_REF, "");
 		memberOCD.collectionDescriptor = CollectionDescriptor.COLLECTION_MEMBER;
 		otcCommandDto.addChild(memberOCD);
@@ -147,12 +143,11 @@ public class OtcCommandDtoFactory {
 	 *
 	 * @param commandId     the command id
 	 * @param otcCommandDto the otc command dto
-	 * @param otcChain      the otc chain
 	 * @param otcTokens     the otc tokens
 	 * @param isLeaf        the is leaf
 	 * @return the otc command dto
 	 */
-	public static OtcCommandDto createMapMember(String commandId, OtcCommandDto otcCommandDto, String otcChain,
+	public static OtcCommandDto createMapMember(String commandId, OtcCommandDto otcCommandDto,
 			String[] otcTokens, boolean isLeaf) {
 		String otcToken = otcTokens[otcCommandDto.otcTokenIndex];
 		String memberOtcToken = null;
@@ -214,7 +209,7 @@ public class OtcCommandDtoFactory {
 			memberOtcToken = OtcConstants.MAP_VALUE_REF + otcCommandDto.fieldName;
 			memberConcreteType = otcCommandDto.mapValueConcreteType;
 		}
-		if (!CommonUtils.isEmpty(memberConcreteType)) {
+		if (!CommonUtils.isTrimmedAndEmpty(memberConcreteType)) {
 			memberOtcGenericTypeClz = OtcUtils.loadClass(memberConcreteType);
 		}
 		OtcCommandDto memberOCD = otcCommandDto.children.get(memberOtcToken);
@@ -226,7 +221,7 @@ public class OtcCommandDtoFactory {
 				memberType = (Class<?>) ((ParameterizedType) parameterizedType).getActualTypeArguments()[1];
 			}
 			memberOCD = OtcCommandDtoFactory.create(commandId, otcCommandDto.enumTargetSource, memberOtcToken,
-					otcCommandDto.tokenPath, otcCommandDto.otcTokenIndex, otcCommandDto.fieldName, memberConcreteType,
+					otcCommandDto.tokenPath, otcCommandDto.otcTokenIndex, otcCommandDto.fieldName,
 					false, null, memberType, memberOtcGenericTypeClz, isLeaf);
 			memberOCD.tokenPath = CommonUtils.replaceLast(memberOCD.tokenPath, OtcConstants.MAP_KEY_REF, "");
 			memberOCD.tokenPath = CommonUtils.replaceLast(memberOCD.tokenPath, OtcConstants.MAP_VALUE_REF, "");

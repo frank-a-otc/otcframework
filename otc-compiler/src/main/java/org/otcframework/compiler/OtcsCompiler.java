@@ -29,7 +29,6 @@ import java.util.List;
 /**
  * The Interface OtcCompiler.
  */
-// TODO: Auto-generated Javadoc
 public interface OtcsCompiler {
 
 	/**
@@ -37,7 +36,7 @@ public interface OtcsCompiler {
 	 *
 	 * @return the list
 	 */
-	List<CompilationReport> compile();
+	List<CompilationReport> compileOtcsFiles();
 
 	/**
 	 * Compile source code.

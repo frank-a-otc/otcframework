@@ -22,18 +22,23 @@
 */
 package org.otcframework.common.util;
 
+import org.apache.commons.io.FileUtils;
 import org.otcframework.common.OtcConstants;
 import org.otcframework.common.config.OtcConfig;
+import org.otcframework.common.config.exception.FileDeleteException;
 import org.otcframework.common.dto.OtcCommandDto;
 import org.otcframework.common.exception.OtcException;
+import org.otcframework.common.exception.OtcUnsupportedJdkException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +46,9 @@ import java.util.Map;
 /**
  * The Class OtcUtils.
  */
-// TODO: Auto-generated Javadoc
 public class OtcUtils {
+
+	private OtcUtils() {}
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtcUtils.class);
@@ -51,7 +57,7 @@ public class OtcUtils {
 	private static URLClassLoader clzLoader;
 
 	/** The Constant otcLibLocation. */
-	private static final String otcLibLocation = OtcConfig.getOtcLibLocation();
+	private static final String OTC_LIB_LOCATION = OtcConfig.getOtcLibDirectoryPath();
 	
 	/**
 	 * Creates the otc file name.
@@ -61,11 +67,10 @@ public class OtcUtils {
 	 * @return the string
 	 */
 	public static String createOtcFileName(String sourceClz, String targetClz) {
-		if (CommonUtils.isEmpty(targetClz)) {
+		if (CommonUtils.isTrimmedAndEmpty(targetClz)) {
 			throw new OtcException("", "Target-class cannot be null.");
 		}
-		String fileName = createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
-		return fileName;
+		return createRegistryId(null, sourceClz, targetClz) + OtcConstants.OTC_SCRIPT_EXTN;
 	}
 
 	/**
@@ -80,7 +85,7 @@ public class OtcUtils {
 		if (source == null) {
 			return createRegistryId(otcNamespace, null, targetClz.getName());
 		} else {
-			return createRegistryId(otcNamespace, source.getClass().getName(), targetClz.getName());
+			return createRegistryId(otcNamespace, source.getClass(), targetClz);
 		}
 	}
 
@@ -126,7 +131,7 @@ public class OtcUtils {
 		} else {
 			registryId = sourceClz + "_" + targetClz;
 		}
-		if (!CommonUtils.isEmpty(otcNamespace)) {
+		if (!CommonUtils.isTrimmedAndEmpty(otcNamespace)) {
 			registryId = otcNamespace + "." + registryId;
 		}
 		return registryId;
@@ -210,8 +215,7 @@ public class OtcUtils {
 		} else if (ocdKey.contains(OtcConstants.MAP_VALUE_REF)) {
 			ocdKey = ocdKey.replace(OtcConstants.MAP_VALUE_REF, "");
 		}
-		OtcCommandDto otcCommandDto = mapOCDs.get(ocdKey);
-		return otcCommandDto;
+		return mapOCDs.get(ocdKey);
 	}
 
 	/**
@@ -223,8 +227,7 @@ public class OtcUtils {
 	public static String retrieveIndexCharacter(String otcToken) {
 		int idxCollectionNotation = otcToken.indexOf(OtcConstants.OPEN_BRACKET) + 1;
 		int idxEndCollectionNotation = otcToken.indexOf(OtcConstants.CLOSE_BRACKET);
-		String idxCharacter = otcToken.substring(idxCollectionNotation, idxEndCollectionNotation);
-		return idxCharacter;
+		return otcToken.substring(idxCollectionNotation, idxEndCollectionNotation);
 	}
 
 	/**
@@ -235,12 +238,23 @@ public class OtcUtils {
 	 */
 	public static URLClassLoader loadURLClassLoader(String path) {
 		File otcBinDirectory = new File(path);
-		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"), null);
-		if (urls == null || urls.isEmpty()) {
+		List<URL> urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".jar"));
+		if (urls.isEmpty()) {
+			urls = createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class"));
+		} else {
+			urls.addAll(createURLs(otcBinDirectory, CommonUtils.createFilenameFilter(".class")));
+		}
+		if (urls.isEmpty()) {
 			return null;
 		}
-		URLClassLoader clzLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
+		return new URLClassLoader(urls.toArray(new URL[0]),
 				ClassLoader.getSystemClassLoader());
+	}
+
+	public static URLClassLoader getClassLoader() {
+		if (clzLoader == null) {
+			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
+		}
 		return clzLoader;
 	}
 
@@ -249,27 +263,23 @@ public class OtcUtils {
 	 *
 	 * @param directory  the directory
 	 * @param fileFilter the file filter
-	 * @param urls       the urls
 	 * @return the list
 	 */
-	public static List<URL> createURLs(File directory, FileFilter fileFilter, List<URL> urls) {
+	public static List<URL> createURLs(File directory, FileFilter fileFilter) {
+		List<URL> urls = new ArrayList<>();
+		if (directory.listFiles(fileFilter) == null) {
+			return urls;
+		}
 		for (File file : directory.listFiles(fileFilter)) {
 			if (file.isDirectory()) {
-				if (urls == null) {
-					urls = createURLs(file, fileFilter, urls);
-				} else {
-					urls.addAll(createURLs(file, fileFilter, urls));
-				}
+				urls.addAll(createURLs(file, fileFilter));
 			} else {
 				try {
-					URL url = null;
+					URL url;
 					if (file.getName().endsWith(".jar")) {
 						url = new URL("jar:file:" + file.getAbsolutePath() + "!/");
 					} else {
 						url = new URL("file:" + file.getAbsolutePath());
-					}
-					if (urls == null) {
-						urls = new ArrayList<>();
 					}
 					urls.add(url);
 				} catch (MalformedURLException e) {
@@ -287,17 +297,28 @@ public class OtcUtils {
 	 * @return the class
 	 */
 	public static Class<?> loadClass(String clzName) {
-		if (clzLoader == null) {
-			clzLoader = loadURLClassLoader(otcLibLocation);
+		if (clzName == null) {
+			throw new OtcException("", "Cannot load class - Class-name is null");
 		}
-		if (clzLoader == null || clzName == null) {
-			throw new OtcException("", "Invalid value : null!");
+		if (clzLoader == null) {
+			clzLoader = loadURLClassLoader(OTC_LIB_LOCATION);
+			if (clzLoader == null) {
+				throw new OtcException("", "Cannot load class - class-loader is null");
+			}
 		}
 		Class<?> cls = null;
 		try {
 			cls = clzLoader.loadClass(clzName);
+		} catch (Error e) {
+			LOGGER.error(e.getMessage());
+			if (e instanceof UnsupportedClassVersionError) {
+				throw new OtcUnsupportedJdkException("", "JDK versions conflict.");
+			}
+			throw new OtcException("", e.getMessage(), e);
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new OtcException("", e);
+			throw new OtcException("", e.getMessage(), e);
 		}
 		return cls;
 	}
@@ -310,4 +331,31 @@ public class OtcUtils {
 	public static URLClassLoader fetchCurrentURLClassLoader() {
 		return clzLoader;
 	}
+
+	public static void creteDirectory(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+	}
+
+	public static void deleteFileOrFolder(String path) {
+		if (!OtcConfig.isDefaultLocations() || !OtcConfig.getCleanupBeforeCompile()) {
+			return;
+		}
+		File file = new File(path);
+		if (!file.exists()) {
+			return;
+		}
+		try {
+			if (file.isDirectory()) {
+				FileUtils.deleteDirectory(file);
+			} else {
+				Files.delete(file.toPath());
+			}
+		} catch (IOException e) {
+			throw new FileDeleteException("", "Could not clean up generated folders.", e);
+		}
+	}
+
 }

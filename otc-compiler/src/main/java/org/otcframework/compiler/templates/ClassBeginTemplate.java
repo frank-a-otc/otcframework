@@ -32,11 +32,10 @@ import java.util.Set;
 /**
  * The Class ClassBeginTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class ClassBeginTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
-			ClassBeginTemplate.class.getSimpleName() + "\n";
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
+			ClassBeginTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new class begin template.
 	 */
@@ -49,12 +48,11 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 * @param mainClassDto the main class dto
 	 * @param targetType   the target type
 	 * @param sourceType   the source type
-	 * @param otcChain     the otc chain
 	 * @param varNamesSet  the var names set
 	 * @return the string
 	 */
 	public static String generateMainClassCode(ClassDto mainClassDto, String targetType, String sourceType,
-			String otcChain, Set<String> varNamesSet) {
+			Set<String> varNamesSet) {
 		String rootTargetVariable = CommonUtils.initLower(targetType);
 		rootTargetVariable = sanitizeVarName(rootTargetVariable, varNamesSet);
 		String rootSourceVariable = null;
@@ -71,12 +69,12 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 			sourceType = "Object";
 			rootSourceVariable = "arg1";
 		}
-		String classBeginBody = String.format(mainClassBeginCodeTemplate, packageName, mainClassName, sourceType,
+		String classBeginBody = String.format(MAIN_CLASS_BEGIN_CODE_TEMPLATE, packageName, mainClassName, sourceType,
 				targetType, targetType, sourceType, rootSourceVariable, targetType, rootTargetVariable, targetType);
-		if (CommonUtils.isEmpty(packageName)) {
+		if (CommonUtils.isTrimmedAndEmpty(packageName)) {
 			classBeginBody = classBeginBody.replace("package ;\n", "");
 		}
-		return classBeginBody;
+		return addInlineComments(INLINE_COMMENTS, classBeginBody);
 	}
 
 	/**
@@ -91,7 +89,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 */
 	public static String generateFactoryClassCode(ClassDto classDto, String sourceType, String targetType,
 			boolean addLogger, Set<String> varNamesSet) {
-		return generateClassCode(classDto, sourceType, targetType, addLogger, factoryClassBeginCodeTemplate,
+		return generateClassCode(classDto, sourceType, targetType, addLogger, FACTORY_CLASS_BEGIN_CODE_TEMPLATE,
 				varNamesSet);
 	}
 
@@ -107,7 +105,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 	 */
 	public static String generateModuleClassCode(ClassDto classDto, String sourceType, String targetType,
 			boolean addLogger, Set<String> varNamesSet) {
-		return generateClassCode(classDto, sourceType, targetType, addLogger, factoryModuleClassBeginCodeTemplate,
+		return generateClassCode(classDto, sourceType, targetType, addLogger, FACTORY_MODULE_CLASS_BEGIN_CODE_TEMPLATE,
 				varNamesSet);
 	}
 
@@ -141,7 +139,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 			sourceVar = "arg1";
 		}
 		if (!addLogger) {
-			String supportClassBeginTemplateCopy = template.replace(loggerInitTemplate, "");
+			String supportClassBeginTemplateCopy = template.replace(LOGGER_INIT_TEMPLATE, "");
 			classBeginBody = String.format(supportClassBeginTemplateCopy, packageName, classDto.className, sourceType,
 					sourceVar, targetType, targetVar);
 		} else {
@@ -150,7 +148,7 @@ public final class ClassBeginTemplate extends AbstractTemplate {
 			classBeginBody = String.format(template, packageName, classDto.className, classDto.className, sourceType,
 					sourceVar, targetType, targetVar);
 		}
-		if (CommonUtils.isEmpty(packageName)) {
+		if (CommonUtils.isTrimmedAndEmpty(packageName)) {
 			classBeginBody = classBeginBody.replace("package ;\n", "");
 		}
 		return classBeginBody;

@@ -27,7 +27,6 @@ import org.otcframework.common.exception.OtcException;
 /**
  * The Class SemanticsException.
  */
-// TODO: Auto-generated Javadoc
 public class SemanticsException extends OtcException {
 
 	/** The Constant serialVersionUID. */

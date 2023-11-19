@@ -38,44 +38,39 @@ import java.util.List;
 /**
  * The Class ConcreteTypeNotationProcessor.
  */
-// TODO: Auto-generated Javadoc
 final class ConcreteTypeNotationProcessor {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConcreteTypeNotationProcessor.class);
 
+	private ConcreteTypeNotationProcessor() {}
 	/**
 	 * Process.
 	 *
 	 * @param script        the script
 	 * @param otcCommandDto the otc command dto
-	 * @return true, if successful
 	 */
-	public static boolean process(ScriptDto script, OtcCommandDto otcCommandDto) {
-		if (!(script.command instanceof Copy)) {
-			return true;
-		}
+	public static void process(ScriptDto script, OtcCommandDto otcCommandDto) {
 		String commandId = script.command.id;
 		List<TargetDto.Override> overrides = null;
-		String otcChain;
+		String objectPath;
 		if (script.command instanceof Copy) {
 			Copy copy = (Copy) script.command;
-			otcChain = copy.to.objectPath;
-			if (copy != null && copy.to != null && copy.to.overrides != null) {
+			objectPath = copy.to.objectPath;
+			if (copy.to.overrides != null) {
 				overrides = copy.to.overrides;
 			}
 		} else {
 			Execute execute = (Execute) script.command;
-			otcChain = execute.target.objectPath;
-			if (execute != null && execute.target != null && execute.target.overrides != null) {
+			objectPath = execute.target.objectPath;
+			if (execute.target.overrides != null) {
 				overrides = execute.target.overrides;
 			}
 		}
 		if (overrides == null) {
-			return true;
+			return;
 		}
 		otcCommandDto.concreteTypeName = null;
-//		for (TargetDto.Override override : overrides) {
 		overrides.forEach(override -> {
 			String tokenPath = override.tokenPath;
 			if (tokenPath == null) {
@@ -86,7 +81,7 @@ final class ConcreteTypeNotationProcessor {
 				throw new SyntaxException("", "Oops... Syntax error in Command-block : " + commandId
 						+ ".  Anchor not allowed in 'overrides.tokenPath: '" + tokenPath + "'");
 			}
-			if (!otcChain.startsWith(tokenPath)) {
+			if (!objectPath.startsWith(tokenPath)) {
 				throw new SemanticsException("", "Irrelevant tokenPath '" + tokenPath
 						+ "' in target's overrides section in command : " + commandId);
 			}
@@ -120,10 +115,9 @@ final class ConcreteTypeNotationProcessor {
 			if (isErr) {
 				LOGGER.warn(
 						"Oops... Error in OTC-Command-Id : {} - 'overrides.concreteType' already set earlier for : '{}"
-								+ "' in one of these earlier commands : ",
+								+ "' in one of these earlier commands : {}",
 						commandId, tokenPath, otcCommandDto.occursInCommands);
 			}
 		});
-		return true;
 	}
 }

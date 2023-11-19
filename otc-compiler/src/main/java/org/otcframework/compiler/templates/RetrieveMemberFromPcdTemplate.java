@@ -32,11 +32,10 @@ import java.util.Set;
 /**
  * The Class RetrieveMemberFromPcdTemplate.
  */
-// TODO: Auto-generated Javadoc
 public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 
-	private static final String inlineComments = "\n// ---- generator - " +
-			RetrieveMemberFromPcdTemplate.class.getSimpleName() + "\n";
+	private static final String INLINE_COMMENTS = "\n// ---- generator - " +
+			RetrieveMemberFromPcdTemplate.class.getSimpleName();
 	/**
 	 * Instantiates a new retrieve member from pcd template.
 	 */
@@ -59,9 +58,8 @@ public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 		String memberType = fetchFieldTypeName(targetOCC, null, memberOCD, createNewVarName, varNamesMap);
 		String varName = createVarName(memberOCD, createNewVarName, varNamesSet, varNamesMap);
 		String typecastType = fetchSanitizedTypeName(targetOCC, memberOCD);
-		String retrieveTargetObjectFromPcdCode = String.format(retrieveMemberFromIcdTemplate, memberType, varName,
-				typecastType, icd);
-		return retrieveTargetObjectFromPcdCode;
+		return addInlineComments(INLINE_COMMENTS, String.format(RETRIEVE_MEMBER_FROM_ICD_TEMPLATE, memberType, varName,
+				typecastType, icd));
 	}
 
 	/**
@@ -80,8 +78,7 @@ public final class RetrieveMemberFromPcdTemplate extends AbstractTemplate {
 		String memberType = fetchFieldTypeName(targetOCC, sourceOCC, memberOCD, createNewVarName, varNamesMap);
 		String varName = createVarName(memberOCD, createNewVarName, varNamesSet, varNamesMap);
 		String typecastType = fetchSanitizedTypeName(targetOCC, memberOCD);
-		String retrieveSourceObjectFromPcdCode = String.format(retrieveMemberFromIcdTemplate, memberType, varName,
-				typecastType, MEMBER_SOURCE_ICD);
-		return retrieveSourceObjectFromPcdCode;
+		return addInlineComments(INLINE_COMMENTS, String.format(RETRIEVE_MEMBER_FROM_ICD_TEMPLATE, memberType, varName,
+				typecastType, MEMBER_SOURCE_ICD));
 	}
 }
