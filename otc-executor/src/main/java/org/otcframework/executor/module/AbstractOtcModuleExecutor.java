@@ -40,7 +40,6 @@ public abstract class AbstractOtcModuleExecutor {
 	/** The otc engine. */
 	private static OtcExecutor otcExecutor = OtcExecutorImpl.getInstance();
 
-	private AbstractOtcModuleExecutor() {}
 	/**
 	 * Execute module.
 	 *

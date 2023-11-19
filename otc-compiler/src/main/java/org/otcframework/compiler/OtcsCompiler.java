@@ -38,8 +38,4 @@ public interface OtcsCompiler {
 	 */
 	List<CompilationReport> compileOtcsFiles();
 
-	/**
-	 * Compile source code.
-	 */
-	void compileSourceCode();
 }
