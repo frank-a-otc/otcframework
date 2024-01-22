@@ -80,16 +80,17 @@
 			<artifactId>logback-core</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.otcframework</groupId>
+			<artifactId>otc-common</artifactId>
+		</dependency>
+
 		<!-- lombok required in otc-compiler by java-dynamic-compiler in Java 16+ -->
 		<dependency>
 		    <groupId>org.projectlombok</groupId>
 		    <artifactId>lombok</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.otcframework</groupId>
-			<artifactId>otc-common</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.otcframework</groupId>
 			<artifactId>dateconverters</artifactId>
